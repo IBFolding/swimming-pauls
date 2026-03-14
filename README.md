@@ -4,15 +4,27 @@
 >
 > Many Pauls from many universes and many professions contemplate the future of your question.
 
-![Swimming Pauls Logo](docs/logo.png)
+![Swimming Pauls](docs/logo.png)
 
-Swimming Pauls is a **multi-agent prediction pool** that simulates diverse personas debating and predicting outcomes. Named for the collective intelligence of multiple perspectives converging on truth.
+**Swimming Pauls** is a **multi-agent prediction pool** that simulates diverse personas debating and predicting outcomes. Born from the realization that single-agent AI predictions are limited, Swimming Pauls casts a pool of specialized agents - each with unique expertise, biases, and perspectives - and lets them debate until consensus emerges.
 
-## 🎯 What is This?
+Like fish in a school, individual Pauls have limited perspective. But together, swimming through data in parallel, they create **emergent intelligence** greater than any single agent. The collective surfaces truth through disagreement and debate.
 
-Instead of asking one AI for an answer, you cast a **pool of Pauls** - each with unique expertise, biases, and perspectives - and let them debate until consensus emerges.
+---
 
-Like fish in a school, individual Pauls have limited perspective. But together, swimming through data in parallel, they create **emergent intelligence** greater than any single agent.
+## 🎯 Why Swimming Pauls?
+
+Most AI predictions come from a single model with a single perspective. But real decisions benefit from **diverse viewpoints**:
+
+- The **Analyst** sees patterns in data
+- The **Skeptic** finds the blindspots  
+- The **Visionary** imagines futures
+- The **Hedgie** protects against downside
+- The **Entrepreneur** spots opportunities
+
+Swimming Pauls brings all these perspectives together, lets them debate, and surfaces a **weighted consensus** that reflects multi-dimensional thinking.
+
+---
 
 ## ✨ Features
 
@@ -25,6 +37,8 @@ Like fish in a school, individual Pauls have limited perspective. But together, 
 - 🧠 **Knowledge Graphs** - Semantic memory and reasoning
 - 💾 **100% Local** - No APIs, no cloud, no data leaves your machine
 
+---
+
 ## 🚀 Quick Start
 
 ```bash
@@ -32,12 +46,14 @@ Like fish in a school, individual Pauls have limited perspective. But together, 
 git clone https://github.com/howardtherekt/swimming-pauls.git
 cd swimming-pauls
 
-# No dependencies needed! (Optional ones below)
+# Install (optional dependencies for enhanced features)
 pip install -r requirements.txt
 
 # Cast the Pauls
-python main.py --topic "Will CRITIC succeed?" --rounds 20
+python main.py --topic "Will my startup succeed?" --rounds 20
 ```
+
+---
 
 ## 🐟 Meet the Pauls
 
@@ -50,17 +66,23 @@ python main.py --topic "Will CRITIC succeed?" --rounds 20
 | **Producer Paul** | Budget-focused | Conservative | ROI analysis |
 | **Director Paul** | Creative | Optimistic | Trend spotting |
 | **Hedgie Paul** | Risk-manager | Defensive | Downside protection |
+| **Entrepreneur Paul** | Innovation | Aggressive | Opportunity spotting |
+| **Academic Paul** | Research | Cautious | Evidence-based |
+| **Journalist Paul** | Narrative | Inquisitive | Story sensing |
 | **+ 30+ more** | Various | Various | Various |
+
+---
 
 ## 💬 Example Session
 
-```
+```bash
 $ python main.py --topic "Should I launch a coffee maker that mines Bitcoin?"
 
 🐟 Casting 8 Pauls for analysis...
 
 📊 Round 1/10
    Consensus: BULLISH (confidence: 0.60, strength: strong)
+   [Entrepreneur Paul and Visionary Paul are excited]
 
 📊 Round 5/10
    Consensus: NEUTRAL (confidence: 0.52, strength: moderate)
@@ -86,17 +108,19 @@ Recommendation: Launch as novelty hardware with disclaimers.
 Don't promise actual mining profits.
 ```
 
+---
+
 ## 🎮 Commands
 
-### Predict
+### Basic Prediction
 ```bash
-# Basic prediction
+# Standard prediction
 python main.py --topic "Netflix stock price next quarter"
 
-# With custom team
+# With custom team composition
 python main.py --topic "AI regulation impact" --analysts 3 --skeptics 2
 
-# Full analysis
+# Full analysis suite
 python main.py --topic "Should I quit my job?" --full-analysis
 ```
 
@@ -115,12 +139,25 @@ python main.py --compare --scenario-a "Launch now" --scenario-b "Wait 6 months"
 python main.py --interactive
 ```
 
+### Web UI
+```bash
+# Start local web interface
+python -m http.server 8765 --directory ui
+
+# Open browser
+open http://localhost:8765
+```
+
+---
+
 ## 📊 Output Formats
 
 - **Terminal** - ASCII charts and tables (default)
 - **JSON** - Structured data for integration
 - **HTML** - Interactive reports with Chart.js
 - **PNG** - Static charts for presentations
+
+---
 
 ## 🏗️ Architecture
 
@@ -132,12 +169,16 @@ swimming-pauls/
 ├── knowledge_graph.py    # Semantic memory & reasoning
 ├── memory.py            # SQLite persistence
 ├── local_memory.py      # 100% local memory (no cloud)
-├── data_feeds_local.py  # Local data connectors
+├── data_feeds_local.py  # Local data connectors (RSS, files, web scraping)
 ├── advanced.py          # Monte Carlo, sensitivity, backtesting
 ├── visualization.py     # Charts & reports
 ├── main.py             # CLI entry point
-└── swimming_pauls.py   # Unified API
+├── swimming_pauls.py   # Unified API
+└── ui/                 # Web interface
+    └── index.html
 ```
+
+---
 
 ## 🔒 100% Local - No Cloud
 
@@ -149,6 +190,8 @@ Swimming Pauls runs entirely on your machine:
 - ✅ Fully private and auditable
 
 See [LOCAL_ONLY.md](LOCAL_ONLY.md) for details.
+
+---
 
 ## 🧪 Advanced Usage
 
@@ -174,16 +217,43 @@ pauls.visualize(format='html', output='report.html')
 await pauls.full_analysis(topic="Should I pivot?")
 ```
 
+---
+
+## 📝 Origin Story
+
+Swimming Pauls was born on a drive down Sunset Boulevard, in a self-driving car, while listening to Swimming Paul and texting OpenClaw. The realization: single-agent AI is like asking one person for advice. But real decisions benefit from a **pool of perspectives** - analysts, skeptics, visionaries, and hedges all debating until truth emerges.
+
+When MiroFish felt too heavy and too cloud-dependent, Swimming Pauls was built to be **lightweight, local, and 100% private**. Your questions, your Pauls, your machine.
+
+---
+
 ## 📸 Screenshots
 
 ### Terminal Output
-![Terminal](docs/screenshot-terminal.png)
+```
+🐟 SWIMMING PAULS PREDICTION REPORT
+================================
+Question: Will CRITIC succeed?
+Pool Size: 10 Pauls | Rounds: 20
 
-### HTML Report
-![HTML Report](docs/screenshot-html.png)
+CONSENSUS: 72% confidence
+Prediction: MODERATE POSITIVE
 
-### Monte Carlo Distribution
-![Monte Carlo](docs/screenshot-monte-carlo.png)
+Paul Breakdown:
+• Producer Paul: 68% confidence, CAUTIOUSLY BULLISH
+• Director Paul: 82% confidence, VERY BULLISH  
+• Hedgie Paul: 45% confidence, NEUTRAL
+• Visionary Paul: 79% confidence, BULLISH
+• Skeptic Paul: 51% confidence, SLIGHTLY BEARISH
+
+Key Factors Surfaced:
+→ Real pain point identified
+→ Market timing favorable
+→ Execution risk moderate
+→ Competition significant
+```
+
+---
 
 ## 🤝 Contributing
 
@@ -194,9 +264,19 @@ The Pauls welcome new personas! To add a Paul:
 3. Set their bias and confidence levels
 4. Submit a PR
 
+---
+
 ## 📜 License
 
 MIT - Your machine, your Pauls, your predictions.
+
+---
+
+## 🙏 Acknowledgments
+
+- Inspired by multi-agent systems and ensemble forecasting
+- Built with ❤️ by Howard (H.O.W.A.R.D)
+- Named while listening to Swimming Paul, driving down Sunset
 
 ---
 
