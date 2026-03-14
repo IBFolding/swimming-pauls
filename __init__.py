@@ -1,0 +1,322 @@
+"""
+SwimmingPauls v2.0 - 100% Local Multi-Agent Simulation Platform
+
+A comprehensive platform for multi-agent prediction and analysis.
+
+✅ 100% LOCAL - NO API KEYS REQUIRED:
+- Agent-based predictions with personas
+- Simulation orchestration  
+- Local data feeds (RSS, files, web scraping, demo mode)
+- Persistent SQLite memory
+- Rich terminal visualizations
+- Advanced analytics (Monte Carlo, sensitivity, backtesting)
+- 🐟 MiroFish: Knowledge graphs, graph memory, 40+ Paul personas
+
+All functionality works offline with local computation only.
+Optional cloud features (Zep, etc.) are truly optional.
+
+Quick Start:
+    from swimming_pauls import SwimmingPauls
+    
+    pauls = SwimmingPauls()
+    result = await pauls.run_simulation(rounds=20)
+    pauls.visualize()
+
+MiroFish Quick Start:
+    from swimming_pauls import MiroFishSwimmingPauls
+    
+    # 100% local - no internet needed
+    mirofish = MiroFishSwimmingPauls.quick_start(paul_count=40)
+    result = mirofish.run_prediction_round(market_data)
+
+CLI Usage:
+    python -m swimming_pauls --rounds 20
+    python -m swimming_pauls --live --market BTC,ETH
+    python -m swimming_pauls --monte-carlo --mc-runs 5000
+"""
+
+__version__ = "2.0.0"
+__author__ = "Howard (H.O.W.A.R.D)"
+
+# Import the unified system
+from .swimming_pauls import (
+    SwimmingPauls,
+    SwimmingPaulsConfig,
+    quick_run,
+    demo,
+)
+
+# Import all agent-related classes
+from .agent import (
+    Agent,
+    AgentPrediction,
+    AgentMemory,
+    AgentTrait,
+    PersonaType,
+    PERSONA_PROFILES,
+    create_agent_team,
+    create_film_industry_team,
+)
+
+# Import simulation classes
+from .simulation import (
+    SimulationRunner,
+    SimulationBuilder,
+    SimulationResult,
+    SimulationRound,
+    quick_simulate,
+)
+
+# Import data feed classes
+from .data_feeds import (
+    DataFeedManager,
+    DataConnector,
+    NewsConnector,
+    MarketConnector,
+    SentimentConnector,
+    FileWatcherConnector,
+    NewsArticle,
+    MarketPrice,
+    SentimentScore,
+    FileChange,
+    fetch_news,
+    fetch_market,
+    fetch_sentiment,
+    watch_files,
+)
+
+# Import 100% LOCAL data feed classes (no API keys needed)
+from .local_data_feeds import (
+    LocalNewsConnector,
+    LocalMarketConnector,
+    LocalSentimentConnector,
+    LocalDataFeedManager,
+    fetch_local_news,
+    fetch_local_market,
+    fetch_local_sentiment,
+    watch_local_files,
+)
+
+# Import memory classes
+from .memory import (
+    ScalesMemory,
+    Session,
+    Agent as MemoryAgent,
+    Prediction,
+    AccuracyMetrics,
+    ModelAdjustment,
+    init_memory,
+)
+
+# Import visualization classes
+from .visualization import (
+    ScalesVisualizer,
+    TerminalCharts,
+    PlotextCharts,
+    MatplotlibCharts,
+    HTMLReportGenerator,
+    HTMLReportConfig,
+    quick_visualize,
+    print_confidence_chart,
+    print_sentiment_timeline,
+    print_agent_ranking,
+)
+
+# Import advanced analytics classes
+from .advanced import (
+    MonteCarloSimulator,
+    SensitivityAnalyzer,
+    ScenarioComparator,
+    Backtester,
+    AdvancedSimulationSuite,
+    MonteCarloResult,
+    SensitivityResult,
+    ScenarioComparison,
+    BacktestResult,
+    quick_monte_carlo,
+    quick_sensitivity,
+    quick_compare,
+    quick_backtest,
+)
+
+# Import prediction formatting
+from .prediction import (
+    PredictionFormatter,
+    SimulationReporter,
+    SimpleOutput,
+    print_report,
+    export_json,
+)
+
+# 🐟 MiroFish Imports - Knowledge Graph & Memory
+from .knowledge_graph import (
+    KnowledgeGraph,
+    Entity,
+    Relationship,
+    GraphBuilder,
+    EntityExtractor,
+    create_market_knowledge_graph,
+)
+
+from .graph_memory import (
+    GraphMemory,
+    AgentKnowledge,
+    KnowledgeQuery,
+    GraphMemoryMixin,
+)
+
+from .persona_factory import (
+    PaulPersonaFactory,
+    PaulPersona,
+    TradingStyle,
+    RiskProfile,
+    SpecialtyDomain,
+    generate_swimming_pauls_pool,
+    PAUL_ARCHETYPES,
+)
+
+from .mirofish_integration import (
+    MiroFishSwimmingPauls,
+    MiroFishConfig,
+    MiroFishAgent,
+    quick_start,
+)
+
+# Optional Zep Cloud integration
+try:
+    from .zep_memory import (
+        ZepMemoryManager,
+        ZepMemoryConfig,
+        AgentZepSession,
+        MemoryFact,
+        create_memory_manager,
+    )
+    ZEP_AVAILABLE = True
+except ImportError:
+    ZEP_AVAILABLE = False
+
+__all__ = [
+    # Version
+    "__version__",
+    
+    # Main unified system
+    "SwimmingPauls",
+    "SwimmingPaulsConfig",
+    "quick_run",
+    "demo",
+    
+    # Agent module
+    "Agent",
+    "AgentPrediction",
+    "AgentMemory",
+    "AgentTrait",
+    "PersonaType",
+    "PERSONA_PROFILES",
+    "create_agent_team",
+    "create_film_industry_team",
+    
+    # Simulation module
+    "SimulationRunner",
+    "SimulationBuilder",
+    "SimulationResult",
+    "SimulationRound",
+    "quick_simulate",
+    
+    # Data feeds
+    "DataFeedManager",
+    "DataConnector",
+    "NewsConnector",
+    "MarketConnector",
+    "SentimentConnector",
+    "FileWatcherConnector",
+    "NewsArticle",
+    "MarketPrice",
+    "SentimentScore",
+    "FileChange",
+    "fetch_news",
+    "fetch_market",
+    "fetch_sentiment",
+    "watch_files",
+    
+    # 100% LOCAL Data feeds (no API keys)
+    "LocalNewsConnector",
+    "LocalMarketConnector",
+    "LocalSentimentConnector",
+    "LocalDataFeedManager",
+    "fetch_local_news",
+    "fetch_local_market",
+    "fetch_local_sentiment",
+    "watch_local_files",
+    
+    # Memory
+    "ScalesMemory",
+    "Session",
+    "MemoryAgent",
+    "Prediction",
+    "AccuracyMetrics",
+    "ModelAdjustment",
+    "init_memory",
+    
+    # Visualization
+    "ScalesVisualizer",
+    "TerminalCharts",
+    "PlotextCharts",
+    "MatplotlibCharts",
+    "HTMLReportGenerator",
+    "HTMLReportConfig",
+    "quick_visualize",
+    "print_confidence_chart",
+    "print_sentiment_timeline",
+    "print_agent_ranking",
+    
+    # Advanced analytics
+    "MonteCarloSimulator",
+    "SensitivityAnalyzer",
+    "ScenarioComparator",
+    "Backtester",
+    "AdvancedSimulationSuite",
+    "MonteCarloResult",
+    "SensitivityResult",
+    "ScenarioComparison",
+    "BacktestResult",
+    "quick_monte_carlo",
+    "quick_sensitivity",
+    "quick_compare",
+    "quick_backtest",
+    
+    # Prediction formatting
+    "PredictionFormatter",
+    "SimulationReporter",
+    "SimpleOutput",
+    "print_report",
+    "export_json",
+    
+    # 🐟 MiroFish - Knowledge Graph
+    "KnowledgeGraph",
+    "Entity",
+    "Relationship",
+    "GraphBuilder",
+    "EntityExtractor",
+    "create_market_knowledge_graph",
+    
+    # 🐟 MiroFish - Graph Memory
+    "GraphMemory",
+    "AgentKnowledge",
+    "KnowledgeQuery",
+    "GraphMemoryMixin",
+    
+    # 🐟 MiroFish - Persona Factory
+    "PaulPersonaFactory",
+    "PaulPersona",
+    "TradingStyle",
+    "RiskProfile",
+    "SpecialtyDomain",
+    "generate_swimming_pauls_pool",
+    "PAUL_ARCHETYPES",
+    
+    # 🐟 MiroFish - Integration
+    "MiroFishSwimmingPauls",
+    "MiroFishConfig",
+    "MiroFishAgent",
+    "quick_start",
+]
