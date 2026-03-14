@@ -1,34 +1,9 @@
-# Swimming Pauls - 100% Local Dependencies
-# Python 3.8+ required
+# Swimming Pauls - Local Agent Connector
+# Python dependencies
 
-# Core dependencies (all lightweight, no API keys)
-httpx>=0.25.0          # HTTP client for web scraping and RSS feeds
-networkx>=3.0          # Graph analysis for knowledge graphs
+# WebSocket server
+websockets>=11.0.0
 
-# Optional: For enhanced functionality (but NOT required)
-# beautifulsoup4>=4.12.0  # Better web scraping (falls back to regex without)
-# lxml>=4.9.0            # Faster XML parsing for RSS (stdlib fallback)
-# PyPDF2>=3.0.0          # PDF text extraction (optional)
-
-# Optional: Zep Cloud memory (truly optional, only if you want cloud sync)
-# zep-cloud>=1.0.0       # Cloud memory - system works 100% without this
-
-# Development dependencies (optional)
-# pytest>=7.0.0
-# black>=22.0.0
-# mypy>=1.0.0
-
-# ============================================
-# NO API KEYS REQUIRED!
-# ============================================
-# All functionality works offline using:
-# - Local SQLite database for memory
-# - Local files for data storage
-# - RSS feeds for news (no API key)
-# - Web scraping with httpx (no API key)
-# - Rule-based sentiment analysis
-# - Demo/simulated market data
-
-# To run completely offline:
-#   python -c "from swimming_pauls import MiroFishSwimmingPauls; \
-#              m = MiroFishSwimmingPauls.quick_start(paul_count=40)"
+# QR Code generation
+qrcode>=7.4.0
+pillow>=10.0.0

@@ -1,0 +1,9 @@
+<!--
+  Placeholder for Swimming Paul audio track
+  Replace this with the actual swimming-paul.mp3 file
+  
+  The audio file should be placed in the public folder as:
+  /Users/brain/.openclaw/workspace/swimming_pauls/ui/public/swimming-paul.mp3
+  
+  This is used by the AudioPlayer component for the immersive experience.
+-->
