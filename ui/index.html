@@ -3,120 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚡ SWIMMING PAULS // THE DJ ⚡</title>
+    <title>🦷 SWIMMING PAULS // PARALLEL WORLD SIMULATION</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --neon-pink: #ff00ff;
-            --neon-cyan: #00ffff;
-            --neon-purple: #bf00ff;
-            --dark-bg: #0a0a0f;
-        }
-        
-        * {
-            font-family: 'VT323', monospace;
-            letter-spacing: 0.5px;
-        }
+        * { font-family: 'Inter', sans-serif; }
         
         body {
-            background: var(--dark-bg);
-            color: var(--neon-cyan);
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e2e8f0;
             min-height: 100vh;
-            overflow-x: hidden;
-            background-image: 
-                linear-gradient(rgba(0,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,255,255,0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
         }
         
-        @keyframes scanline {
-            0% { transform: translateY(-100vh); }
-            100% { transform: translateY(100vh); }
-        }
-        
-        .scanline {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: rgba(0,255,255,0.1);
-            animation: scanline 4s linear infinite;
-            z-index: 9999;
-            pointer-events: none;
-        }
-        
-        @keyframes flicker {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.95; }
-        }
-        
-        .flicker {
-            animation: flicker 0.1s infinite;
-        }
-        
-        @keyframes glow {
-            0%, 100% { text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan); }
-            50% { text-shadow: 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan); }
-        }
-        
-        .neon-text {
-            animation: glow 2s ease-in-out infinite;
+        .glass-panel {
+            background: rgba(30, 30, 50, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .neon-border {
-            border: 2px solid var(--neon-cyan);
-            box-shadow: 0 0 10px var(--neon-cyan), inset 0 0 10px rgba(0,255,255,0.1);
+            border: 1px solid rgba(99, 102, 241, 0.5);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
         }
         
-        .neon-border-pink {
-            border: 2px solid var(--neon-pink);
-            box-shadow: 0 0 10px var(--neon-pink), inset 0 0 10px rgba(255,0,255,0.1);
+        .agent-node {
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
         
-        .retro-btn {
-            background: transparent;
-            border: 2px solid var(--neon-cyan);
-            color: var(--neon-cyan);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: all 0.3s;
-            box-shadow: 0 0 10px rgba(0,255,255,0.3);
+        .agent-node:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
         }
         
-        .retro-btn:hover {
-            background: var(--neon-cyan);
-            color: var(--dark-bg);
-            box-shadow: 0 0 20px var(--neon-cyan);
+        .pulse-ring {
+            animation: pulse-ring 2s ease-out infinite;
         }
         
-        .retro-btn-pink {
-            border-color: var(--neon-pink);
-            color: var(--neon-pink);
-            box-shadow: 0 0 10px rgba(255,0,255,0.3);
+        @keyframes pulse-ring {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
         }
         
-        .retro-btn-pink:hover {
-            background: var(--neon-pink);
-            color: var(--dark-bg);
-            box-shadow: 0 0 20px var(--neon-pink);
-        }
-        
-        .terminal-window {
-            background: rgba(0,0,0,0.8);
-            border: 2px solid var(--neon-cyan);
-            box-shadow: 0 0 20px rgba(0,255,255,0.2);
-        }
-        
-        .terminal-header {
-            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
-            color: var(--dark-bg);
-            padding: 4px 10px;
-            font-weight: bold;
-        }
-        
-        .blink {
+        .typing-cursor::after {
+            content: '|';
             animation: blink 1s step-end infinite;
         }
         
@@ -125,268 +56,468 @@
             50% { opacity: 0; }
         }
         
-        .typewriter {
-            overflow: hidden;
-            white-space: nowrap;
-            animation: typing 3s steps(40, end);
+        .progress-bar {
+            background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+            background-size: 200% 100%;
+            animation: gradient-shift 2s ease infinite;
         }
         
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 100% }
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
         }
         
-        .waveform {
-            display: flex;
-            align-items: center;
+        .chat-bubble {
+            position: relative;
+            max-width: 80%;
+        }
+        
+        .chat-bubble::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 10px;
+            border: 10px solid transparent;
+            border-right-color: rgba(99, 102, 241, 0.2);
+        }
+        
+        .world-grid {
+            display: grid;
+            grid-template-columns: repeat(20, 1fr);
             gap: 2px;
-            height: 40px;
         }
         
-        .waveform-bar {
-            width: 4px;
-            background: var(--neon-cyan);
-            animation: wave 1s ease-in-out infinite;
+        .grid-cell {
+            aspect-ratio: 1;
+            background: rgba(99, 102, 241, 0.1);
+            transition: all 0.3s;
         }
         
-        @keyframes wave {
-            0%, 100% { height: 10px; }
-            50% { height: 40px; }
+        .grid-cell.active {
+            background: rgba(99, 102, 241, 0.6);
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
         }
         
-        ::-webkit-scrollbar {
-            width: 10px;
+        .report-section {
+            border-left: 3px solid #6366f1;
+            padding-left: 1rem;
+            margin: 1rem 0;
         }
         
-        ::-webkit-scrollbar-track {
-            background: var(--dark-bg);
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: var(--neon-cyan);
-            border-radius: 0;
-        }
-        
-        ::selection {
-            background: var(--neon-pink);
-            color: white;
+        .stat-card {
+            background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1));
+            border: 1px solid rgba(99,102,241,0.3);
         }
     </style>
 </head>
-<body>
-    <div class="scanline"></div>
-
+<body class="antialiased">
     <!-- Header -->
-    <header class="p-4 border-b-2 border-cyan-400">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <header class="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
             <div class="flex items-center gap-4">
-                <div class="text-4xl">🦷</div>
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-2xl shadow-lg shadow-indigo-500/30">
+                    🦷
+                </div>
                 <div>
-                    <div class="text-2xl neon-text font-bold">SWIMMING PAULS</div>
-                    <div class="text-sm text-pink-500">⚡ THE DJ // MULTI-AGENT PREDICTION PROTOCOL ⚡</div>
+                    <h1 class="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">SWIMMING PAULS</h1>
+                    <p class="text-xs text-gray-400">Parallel World Simulation Engine</p>
                 </div>
             </div>
             
-            <div class="flex gap-4 text-sm">
-                <div class="text-cyan-400">[MODEL: KIMI-K2.5]</div>
-                <div class="text-pink-400">[STATUS: ONLINE]</div>
+            <div class="flex items-center gap-6">
+                <div class="text-sm text-gray-400">
+                    <span class="text-indigo-400">●</span> Multi-Agent System
+                </div>
+                <button onclick="connectWallet()" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium transition-colors"
+003e
+                    Connect Wallet
+                </button>
             </div>
         </div>
     </header>
 
-    <!-- Main -->
-    <main class="max-w-6xl mx-auto p-4">
-        <!-- Visualizer -->
-        <div class="mb-6 flex justify-center">
-            <div class="waveform">
-                <script>
-                    for(let i=0; i<30; i++) {
-                        document.write(`<div class="waveform-bar" style="animation-delay: ${i*0.05}s; background: ${i%2===0?'#00ffff':'#ff00ff'}"></div>`);
-                    }
-                </script>
-            </div>
-        </div>
-
-        <!-- Terminal Window -->
-        <div class="terminal-window mb-6">
-            <div class="terminal-header flex justify-between items-center">
-                <span>⚡ SWIMMING_PAULS_TERMINAL_v2.0.exe</span>
-                <span class="blink">●</span>
+    <!-- Main Content -->
+    <main class="pt-24 pb-12 px-6 max-w-7xl mx-auto">
+        
+        <!-- Step 1: Seed Material -->
+        <section id="step1" class="mb-8">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-sm font-bold">1</span>
+                <h2 class="text-lg font-semibold">Seed Material Injection</h2>
             </div>
             
-            <div class="p-6">
-                <div class="text-cyan-400 mb-2">> INITIALIZING PAUL POOL...</div>
-                <div class="text-green-400 mb-2">> CONNECTED: Kimi K2.5, Claude 3.5, GPT-4o, Llama 3</div>
-                <div class="text-pink-400 mb-4">> READY TO PREDICT</div>
+            <div class="glass-panel rounded-2xl p-6 neon-border">
+                <p class="text-gray-400 mb-4 text-sm">Upload reports, news articles, or any context. The Pauls will extract entities and build the simulation world.</p>
                 
-                <!-- Input -->
-                <div class="mb-4">
-                    <label class="block text-pink-400 mb-2">> ENTER_QUERY:</label>
-                    <textarea id="query" 
-                        class="w-full bg-black border-2 border-cyan-400 text-cyan-400 p-4 text-lg focus:outline-none focus:border-pink-400 resize-none"
-                        rows="3"
-                        placeholder="Ask the Pauls anything..."
-                    ></textarea>
-                </div>
-
-                <!-- Model Selection -->
-                <div class="mb-4 grid grid-cols-2 md:grid-cols-4 gap-2">
-                    <button onclick="selectModel('kimi')" id="btn-kimi" class="retro-btn py-2 text-sm selected">
-                        [✓] KIMI K2.5
-                    </button>
-                    <button onclick="selectModel('claude')" id="btn-claude" class="retro-btn py-2 text-sm">
-                        [ ] CLAUDE 3.5
-                    </button>
-                    <button onclick="selectModel('gpt')" id="btn-gpt" class="retro-btn py-2 text-sm">
-                        [ ] GPT-4o
-                    </button>
-                    <button onclick="selectModel('llama')" id="btn-llama" class="retro-btn py-2 text-sm"
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="border-2 border-dashed border-gray-700 rounded-xl p-8 text-center hover:border-indigo-500 transition-colors cursor-pointer"
 003e
-                        [ ] LLAMA 3
-                    </button>
-                </div>
-
-                <!-- Scale -->
-                <div class="mb-4 flex gap-4">
-                    <div class="flex-1">
-                        <label class="text-cyan-400">> PAULS: <span id="paulCount">50</span></label>
-                        <input type="range" min="10" max="1000" value="50" 
-                            class="w-full mt-2"
-                            oninput="document.getElementById('paulCount').textContent=this.value"
-                            style="accent-color: #00ffff;"
+                        <div class="text-4xl mb-2">📄</div>
+                        <p class="text-gray-400">Drop PDFs, CSVs, or text files</p>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <input type="text" placeholder="Prediction target (e.g., 'Will Bitcoin reach $100k by 2025?')" 
+                            class="w-full px-4 py-3 rounded-lg bg-black/30 border border-gray-700 text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none"
                         >
+                        
+                        <textarea placeholder="Additional context, news, or background information..." rows="4"
+                            class="w-full px-4 py-3 rounded-lg bg-black/30 border border-gray-700 text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none resize-none"
+                        ></textarea>
+                    </div>
+                </div>
+                
+                <button onclick="buildWorld()" class="mt-6 w-full py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold transition-all"
+003e
+                    🚀 Construct Parallel World
+                </button>
+            </div>
+        </section>
+
+        <!-- Step 2: World Construction -->
+        <section id="step2" class="mb-8 hidden">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-sm font-bold">2</span>
+                <h2 class="text-lg font-semibold">World Construction</h2>
+            </div>
+            
+            <div class="grid lg:grid-cols-3 gap-6">
+                <!-- Agent Network -->
+                <div class="lg:col-span-2 glass-panel rounded-2xl p-6">
+                    <h3 class="text-sm font-medium text-gray-400 mb-4">Agent Social Network</h3>
+                    
+                    <div id="agentNetwork" class="h-80 bg-black/20 rounded-xl relative overflow-hidden">
+                        <!-- D3.js visualization will be injected here -->
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-center">
+                                <div class="inline-block relative">
+                                    <div class="w-20 h-20 rounded-full bg-indigo-500/20 flex items-center justify-center text-3xl">
+                                        🧠
+                                    </div>
+                                    <div class="absolute inset-0 rounded-full border-2 border-indigo-500/50 pulse-ring"></div>
+                                </div>
+                                <p class="mt-4 text-gray-400">Spawning agents...</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Execute -->
-                <button onclick="executeQuery()" class="retro-btn-pink w-full py-4 text-xl font-bold">
-                    ⚡ EXECUTE_QUERY ⚡
-                </button>
+                <!-- Agent List -->
+                <div class="glass-panel rounded-2xl p-6">
+                    <h3 class="text-sm font-medium text-gray-400 mb-4">Spawned Agents (<span id="agentCount">0</span>)</h3>
+                    
+                    <div id="agentList" class="space-y-2 max-h-80 overflow-y-auto">
+                        <!-- Agents will be populated here -->
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <!-- Results Terminal -->
-        <div id="resultsTerminal" class="terminal-window hidden">
-            <div class="terminal-header">
-                <span>⚡ QUERY_RESULTS.log</span>
+            <!-- Progress -->
+            <div class="mt-6 glass-panel rounded-xl p-4">
+                <div class="flex justify-between text-sm mb-2">
+                    <span class="text-gray-400">Construction Progress</span>
+                    <span id="progressText" class="text-indigo-400">0%</span>
+                </div>
+                
+                <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+                    <div id="progressBar" class="h-full progress-bar w-0 transition-all duration-500"></div>
+                </div>
+                
+                <div id="constructionLog" class="mt-3 text-xs text-gray-500 font-mono">
+                    > Initializing world parameters...
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 3: Simulation -->
+        <section id="step3" class="mb-8 hidden">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-sm font-bold">3</span>
+                <h2 class="text-lg font-semibold">Parallel World Simulation</h2>
             </div>
             
-            <div id="resultsContent" class="p-6 font-mono text-sm">
-                <!-- Results injected here -->
-            </div>
-        </div>
+            <div class="grid lg:grid-cols-3 gap-6">
+                <!-- World Grid -->
+                <div class="lg:col-span-2 glass-panel rounded-2xl p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-sm font-medium text-gray-400">Digital Twin Visualization</h3>
+                        <div class="flex gap-2">
+                            <button onclick="pauseSimulation()" class="px-3 py-1 rounded bg-gray-700 text-sm hover:bg-gray-600">⏸ Pause</button>
+                            <button onclick="speedUp()" class="px-3 py-1 rounded bg-indigo-600 text-sm hover:bg-indigo-500">⏩ Speed</button>
+                        </div>
+                    </div>
+                    
+                    <div id="worldGrid" class="world-grid">
+                        <!-- Grid cells -->
+                    </div>
+                </div>
 
-        <!-- Info Panel -->
-        <div class="grid md:grid-cols-2 gap-4">
-            <div class="terminal-window">
-                <div class="terminal-header">SYSTEM_INFO</div>
-                <div class="p-4 text-sm">
-                    <div class="text-cyan-400 mb-1">> MODELS: 4 CONNECTED</div>
-                    <div class="text-green-400 mb-1">> PAULS: 100+ PERSONAS</div>
-                    <div class="text-pink-400 mb-1">> MODE: LOCAL/PRIVATE</div>
-                    <div class="text-yellow-400">> VERSION: 2.0.0</div>
+                <!-- Live Chat -->
+                <div class="glass-panel rounded-2xl p-6 flex flex-col h-96">
+                    <h3 class="text-sm font-medium text-gray-400 mb-4">Agent Interactions</h3>
+                    
+                    <div id="agentChat" class="flex-1 overflow-y-auto space-y-3 text-sm">
+                        <!-- Chat messages -->
+                    </div>
                 </div>
             </div>
 
-            <div class="terminal-window">
-                <div class="terminal-header">ORIGIN_STORY</div>
-                <div class="p-4 text-sm text-cyan-400">
-                    Born on Sunset Blvd in a self-driving car listening to Swimming Paul. When MiroFish is too hard, ask Paul and his multiples.
+            <div class="mt-6 flex justify-center">
+                <button onclick="runSimulation()" id="runSimBtn" class="px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold"
+003e
+                    ▶ Run 100 Rounds of Simulation
+                </button>
+            </div>
+        </section>
+
+        <!-- Step 4: Prediction Report -->
+        <section id="step4" class="hidden">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center text-sm font-bold">4</span>
+                <h2 class="text-lg font-semibold">Prediction Report</h2>
+            </div>
+            
+            <div class="glass-panel rounded-2xl p-8">
+                <div class="text-center mb-8">
+                    <div class="inline-block px-6 py-3 rounded-full bg-green-500/20 border border-green-500/50">
+                        <span class="text-green-400 font-bold text-xl">✓ SIMULATION COMPLETE</span>
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="grid md:grid-cols-4 gap-4 mb-8">
+                    <div class="stat-card rounded-xl p-4 text-center">
+                        <div class="text-2xl font-bold text-indigo-400">78%</div>
+                        <div class="text-xs text-gray-400">Confidence</div>
+                    </div>
+                    
+                    <div class="stat-card rounded-xl p-4 text-center">
+                        <div class="text-2xl font-bold text-purple-400">156</div>
+                        <div class="text-xs text-gray-400">Rounds Simulated</div>
+                    </div>
+                    
+                    <div class="stat-card rounded-xl p-4 text-center">
+                        <div class="text-2xl font-bold text-pink-400">2,847</div>
+                        <div class="text-xs text-gray-400">Agent Interactions</div>
+                    </div>
+                    
+                    <div class="stat-card rounded-xl p-4 text-center">
+                        <div class="text-2xl font-bold text-cyan-400">BULLISH</div>
+                        <div class="text-xs text-gray-400">Consensus</div>
+                    </div>
+                </div>
+
+                <!-- Report Content -->
+                <div class="space-y-6">
+                    <div class="report-section">
+                        <h3 class="font-semibold text-indigo-400 mb-2">Executive Summary</h3>
+                        <p class="text-gray-300 leading-relaxed">
+                            After 156 rounds of parallel world simulation involving 100+ diverse Paul agents, 
+                            the consensus indicates a <strong class="text-green-400">78% probability</strong> of the predicted outcome. 
+                            The digital twin revealed emergent behaviors not captured in linear analysis.
+                        </p>
+                    </div>
+
+                    <div class="report-section">
+                        <h3 class="font-semibold text-indigo-400 mb-2">Key Agent Perspectives</h3>
+                        
+                        <div class="space-y-3 mt-4">
+                            <div class="flex gap-3 p-3 rounded-lg bg-black/20">
+                                <span class="text-2xl">👨‍🏫</span>
+                                <div>
+                                    <div class="font-medium">Professor Paul</div>
+                                    <div class="text-sm text-gray-400">"Historical precedents show similar patterns in 73% of analogous scenarios. The trajectory aligns with established theoretical frameworks."</div>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-3 p-3 rounded-lg bg-black/20">
+                                <span class="text-2xl">⚖️</span>
+                                <div>
+                                    <div class="font-medium">Lawyer Paul</div>
+                                    <div class="text-sm text-gray-400">"Regulatory landscape appears favorable. Risk mitigation strategies identified through 40+ scenario variants."</div>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-3 p-3 rounded-lg bg-black/20">
+                                <span class="text-2xl">🤨</span>
+                                <div>
+                                    <div class="font-medium">Skeptic Paul</div>
+                                    <div class="text-sm text-gray-400">"While consensus is bullish, the tail risks are significant. Black swan events could reverse the trajectory entirely."</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="report-section">
+                        <h3 class="font-semibold text-indigo-400 mb-2">Emergent Behaviors</h3>
+                        <p class="text-gray-300 leading-relaxed">
+                            The simulation revealed unexpected group dynamics. At round 73, a cascade effect emerged 
+                            when early-adopter agents influenced the broader network. This "wisdom of crowds" phenomenon 
+                            amplified the signal beyond individual predictions.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex gap-4">
+                    <button class="flex-1 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium transition-colors"
+003e
+                        📥 Download Full Report
+                    </button>
+                    
+                    <button class="flex-1 py-3 rounded-xl border border-indigo-500 hover:bg-indigo-500/10 text-indigo-400 font-medium transition-colors"
+003e
+                        🔄 Run New Simulation
+                    </button>
                 </div>
             </div>
-        </div>
+        </section>
     </main>
 
-    <footer class="mt-12 p-4 border-t-2 border-cyan-400 text-center text-sm">
-        <div class="text-cyan-400">⚡ SWIMMING PAULS // THE DJ ⚡</div>
-        <div class="text-pink-400 mt-1">Built by HOWARD | 100% Local | No Cloud</div>
-    </footer>
-
     <script>
-        let selectedModel = 'kimi';
+        // Initialize world grid
+        const grid = document.getElementById('worldGrid');
+        for (let i = 0; i < 400; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'grid-cell';
+            cell.id = `cell-${i}`;
+            grid.appendChild(cell);
+        }
 
-        function selectModel(model) {
-            selectedModel = model;
-            ['kimi','claude','gpt','llama'].forEach(m => {
-                document.getElementById(`btn-${m}`).innerHTML = 
-                    m === model ? '[✓] ' + m.toUpperCase() : '[ ] ' + m.toUpperCase();
+        function buildWorld() {
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+            
+            // Simulate construction progress
+            let progress = 0;
+            const log = document.getElementById('constructionLog');
+            const logs = [
+                'Extracting entities from seed material...',
+                'Building knowledge graph...',
+                'Generating agent personas...',
+                'Injecting memory vectors...',
+                'Configuring simulation parameters...',
+                'Spawning agent network...',
+                'World construction complete!'
+            ];
+            
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        document.getElementById('step2').classList.add('hidden');
+                        document.getElementById('step3').classList.remove('hidden');
+                        startAgentSpawning();
+                    }, 500);
+                }
+                
+                document.getElementById('progressBar').style.width = progress + '%';
+                document.getElementById('progressText').textContent = Math.floor(progress) + '%';
+                
+                const logIndex = Math.floor((progress / 100) * logs.length);
+                if (logs[logIndex]) {
+                    log.innerHTML += '<br>> ' + logs[logIndex];
+                }
+            }, 300);
+        }
+
+        function startAgentSpawning() {
+            const agents = [
+                { name: 'Professor Paul', emoji: '👨‍🏫', role: 'Academic', bias: 'analytical' },
+                { name: 'Lawyer Paul', emoji: '⚖️', role: 'Legal', bias: 'cautious' },
+                { name: 'Chef Paul', emoji: '👩‍🍳', role: 'Practical', bias: 'intuitive' },
+                { name: 'Skeptic Paul', emoji: '🤨', role: 'Contrarian', bias: 'bearish' },
+                { name: 'Visionary Paul', emoji: '🔮', role: 'Futurologist', bias: 'bullish' },
+                { name: 'Hedgie Paul', emoji: '🛡️', role: 'Risk Manager', bias: 'defensive' },
+                { name: 'Entrepreneur Paul', emoji: '🚀', role: 'Founder', bias: 'aggressive' },
+                { name: 'Doctor Paul', emoji: '🏥', role: 'Medical', bias: 'evidence-based' },
+            ];
+            
+            const list = document.getElementById('agentList');
+            let count = 0;
+            
+            agents.forEach((agent, i) => {
+                setTimeout(() => {
+                    const div = document.createElement('div');
+                    div.className = 'flex items-center gap-3 p-3 rounded-lg bg-black/20 agent-node';
+                    div.innerHTML = `
+                        <span class="text-2xl">${agent.emoji}</span>
+                        <div class="flex-1">
+                            <div class="font-medium">${agent.name}</div>
+                            <div class="text-xs text-gray-500">${agent.role} • ${agent.bias}</div>
+                        </div>
+                        <span class="w-2 h-2 rounded-full bg-green-400"></span>
+                    `;
+                    list.appendChild(div);
+                    count++;
+                    document.getElementById('agentCount').textContent = count;
+                    
+                    // Activate grid cell
+                    const cell = document.getElementById(`cell-${Math.floor(Math.random() * 400)}`);
+                    if (cell) cell.classList.add('active');
+                }, i * 200);
             });
         }
 
-        function executeQuery() {
-            const query = document.getElementById('query').value;
-            if (!query.trim()) return;
-
-            const terminal = document.getElementById('resultsTerminal');
-            const content = document.getElementById('resultsContent');
+        function runSimulation() {
+            document.getElementById('runSimBtn').textContent = '⏳ Simulating...';
+            document.getElementById('runSimBtn').disabled = true;
             
-            terminal.classList.remove('hidden');
+            const chat = document.getElementById('agentChat');
+            const messages = [
+                { agent: 'Professor Paul', msg: 'Initial analysis complete. Pattern recognition algorithms engaged.' },
+                { agent: 'Skeptic Paul', msg: 'Ive seen this before. Three times. Let me check the tail risks...' },
+                { agent: 'Visionary Paul', msg: 'The paradigm is shifting. Early signals detected in round 12.' },
+                { agent: 'Chef Paul', msg: 'Ingredients are mixing well. The temperature is rising.' },
+                { agent: 'Hedgie Paul', msg: 'Position sizing critical. Asymmetric payoff detected.' },
+            ];
             
-            // Terminal-style loading
-            content.innerHTML = `
-                <div class="text-cyan-400">> PROCESSING QUERY...${'<span class="blink">_</span>'}</div>
-                <div class="text-green-400 mt-2">> SPAWNING ${document.getElementById('paulCount').textContent} PAULS... </div>
-                <div class="text-pink-400 mt-2">> CONSULTING ${selectedModel.toUpperCase()}... </div>
-            `;
+            let round = 0;
+            const interval = setInterval(() => {
+                round++;
+                
+                // Add chat message
+                if (messages[round - 1]) {
+                    const m = messages[round - 1];
+                    const div = document.createElement('div');
+                    div.className = 'chat-bubble bg-indigo-500/10 p-3 rounded-lg';
+                    div.innerHTML = `
+                        <div class="text-xs text-indigo-400 mb-1">${m.agent}</div>
+                        <div class="text-gray-300">${m.msg}</div>
+                    `;
+                    chat.appendChild(div);
+                    chat.scrollTop = chat.scrollHeight;
+                }
+                
+                // Update random grid cells
+                for (let i = 0; i < 5; i++) {
+                    const cell = document.getElementById(`cell-${Math.floor(Math.random() * 400)}`);
+                    if (cell) {
+                        cell.classList.toggle('active');
+                    }
+                }
+                
+                if (round >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        document.getElementById('step3').classList.add('hidden');
+                        document.getElementById('step4').classList.remove('hidden');
+                    }, 1000);
+                }
+            }, 100);
+        }
 
-            // Simulate real AI response
-            setTimeout(() => {
-                const responses = {
-                    'kimi': `
-                        <div class="text-green-400 mb-2">> KIMI K2.5 ANALYSIS COMPLETE</div>
-                        <div class="text-cyan-400 mb-4">CONSENSUS: BULLISH (78% confidence)</div>
-                        
-                        <div class="border border-cyan-400 p-3 mb-3">
-                            <div class="text-pink-400 mb-1">[ANALYST_PAUL]</div>
-                            <div class="text-white">Pattern recognition algorithms indicate strong upward momentum. Historical data supports 73% probability.</div>
-                        </div>
+        function connectWallet() {
+            alert('Wallet connected! (Demo)');
+        }
 
-                        <div class="border border-pink-400 p-3 mb-3">
-                            <div class="text-pink-400 mb-1">[SKEPTIC_PAUL]</div>
-                            <div class="text-white">Contrarian view: Risk factors at 34%. Recommend hedging. But data is compelling.</div>
-                        </div>
+        function pauseSimulation() {
+            alert('Simulation paused');
+        }
 
-                        <div class="border border-green-400 p-3">
-                            <div class="text-pink-400 mb-1">[VISIONARY_PAUL]</div>
-                            <div class="text-white">Paradigm shift detected. Early adoption window closing. Strike now or miss forever.</div>
-                        </div>
-                    `,
-                    'claude': `
-                        <div class="text-purple-400 mb-2">> CLAUDE 3.5 ANALYSIS COMPLETE</div>
-                        <div class="text-cyan-400 mb-4">CONSENSUS: MODERATE BULLISH (65% confidence)</div>
-                        
-                        <div class="border border-cyan-400 p-3 mb-3">
-                            <div class="text-pink-400 mb-1">[PHILOSOPHER_PAUL]</div>
-                            <div class="text-white">Examining first principles... The underlying mechanism appears sound. Execution risk remains.</div>
-                        </div>
-
-                        <div class="border border-pink-400 p-3">
-                            <div class="text-pink-400 mb-1">[HEDGIE_PAUL]</div>
-                            <div class="text-white">Asymmetric risk profile. Downside capped at -25%, upside 200%. R/R ratio favorable.</div>
-                        </div>
-                    `,
-                    'gpt': `
-                        <div class="text-blue-400 mb-2">> GPT-4o ANALYSIS COMPLETE</div>
-                        <div class="text-cyan-400 mb-4">CONSENSUS: STRONG BULLISH (82% confidence)</div>
-                        
-                        <div class="border border-cyan-400 p-3">
-                            <div class="text-pink-400 mb-1">[PROFESSOR_PAUL]</div>
-                            <div class="text-white">Comprehensive analysis indicates favorable conditions. Market indicators align with historical success patterns.</div>
-                        </div>
-                    `,
-                    'llama': `
-                        <div class="text-orange-400 mb-2">> LLAMA 3 ANALYSIS COMPLETE</div>
-                        <div class="text-cyan-400 mb-4">CONSENSUS: NEUTRAL-BULLISH (58% confidence)</div>
-                        
-                        <div class="border border-cyan-400 p-3">
-                            <div class="text-pink-400 mb-1">[ENGINEER_PAUL]</div>
-                            <div class="text-white">Technical architecture sound. Scalability concerns noted. Worth pursuing with caveats.</div>
-                        </div>
-                    `
-                };
-
-                content.innerHTML = responses[selectedModel] || responses['kimi'];
-            }, 2000);
+        function speedUp() {
+            alert('Speed increased 2x');
         }
     </script>
 </body>
