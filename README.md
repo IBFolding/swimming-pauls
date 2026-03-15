@@ -6,18 +6,19 @@
 
 ![Swimming Pauls](ui/paul.jpg)
 
-**Swimming Pauls** is a **multi-agent prediction pool** that simulates diverse personas debating and predicting outcomes. Born on Sunset Boulevard in a self-driving car while listening to Swimming Paul and texting OpenClaw.
+**Swimming Pauls** is a **multi-agent prediction pool** that simulates hundreds or thousands of AI personas debating and predicting outcomes. Born on Sunset Boulevard in a self-driving car while listening to Swimming Paul and texting OpenClaw.
 
-Ask a question. The Pauls argue about it. They debate, deliberate, and reach consensus.
+Ask a question. 100, 1000, or even 700,000+ Pauls argue about it. They debate, deliberate, and reach consensus.
 
 ---
 
 ## 🎯 Features
 
-- 🎭 **6 Core Personas** - Professor, Trader, Skeptic, Visionary, Whale, Degen
+- 🎭 **Hundreds of Personas** - From 6 archetypes to 700,000+ unique perspectives
 - 🔮 **Monte Carlo Simulation** - 1000-run probability distributions
 - 📊 **Sensitivity Analysis** - Which variables actually matter
 - 🧠 **Knowledge Graph** - Semantic entity extraction and relationships
+- 🔲 **Paul Matrix** - Visual consensus map of all agents
 - 📉 **Backtesting** - Historical accuracy validation
 - 📎 **Context Upload** - Images, PDFs, links for analysis
 - 🎨 **Custom Pauls** - Create your own personas
@@ -49,6 +50,51 @@ python local_agent.py
 
 # Open UI and click "🔌 Connect Local"
 ```
+
+### Option 3: OpenClaw Skill (One Command)
+
+If you have OpenClaw installed:
+
+```bash
+# Install the skill
+curl -sSL https://raw.githubusercontent.com/IBFolding/swimming-pauls/main/install-skill.sh | bash
+
+# Run it
+openclaw run swimming-pauls
+```
+
+Or manually:
+```bash
+# Copy skill to your OpenClaw skills folder
+mkdir -p ~/.openclaw/workspace/skills/swimming-pauls
+cp swimming-pauls/openclaw-skill/* ~/.openclaw/workspace/skills/swimming-pauls/
+
+# Run it
+openclaw run swimming-pauls
+```
+
+---
+
+## 🐟 Meet the Pauls
+
+Not just 6 Pauls. **Hundreds. Thousands. Up to 700,000+.** Each with unique personality and perspective.
+
+### The 6 Archetypes (Examples of Many)
+
+| Paul | Emoji | Style | Strength |
+|------|-------|-------|----------|
+| **Professor Paul** | 👨‍🏫 | Academic, data-driven | Pattern recognition, regression analysis |
+| **Trader Paul** | 📈 | Market-focused, reactive | Order flow, timing, risk/reward |
+| **Skeptic Paul** | 🤨 | Contrarian, cautious | Blindspot detection, tail risk analysis |
+| **Visionary Paul** | 🔮 | Long-term, optimistic | Future casting, paradigm shifts |
+| **Whale Paul** | 🐋 | Institutional, strategic | Liquidity analysis, smart money flows |
+| **Degen Paul** | 🎰 | Chaotic, YOLO energy | Market sentiment, meme momentum |
+
+### Plus 100+ More Professions
+
+Chef Paul 👨‍🍳, Lawyer Paul ⚖️, Doctor Paul 🏥, Engineer Paul 🔧, Artist Paul 🎨, Musician Paul 🎵, Writer Paul ✍️, Athlete Paul 🏃, Teacher Paul 📚, Nurse Paul 👩‍⚕️, Pilot Paul ✈️, Scientist Paul 🔬, Farmer Paul 🌾, Carpenter Paul 🔨, and many more...
+
+**Scale:** 10 → 1,000,000+ Pauls. Your hardware is the limit.
 
 ---
 
@@ -107,6 +153,38 @@ Historical performance metrics:
 - Average return
 - Sharpe ratio
 - Max drawdown
+
+---
+
+## 🚀 Scale: Why Hundreds of Pauls?
+
+**Traditional Prediction:** 1 expert opinion  
+**Polling:** 10-100 human votes  
+**Swimming Pauls:** 100 - 700,000+ AI agents
+
+### Why So Many?
+
+- **Wisdom of Crowds** - More perspectives = better consensus
+- **Diverse Expertise** - Chef sees different patterns than Lawyer
+- **Bias Cancellation** - Optimists and pessimists balance out
+- **Tail Risk Detection** - Skeptics catch what others miss
+- **Confidence Calibration** - Agreement across 1000s = high confidence
+
+### Each Paul Is Unique
+
+Every agent has:
+- **Unique personality** - Analytical, emotional, contrarian, etc.
+- **Individual memory** - Remembers past predictions
+- **Specific expertise** - Professional background affects analysis
+- **Real reasoning** - LLM-powered (not templates) in full mode
+
+### Scale Options
+
+| Mode | Pauls | Speed | Setup |
+|------|-------|-------|-------|
+| Demo | 6-100 | Instant | None |
+| Standard | 100-1000 | Fast | Python |
+| LLM Mode | 1000-700,000+ | Medium | Ollama/LM Studio |
 
 ---
 
