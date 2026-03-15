@@ -3,393 +3,390 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swimming Pauls 🦷 | Multi-Agent Prediction Pool</title>
+    <title>⚡ SWIMMING PAULS // THE DJ ⚡</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-        
-        * { font-family: 'Space Grotesk', sans-serif; }
-        
-        @keyframes swim {
-            0% { transform: translateX(-100px) translateY(0px) rotate(0deg); }
-            25% { transform: translateX(25vw) translateY(-30px) rotate(5deg); }
-            50% { transform: translateX(50vw) translateY(20px) rotate(-5deg); }
-            75% { transform: translateX(75vw) translateY(-20px) rotate(3deg); }
-            100% { transform: translateX(calc(100vw + 100px)) translateY(0px) rotate(0deg); }
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
-        }
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(236, 72, 153, 0.4); }
-            50% { box-shadow: 0 0 40px rgba(236, 72, 153, 0.8); }
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-cyan: #00ffff;
+            --neon-purple: #bf00ff;
+            --dark-bg: #0a0a0f;
         }
         
-        .swimming-paul {
-            position: fixed;
-            font-size: 2rem;
-            animation: swim 20s linear infinite;
-            opacity: 0.3;
-            z-index: 0;
-            pointer-events: none;
+        * {
+            font-family: 'VT323', monospace;
+            letter-spacing: 0.5px;
         }
         
         body {
-            background: linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 50%, #1a0b2e 100%);
+            background: var(--dark-bg);
+            color: var(--neon-cyan);
             min-height: 100vh;
-            color: white;
             overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(0,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
         }
         
-        .glass {
-            background: rgba(255,255,255,0.03);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.3);
+        @keyframes scanline {
+            0% { transform: translateY(-100vh); }
+            100% { transform: translateY(100vh); }
         }
         
-        .gradient-text {
-            background: linear-gradient(135deg, #f472b6, #a855f7, #22d3ee);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: rgba(0,255,255,0.1);
+            animation: scanline 4s linear infinite;
+            z-index: 9999;
+            pointer-events: none;
         }
         
-        .btn-primary {
-            background: linear-gradient(135deg, #ec4899, #8b5cf6);
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(236, 72, 153, 0.4);
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.95; }
         }
         
-        .glitch-text:hover {
-            animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+        .flicker {
+            animation: flicker 0.1s infinite;
         }
         
-        input[type=range] {
-            -webkit-appearance: none;
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan); }
+            50% { text-shadow: 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan); }
+        }
+        
+        .neon-text {
+            animation: glow 2s ease-in-out infinite;
+        }
+        
+        .neon-border {
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 10px var(--neon-cyan), inset 0 0 10px rgba(0,255,255,0.1);
+        }
+        
+        .neon-border-pink {
+            border: 2px solid var(--neon-pink);
+            box-shadow: 0 0 10px var(--neon-pink), inset 0 0 10px rgba(255,0,255,0.1);
+        }
+        
+        .retro-btn {
             background: transparent;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 24px;
-            width: 24px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ec4899, #8b5cf6);
-            cursor: pointer;
-            margin-top: -10px;
-        }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 4px;
-            cursor: pointer;
-            background: rgba(255,255,255,0.2);
-            border-radius: 2px;
+            border: 2px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px rgba(0,255,255,0.3);
         }
         
-        .hidden-section { display: none; }
-        .visible-section { display: block; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .retro-btn:hover {
+            background: var(--neon-cyan);
+            color: var(--dark-bg);
+            box-shadow: 0 0 20px var(--neon-cyan);
         }
         
-        .paul-card {
-            background: linear-gradient(135deg, rgba(236,72,153,0.1), rgba(139,92,246,0.1));
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: all 0.3s ease;
+        .retro-btn-pink {
+            border-color: var(--neon-pink);
+            color: var(--neon-pink);
+            box-shadow: 0 0 10px rgba(255,0,255,0.3);
         }
-        .paul-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(236,72,153,0.5);
-            box-shadow: 0 10px 40px rgba(236,72,153,0.2);
+        
+        .retro-btn-pink:hover {
+            background: var(--neon-pink);
+            color: var(--dark-bg);
+            box-shadow: 0 0 20px var(--neon-pink);
+        }
+        
+        .terminal-window {
+            background: rgba(0,0,0,0.8);
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 20px rgba(0,255,255,0.2);
+        }
+        
+        .terminal-header {
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+            color: var(--dark-bg);
+            padding: 4px 10px;
+            font-weight: bold;
+        }
+        
+        .blink {
+            animation: blink 1s step-end infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typing 3s steps(40, end);
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        .waveform {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            height: 40px;
+        }
+        
+        .waveform-bar {
+            width: 4px;
+            background: var(--neon-cyan);
+            animation: wave 1s ease-in-out infinite;
+        }
+        
+        @keyframes wave {
+            0%, 100% { height: 10px; }
+            50% { height: 40px; }
+        }
+        
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--dark-bg);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--neon-cyan);
+            border-radius: 0;
+        }
+        
+        ::selection {
+            background: var(--neon-pink);
+            color: white;
         }
     </style>
 </head>
-<body class="relative">
-    <!-- Background Music (autoplay) -->
-    <iframe id="bgMusic" 
-        width="0" height="0" 
-        src="https://www.youtube.com/embed/videoseries?list=PLSwimmingPaul&autoplay=1&mute=0&loop=1" 
-        frameborder="0" 
-        allow="autoplay; encrypted-media"
-    ></iframe>
+<body>
+    <div class="scanline"></div>
 
-    <!-- Swimming Pauls -->
-    <div class="swimming-paul" style="top: 5%; animation-delay: 0s;">👨‍🏫</div>
-    <div class="swimming-paul" style="top: 15%; animation-delay: 2s;">👩‍🔧</div>
-    <div class="swimming-paul" style="top: 25%; animation-delay: 4s;">👨‍⚖️</div>
-    <div class="swimming-paul" style="top: 35%; animation-delay: 6s;">👩‍⚕️</div>
-    <div class="swimming-paul" style="top: 45%; animation-delay: 8s;">👨‍🍳</div>
-    <div class="swimming-paul" style="top: 55%; animation-delay: 10s;">👩‍🎨</div>
-
-    <!-- Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-3 cursor-pointer" onclick="showSection('landing')">
-                <img src="https://i.imgur.com/your_paul_logo.jpg" 
-                     alt="🦷" 
-                     class="w-10 h-10 rounded-lg object-cover bg-gradient-to-br from-pink-500 to-purple-600"
-                     onerror="this.style.display='none'"
-                >
-                <span class="text-xl font-bold gradient-text glitch-text">Swimming Pauls</span>
-            </div>
-            
+    <!-- Header -->
+    <header class="p-4 border-b-2 border-cyan-400">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-4">
-                <button onclick="showSection('app')" class="px-4 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm">
-                    🎣 Cast
-                </button>
-                <button onclick="connectWallet()" class="btn-primary px-6 py-2 rounded-lg font-semibold text-sm">
-                    👛 Connect
-                </button>
+                <div class="text-4xl">🦷</div>
+                <div>
+                    <div class="text-2xl neon-text font-bold">SWIMMING PAULS</div>
+                    <div class="text-sm text-pink-500">⚡ THE DJ // MULTI-AGENT PREDICTION PROTOCOL ⚡</div>
+                </div>
+            </div>
+            
+            <div class="flex gap-4 text-sm">
+                <div class="text-cyan-400">[MODEL: KIMI-K2.5]</div>
+                <div class="text-pink-400">[STATUS: ONLINE]</div>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <!-- LANDING PAGE -->
-    <section id="landing" class="visible-section pt-24">
-        <div class="max-w-5xl mx-auto px-4 py-16 text-center">
-            <!-- Logo -->
-            <div class="flex justify-center mb-8">
-                <div class="relative w-48 h-48 rounded-3xl overflow-hidden shadow-2xl"
-                     style="box-shadow: 0 0 60px rgba(236,72,153,0.3);">
-                    <img src="https://i.imgur.com/JR7p1qh.jpg" 
-                         alt="PAUL" 
-                         class="w-full h-full object-cover"
-                         onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦷</text></svg>'"
-                    >
-                </div>
-            </div>
-
-            <h1 class="text-5xl md:text-7xl font-black mb-6 gradient-text glitch-text">
-                Swimming Pauls
-            </h1>
-            
-            <p class="text-xl md:text-2xl text-pink-300 mb-4 font-bold">
-                "When MiroFish is too hard, ask Paul. And his multiples."
-            </p>
-            
-            <p class="text-white/60 mb-10 max-w-2xl mx-auto">
-                100+ Pauls from all walks of life. Professors, lawyers, chefs, moms, dads, all swimming toward the truth through disagreement and debate.
-            </p>
-
-            <div class="flex flex-wrap justify-center gap-4 mb-12">
-                <button onclick="showSection('app')" class="btn-primary px-8 py-4 rounded-2xl text-lg font-bold">
-                    🎣 Cast the Pool
-                </button>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                <div class="glass p-6 rounded-2xl text-center">
-                    <div class="text-4xl mb-3">🐟</div>
-                    <div class="font-bold text-pink-400">100+ Pauls</div>
-                    <div class="text-white/50 text-sm">All walks of life</div>
-                </div>
-                <div class="glass p-6 rounded-2xl text-center">
-                    <div class="text-4xl mb-3">🧠</div>
-                    <div class="font-bold text-purple-400">Multi-Agent</div>
-                    <div class="text-white/50 text-sm">Weighted consensus</div>
-                </div>
-                <div class="glass p-6 rounded-2xl text-center">
-                    <div class="text-4xl mb-3">🔒</div>
-                    <div class="font-bold text-cyan-400">100% Local</div>
-                    <div class="text-white/50 text-sm">Your machine only</div>
-                </div>
+    <!-- Main -->
+    <main class="max-w-6xl mx-auto p-4">
+        <!-- Visualizer -->
+        <div class="mb-6 flex justify-center">
+            <div class="waveform">
+                <script>
+                    for(let i=0; i<30; i++) {
+                        document.write(`<div class="waveform-bar" style="animation-delay: ${i*0.05}s; background: ${i%2===0?'#00ffff':'#ff00ff'}"></div>`);
+                    }
+                </script>
             </div>
         </div>
-    </section>
 
-    <!-- APP PAGE -->
-    <section id="app" class="hidden-section pt-24 pb-12">
-        <div class="max-w-5xl mx-auto px-4">
-            <div class="glass rounded-3xl p-6 md:p-10">
-                <h2 class="text-3xl font-bold gradient-text mb-6">🎣 Cast the Pool</h2>
+        <!-- Terminal Window -->
+        <div class="terminal-window mb-6">
+            <div class="terminal-header flex justify-between items-center">
+                <span>⚡ SWIMMING_PAULS_TERMINAL_v2.0.exe</span>
+                <span class="blink">●</span>
+            </div>
+            
+            <div class="p-6">
+                <div class="text-cyan-400 mb-2">> INITIALIZING PAUL POOL...</div>
+                <div class="text-green-400 mb-2">> CONNECTED: Kimi K2.5, Claude 3.5, GPT-4o, Llama 3</div>
+                <div class="text-pink-400 mb-4">> READY TO PREDICT</div>
+                
+                <!-- Input -->
+                <div class="mb-4">
+                    <label class="block text-pink-400 mb-2">> ENTER_QUERY:</label>
+                    <textarea id="query" 
+                        class="w-full bg-black border-2 border-cyan-400 text-cyan-400 p-4 text-lg focus:outline-none focus:border-pink-400 resize-none"
+                        rows="3"
+                        placeholder="Ask the Pauls anything..."
+                    ></textarea>
+                </div>
 
-                <!-- Question -->
-                <div class="mb-8">
-                    <label class="block text-pink-300 mb-3 text-lg font-semibold">What would you like the Pauls to predict?</label>
-                    <textarea id="question" 
-                        class="w-full p-5 rounded-2xl bg-black/40 border border-pink-500/30 text-white placeholder-white/30 focus:border-pink-400 focus:outline-none resize-none"
-                        rows="3" 
-                        placeholder="Ask anything..."></textarea>
+                <!-- Model Selection -->
+                <div class="mb-4 grid grid-cols-2 md:grid-cols-4 gap-2">
+                    <button onclick="selectModel('kimi')" id="btn-kimi" class="retro-btn py-2 text-sm selected">
+                        [✓] KIMI K2.5
+                    </button>
+                    <button onclick="selectModel('claude')" id="btn-claude" class="retro-btn py-2 text-sm">
+                        [ ] CLAUDE 3.5
+                    </button>
+                    <button onclick="selectModel('gpt')" id="btn-gpt" class="retro-btn py-2 text-sm">
+                        [ ] GPT-4o
+                    </button>
+                    <button onclick="selectModel('llama')" id="btn-llama" class="retro-btn py-2 text-sm"
+003e
+                        [ ] LLAMA 3
+                    </button>
                 </div>
 
                 <!-- Scale -->
-                <div class="grid md:grid-cols-2 gap-6 mb-8">
-                    <div class="glass p-5 rounded-2xl">
-                        <label class="block text-pink-300 mb-2">Pauls: <span id="paulCountDisplay" class="text-2xl font-bold">50</span></label>
-                        <input type="range" id="paulCount" min="10" max="100000" value="50" 
-                            class="w-full"
-                            oninput="document.getElementById('paulCountDisplay').textContent=parseInt(this.value).toLocaleString(); updateEstimate();">
-                    </div>
-
-                    <div class="glass p-5 rounded-2xl">
-                        <label class="block text-purple-300 mb-2">Rounds: <span id="roundsDisplay" class="text-2xl font-bold">25</span></label>
-                        <input type="range" id="rounds" min="5" max="100000" value="25" 
-                            class="w-full"
-                            oninput="document.getElementById('roundsDisplay').textContent=parseInt(this.value).toLocaleString(); updateEstimate();"
-003e
+                <div class="mb-4 flex gap-4">
+                    <div class="flex-1">
+                        <label class="text-cyan-400">> PAULS: <span id="paulCount">50</span></label>
+                        <input type="range" min="10" max="1000" value="50" 
+                            class="w-full mt-2"
+                            oninput="document.getElementById('paulCount').textContent=this.value"
+                            style="accent-color: #00ffff;"
+                        >
                     </div>
                 </div>
 
-                <!-- Create Paul -->
-                <div class="glass p-5 rounded-2xl mb-8">
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="font-bold">🎨 Your Paul Pool</span>
-                        <button onclick="toggleCreatePaul()" class="text-pink-400 hover:text-pink-300 text-sm">
-                            + Create Paul
-                        </button>
-                    </div>
-                    
-                    <div id="createPaulForm" class="hidden space-y-4">
-                        <input type="text" id="newPaulName" placeholder="Name" class="w-full p-3 rounded-xl bg-black/40 border border-white/20 text-white">
-                        <input type="text" id="newPaulEmoji" placeholder="Emoji" maxlength="2" class="w-full p-3 rounded-xl bg-black/40 border border-white/20 text-white">
-                        <textarea id="newPaulDesc" placeholder="Who is this Paul? What's their story? What do they bring to the pool?" 
-                            class="w-full p-3 rounded-xl bg-black/40 border border-white/20 text-white resize-none" rows="3"></textarea>
-                        
-                        <button onclick="addPaul()" class="w-full py-3 rounded-xl btn-primary font-bold">Add to Pool</button>
-                    </div>
-                </div>
-
-                <!-- Cast Button -->
-                <button onclick="castPool()" class="w-full py-6 text-2xl font-black uppercase btn-primary rounded-2xl shadow-2xl"
-                >
-                    🐟 Cast the Pool 🐟
+                <!-- Execute -->
+                <button onclick="executeQuery()" class="retro-btn-pink w-full py-4 text-xl font-bold">
+                    ⚡ EXECUTE_QUERY ⚡
                 </button>
-
-                <p class="text-center text-white/40 mt-4 text-sm">Est: <span id="timeEstimate">~3 seconds</span></p>
-            </div>
-
-            <!-- Results -->
-            <div id="results" class="glass rounded-3xl p-6 md:p-10 mt-8 hidden">
-                <div id="resultsContent"></div>
             </div>
         </div>
-    </section>
+
+        <!-- Results Terminal -->
+        <div id="resultsTerminal" class="terminal-window hidden">
+            <div class="terminal-header">
+                <span>⚡ QUERY_RESULTS.log</span>
+            </div>
+            
+            <div id="resultsContent" class="p-6 font-mono text-sm">
+                <!-- Results injected here -->
+            </div>
+        </div>
+
+        <!-- Info Panel -->
+        <div class="grid md:grid-cols-2 gap-4">
+            <div class="terminal-window">
+                <div class="terminal-header">SYSTEM_INFO</div>
+                <div class="p-4 text-sm">
+                    <div class="text-cyan-400 mb-1">> MODELS: 4 CONNECTED</div>
+                    <div class="text-green-400 mb-1">> PAULS: 100+ PERSONAS</div>
+                    <div class="text-pink-400 mb-1">> MODE: LOCAL/PRIVATE</div>
+                    <div class="text-yellow-400">> VERSION: 2.0.0</div>
+                </div>
+            </div>
+
+            <div class="terminal-window">
+                <div class="terminal-header">ORIGIN_STORY</div>
+                <div class="p-4 text-sm text-cyan-400">
+                    Born on Sunset Blvd in a self-driving car listening to Swimming Paul. When MiroFish is too hard, ask Paul and his multiples.
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="mt-12 p-4 border-t-2 border-cyan-400 text-center text-sm">
+        <div class="text-cyan-400">⚡ SWIMMING PAULS // THE DJ ⚡</div>
+        <div class="text-pink-400 mt-1">Built by HOWARD | 100% Local | No Cloud</div>
+    </footer>
 
     <script>
-        function showSection(id) {
-            document.querySelectorAll('section').forEach(s => {
-                s.classList.remove('visible-section');
-                s.classList.add('hidden-section');
+        let selectedModel = 'kimi';
+
+        function selectModel(model) {
+            selectedModel = model;
+            ['kimi','claude','gpt','llama'].forEach(m => {
+                document.getElementById(`btn-${m}`).innerHTML = 
+                    m === model ? '[✓] ' + m.toUpperCase() : '[ ] ' + m.toUpperCase();
             });
-            document.getElementById(id).classList.remove('hidden-section');
-            document.getElementById(id).classList.add('visible-section');
         }
 
-        function toggleCreatePaul() {
-            const form = document.getElementById('createPaulForm');
-            form.classList.toggle('hidden');
-        }
+        function executeQuery() {
+            const query = document.getElementById('query').value;
+            if (!query.trim()) return;
 
-        function addPaul() {
-            const name = document.getElementById('newPaulName').value;
-            const emoji = document.getElementById('newPaulEmoji').value;
-            const desc = document.getElementById('newPaulDesc').value;
+            const terminal = document.getElementById('resultsTerminal');
+            const content = document.getElementById('resultsContent');
             
-            if (name && emoji) {
-                alert(`${emoji} ${name} added!\\n\\n"${desc}"`);
-                toggleCreatePaul();
-            }
-        }
-
-        function connectWallet() {
-            alert('👛 Wallet connected! (Demo)');
-        }
-
-        function updateEstimate() {
-            const p = parseInt(document.getElementById('paulCount').value);
-            const r = parseInt(document.getElementById('rounds').value);
-            const total = p * r;
-            const time = total < 1000 ? '~1s' : total < 10000 ? '~3s' : total < 100000 ? '~10s' : total < 1000000 ? '~1m' : '~10m';
-            document.getElementById('timeEstimate').textContent = time;
-        }
-
-        function castPool() {
-            const q = document.getElementById('question').value;
-            if (!q.trim()) { alert('Ask something!'); return; }
+            terminal.classList.remove('hidden');
             
-            const pauls = parseInt(document.getElementById('paulCount').value);
-            const rounds = parseInt(document.getElementById('rounds').value);
-            
-            document.getElementById('results').classList.remove('hidden');
-            
-            document.getElementById('resultsContent').innerHTML = `
-                <div class="text-center py-12">
-                    <div class="text-5xl mb-4 animate-pulse">🐟💭🌊</div>
-                    <p class="text-xl text-pink-300">The Pauls are swimming...🌊</p>
-                </div>
+            // Terminal-style loading
+            content.innerHTML = `
+                <div class="text-cyan-400">> PROCESSING QUERY...${'<span class="blink">_</span>'}</div>
+                <div class="text-green-400 mt-2">> SPAWNING ${document.getElementById('paulCount').textContent} PAULS... </div>
+                <div class="text-pink-400 mt-2">> CONSULTING ${selectedModel.toUpperCase()}... </div>
             `;
 
-            setTimeout(() => showDetailedResults(pauls, rounds), 2000);
-        }
-
-        function showDetailedResults(pauls, rounds) {
-            const direction = ['BULLISH', 'BEARISH', 'NEUTRAL'][Math.floor(Math.random() * 3)];
-            const confidence = Math.floor(Math.random() * 30) + 55;
-            
-            const colors = { 'BULLISH': 'text-green-400', 'BEARISH': 'text-red-400', 'NEUTRAL': 'text-yellow-400' };
-            
-            const paulResponses = [
-                { name: 'Professor Paul', emoji: '👨‍🏫', bias: 'analytical', confidence: 78, said: 'Historical precedents suggest a 73% probability of success. The data aligns with established patterns in market cyclicality.' },
-                { name: 'Skeptic Paul', emoji: '🤨', bias: 'contrarian', confidence: 62, said: 'Ive seen this movie before. Three times. It doesnt end well. But... the fundamentals are stronger this time.' },
-                { name: 'Visionary Paul', emoji: '🔮', bias: 'optimistic', confidence: 85, said: 'The paradigm is shifting. What seems impossible today becomes inevitable tomorrow. This is the inflection point.' },
-                { name: 'Hedgie Paul', emoji: '🛡️', bias: 'risk-aware', confidence: 45, said: 'The downside case is -40%. Upside is 300%. Risk-reward is asymmetric but position sizing is critical.' },
-                { name: 'Chef Paul', emoji: '👩‍🍳', bias: 'practical', confidence: 71, said: 'The ingredients are all there. Timing is everything. Oven is preheated, but we need to watch it doesnt burn.' },
-                { name: 'Mom Paul', emoji: '👩‍👧', bias: 'protective', confidence: 68, said: 'I worry about you getting hurt, but I also see how much this means to you. Trust your gut, but wear a helmet.' }
-            ];
-
-            let paulCards = paulResponses.map(p => `
-                <div class="paul-card p-4 rounded-xl">
-                    <div class="flex items-center gap-3 mb-3">
-                        <span class="text-2xl">${p.emoji}</span>
-                        <div>
-                            <div class="font-bold">${p.name}</div>
-                            <div class="text-xs text-white/50">${p.bias} • ${p.confidence}% confidence</div>
+            // Simulate real AI response
+            setTimeout(() => {
+                const responses = {
+                    'kimi': `
+                        <div class="text-green-400 mb-2">> KIMI K2.5 ANALYSIS COMPLETE</div>
+                        <div class="text-cyan-400 mb-4">CONSENSUS: BULLISH (78% confidence)</div>
+                        
+                        <div class="border border-cyan-400 p-3 mb-3">
+                            <div class="text-pink-400 mb-1">[ANALYST_PAUL]</div>
+                            <div class="text-white">Pattern recognition algorithms indicate strong upward momentum. Historical data supports 73% probability.</div>
                         </div>
-                    </div>
-                    <p class="text-white/80 text-sm italic">"${p.said}"</p>
-                </div>
-            `).join('');
 
-            document.getElementById('resultsContent').innerHTML = `
-                <div class="text-center mb-8">
-                    <div class="inline-block p-8 rounded-3xl bg-gradient-to-br from-pink-500/20 to-purple-500/20 border border-pink-500/30"
-003e
-                        <div class="text-6xl font-black ${colors[direction]} mb-2">${direction}</div>
-                        <div class="text-3xl font-bold">${confidence}% Confidence</div>
-                        <div class="text-white/50 mt-2">${pauls.toLocaleString()} Pauls • ${rounds.toLocaleString()} Rounds</div>
-                    </div>
-                </div>
+                        <div class="border border-pink-400 p-3 mb-3">
+                            <div class="text-pink-400 mb-1">[SKEPTIC_PAUL]</div>
+                            <div class="text-white">Contrarian view: Risk factors at 34%. Recommend hedging. But data is compelling.</div>
+                        </div>
 
-                <div class="mb-8">
-                    <h3 class="text-xl font-bold text-pink-300 mb-4">🎭 What the Pauls Said</h3>
-                    <div class="grid md:grid-cols-2 gap-4">
-                        ${paulCards}
-                    </div>
-                </div>
+                        <div class="border border-green-400 p-3">
+                            <div class="text-pink-400 mb-1">[VISIONARY_PAUL]</div>
+                            <div class="text-white">Paradigm shift detected. Early adoption window closing. Strike now or miss forever.</div>
+                        </div>
+                    `,
+                    'claude': `
+                        <div class="text-purple-400 mb-2">> CLAUDE 3.5 ANALYSIS COMPLETE</div>
+                        <div class="text-cyan-400 mb-4">CONSENSUS: MODERATE BULLISH (65% confidence)</div>
+                        
+                        <div class="border border-cyan-400 p-3 mb-3">
+                            <div class="text-pink-400 mb-1">[PHILOSOPHER_PAUL]</div>
+                            <div class="text-white">Examining first principles... The underlying mechanism appears sound. Execution risk remains.</div>
+                        </div>
 
-                <div class="glass p-6 rounded-2xl">
-                    <h3 class="font-bold text-cyan-300 mb-3">💡 Consensus Insights</h3>
-                    <ul class="space-y-2 text-white/80 text-sm">
-                        <li>📊 ${pauls.toLocaleString()} diverse perspectives analyzed</li>
-                        <li>🎯 Consensus emerged after ${rounds.toLocaleString()} debate rounds</li>
-                        <li>⚖️ Risk factors weighted by expert Pauls</li>
-                        <li>🔮 Multiple future scenarios considered</li>
-                    </ul>
-                </div>
-            `;
+                        <div class="border border-pink-400 p-3">
+                            <div class="text-pink-400 mb-1">[HEDGIE_PAUL]</div>
+                            <div class="text-white">Asymmetric risk profile. Downside capped at -25%, upside 200%. R/R ratio favorable.</div>
+                        </div>
+                    `,
+                    'gpt': `
+                        <div class="text-blue-400 mb-2">> GPT-4o ANALYSIS COMPLETE</div>
+                        <div class="text-cyan-400 mb-4">CONSENSUS: STRONG BULLISH (82% confidence)</div>
+                        
+                        <div class="border border-cyan-400 p-3">
+                            <div class="text-pink-400 mb-1">[PROFESSOR_PAUL]</div>
+                            <div class="text-white">Comprehensive analysis indicates favorable conditions. Market indicators align with historical success patterns.</div>
+                        </div>
+                    `,
+                    'llama': `
+                        <div class="text-orange-400 mb-2">> LLAMA 3 ANALYSIS COMPLETE</div>
+                        <div class="text-cyan-400 mb-4">CONSENSUS: NEUTRAL-BULLISH (58% confidence)</div>
+                        
+                        <div class="border border-cyan-400 p-3">
+                            <div class="text-pink-400 mb-1">[ENGINEER_PAUL]</div>
+                            <div class="text-white">Technical architecture sound. Scalability concerns noted. Worth pursuing with caveats.</div>
+                        </div>
+                    `
+                };
+
+                content.innerHTML = responses[selectedModel] || responses['kimi'];
+            }, 2000);
         }
     </script>
 </body>
