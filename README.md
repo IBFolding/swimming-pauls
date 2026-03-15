@@ -21,8 +21,13 @@ Ask a question. 100, 1000, or even 700,000+ Pauls argue about it. They debate, d
 - 🧠 **Knowledge Graph** - Semantic entity extraction and relationships
 - 🔲 **Paul Matrix** - Visual consensus map of all agents
 - 📉 **Backtesting** - Historical accuracy validation
+- 📢 **PR Simulation** - Test crisis responses before they happen
+- 📊 **Marketing Testing** - A/B test campaigns with simulated audiences
+- 📖 **Story Analysis** - Predict plot developments and character arcs
+- 🔬 **Research Design** - Calculate power analysis and sample sizes
 - 📎 **Context Upload** - Images, PDFs, links for analysis
 - 🎨 **Custom Pauls** - Create your own personas
+- 📥 **Export Results** - TSV format for Excel/sorting
 - 🔌 **Local Agent** - WebSocket connection to Python backend
 - 🎮 **Demo Mode** - Test without installing Python
 - 💾 **100% Local** - No APIs, no cloud, no data leaves your machine
@@ -33,9 +38,10 @@ Ask a question. 100, 1000, or even 700,000+ Pauls argue about it. They debate, d
 
 ### Option 1: Demo Mode (Fastest)
 1. Open `http://localhost:3005` (or open `ui/index.html` directly)
-2. Type a question
-3. Click "🐟 CAST THE POOL 🐟"
-4. The Pauls will debate and reach consensus
+2. Select your mode tab (Prediction, PR Sim, Marketing, Story, Research)
+3. Type a question / enter parameters
+4. Click "🐟 CAST THE POOL 🐟"
+5. The Pauls will debate and reach consensus
 
 ### Option 2: Local Agent (Full Power)
 ```bash
@@ -57,22 +63,15 @@ python local_agent.py
 If you have OpenClaw installed:
 
 ```bash
-# Install the skill
-curl -sSL https://raw.githubusercontent.com/IBFolding/swimming-pauls/main/install-skill.sh | bash
-
-# Run it
+# Run it (auto-installs on first use)
 openclaw run swimming-pauls
 ```
 
-Or manually:
-```bash
-# Copy skill to your OpenClaw skills folder
-mkdir -p ~/.openclaw/workspace/skills/swimming-pauls
-cp swimming-pauls/openclaw-skill/* ~/.openclaw/workspace/skills/swimming-pauls/
-
-# Run it
-openclaw run swimming-pauls
-```
+This will:
+1. Clone the repo (first time only)
+2. Install dependencies
+3. Start the local agent
+4. Open your browser automatically
 
 ---
 
@@ -96,19 +95,6 @@ Not just 6 Pauls. **Hundreds. Thousands. Up to 700,000+.** Each with unique pers
 Chef Paul 👨‍🍳, Lawyer Paul ⚖️, Doctor Paul 🏥, Engineer Paul 🔧, Artist Paul 🎨, Musician Paul 🎵, Writer Paul ✍️, Athlete Paul 🏃, Teacher Paul 📚, Nurse Paul 👩‍⚕️, Pilot Paul ✈️, Scientist Paul 🔬, Farmer Paul 🌾, Carpenter Paul 🔨, and many more...
 
 **Scale:** 10 → 1,000,000+ Pauls. Your hardware is the limit.
-
----
-
-## 🐟 Meet the Pauls
-
-| Paul | Emoji | Style | Strength |
-|------|-------|-------|----------|
-| **Professor Paul** | 👨‍🏫 | Academic, data-driven | Pattern recognition, regression analysis |
-| **Trader Paul** | 📈 | Market-focused, reactive | Order flow, timing, risk/reward |
-| **Skeptic Paul** | 🤨 | Contrarian, cautious | Blindspot detection, tail risk analysis |
-| **Visionary Paul** | 🔮 | Long-term, optimistic | Future casting, paradigm shifts |
-| **Whale Paul** | 🐋 | Institutional, strategic | Liquidity analysis, smart money flows |
-| **Degen Paul** | 🎰 | Chaotic, YOLO energy | Market sentiment, meme momentum |
 
 ---
 
@@ -154,6 +140,47 @@ Historical performance metrics:
 - Average return
 - Sharpe ratio
 - Max drawdown
+
+---
+
+## 🎯 Prediction Modes
+
+Swimming Pauls isn't just for financial predictions. Choose your mode:
+
+### 🔮 Prediction (Default)
+Ask anything. Market moves, event outcomes, future trends. The Pauls analyze from every angle.
+
+### 📢 PR Simulation
+Test crisis scenarios before they happen:
+- Enter crisis headline
+- Draft company response
+- Simulate 24-hour social media reaction
+- See sentiment breakdown by platform
+- Get recommendations on handling
+
+### 📊 Marketing Testing
+A/B test campaigns before launch:
+- Enter product name
+- Create Variant A and B headlines
+- Simulate 12-week campaign
+- See predicted revenue for each variant
+- Know which campaign wins before spending
+
+### 📖 Story Analysis
+Analyze narratives and predict plot developments:
+- Enter story premise
+- Select genre (Mystery, Romance, Thriller, Sci-Fi, Fantasy)
+- Get predicted plot points
+- See likely ending with confidence
+- Identify major themes
+
+### 🔬 Research Design
+Design experiments with proper power analysis:
+- Enter research question
+- Define null hypothesis
+- Select experiment type (RCT, A/B Test, Longitudinal)
+- Get sample size calculations
+- See methodology recommendations
 
 ---
 
