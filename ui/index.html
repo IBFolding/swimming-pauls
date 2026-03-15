@@ -1066,14 +1066,8 @@
             document.getElementById('statSentiment').textContent = (sentiment > 0 ? '+' : '') + sentiment.toFixed(2);
             document.getElementById('statSentiment').className = `text-2xl font-bold ${sentiment > 0 ? 'text-green-400' : sentiment < 0 ? 'text-red-400' : 'text-yellow-400'}`;
             
-            // Generate dynamic Paul responses based on direction
-            const responses = generatePaulResponses(direction, confidence);
-            document.getElementById('profPaul').textContent = `"${responses.prof}"`;
-            document.getElementById('traderPaul').textContent = `"${responses.trader}"`;
-            document.getElementById('skepticPaul').textContent = `"${responses.skeptic}"`;
-            document.getElementById('visionaryPaul').textContent = `"${responses.visionary}"`;
-            document.getElementById('whalePaul').textContent = `"${responses.whale}"`;
-            document.getElementById('degenPaul').textContent = `"${responses.degen}"`;
+            // Generate dynamic Paul responses based on direction and number of Pauls
+            generatePaulCards(payload.pauls || 50, direction, confidence);
             
             // Update insights with Monte Carlo and backtesting
             const insights = generateInsights(direction, confidence, sentiment);
