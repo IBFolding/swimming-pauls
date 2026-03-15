@@ -1,182 +1,165 @@
-# 🐟 Swimming Pauls
+# 🦷 Swimming Pauls
 
-> **"When MiroFish is too hard, ask Paul. And his multiples."**
+> **"Let the Pauls cook."**
 >
-> Many Pauls from many universes and many professions contemplate the future of your question.
+> Multi-agent prediction engine. 100% local. No cloud.
 
-![Swimming Pauls](docs/logo.png)
+![Swimming Pauls](ui/paul.jpg)
 
-**Swimming Pauls** is a **multi-agent prediction pool** that simulates diverse personas debating and predicting outcomes. Born from the realization that single-agent AI predictions are limited, Swimming Pauls casts a pool of specialized agents - each with unique expertise, biases, and perspectives - and lets them debate until consensus emerges.
+**Swimming Pauls** is a **multi-agent prediction pool** that simulates diverse personas debating and predicting outcomes. Born on Sunset Boulevard in a self-driving car while listening to Swimming Paul and texting OpenClaw.
 
-Like fish in a school, individual Pauls have limited perspective. But together, swimming through data in parallel, they create **emergent intelligence** greater than any single agent. The collective surfaces truth through disagreement and debate.
-
----
-
-## 🎯 Why Swimming Pauls?
-
-Most AI predictions come from a single model with a single perspective. But real decisions benefit from **diverse viewpoints**:
-
-- The **Analyst** sees patterns in data
-- The **Skeptic** finds the blindspots  
-- The **Visionary** imagines futures
-- The **Hedgie** protects against downside
-- The **Entrepreneur** spots opportunities
-
-Swimming Pauls brings all these perspectives together, lets them debate, and surfaces a **weighted consensus** that reflects multi-dimensional thinking.
+Ask a question. The Pauls argue about it. They debate, deliberate, and reach consensus.
 
 ---
 
-## ✨ Features
+## 🎯 Features
 
-- 🎭 **100+ Personas** - Professors, lawyers, mechanics, artists, moms, dads, young, old, all walks of life
-- 🔮 **Multi-Agent Simulation** - Async debates with weighted consensus
-- 📊 **Monte Carlo** - 1000+ scenario probability distributions
-- 📈 **Sensitivity Analysis** - Which variables actually matter
-- 📉 **Backtesting** - Validate predictions against history
-- 🎨 **Rich Visualizations** - Terminal charts, HTML reports, PNG exports
-- 🧠 **Knowledge Graphs** - Semantic memory and reasoning
+- 🎭 **6 Core Personas** - Professor, Trader, Skeptic, Visionary, Whale, Degen
+- 🔮 **Monte Carlo Simulation** - 1000-run probability distributions
+- 📊 **Sensitivity Analysis** - Which variables actually matter
+- 🧠 **Knowledge Graph** - Semantic entity extraction and relationships
+- 📉 **Backtesting** - Historical accuracy validation
+- 📎 **Context Upload** - Images, PDFs, links for analysis
+- 🎨 **Custom Pauls** - Create your own personas
+- 🔌 **Local Agent** - WebSocket connection to Python backend
+- 🎮 **Demo Mode** - Test without installing Python
 - 💾 **100% Local** - No APIs, no cloud, no data leaves your machine
 
 ---
 
 ## 🚀 Quick Start
 
+### Option 1: Demo Mode (Fastest)
+1. Open `http://localhost:3005` (or open `ui/index.html` directly)
+2. Type a question
+3. Click "🐟 CAST THE POOL 🐟"
+4. The Pauls will debate and reach consensus
+
+### Option 2: Local Agent (Full Power)
 ```bash
 # Clone the pool
-git clone https://github.com/howardtherekt/swimming-pauls.git
+git clone https://github.com/IBFolding/swimming-pauls.git
 cd swimming-pauls
 
-# Install (optional dependencies for enhanced features)
+# Install dependencies
 pip install -r requirements.txt
 
-# Cast the Pauls
-python main.py --topic "Will my startup succeed?" --rounds 20
+# Start local agent
+python local_agent.py
+
+# Open UI and click "🔌 Connect Local"
 ```
 
 ---
 
 ## 🐟 Meet the Pauls
 
-| Paul | Type | Bias | Strength |
-|------|------|------|----------|
-| **Analyst Paul** | Data-driven | Neutral | Pattern recognition |
-| **Trader Paul** | Short-term | Reactive | Market timing |
-| **Visionary Paul** | Long-term | Bullish | Future casting |
-| **Skeptic Paul** | Contrarian | Bearish | Blindspot detection |
-| **Producer Paul** | Budget-focused | Conservative | ROI analysis |
-| **Director Paul** | Creative | Optimistic | Trend spotting |
-| **Hedgie Paul** | Risk-manager | Defensive | Downside protection |
-| **Entrepreneur Paul** | Innovation | Aggressive | Opportunity spotting |
-| **Academic Paul** | Research | Cautious | Evidence-based |
-| **Journalist Paul** | Narrative | Inquisitive | Story sensing |
-| **+ 90+ more** | Various | Various | Various |
+| Paul | Emoji | Style | Strength |
+|------|-------|-------|----------|
+| **Professor Paul** | 👨‍🏫 | Academic, data-driven | Pattern recognition, regression analysis |
+| **Trader Paul** | 📈 | Market-focused, reactive | Order flow, timing, risk/reward |
+| **Skeptic Paul** | 🤨 | Contrarian, cautious | Blindspot detection, tail risk analysis |
+| **Visionary Paul** | 🔮 | Long-term, optimistic | Future casting, paradigm shifts |
+| **Whale Paul** | 🐋 | Institutional, strategic | Liquidity analysis, smart money flows |
+| **Degen Paul** | 🎰 | Chaotic, YOLO energy | Market sentiment, meme momentum |
 
 ---
 
-## 💬 Example Session
+## 📊 Output Sections
 
-```bash
-$ python main.py --topic "Should I launch a coffee maker that mines Bitcoin?"
+After casting the pool, you get:
 
-🐟 Casting 8 Pauls for analysis...
+### 1. Consensus Header
+- Direction (BULLISH / BEARISH / NEUTRAL)
+- Confidence percentage
+- Summary message
 
-📊 Round 1/10
-   Consensus: BULLISH (confidence: 0.60, strength: strong)
-   [Entrepreneur Paul and Visionary Paul are excited]
+### 2. Statistics
+- Number of rounds
+- Number of Pauls
+- Sentiment score
 
-📊 Round 5/10
-   Consensus: NEUTRAL (confidence: 0.52, strength: moderate)
-   [Skeptic Paul and Hedgie Paul are pushing back...]
+### 3. Individual Paul Perspectives
+Each Paul provides a detailed, context-aware response with confidence level.
 
-📊 Round 10/10
-   Consensus: BULLISH (confidence: 0.48, strength: moderate)
+### 4. Key Insights
+Synthesized takeaways from the collective debate.
 
-🏁 FINAL CONSENSUS
-Direction: BULLISH
-Confidence: 48%
-Sentiment: +0.47
+### 5. Monte Carlo Simulation
+1000-run probability distribution across bullish/neutral/bearish outcomes.
 
-🟢 THE PAULS SAY: This might actually work (as a meme product)
+### 6. Sensitivity Analysis
+Impact scores showing which factors most affect the outcome:
+- Market Sentiment
+- Fundamentals
+- Regulation
+- Competition
 
-Key insights:
-  → Viral marketing potential
-  → Crypto bros buy anything with "mine Bitcoin" on it
-  → But the economics are impossible
-  → And the fire risk is real
+### 7. Knowledge Graph
+- Entity extraction count
+- Relationship mapping
+- Emergent pattern detection
+- Key concept tags
 
-Recommendation: Launch as novelty hardware with disclaimers.
-Don't promise actual mining profits.
-```
+### 8. Backtesting Results
+Historical performance metrics:
+- Accuracy rate
+- Average return
+- Sharpe ratio
+- Max drawdown
 
 ---
 
-## 🎮 Commands
-
-### Basic Prediction
-```bash
-# Standard prediction
-python main.py --topic "Netflix stock price next quarter"
-
-# With custom team composition
-python main.py --topic "AI regulation impact" --analysts 3 --skeptics 2
-
-# Full analysis suite
-python main.py --topic "Should I quit my job?" --full-analysis
-```
-
-### Monte Carlo Simulation
-```bash
-python main.py --topic "Bitcoin price 2026" --monte-carlo --runs 1000
-```
-
-### Compare Scenarios
-```bash
-python main.py --compare --scenario-a "Launch now" --scenario-b "Wait 6 months"
-```
-
-### Interactive Mode
-```bash
-python main.py --interactive
-```
+## 🎮 Usage
 
 ### Web UI
 ```bash
-# Start local web interface
-python -m http.server 8765 --directory ui
+# Simple HTTP server
+python -m http.server 3005 --directory ui
 
-# Open browser
-open http://localhost:8765
+# Or just open ui/index.html in your browser
+```
+
+### OpenClaw Skill
+```bash
+# Using OpenClaw CLI
+openclaw run swimming-pauls
+
+# With custom settings
+openclaw run swimming-pauls --pauls 100 --rounds 50
+```
+
+### Python API
+```python
+from simulation import quick_simulate
+from agent import Agent, PersonaType
+
+agents = [
+    Agent('Professor Paul', PersonaType.ANALYST),
+    Agent('Trader Paul', PersonaType.TRADER),
+    Agent('Skeptic Paul', PersonaType.SKEPTIC),
+    Agent('Visionary Paul', PersonaType.VISIONARY),
+    Agent('Whale Paul', PersonaType.HEDGIE),
+    Agent('Degen Paul', PersonaType.ANALYST),
+]
+
+result = await quick_simulate(rounds=20, agents=agents)
+print(result.rounds[-1].consensus)
 ```
 
 ---
 
-## 📊 Output Formats
+## 📝 Origin Story
 
-- **Terminal** - ASCII charts and tables (default)
-- **JSON** - Structured data for integration
-- **HTML** - Interactive reports with Chart.js
-- **PNG** - Static charts for presentations
+It started on Sunset Boulevard. 2 AM. A self-driving Tesla with no one in it.
 
----
+Inside, someone was listening to **Swimming Paul** on repeat, texting OpenClaw about MiroFish, and realizing... this is too complicated for regular people.
 
-## 🏗️ Architecture
+The idea hit like a lightning bolt: **What if we made it simple?**
 
-```
-swimming-pauls/
-├── agent.py              # The Pauls themselves (100+ personas)
-├── simulation.py         # Pool orchestration & consensus
-├── persona_factory.py    # Generate custom Pauls
-├── knowledge_graph.py    # Semantic memory & reasoning
-├── memory.py            # SQLite persistence
-├── local_memory.py      # 100% local memory (no cloud)
-├── data_feeds_local.py  # Local data connectors (RSS, files, web scraping)
-├── advanced.py          # Monte Carlo, sensitivity, backtesting
-├── visualization.py     # Charts & reports
-├── main.py             # CLI entry point
-├── swimming_pauls.py   # Unified API
-└── ui/                 # Web interface
-    └── index.html
-```
+No cloud APIs. No complicated setup. Just download, run, and cast the pool.
+
+**"Let the Pauls cook."**
 
 ---
 
@@ -184,46 +167,10 @@ swimming-pauls/
 
 Swimming Pauls runs entirely on your machine:
 - ✅ No API keys needed
-- ✅ No cloud accounts  
+- ✅ No cloud accounts
 - ✅ No internet required (after install)
 - ✅ No data leaves your machine
 - ✅ Fully private and auditable
-
-See [LOCAL_ONLY.md](LOCAL_ONLY.md) for details.
-
----
-
-## 🧪 Advanced Usage
-
-```python
-from swimming_pauls import SwimmingPauls
-
-# Create the pool
-pauls = SwimmingPauls()
-
-# Cast 100 Pauls and run simulation
-result = await pauls.run_simulation(
-    topic="Will CRITIC succeed?",
-    rounds=20
-)
-
-# Monte Carlo analysis
-mc_result = await pauls.monte_carlo(runs=1000)
-
-# Generate visualizations
-pauls.visualize(format='html', output='report.html')
-
-# Full analysis suite
-await pauls.full_analysis(topic="Should I pivot?")
-```
-
----
-
-## 📝 Origin Story
-
-Swimming Pauls was born on a drive down Sunset Boulevard, in a self-driving car, while listening to Swimming Paul and texting OpenClaw. The realization: single-agent AI is like asking one person for advice. But real decisions benefit from a **pool of perspectives** - analysts, skeptics, visionaries, and hedges all debating until truth emerges.
-
-When MiroFish felt too heavy and too cloud-dependent, Swimming Pauls was built to be **lightweight, local, and 100% private**. Your questions, your Pauls, your machine.
 
 ---
 
@@ -231,10 +178,11 @@ When MiroFish felt too heavy and too cloud-dependent, Swimming Pauls was built t
 
 The Pauls welcome new personas! To add a Paul:
 
-1. Define their traits in `persona_factory.py`
-2. Give them a backstory and catchphrase
-3. Set their bias and confidence levels
-4. Submit a PR
+1. Use the "Create Your Paul" feature in the UI
+2. Or define their traits in `persona_factory.py`
+3. Give them a backstory and catchphrase
+4. Set their bias and confidence levels
+5. Submit a PR
 
 ---
 
@@ -245,6 +193,6 @@ MIT - Your machine, your Pauls, your predictions.
 ---
 
 <p align="center">
-  <i>"When one Paul doubts, ten Pauls know."</i><br>
-  <b>🐟 Cast the pool. Surface the truth. 🐟</b>
+  <i>"Let the Pauls cook."</i><br>
+  <b>🦷 Cast the pool. Surface the truth. 🦷</b>
 </p>
