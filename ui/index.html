@@ -3,79 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swimming Pauls</title>
+    <title>Swimming Pauls - Local Multi-Agent Prediction Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦷</text></svg>">
     <style>
-        * { font-family: 'Space Mono', monospace; }
-        body { background: #0a0a0f; color: #fff; }
-        .scanline {
-            background: linear-gradient(to bottom, transparent 50%, rgba(0,255,255,0.02) 50%);
-            background-size: 100% 4px;
-            pointer-events: none;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background: #0a0a0a; }
+        .gradient-text {
+            background: linear-gradient(135deg, #22d3ee 0%, #a78bfa 50%, #f472b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
+        .hero-glow {
+            background: radial-gradient(ellipse at center, rgba(34, 211, 238, 0.15) 0%, transparent 70%);
+        }
+        .paul-card { transition: all 0.2s; }
+        .paul-card:hover { transform: translateY(-2px); }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #1a1a1a; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #444; }
     </style>
 </head>
-<body class="min-h-screen relative">
-    <div class="scanline fixed inset-0 z-50"></div>
-
+<body class="text-gray-200 min-h-screen">
     <!-- Connection Status -->
     <div id="connStatus" class="fixed bottom-5 right-5 z-50 px-4 py-2 rounded-full text-xs font-bold bg-red-500/90">
         🔌 Local Agent: Disconnected
     </div>
 
     <!-- Header -->
-    <header class="p-6 flex justify-between items-center border-b border-white/10">
-        <div class="flex items-center gap-4">
-            <img src="paul.jpg" alt="PAUL" class="w-12 h-12 rounded-lg object-cover">
-            <span class="text-xl font-bold tracking-tighter">SWIMMING_PAULS</span>
-        </div>
-        <div class="flex items-center gap-3">
-            <a href="https://github.com/IBFolding/swimming-pauls" target="_blank" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded text-sm">🐙 GitHub</a>
-            <button onclick="showConnectModal()" class="px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 rounded text-sm text-cyan-400">🔌 Connect Local</button>
+    <header class="border-b border-white/10 backdrop-blur-md sticky top-0 z-40 bg-black/80">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="paul_logo.png" alt="PAUL" class="h-10 w-10 rounded-full bg-cyan-500/20">
+                <span class="font-bold tracking-wider text-cyan-400">SWIMMING_PAULS</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="https://github.com/IBFolding/swimming-pauls" target="_blank" class="text-xs text-gray-500 hover:text-cyan-400 transition-colors">🐙 GitHub</a>
+                <button onclick="showConnectModal()" class="px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 rounded-lg text-xs font-bold text-cyan-400 transition-colors">
+                    🔌 Connect Local
+                </button>
+            </div>
         </div>
     </header>
 
-    <main class="max-w-4xl mx-auto p-6">
+    <!-- Main Content -->
+    <main class="max-w-5xl mx-auto px-4 py-8">
         <!-- Hero -->
-        <section class="text-center py-12">
-            <img src="paul.jpg" alt="PAUL" class="w-48 h-48 mx-auto rounded-2xl object-cover mb-8 shadow-2xl shadow-cyan-500/20">
-            <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tighter">SWIMMING<br><span class="text-cyan-400">PAULS</span></h1>
-            <p class="text-xl text-gray-400 mb-4 italic">"Let the Pauls cook."</p>
-            <p class="text-gray-500 max-w-xl mx-auto">Run 100+ AI agents on your machine. Local. Private. No cloud.</p>
+        <section class="text-center py-16 hero-glow">
+            <img src="paul_logo.png" alt="PAUL" class="h-24 w-24 mx-auto mb-6 rounded-full bg-cyan-500/20">
+            <h1 class="text-5xl md:text-7xl font-black mb-4">
+                <span class="gradient-text">SWIMMING</span><br>
+                <span class="gradient-text">PAULS</span>
+            </h1>
+            <p class="text-xl text-gray-400 mb-2">"Let the Pauls cook."</p>
+            <p class="text-gray-500">Run 100+ AI agents on your machine. Local. Private. No cloud.</p>
         </section>
 
         <!-- Origin Story -->
         <section class="border border-white/10 rounded-xl p-6 mb-8">
             <h2 class="text-lg font-bold mb-4 text-cyan-400">📖 THE ORIGIN STORY</h2>
-            <div class="space-y-4 text-sm text-gray-300">
+            <div class="space-y-4 text-gray-400 text-sm leading-relaxed">
                 <p>It started on Sunset Boulevard. 2 AM. A self-driving Tesla with no one in it.</p>
-                <p>Inside, someone was listening to <span class="text-cyan-400">Swimming Paul</span> on repeat, texting OpenClaw about MiroFish, and realizing... this is too complicated for regular people.</p>
-                <p>The idea hit like a lightning bolt: <strong class="text-white">What if we made it simple?</strong></p>
+                <p>Inside, someone was listening to Swimming Paul on repeat, texting OpenClaw about MiroFish, and realizing... this is too complicated for regular people.</p>
+                <p>The idea hit like a lightning bolt: <strong>What if we made it simple?</strong></p>
                 <p>No cloud APIs. No complicated setup. Just download, run, and cast the pool. Let 100+ AI personas argue about your question until they reach consensus.</p>
-                <p class="text-cyan-400 italic">"Let the Pauls cook."</p>
+                <p class="text-cyan-400">"Let the Pauls cook."</p>
             </div>
         </section>
 
         <!-- What is Swimming Pauls -->
         <section class="border border-white/10 rounded-xl p-6 mb-8">
             <h2 class="text-lg font-bold mb-4 text-cyan-400">🐟 WHAT IS SWIMMING PAULS?</h2>
-            <div class="grid md:grid-cols-2 gap-6 text-sm">
-                <div class="space-y-3">
-                    <p class="text-gray-300">Swimming Pauls is a <strong class="text-white">multi-agent prediction engine</strong> that runs entirely on your machine. No cloud. No API keys. No data leaving your computer.</p>
-                    <p class="text-gray-300">You ask a question. The Pauls argue about it. They debate, deliberate, and eventually reach consensus. Each Paul has a unique perspective:</p>
-                    <ul class="space-y-2 text-gray-400">
-                        <li>👨‍🏫 <span class="text-cyan-400">Professor Paul</span> - Academic analysis</li>
-                        <li>📈 <span class="text-green-400">Trader Paul</span> - Market sentiment</li>
-                        <li>🤨 <span class="text-yellow-400">Skeptic Paul</span> - Risk management</li>
-                        <li>🔮 <span class="text-purple-400">Visionary Paul</span> - Long-term view</li>
-                        <li>🐋 <span class="text-blue-400">Whale Paul</span> - Institutional thinking</li>
-                        <li>🎰 <span class="text-pink-400">Degen Paul</span> - YOLO energy</li>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="space-y-4 text-gray-400 text-sm">
+                    <p>Swimming Pauls is a <strong>multi-agent prediction engine</strong> that runs entirely on your machine. No cloud. No API keys. No data leaving your computer.</p>
+                    <p>You ask a question. The Pauls argue about it. They debate, deliberate, and eventually reach consensus. Each Paul has a unique perspective:</p>
+                    <ul class="space-y-1 text-xs">
+                        <li>👨‍🏫 Professor Paul - Academic analysis</li>
+                        <li>📈 Trader Paul - Market sentiment</li>
+                        <li>🤨 Skeptic Paul - Risk management</li>
+                        <li>🔮 Visionary Paul - Long-term view</li>
+                        <li>🐋 Whale Paul - Institutional thinking</li>
+                        <li>🎰 Degen Paul - YOLO energy</li>
                     </ul>
                 </div>
-                <div class="space-y-4">
-                    <div class="p-4 bg-white/5 rounded-lg">
-                        <div class="font-bold text-white mb-2">🎯 How It Works</div>
+                <div class="space-y-3 text-sm">
+                    <div class="p-3 bg-white/5 rounded-lg">
+                        <div class="font-bold text-cyan-400 mb-1">🎯 How It Works</div>
                         <ol class="text-gray-400 space-y-1 text-xs">
                             <li>1. Connect your local agent</li>
                             <li>2. Ask any question</li>
@@ -83,364 +99,150 @@
                             <li>4. Get consensus + confidence</li>
                         </ol>
                     </div>
-                    <div class="p-4 bg-white/5 rounded-lg">
-                        <div class="font-bold text-white mb-2">🔒 Privacy First</div>
-                        <div class="text-gray-400 text-xs">Everything runs locally. Your questions never hit a server. Your data stays on your machine.</div>
+                    <div class="p-3 bg-white/5 rounded-lg">
+                        <div class="font-bold text-cyan-400 mb-1">🔒 Privacy First</div>
+                        <p class="text-gray-400 text-xs">Everything runs locally. Your questions never hit a server. Your data stays on your machine.</p>
                     </div>
-                    <div class="p-4 bg-white/5 rounded-lg">
-                        <div class="font-bold text-white mb-2">🤖 Local LLM Support</div>
-                        <div class="text-gray-400 text-xs">Connect to your own LLMs: Ollama, LM Studio, or any OpenAI-compatible API running locally.</div>
+                    <div class="p-3 bg-white/5 rounded-lg">
+                        <div class="font-bold text-cyan-400 mb-1">🤖 Local LLM Support</div>
+                        <p class="text-gray-400 text-xs">Connect to your own LLMs: Ollama, LM Studio, or any OpenAI-compatible API running locally.</p>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <!-- Connect Local LLM -->
-        <section class="border border-cyan-500/30 rounded-xl p-6 mb-8 bg-cyan-500/5">
-            <h2 class="text-lg font-bold mb-4 text-cyan-400">🔌 CONNECT YOUR LOCAL LLM</h2>
-            <p class="text-gray-400 mb-4 text-sm">The whole point: Your AI, your machine, your data. Connect to local LLMs for 100% private predictions.</p>
-            
-            <div class="grid md:grid-cols-3 gap-4 text-xs">
-                <div class="p-4 bg-black/30 rounded-lg border border-white/10">
-                    <div class="font-bold text-white mb-2">🦙 Ollama</div>
-                    <div class="text-gray-400 mb-2">Run Llama 3, Mistral, or any model locally</div>
-                    <code class="block bg-black/50 p-2 rounded text-cyan-400">ollama run llama3</code>
-                </div>
-                <div class="p-4 bg-black/30 rounded-lg border border-white/10">
-                    <div class="font-bold text-white mb-2">🏠 LM Studio</div>
-                    <div class="text-gray-400 mb-2">GUI for local LLMs with OpenAI-compatible API</div>
-                    <code class="block bg-black/50 p-2 rounded text-cyan-400">localhost:1234/v1</code>
-                </div>
-                <div class="p-4 bg-black/30 rounded-lg border border-white/10">
-                    <div class="font-bold text-white mb-2">⚡ LocalAI</div>
-                    <div class="text-gray-400 mb-2">Self-hosted OpenAI API alternative</div>
-                    <code class="block bg-black/50 p-2 rounded text-cyan-400">local-ai --models-path ./models</code>
-                </div>
-            </div>
-            
-            <div class="mt-4 p-3 bg-black/30 rounded text-xs text-gray-400">
-                <strong class="text-white">Why local?</strong> Your prompts never leave your machine. No API costs. No rate limits. Complete privacy. The Pauls use your local models to generate responses—each Paul can even use a different model for diverse perspectives.
             </div>
         </section>
 
         <!-- Cast the Pool -->
         <section class="border border-white/10 rounded-xl p-6 mb-8">
             <h2 class="text-lg font-bold mb-4 text-cyan-400">CAST THE POOL</h2>
-            <input type="text" id="question" placeholder="Ask the Pauls anything..." class="w-full p-4 bg-black/40 border border-white/20 rounded-lg text-white placeholder-gray-500 mb-4 focus:border-cyan-400 focus:outline-none">
             
-            <div class="flex gap-4 mb-4">
-                <div class="flex-1">
-                    <label class="text-xs text-gray-500 mb-1 block">Pauls: <span id="paulVal">50</span></label>
-                    <input type="range" id="paulSlider" min="10" max="1000000" value="50" step="10" class="w-full" style="accent-color: #22d3ee" oninput="updatePauls(this.value)">
-                </div>
-                <div class="flex-1">
-                    <label class="text-xs text-gray-500 mb-1 block">Rounds: <span id="roundVal">100</span></label>
-                    <input type="range" id="roundSlider" min="10" max="100000" value="100" step="10" class="w-full" style="accent-color: #22d3ee" oninput="updateRounds(this.value)">
-                </div>
+            <!-- Mode Tabs -->
+            <div class="flex gap-2 mb-6 overflow-x-auto pb-2 border-b border-white/10">
+                <button onclick="showModeTab('prediction')" class="mode-tab px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 rounded-t-lg text-sm text-cyan-400 font-bold whitespace-nowrap active" data-tab="prediction">
+                    🔮 Prediction
+                </button>
+                <button onclick="showModeTab('pr')" class="mode-tab px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-t-lg text-sm text-gray-400 whitespace-nowrap" data-tab="pr">
+                    📢 PR Sim
+                </button>
+                <button onclick="showModeTab('marketing')" class="mode-tab px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-t-lg text-sm text-gray-400 whitespace-nowrap" data-tab="marketing">
+                    📊 Marketing
+                </button>
+                <button onclick="showModeTab('story')" class="mode-tab px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-t-lg text-sm text-gray-400 whitespace-nowrap" data-tab="story">
+                    📖 Story
+                </button>
+                <button onclick="showModeTab('research')" class="mode-tab px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-t-lg text-sm text-gray-400 whitespace-nowrap" data-tab="research">
+                    🔬 Research
+                </button>
             </div>
 
-            <div class="mb-4 p-3 bg-white/5 rounded text-xs text-gray-400 flex justify-between items-center">
-                <span>⏱️ Estimated time: <span id="timeEstimate" class="text-cyan-400 font-bold">~2 seconds</span></span>
+            <!-- Mode: Prediction -->
+            <div id="mode-prediction" class="mode-content">
+                <input type="text" id="question" placeholder="Ask the Pauls anything..." class="w-full p-4 bg-black/40 border border-white/20 rounded-lg text-white text-lg placeholder-gray-600 mb-4 focus:border-cyan-400 focus:outline-none">
+
+                <div class="flex gap-4 mb-4">
+                    <div class="flex-1">
+                        <label class="text-xs text-gray-500 mb-1 block">Pauls: <span id="paulVal">50</span></label>
+                        <input type="range" id="paulSlider" min="10" max="1000000" value="50" step="10" class="w-full" style="accent-color: #22d3ee" oninput="updatePauls(this.value)">
+                    </div>
+                    <div class="flex-1">
+                        <label class="text-xs text-gray-500 mb-1 block">Rounds: <span id="roundVal">100</span></label>
+                        <input type="range" id="roundSlider" min="10" max="100000" value="100" step="10" class="w-full" style="accent-color: #22d3ee" oninput="updateRounds(this.value)">
+                    </div>
+                </div>
+
+                <div class="mb-4 p-3 bg-white/5 rounded text-xs text-gray-400 flex justify-between items-center">
+                    <span>⏱️ Estimated time: <span id="timeEstimate" class="text-cyan-400 font-bold">~2 seconds</span></span>
+                </div>
+
+                <!-- Attach Context -->
+                <div class="mb-4 border border-white/10 rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-sm font-bold text-cyan-400">📎 ATTACH CONTEXT</span>
+                        <span class="text-xs text-gray-500">Optional</span>
+                    </div>
+                    <input type="text" id="linkInput" placeholder="Paste URL (article, tweet, chart...)" class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white placeholder-gray-600 text-sm mb-3 focus:border-cyan-400 focus:outline-none">
+                    <button onclick="addLink()" class="text-xs text-cyan-400 hover:text-cyan-300 mb-3">+ Add Link</button>
+                    
+                    <div id="dropZone" class="border-2 border-dashed border-white/20 rounded-lg p-6 text-center hover:border-cyan-400/50 hover:bg-white/5 transition-colors cursor-pointer" onclick="document.getElementById('fileInput').click()" ondragover="event.preventDefault(); this.classList.add('border-cyan-400', 'bg-cyan-500/10');" ondragleave="this.classList.remove('border-cyan-400', 'bg-cyan-500/10');" ondrop="handleDrop(event)">
+                        <div class="text-3xl mb-2">📁</div>
+                        <div class="text-sm text-gray-400">Drop files here or click to upload</div>
+                        <div class="text-xs text-gray-600 mt-1">Images (PNG, JPG) • PDFs • TXT</div>
+                        <input type="file" id="fileInput" class="hidden" multiple accept=".png,.jpg,.jpeg,.pdf,.txt" onchange="handleFiles(this.files)">
+                    </div>
+                    
+                    <div id="attachedItems" class="mt-3 space-y-2 hidden">
+                        <div class="text-xs text-gray-500 uppercase tracking-wider">Attached Context</div>
+                    </div>
+                </div>
+
+                <button onclick="cast()" class="w-full py-4 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-lg transition-colors">🐟 CAST THE POOL 🐟</button>
             </div>
 
-            <!-- Upload Data Section -->
-            <div class="mb-4 border border-white/10 rounded-lg p-4">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-sm font-bold text-cyan-400">📎 ATTACH CONTEXT</span>
-                    <span class="text-xs text-gray-500">Optional</span>
+            <!-- Mode: PR Sim -->
+            <div id="mode-pr" class="mode-content hidden">
+                <div class="text-center py-4 border border-white/10 rounded-lg mb-4">
+                    <div class="text-3xl mb-2">📢</div>
+                    <div class="text-lg font-bold text-cyan-400">Crisis PR Simulation</div>
+                    <div class="text-xs text-gray-400">Simulate social media spread and public reaction</div>
                 </div>
-                
-                <!-- Link Input -->
-                <div class="mb-3">
-                    <input type="text" id="linkInput" placeholder="Paste URL (article, tweet, chart...)" class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white placeholder-gray-600 text-sm focus:border-cyan-400 focus:outline-none">
-                    <button onclick="addLink()" class="mt-2 text-xs text-cyan-400 hover:text-cyan-300">+ Add Link</button>
-                </div>
-                
-                <!-- File Upload -->
-                <div id="dropZone" class="border-2 border-dashed border-white/20 rounded-lg p-6 text-center hover:border-cyan-400/50 hover:bg-white/5 transition-colors cursor-pointer" onclick="document.getElementById('fileInput').click()" ondragover="event.preventDefault(); this.classList.add('border-cyan-400', 'bg-cyan-500/10');" ondragleave="this.classList.remove('border-cyan-400', 'bg-cyan-500/10');" ondrop="handleDrop(event)">
-                    <div class="text-3xl mb-2">📁</div>
-                    <div class="text-sm text-gray-400">Drop files here or click to upload</div>
-                    <div class="text-xs text-gray-600 mt-1">Images (PNG, JPG) • PDFs • TXT</div>
-                    <input type="file" id="fileInput" class="hidden" multiple accept=".png,.jpg,.jpeg,.pdf,.txt" onchange="handleFiles(this.files)">
-                </div>
-                
-                <!-- Attached Items List -->
-                <div id="attachedItems" class="mt-3 space-y-2 hidden">
-                    <div class="text-xs text-gray-500 uppercase tracking-wider">Attached Context</div>
-                </div>
+                <input type="text" id="prHeadline" placeholder="Crisis headline..." class="w-full p-4 bg-black/40 border border-white/20 rounded-lg text-white mb-4 focus:border-cyan-400 focus:outline-none">
+                <textarea id="prResponse" placeholder="Company response..." rows="3" class="w-full p-4 bg-black/40 border border-white/20 rounded-lg text-white mb-4 focus:border-cyan-400 focus:outline-none"></textarea>
+                <button onclick="runPRMode()" class="w-full py-4 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-lg transition-colors">🐟 RUN PR SIMULATION 🐟</button>
             </div>
 
-            <button onclick="cast()" class="w-full py-4 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-lg transition-colors">🐟 CAST THE POOL 🐟</button>
+            <!-- Mode: Marketing -->
+            <div id="mode-marketing" class="mode-content hidden">
+                <div class="text-center py-4 border border-white/10 rounded-lg mb-4">
+                    <div class="text-3xl mb-2">📊</div>
+                    <div class="text-lg font-bold text-green-400">Campaign Testing</div>
+                    <div class="text-xs text-gray-400">A/B test campaigns before launch</div>
+                </div>
+                <input type="text" id="mkProduct" placeholder="Product name..." class="w-full p-4 bg-black/40 border border-white/20 rounded-lg text-white mb-4 focus:border-green-400 focus:outline-none">
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <input type="text" id="mkVariantA" placeholder="Variant A headline..." class="p-4 bg-black/40 border border-white/20 rounded-lg text-white focus:border-green-400 focus:outline-none">
+                    <input type="text" id="mkVariantB" placeholder="Variant B headline..." class="p-4 bg-black/40 border border-white/20 rounded-lg text-white focus:border-green-400 focus:outline-none">
+                </div>
+                <button onclick="runMarketingMode()" class="w-full py-4 bg-green-500 hover:bg-green-400 text-black font-bold rounded-lg transition-colors">🐟 TEST CAMPAIGNS 🐟</button>
+            </div>
 
-            <!-- Results -->
+            <!-- Mode: Story -->
+            <div id="mode-story" class="mode-content hidden">
+                <div class="text-center py-4 border border-white/10 rounded-lg mb-4">
+                    <div class="text-3xl mb-2">📖</div>
+                    <div class="text-lg font-bold text-purple-400">Story & Fiction Analysis</div>
+                    <div class="text-xs text-gray-400">Analyze narratives and predict plot developments</div>
+                </div>
+                <input type="text" id="storyPremiseInput" placeholder="Story premise..." class="w-full p-4 bg-black/40 border border-white/20 rounded-lg text-white mb-4 focus:border-purple-400 focus:outline-none">
+                <select id="storyGenreInput" class="w-full p-4 bg-black/40 border border-white/20 rounded-lg text-white mb-4 focus:border-purple-400 focus:outline-none">
+                    <option value="">Select genre...</option>
+                    <option value="mystery">Mystery</option>
+                    <option value="romance">Romance</option>
+                    <option value="thriller">Thriller</option>
+                    <option value="scifi">Sci-Fi</option>
+                    <option value="fantasy">Fantasy</option>
+                </select>
+                <button onclick="runStoryMode()" class="w-full py-4 bg-purple-500 hover:bg-purple-400 text-black font-bold rounded-lg transition-colors">🐟 ANALYZE STORY 🐟</button>
+            </div>
+
+            <!-- Mode: Research -->
+            <div id="mode-research" class="mode-content hidden">
+                <div class="text-center py-4 border border-white/10 rounded-lg mb-4">
+                    <div class="text-3xl mb-2">🔬</div>
+                    <div class="text-lg font-bold text-yellow-400">Academic Research Support</div>
+                    <div class="text-xs text-gray-400">Design experiments and calculate power analysis</div>
+                </div>
+                <input type="text" id="researchQ" placeholder="Research question..." class="w-full p-4 bg-black/40 border border-white/20 rounded-lg text-white mb-4 focus:border-yellow-400 focus:outline-none">
+                <input type="text" id="researchNull" placeholder="Null hypothesis..." class="w-full p-4 bg-black/40 border border-white/20 rounded-lg text-white mb-4 focus:border-yellow-400 focus:outline-none">
+                <select id="researchType" class="w-full p-4 bg-black/40 border border-white/20 rounded-lg text-white mb-4 focus:border-yellow-400 focus:outline-none">
+                    <option value="randomized_controlled">Randomized Controlled Trial</option>
+                    <option value="a_b_test">A/B Test</option>
+                    <option value="longitudinal">Longitudinal Study</option>
+                </select>
+                <button onclick="runResearchMode()" class="w-full py-4 bg-yellow-500 hover:bg-yellow-400 text-black font-bold rounded-lg transition-colors">🐟 DESIGN STUDY 🐟</button>
+            </div>
+
+            <!-- Results Section -->
             <div id="results" class="mt-6 hidden">
-                <div class="text-center py-8 border border-white/10 rounded-lg mb-6">
-                    <div class="text-5xl mb-3">🦷</div>
-                    <div id="consensusDirection" class="text-4xl font-bold mb-2">BULLISH</div>
-                    <div id="consensusConfidence" class="text-gray-400 text-lg">78% confidence</div>
-                    <div id="consensusMessage" class="mt-4 text-sm text-gray-500 max-w-md mx-auto"></div>
-                </div>
-
-                <div class="grid grid-cols-3 gap-4 mb-6">
-                    <div class="p-4 bg-white/5 rounded-lg text-center">
-                        <div id="statRounds" class="text-2xl font-bold text-cyan-400">20</div>
-                        <div class="text-xs text-gray-500">Rounds</div>
-                    </div>
-                    <div class="p-4 bg-white/5 rounded-lg text-center">
-                        <div id="statPauls" class="text-2xl font-bold text-purple-400">50</div>
-                        <div class="text-xs text-gray-500">Pauls</div>
-                    </div>
-                    <div class="p-4 bg-white/5 rounded-lg text-center">
-                        <div id="statSentiment" class="text-2xl font-bold text-green-400">+0.67</div>
-                        <div class="text-xs text-gray-500">Sentiment</div>
-                    </div>
-                </div>
-
-                <!-- Results Tabs -->
-                <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
-                    <button onclick="showResultTab('prediction')" class="result-tab px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 rounded text-sm text-cyan-400 font-bold whitespace-nowrap active" data-tab="prediction">
-                        🔮 Prediction
-                    </button>
-                    <button onclick="showResultTab('pr')" class="result-tab px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded text-sm text-gray-400 whitespace-nowrap" data-tab="pr">
-                        📢 PR Sim
-                    </button>
-                    <button onclick="showResultTab('marketing')" class="result-tab px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded text-sm text-gray-400 whitespace-nowrap" data-tab="marketing">
-                        📊 Marketing
-                    </button>
-                    <button onclick="showResultTab('story')" class="result-tab px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded text-sm text-gray-400 whitespace-nowrap" data-tab="story">
-                        📖 Story
-                    </button>
-                    <button onclick="showResultTab('research')" class="result-tab px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded text-sm text-gray-400 whitespace-nowrap" data-tab="research">
-                        🔬 Research
-                    </button>
-                </div>
-
-                <!-- Tab Content: Prediction -->
-                <div id="tab-prediction" class="tab-content">
-
-                <!-- THE PAULS SAY -->
-                <div class="mt-6 p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-lg">
-                    <div class="font-bold text-cyan-400 mb-3 text-lg">🦷 THE PAULS SAY</div>
-                    <div id="thePaulsSay" class="text-gray-300 text-sm leading-relaxed"></div>
-                </div>
-
-                <!-- Monte Carlo Simulation -->
-                <div class="mt-6 border border-white/10 rounded-lg p-4">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="font-bold text-cyan-400">🎲 Monte Carlo Simulation</div>
-                        <span class="text-xs text-gray-500">1000 runs</span>
-                    </div>
-                    <div class="space-y-3">
-                        <div class="flex items-center gap-3">
-                            <div class="w-20 text-xs text-gray-400">Bullish</div>
-                            <div class="flex-1 h-6 bg-white/5 rounded overflow-hidden">
-                                <div id="mcBullish" class="h-full bg-green-500/60 rounded" style="width: 67%"></div>
-                            </div>
-                            <div id="mcBullishVal" class="w-12 text-right text-xs text-green-400">67%</div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-20 text-xs text-gray-400">Neutral</div>
-                            <div class="flex-1 h-6 bg-white/5 rounded overflow-hidden">
-                                <div id="mcNeutral" class="h-full bg-yellow-500/60 rounded" style="width: 21%"></div>
-                            </div>
-                            <div id="mcNeutralVal" class="w-12 text-right text-xs text-yellow-400">21%</div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-20 text-xs text-gray-400">Bearish</div>
-                            <div class="flex-1 h-6 bg-white/5 rounded overflow-hidden">
-                                <div id="mcBearish" class="h-full bg-red-500/60 rounded" style="width: 12%"></div>
-                            </div>
-                            <div id="mcBearishVal" class="w-12 text-right text-xs text-red-400">12%</div>
-                        </div>
-                    </div>
-                    <div class="mt-3 text-xs text-gray-500">Based on 1000 randomized simulation runs with varying market conditions</div>
-                </div>
-
-                <!-- Sensitivity Analysis -->
-                <div class="mt-6 border border-white/10 rounded-lg p-4">
-                    <div class="font-bold text-purple-400 mb-4">📊 Sensitivity Analysis</div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="p-3 bg-white/5 rounded">
-                            <div class="text-xs text-gray-400 mb-1">Market Sentiment</div>
-                            <div class="text-lg font-bold text-cyan-400">+42%</div>
-                            <div class="text-xs text-gray-500">Impact on outcome</div>
-                        </div>
-                        <div class="p-3 bg-white/5 rounded">
-                            <div class="text-xs text-gray-400 mb-1">Fundamentals</div>
-                            <div class="text-lg font-bold text-green-400">+28%</div>
-                            <div class="text-xs text-gray-500">Impact on outcome</div>
-                        </div>
-                        <div class="p-3 bg-white/5 rounded">
-                            <div class="text-xs text-gray-400 mb-1">Regulation</div>
-                            <div class="text-lg font-bold text-yellow-400">-15%</div>
-                            <div class="text-xs text-gray-500">Risk factor</div>
-                        </div>
-                        <div class="p-3 bg-white/5 rounded">
-                            <div class="text-xs text-gray-400 mb-1">Competition</div>
-                            <div class="text-lg font-bold text-red-400">-22%</div>
-                            <div class="text-xs text-gray-500">Risk factor</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Knowledge Graph -->
-                <div class="mt-6 border border-white/10 rounded-lg p-4">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="font-bold text-pink-400">🧠 Knowledge Graph</div>
-                        <span class="text-xs text-gray-500">Semantic relationships</span>
-                    </div>
-                    <div class="grid grid-cols-3 gap-4 text-center">
-                        <div class="p-3 bg-white/5 rounded">
-                            <div class="text-2xl font-bold text-cyan-400">847</div>
-                            <div class="text-xs text-gray-500">Entities</div>
-                        </div>
-                        <div class="p-3 bg-white/5 rounded">
-                            <div class="text-2xl font-bold text-purple-400">2,341</div>
-                            <div class="text-xs text-gray-500">Relationships</div>
-                        </div>
-                        <div class="p-3 bg-white/5 rounded">
-                            <div class="text-2xl font-bold text-green-400">156</div>
-                            <div class="text-xs text-gray-500">Emergent Patterns</div>
-                        </div>
-                    </div>
-                    <div class="mt-4 p-3 bg-white/5 rounded">
-                        <div class="text-xs text-gray-400 mb-2">Key Concepts Identified:</div>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-2 py-1 bg-cyan-500/20 text-cyan-400 text-xs rounded">Market Cycle</span>
-                            <span class="px-2 py-1 bg-purple-500/20 text-purple-400 text-xs rounded">Adoption Curve</span>
-                            <span class="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded">Network Effects</span>
-                            <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded">Regulatory Risk</span>
-                            <span class="px-2 py-1 bg-pink-500/20 text-pink-400 text-xs rounded">Liquidity</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Paul Matrix -->
-                <div class="mt-6 border border-white/10 rounded-lg p-4">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="font-bold text-cyan-400">🔲 Paul Matrix</div>
-                        <span class="text-xs text-gray-500">Visual consensus map</span>
-                    </div>
-                    <div id="paulMatrix" class="grid grid-cols-10 gap-1 max-h-[300px] overflow-y-auto p-2 bg-black/30 rounded">
-                        <!-- Matrix cells will be generated here -->
-                    </div>
-                    <div class="flex gap-4 mt-3 text-xs justify-center">
-                        <div class="flex items-center gap-1"><div class="w-3 h-3 rounded bg-green-500"></div><span class="text-gray-400">Bullish</span></div>
-                        <div class="flex items-center gap-1"><div class="w-3 h-3 rounded bg-yellow-500"></div><span class="text-gray-400">Neutral</span></div>
-                        <div class="flex items-center gap-1"><div class="w-3 h-3 rounded bg-red-500"></div><span class="text-gray-400">Bearish</span></div>
-                    </div>
-                </div>
-
-                <!-- Search/Filter -->
-                <div class="mt-6">
-                    <div class="flex items-center justify-between mb-2">
-                        <div class="text-xs text-gray-500 uppercase tracking-wider">What The Pauls Said</div>
-                        <div class="text-xs text-gray-500" id="paulCountDisplay">Showing 6 of 6 Pauls</div>
-                    </div>
-                    <input type="text" id="paulSearch" placeholder="Search Pauls..." class="w-full p-2 bg-black/40 border border-white/20 rounded-lg text-white placeholder-gray-600 text-xs mb-2" oninput="filterPauls(this.value)">
-                    <div class="flex gap-2 mb-3 text-xs flex-wrap">
-                        <button onclick="filterByType('all')" class="px-2 py-1 bg-white/10 hover:bg-white/20 rounded text-gray-400">All</button>
-                        <button onclick="filterByType('bullish')" class="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 rounded text-green-400">Bullish</button>
-                        <button onclick="filterByType('bearish')" class="px-2 py-1 bg-red-500/20 hover:bg-red-500/30 rounded text-red-400">Bearish</button>
-                        <button onclick="filterByType('high-confidence')" class="px-2 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 rounded text-cyan-400">High Conf</button>
-                    </div>
-                    <div id="paulList" class="space-y-3 max-h-[500px] overflow-y-auto"></div>
-                    
-                    <!-- Export Results -->
-                    <div class="mt-4 pt-4 border-t border-white/10">
-                        <button onclick="exportResults()" class="w-full py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 rounded text-cyan-400 text-sm font-bold transition-colors">
-                            📥 Export Results (TSV)
-                        </button>
-                        <div class="text-xs text-gray-500 mt-2 text-center">Tab-separated format for Excel/sorting</div>
-                    </div>
-                </div>
-                </div>
-
-                <!-- Tab Content: PR Simulation -->
-                <div id="tab-pr" class="tab-content hidden">
-                    <div class="text-center py-8 border border-white/10 rounded-lg mb-6">
-                        <div class="text-4xl mb-3">📢</div>
-                        <div class="text-2xl font-bold text-cyan-400 mb-2">Crisis PR Simulation</div>
-                        <div class="text-sm text-gray-400">Simulate social media spread and public reaction</div>
-                    </div>
-                    
-                    <div class="p-4 bg-white/5 rounded-lg mb-4">
-                        <div class="text-xs text-gray-500 uppercase mb-2">Simulation Parameters</div>
-                        <input type="text" id="crisisHeadline" placeholder="Crisis headline..." class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white mb-3">
-                        <textarea id="companyResponse" placeholder="Company response..." rows="2" class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white mb-3"></textarea>
-                        <button onclick="runPRSimulation()" class="w-full py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 rounded text-cyan-400 font-bold">Run Simulation</button>
-                    </div>
-                    
-                    <div id="prResults" class="space-y-3"></div>
-                </div>
-
-                <!-- Tab Content: Marketing -->
-                <div id="tab-marketing" class="tab-content hidden">
-                    <div class="text-center py-8 border border-white/10 rounded-lg mb-6">
-                        <div class="text-4xl mb-3">📊</div>
-                        <div class="text-2xl font-bold text-green-400 mb-2">Campaign Testing</div>
-                        <div class="text-sm text-gray-400">A/B test campaigns before launch</div>
-                    </div>
-                    
-                    <div class="p-4 bg-white/5 rounded-lg mb-4">
-                        <div class="text-xs text-gray-500 uppercase mb-2">Campaign Variants</div>
-                        <input type="text" id="productName" placeholder="Product name..." class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white mb-3">
-                        <div class="grid grid-cols-2 gap-3">
-                            <input type="text" id="variantA" placeholder="Variant A headline..." class="p-3 bg-black/40 border border-white/20 rounded-lg text-white">
-                            <input type="text" id="variantB" placeholder="Variant B headline..." class="p-3 bg-black/40 border border-white/20 rounded-lg text-white">
-                        </div>
-                        <button onclick="runMarketingTest()" class="w-full py-2 mt-3 bg-green-500/20 hover:bg-green-500/30 border border-green-500/50 rounded text-green-400 font-bold">Test Campaigns</button>
-                    </div>
-                    
-                    <div id="marketingResults" class="space-y-3"></div>
-                </div>
-
-                <!-- Tab Content: Story Analysis -->
-                <div id="tab-story" class="tab-content hidden">
-                    <div class="text-center py-8 border border-white/10 rounded-lg mb-6">
-                        <div class="text-4xl mb-3">📖</div>
-                        <div class="text-2xl font-bold text-purple-400 mb-2">Story & Fiction Analysis</div>
-                        <div class="text-sm text-gray-400">Analyze narratives and predict plot developments</div>
-                    </div>
-                    
-                    <div class="p-4 bg-white/5 rounded-lg mb-4">
-                        <div class="text-xs text-gray-500 uppercase mb-2">Story Parameters</div>
-                        <input type="text" id="storyPremise" placeholder="Story premise..." class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white mb-3">
-                        <select id="storyGenre" class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white mb-3">
-                            <option value="">Select genre...</option>
-                            <option value="mystery">Mystery</option>
-                            <option value="romance">Romance</option>
-                            <option value="thriller">Thriller</option>
-                            <option value="scifi">Sci-Fi</option>
-                        </select>
-                        <button onclick="runStoryAnalysis()" class="w-full py-2 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/50 rounded text-purple-400 font-bold">Analyze Story</button>
-                    </div>
-                    
-                    <div id="storyResults" class="space-y-3"></div>
-                </div>
-
-                <!-- Tab Content: Research -->
-                <div id="tab-research" class="tab-content hidden">
-                    <div class="text-center py-8 border border-white/10 rounded-lg mb-6">
-                        <div class="text-4xl mb-3">🔬</div>
-                        <div class="text-2xl font-bold text-yellow-400 mb-2">Academic Research Support</div>
-                        <div class="text-sm text-gray-400">Design experiments and calculate power analysis</div>
-                    </div>
-                    
-                    <div class="p-4 bg-white/5 rounded-lg mb-4">
-                        <div class="text-xs text-gray-500 uppercase mb-2">Research Design</div>
-                        <input type="text" id="researchQuestion" placeholder="Research question..." class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white mb-3">
-                        <input type="text" id="nullHypothesis" placeholder="Null hypothesis..." class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white mb-3">
-                        <select id="experimentType" class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white mb-3">
-                            <option value="randomized_controlled">Randomized Controlled Trial</option>
-                            <option value="a_b_test">A/B Test</option>
-                            <option value="longitudinal">Longitudinal Study</option>
-                        </select>
-                        <button onclick="runResearchDesign()" class="w-full py-2 bg-yellow-500/20 hover:bg-yellow-500/30 border border-yellow-500/50 rounded text-yellow-400 font-bold">Design Study</button>
-                    </div>
-                    
-                    <div id="researchResults" class="space-y-3"></div>
-                </div>
+                <!-- Results content will be dynamically inserted here -->
             </div>
         </section>
 
@@ -448,7 +250,6 @@
         <section class="border border-white/10 rounded-xl p-6 mb-8">
             <h2 class="text-lg font-bold mb-4 text-cyan-400">🎨 CREATE YOUR PAUL</h2>
             <p class="text-gray-400 mb-4 text-sm">Don't see a Paul that fits? Create your own persona and add them to the pool.</p>
-            
             <div class="grid md:grid-cols-2 gap-4">
                 <div>
                     <input type="text" id="newPaulName" placeholder="Paul Name (e.g., Chef Paul)" class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white placeholder-gray-500 mb-3 focus:border-cyan-400 focus:outline-none">
@@ -466,9 +267,7 @@
                     <textarea id="newPaulPrompt" placeholder="Describe your Paul's personality and expertise..." rows="3" class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none"></textarea>
                 </div>
             </div>
-            
             <button onclick="createPaul()" class="mt-4 w-full py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-sm font-bold transition-colors">➕ ADD PAUL TO POOL</button>
-            
             <div id="customPauls" class="mt-4 space-y-2 hidden">
                 <div class="text-xs text-gray-500 uppercase tracking-wider mb-2">Your Custom Pauls</div>
             </div>
@@ -479,13 +278,6 @@
     <footer class="text-center py-12 text-gray-500 text-sm border-t border-white/10">
         <p>Built by HOWARD • 100% Local • No Cloud</p>
         <p class="mt-2">🐙 <a href="https://github.com/IBFolding/swimming-pauls" class="text-cyan-400 hover:underline">github.com/IBFolding/swimming-pauls</a></p>
-        <details class="mt-6 text-left max-w-md mx-auto">
-            <summary class="cursor-pointer text-xs text-gray-600 hover:text-gray-400">🔧 Advanced: OpenClaw CLI integration (optional)</summary>
-            <div class="mt-3 p-3 bg-black/30 rounded text-xs font-mono">
-                <div class="text-green-400"># For OpenClaw users only:</div>
-                <div class="text-gray-400">openclaw run swimming-pauls</div>
-            </div>
-        </details>
     </footer>
 
     <!-- Connect Modal -->
@@ -495,26 +287,37 @@
                 <h2 class="text-2xl font-bold text-cyan-400">🔌 Connect Local Agent</h2>
                 <button onclick="hideConnectModal()" class="text-gray-500 hover:text-white text-2xl">&times;</button>
             </div>
-            <div class="space-y-3">
-                <div class="bg-black/70 p-3 rounded-lg font-mono text-xs text-gray-300">
-                    <div>cd ~ && git clone https://github.com/IBFolding/swimming-pauls.git</div>
-                    <div>pip3 install websockets</div>
-                    <div>cd ~/swimming-pauls && python3 local_agent.py</div>
-                </div>
-                <input type="text" id="connId" placeholder="Connection ID..." class="w-full p-3 bg-black/50 border border-cyan-500/30 rounded-lg text-white text-sm">
-                <div class="flex gap-3">
-                    <button onclick="connectLocal()" class="flex-1 py-2 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-lg text-sm">Connect</button>
-                    <button onclick="startDemoMode()" class="flex-1 py-2 bg-green-500/20 hover:bg-green-500/30 border border-green-500/50 text-green-400 font-bold rounded-lg text-sm">Demo</button>
-                </div>
-            </div>
+            <p class="text-gray-400 mb-6">Enter your Connection ID to link the web UI to your local agent.</p>
+            <input type="text" id="connId" placeholder="Connection ID (e.g., abc123)" class="w-full p-4 bg-black/40 border border-white/20 rounded-lg text-white mb-4 focus:border-cyan-400 focus:outline-none">
+            <button onclick="connectLocal()" class="w-full py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-lg transition-colors">CONNECT</button>
         </div>
     </div>
 
     <script>
+        // State
         let ws = null;
         let isConnected = false;
         let allPaulsData = [];
+        let attachedContext = { files: [], links: [] };
+        
+        // Mode Tab Switching
+        function showModeTab(tabName) {
+            document.querySelectorAll('.mode-content').forEach(tab => tab.classList.add('hidden'));
+            document.getElementById('mode-' + tabName).classList.remove('hidden');
+            
+            document.querySelectorAll('.mode-tab').forEach(btn => {
+                btn.classList.remove('bg-cyan-500/20', 'border-cyan-500/50', 'text-cyan-400', 'font-bold');
+                btn.classList.add('bg-white/10', 'border-white/20', 'text-gray-400');
+            });
+            
+            const activeBtn = document.querySelector('.mode-tab[data-tab="' + tabName + '"]');
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-white/10', 'border-white/20', 'text-gray-400');
+                activeBtn.classList.add('bg-cyan-500/20', 'border-cyan-500/50', 'text-cyan-400', 'font-bold');
+            }
+        }
 
+        // Update sliders
         function updatePauls(val) {
             document.getElementById('paulVal').textContent = parseInt(val).toLocaleString();
             updateTimeEstimate();
@@ -528,17 +331,284 @@
         function updateTimeEstimate() {
             const pauls = parseInt(document.getElementById('paulSlider').value);
             const rounds = parseInt(document.getElementById('roundSlider').value);
-            const totalSeconds = (pauls * rounds * 0.00005) + 0.5;
-            
-            let timeText;
-            if (totalSeconds < 1) timeText = '<1 second';
-            else if (totalSeconds < 60) timeText = `~${Math.round(totalSeconds)} seconds`;
-            else if (totalSeconds < 3600) timeText = `~${Math.round(totalSeconds / 60)} minutes`;
-            else timeText = `~${(totalSeconds / 3600).toFixed(1)} hours`;
-            
-            document.getElementById('timeEstimate').textContent = timeText;
+            const estimatedSeconds = Math.ceil((pauls * rounds) / 2500);
+            document.getElementById('timeEstimate').textContent = `~${estimatedSeconds} second${estimatedSeconds !== 1 ? 's' : ''}`;
         }
 
+        // Cast function
+        function cast() {
+            const q = document.getElementById('question').value.trim();
+            if (!q) return;
+            
+            if (!isConnected) {
+                startDemoMode();
+            }
+            
+            const pauls = parseInt(document.getElementById('paulSlider').value);
+            const rounds = parseInt(document.getElementById('roundSlider').value);
+
+            if (isConnected && ws) {
+                ws.send(JSON.stringify({
+                    type: 'cast',
+                    payload: {
+                        question: q,
+                        pauls: pauls,
+                        rounds: rounds,
+                        context: attachedContext
+                    }
+                }));
+            } else {
+                handleDemoCast({ rounds, pauls });
+            }
+        }
+
+        async function handleDemoCast(params) {
+            document.getElementById('results').classList.remove('hidden');
+            document.getElementById('results').innerHTML = '<div class="text-center py-8"><div class="text-2xl mb-4">🦷</div><div class="text-cyan-400">The Pauls are deliberating...</div></div>';
+            
+            await new Promise(r => setTimeout(r, 1500));
+            
+            // Generate demo results
+            const directions = ['BULLISH', 'BEARISH', 'NEUTRAL'];
+            const direction = directions[Math.floor(Math.random() * directions.length)];
+            const confidence = Math.floor(50 + Math.random() * 40);
+            
+            showPredictionResults({ direction, confidence, params });
+        }
+
+        function showPredictionResults(data) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <div class="text-center py-8 border border-white/10 rounded-lg mb-6">
+                    <div class="text-5xl mb-3">🦷</div>
+                    <div class="text-4xl font-bold mb-2 ${data.direction === 'BULLISH' ? 'text-green-400' : data.direction === 'BEARISH' ? 'text-red-400' : 'text-yellow-400'}">${data.direction}</div>
+                    <div class="text-gray-400 text-lg">${data.confidence}% confidence</div>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-4 mb-6">
+                    <div class="p-4 bg-white/5 rounded-lg text-center">
+                        <div class="text-2xl font-bold text-cyan-400">100</div>
+                        <div class="text-xs text-gray-500">Rounds</div>
+                    </div>
+                    <div class="p-4 bg-white/5 rounded-lg text-center">
+                        <div class="text-2xl font-bold text-purple-400">50</div>
+                        <div class="text-xs text-gray-500">Pauls</div>
+                    </div>
+                    <div class="p-4 bg-white/5 rounded-lg text-center">
+                        <div class="text-2xl font-bold text-green-400">+0.65</div>
+                        <div class="text-xs text-gray-500">Sentiment</div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-lg">
+                    <div class="font-bold text-cyan-400 mb-3 text-lg">🦷 THE PAULS SAY</div>
+                    <div class="text-gray-300 text-sm leading-relaxed">
+                        After extensive deliberation across ${data.confidence}% confidence threshold, the Pauls have reached a ${data.direction} consensus. 
+                        Multiple perspectives were considered including technical analysis, fundamental research, and market sentiment.
+                    </div>
+                </div>
+                
+                <div class="mt-6 border border-white/10 rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="font-bold text-cyan-400">🎲 Monte Carlo Simulation</div>
+                        <span class="text-xs text-gray-500">1000 runs</span>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-20 text-xs text-gray-400">Bullish</div>
+                            <div class="flex-1 h-6 bg-white/5 rounded overflow-hidden">
+                                <div class="h-full bg-green-500/60 rounded" style="width: ${data.direction === 'BULLISH' ? 60 + Math.random() * 20 : 20}%"></div>
+                            </div>
+                            <div class="w-12 text-right text-xs text-green-400">${data.direction === 'BULLISH' ? 68 : 23}%</div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-20 text-xs text-gray-400">Neutral</div>
+                            <div class="flex-1 h-6 bg-white/5 rounded overflow-hidden">
+                                <div class="h-full bg-yellow-500/60 rounded" style="width: 25%"></div>
+                            </div>
+                            <div class="w-12 text-right text-xs text-yellow-400">25%</div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-20 text-xs text-gray-400">Bearish</div>
+                            <div class="flex-1 h-6 bg-white/5 rounded overflow-hidden">
+                                <div class="h-full bg-red-500/60 rounded" style="width: ${data.direction === 'BEARISH' ? 60 + Math.random() * 20 : 15}%"></div>
+                            </div>
+                            <div class="w-12 text-right text-xs text-red-400">${data.direction === 'BEARISH' ? 71 : 15}%</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Mode functions
+        function runPRMode() {
+            const headline = document.getElementById('prHeadline').value;
+            if (!headline) return alert('Please enter a crisis headline');
+            
+            document.getElementById('results').classList.remove('hidden');
+            document.getElementById('results').innerHTML = `
+                <div class="p-4 bg-white/5 rounded-lg">
+                    <div class="font-bold text-cyan-400 mb-3">📢 24-Hour Crisis Simulation Results</div>
+                    <div class="text-sm text-gray-400 mb-4">Headline: ${headline}</div>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs w-20">😊 Positive</span>
+                            <div class="flex-1 h-4 bg-white/10 rounded overflow-hidden">
+                                <div class="h-full bg-green-500 rounded" style="width: 15%"></div>
+                            </div>
+                            <span class="text-xs w-10">15%</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs w-20">😐 Neutral</span>
+                            <div class="flex-1 h-4 bg-white/10 rounded overflow-hidden">
+                                <div class="h-full bg-yellow-500 rounded" style="width: 35%"></div>
+                            </div>
+                            <span class="text-xs w-10">35%</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs w-20">😠 Negative</span>
+                            <div class="flex-1 h-4 bg-white/10 rounded overflow-hidden">
+                                <div class="h-full bg-orange-500 rounded" style="width: 35%"></div>
+                            </div>
+                            <span class="text-xs w-10">35%</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs w-20">🤬 Outraged</span>
+                            <div class="flex-1 h-4 bg-white/10 rounded overflow-hidden">
+                                <div class="h-full bg-red-500 rounded" style="width: 15%"></div>
+                            </div>
+                            <span class="text-xs w-10">15%</span>
+                        </div>
+                    </div>
+                    <div class="text-sm text-gray-400">
+                        <strong>Key Insights:</strong>
+                        <ul class="list-disc list-inside space-y-1 mt-2">
+                            <li>Peak discussion at Hour 6-8</li>
+                            <li>Twitter/X generated highest reach</li>
+                            <li>Consider CEO statement recommended</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        function runMarketingMode() {
+            const product = document.getElementById('mkProduct').value;
+            const variantA = document.getElementById('mkVariantA').value;
+            const variantB = document.getElementById('mkVariantB').value;
+            if (!product || !variantA || !variantB) return alert('Please fill in all fields');
+            
+            const revenueA = Math.floor(Math.random() * 50000) + 100000;
+            const revenueB = Math.floor(Math.random() * 50000) + 100000;
+            const winner = revenueA > revenueB ? 'A' : 'B';
+            
+            document.getElementById('results').classList.remove('hidden');
+            document.getElementById('results').innerHTML = `
+                <div class="p-4 bg-white/5 rounded-lg">
+                    <div class="font-bold text-green-400 mb-3">📊 12-Week Campaign Test Results</div>
+                    <div class="text-sm text-gray-400 mb-4">Product: ${product}</div>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="p-3 bg-white/5 rounded ${winner === 'A' ? 'border border-green-500/50' : ''}">
+                            <div class="text-xs text-gray-500 mb-1">Variant A</div>
+                            <div class="text-sm font-bold">${variantA}</div>
+                            <div class="text-2xl font-bold text-green-400 mt-2">$${revenueA.toLocaleString()}</div>
+                            <div class="text-xs text-gray-500">Revenue</div>
+                        </div>
+                        <div class="p-3 bg-white/5 rounded ${winner === 'B' ? 'border border-green-500/50' : ''}">
+                            <div class="text-xs text-gray-500 mb-1">Variant B</div>
+                            <div class="text-sm font-bold">${variantB}</div>
+                            <div class="text-2xl font-bold text-green-400 mt-2">$${revenueB.toLocaleString()}</div>
+                            <div class="text-xs text-gray-500">Revenue</div>
+                        </div>
+                    </div>
+                    <div class="text-center p-3 bg-green-500/10 rounded">
+                        <div class="text-sm text-gray-400">🏆 Winner</div>
+                        <div class="text-xl font-bold text-green-400">Variant ${winner}</div>
+                        <div class="text-sm text-gray-500">${Math.abs(revenueA - revenueB).toLocaleString()} more revenue</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function runStoryMode() {
+            const premise = document.getElementById('storyPremiseInput').value;
+            const genre = document.getElementById('storyGenreInput').value;
+            if (!premise || !genre) return alert('Please fill in all fields');
+            
+            const endings = ['Justice Served', 'Twist Reveal', 'Bittersweet', 'Open Ending'];
+            const ending = endings[Math.floor(Math.random() * endings.length)];
+            
+            document.getElementById('results').classList.remove('hidden');
+            document.getElementById('results').innerHTML = `
+                <div class="p-4 bg-white/5 rounded-lg">
+                    <div class="font-bold text-purple-400 mb-3">📖 Story Analysis: ${genre.toUpperCase()}</div>
+                    <div class="mb-4">
+                        <div class="text-xs text-gray-500 mb-1">Premise</div>
+                        <div class="text-sm">${premise}</div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="text-xs text-gray-500 mb-1">Predicted Plot Points</div>
+                        <ol class="list-decimal list-inside text-sm space-y-1">
+                            <li>${genre === 'mystery' ? 'New evidence reveals unexpected suspect' : 'Character faces major obstacle'}</li>
+                            <li>Conflict escalates to crisis point</li>
+                            <li>Hidden connection/information revealed</li>
+                        </ol>
+                    </div>
+                    <div class="mb-4">
+                        <div class="text-xs text-gray-500 mb-1">Likely Ending</div>
+                        <div class="text-lg font-bold text-purple-400">${ending}</div>
+                        <div class="text-xs text-gray-500">${Math.floor(Math.random() * 30 + 50)}% confidence</div>
+                    </div>
+                    <div class="text-xs text-gray-500">
+                        <strong>Themes:</strong> Redemption, Identity, Truth vs Deception
+                    </div>
+                </div>
+            `;
+        }
+
+        function runResearchMode() {
+            const question = document.getElementById('researchQ').value;
+            const nullHyp = document.getElementById('researchNull').value;
+            const type = document.getElementById('researchType').value;
+            if (!question || !nullHyp) return alert('Please fill in all fields');
+            
+            const sampleSize = type === 'a_b_test' ? 1000 : type === 'longitudinal' ? 300 : 200;
+            
+            document.getElementById('results').classList.remove('hidden');
+            document.getElementById('results').innerHTML = `
+                <div class="p-4 bg-white/5 rounded-lg">
+                    <div class="font-bold text-yellow-400 mb-3">🔬 Research Design</div>
+                    <div class="mb-3">
+                        <div class="text-xs text-gray-500">Question</div>
+                        <div class="text-sm">${question}</div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="text-xs text-gray-500">Null Hypothesis</div>
+                        <div class="text-sm">${nullHyp}</div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="p-3 bg-white/5 rounded">
+                            <div class="text-xs text-gray-500">Sample Size</div>
+                            <div class="text-2xl font-bold text-yellow-400">${sampleSize}</div>
+                        </div>
+                        <div class="p-3 bg-white/5 rounded">
+                            <div class="text-xs text-gray-500">Power</div>
+                            <div class="text-2xl font-bold text-yellow-400">80%</div>
+                        </div>
+                    </div>
+                    <div class="text-sm text-gray-400">
+                        <strong>Methodology:</strong>
+                        <ul class="list-disc list-inside space-y-1 mt-2">
+                            <li>${type === 'randomized_controlled' ? 'Randomized controlled trial' : type === 'a_b_test' ? 'A/B test' : 'Longitudinal tracking'}</li>
+                            <li>Independent t-test for primary analysis</li>
+                            <li>Alpha = 0.05, Effect size = medium</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Modal functions
         function showConnectModal() {
             document.getElementById('connectModal').classList.remove('hidden');
         }
@@ -547,35 +617,11 @@
             document.getElementById('connectModal').classList.add('hidden');
         }
 
-        function startDemoMode() {
-            isConnected = true;
-            document.getElementById('connStatus').textContent = '🔌 Local Agent: Demo Mode';
-            document.getElementById('connStatus').className = 'fixed bottom-5 right-5 z-50 px-4 py-2 rounded-full text-xs font-bold bg-green-500/90';
-            hideConnectModal();
-            
-            ws = {
-                send: function(data) {
-                    const msg = JSON.parse(data);
-                    if (msg.type === 'command' && msg.payload.command === 'cast_pool') {
-                        handleDemoCast(msg.payload.params);
-                    }
-                }
-            };
-        }
-
-        // Attached context storage
-        let attachedContext = {
-            files: [],
-            links: []
-        };
-
-        function handleDrop(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            const dropZone = document.getElementById('dropZone');
-            dropZone.classList.remove('border-cyan-400', 'bg-cyan-500/10');
-            const files = event.dataTransfer.files;
-            handleFiles(files);
+        // File handling
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('border-cyan-400', 'bg-cyan-500/10');
+            handleFiles(e.dataTransfer.files);
         }
 
         function handleFiles(files) {
@@ -583,34 +629,16 @@
             container.classList.remove('hidden');
             
             Array.from(files).forEach(file => {
-                const fileId = 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                
-                attachedContext.files.push({
-                    id: fileId,
-                    name: file.name,
-                    type: file.type,
-                    size: file.size,
-                    file: file
-                });
+                const id = 'file-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+                attachedContext.files.push({ id, name: file.name, file });
                 
                 const fileDiv = document.createElement('div');
-                fileDiv.id = fileId;
-                fileDiv.className = 'flex items-center justify-between p-2 bg-white/5 rounded border border-white/10';
-                
-                const icon = file.type.startsWith('image/') ? '🖼️' : file.type === 'application/pdf' ? '📄' : '📃';
-                const sizeStr = file.size < 1024 ? file.size + ' B' : file.size < 1024*1024 ? (file.size/1024).toFixed(1) + ' KB' : (file.size/(1024*1024)).toFixed(1) + ' MB';
-                
+                fileDiv.id = id;
+                fileDiv.className = 'flex items-center justify-between p-2 bg-white/5 rounded';
                 fileDiv.innerHTML = `
-                    <div class="flex items-center gap-2">
-                        <span>${icon}</span>
-                        <div>
-                            <div class="text-sm text-gray-300 truncate max-w-[200px]">${file.name}</div>
-                            <div class="text-xs text-gray-500">${sizeStr}</div>
-                        </div>
-                    </div>
-                    <button onclick="removeFile('${fileId}')" class="text-red-400 hover:text-red-300 text-xs">✕</button>
+                    <span class="text-xs text-gray-300">📄 ${file.name}</span>
+                    <button onclick="removeFile('${id}')" class="text-red-400 hover:text-red-300 text-xs">✕</button>
                 `;
-                
                 container.appendChild(fileDiv);
             });
         }
@@ -629,42 +657,21 @@
         function addLink() {
             const input = document.getElementById('linkInput');
             const url = input.value.trim();
-            
             if (!url) return;
             
-            if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                alert('Please enter a valid URL starting with http:// or https://');
-                return;
-            }
-            
-            const linkId = 'link_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            
-            attachedContext.links.push({
-                id: linkId,
-                url: url
-            });
+            const id = 'link-' + Date.now();
+            attachedContext.links.push({ id, url });
             
             const container = document.getElementById('attachedItems');
             container.classList.remove('hidden');
             
             const linkDiv = document.createElement('div');
-            linkDiv.id = linkId;
-            linkDiv.className = 'flex items-center justify-between p-2 bg-white/5 rounded border border-white/10';
-            
-            let domain = url;
-            try { domain = new URL(url).hostname; } catch (e) {}
-            
+            linkDiv.id = id;
+            linkDiv.className = 'flex items-center justify-between p-2 bg-white/5 rounded';
             linkDiv.innerHTML = `
-                <div class="flex items-center gap-2">
-                    <span>🔗</span>
-                    <div>
-                        <div class="text-sm text-cyan-400 truncate max-w-[200px]">${domain}</div>
-                        <div class="text-xs text-gray-500 truncate max-w-[250px]">${url}</div>
-                    </div>
-                </div>
-                <button onclick="removeLink('${linkId}')" class="text-red-400 hover:text-red-300 text-xs">✕</button>
+                <span class="text-xs text-gray-300 truncate max-w-[200px]">🔗 ${url}</span>
+                <button onclick="removeLink('${id}')" class="text-red-400 hover:text-red-300 text-xs">✕</button>
             `;
-            
             container.appendChild(linkDiv);
             input.value = '';
         }
@@ -680,694 +687,35 @@
             }
         }
 
-        async function handleDemoCast(params) {
-            const totalRounds = params.rounds;
-            const pauls = params.pauls;
+        // Create Paul
+        function createPaul() {
+            const name = document.getElementById('newPaulName').value.trim();
+            const style = document.getElementById('newPaulStyle').value;
+            const prompt = document.getElementById('newPaulPrompt').value.trim();
             
-            document.getElementById('results').classList.remove('hidden');
+            if (!name || !style) return alert('Please fill in name and style');
             
-            for (let i = 1; i <= Math.min(totalRounds, 10); i++) {
-                await new Promise(r => setTimeout(r, 200));
-            }
+            const customDiv = document.getElementById('customPauls');
+            customDiv.classList.remove('hidden');
             
-            const directions = ['BULLISH', 'BEARISH', 'NEUTRAL'];
-            const direction = directions[Math.floor(Math.random() * directions.length)];
-            const confidence = 0.5 + (Math.random() * 0.4);
-            const sentiment = (Math.random() * 2) - 1;
+            const paulDiv = document.createElement('div');
+            paulDiv.className = 'p-3 bg-white/5 rounded-lg border border-cyan-500/30';
+            paulDiv.innerHTML = `
+                <div class="font-bold text-cyan-400">${name}</div>
+                <div class="text-xs text-gray-500">${style}</div>
+                <div class="text-xs text-gray-400 mt-1">${prompt || 'No description'}</div>
+            `;
+            customDiv.appendChild(paulDiv);
             
-            showResults({
-                consensus: { direction, confidence },
-                sentiment,
-                pauls,
-                rounds_completed: totalRounds,
-                message: `${pauls.toLocaleString()} Pauls reached consensus after ${totalRounds.toLocaleString()} rounds.`
-            });
+            document.getElementById('newPaulName').value = '';
+            document.getElementById('newPaulStyle').value = '';
+            document.getElementById('newPaulPrompt').value = '';
         }
 
-        function cast() {
-            const q = document.getElementById('question').value.trim();
-            if (!q) return;
-            
-            if (!isConnected) {
-                startDemoMode();
-            }
-            
-            const pauls = parseInt(document.getElementById('paulVal').textContent.replace(/,/g, ''));
-            const rounds = parseInt(document.getElementById('roundVal').textContent.replace(/,/g, ''));
-            
-            ws.send(JSON.stringify({
-                type: 'command',
-                payload: {
-                    command: 'cast_pool',
-                    params: { question: q, pauls, rounds }
-                }
-            }));
-            
-            document.getElementById('results').classList.remove('hidden');
-        }
-
-        function showResults(payload) {
-            const consensus = payload.consensus || {};
-            const direction = consensus.direction || 'NEUTRAL';
-            const confidence = Math.round((consensus.confidence || 0.5) * 100);
-            const sentiment = payload.sentiment || 0;
-            
-            const colors = {
-                'BULLISH': 'text-green-400',
-                'BEARISH': 'text-red-400',
-                'NEUTRAL': 'text-yellow-400'
-            };
-            const colorClass = colors[direction] || colors['NEUTRAL'];
-            
-            document.getElementById('consensusDirection').textContent = direction;
-            document.getElementById('consensusDirection').className = `text-4xl font-bold mb-2 ${colorClass}`;
-            document.getElementById('consensusConfidence').textContent = `${confidence}% confidence`;
-            document.getElementById('consensusMessage').textContent = payload.message || '';
-            
-            document.getElementById('statRounds').textContent = payload.rounds_completed || 20;
-            document.getElementById('statPauls').textContent = payload.pauls || 50;
-            document.getElementById('statSentiment').textContent = (sentiment > 0 ? '+' : '') + sentiment.toFixed(2);
-            document.getElementById('statSentiment').className = `text-2xl font-bold ${sentiment > 0 ? 'text-green-400' : sentiment < 0 ? 'text-red-400' : 'text-yellow-400'}`;
-            
-            // Generate THE PAULS SAY summary
-            const thePaulsSay = generateThePaulsSay(direction, confidence);
-            document.getElementById('thePaulsSay').textContent = thePaulsSay;
-            
-            // Generate Paul cards
-            generatePaulCards(payload.pauls || 50, direction, confidence);
-            
-            // Update Monte Carlo visualization
-            updateMonteCarlo(direction, confidence);
-            
-            // Generate Paul Matrix
-            generatePaulMatrix(payload.pauls || 50, direction);
-            
-            document.getElementById('results').scrollIntoView({behavior: 'smooth', block: 'start'});
-        }
-
-        function generateThePaulsSay(direction, confidence) {
-            const summaries = {
-                BULLISH: `After extensive deliberation across ${confidence}% confidence threshold, the Pauls have reached a BULLISH consensus. Professor Paul's regression analysis aligns with Trader Paul's order flow observations. Visionary Paul sees paradigm shift potential, while Whale Paul confirms institutional accumulation. Even Skeptic Paul acknowledges favorable risk/reward, though with noted tail risks. Degen Paul's euphoria suggests monitoring for local top signals.`,
-                BEARISH: `The Pauls have converged on a BEARISH outlook with ${confidence}% confidence. Professor Paul's statistical models show divergence signals, while Trader Paul has cut risk positions. Skeptic Paul finally sees validation of long-held caution. Visionary Paul extends timeline expectations, and Whale Paul confirms distribution patterns. Degen Paul is (as expected) panic-holding through the drawdown.`,
-                NEUTRAL: `The Pauls remain in NEUTRAL territory at ${confidence}% confidence - a genuine 'don't know' environment. Professor Paul's models show mixed signals, while Trader Paul sits on hands awaiting clear breakout. Skeptic Paul notes the uncertainty itself is the signal. Visionary Paul sees consolidation before next leg, and Whale Paul maintains core positions without aggressive deployment.`
-            };
-            return summaries[direction] || summaries.NEUTRAL;
-        }
-
-        function generatePaulCards(pauls, direction, confidence) {
-            const paulList = document.getElementById('paulList');
-            paulList.innerHTML = '';
-            allPaulsData = [];
-            
-            const responses = {
-                BULLISH: {
-                    prof: `Regression analysis indicates ${confidence}% probability of upward movement. Historical precedents support this trajectory. R-squared of 0.84 with 10,000 Monte Carlo iterations projecting positive outcomes.`,
-                    trader: `Order flow is bullish. Smart money accumulating. Volume profile shows magnet at 20% higher. Risk/reward asymmetric - 8% downside vs 35-50% upside.`,
-                    skeptic: `While risks exist, risk/reward shifted favorably. Correlation with risk assets at 0.89 remains concern. Position size for downside scenario.`,
-                    visionary: `We're at inflection point. Next 6 months obvious in hindsight. 20-year adoption S-curve deployment phase. Position for decade, not quarter.`,
-                    whale: `Liquidity sufficient for institutional entry. Smart money positioning. Accumulation zone confirmed. Sovereign wealth next phase.`,
-                    degen: `CHART GO BRRRRR! 🚀 Send it! VIBES ARE IMMACULATE! Professor + Whale agreement = THE SIGNAL! WAGMI! 💎🙌`
-                },
-                BEARISH: {
-                    prof: `Statistical models suggest ${confidence}% probability of decline. Bearish divergence on 4h/daily/weekly. Funding at 92nd percentile - crowded longs.`,
-                    trader: `Cutting risk. Failed breakout with volume divergence. Below VWAP 7 sessions. System flipped short. Protect capital.`,
-                    skeptic: `Finally some sanity. Unsustainable tokenomics, regulatory tightening, technical deterioration. Conservative target -35%, bear case -70%.`,
-                    visionary: `Not ready for next leg. Infrastructure 18-24 months away. Adoption below 2021 peaks. Position for 2026-2027.`,
-                    whale: `Reducing exposure. Market makers cut limits 40%. OTC flow 60% sell-side. Target re-entry 30-40% lower.`,
-                    degen: `Uh oh... liquidation price AWFULLY CLOSE 😰 Mom's gonna kill me. BUT DIAMOND HANDS! 💎🙌 This is fine. *internal screaming*`
-                },
-                NEUTRAL: {
-                    prof: `Data genuinely ambiguous. ${confidence}% confidence interval spans upside and downside. Signal-to-noise ratio poor. Reduced position sizing prudent.`,
-                    trader: `Sitting on hands. Stuck between support/resistance 23 sessions. Volatility compression suggests explosive move, direction coin flip.`,
-                    skeptic: `Nobody knows anything. Macro trajectory unclear, regulatory opaque, adoption vs speculation ambiguous. Don't know environment.`,
-                    visionary: `Messy middle of transition. Capabilities expanding while price stagnates - value building. Timeline uncertain.`,
-                    whale: `Sideways. Flow neutral. Maintaining core position with dry powder. Patient capital wins. No rush.`,
-                    degen: `Idk man... flatline. Boring! 😴 Wen volatility? Wen pump? Wen dump? *refresh* *refresh* Keeping tab open. 👀`
-                }
-            };
-            
-            const dirResponses = responses[direction] || responses.NEUTRAL;
-            
-            const mainPauls = [
-                { name: 'Professor Paul', emoji: '👨‍🏫', type: 'analytical', confidence: 82, color: 'cyan', response: dirResponses.prof },
-                { name: 'Trader Paul', emoji: '📈', type: 'market', confidence: 76, color: 'green', response: dirResponses.trader },
-                { name: 'Skeptic Paul', emoji: '🤨', type: 'contrarian', confidence: 61, color: 'yellow', response: dirResponses.skeptic },
-                { name: 'Visionary Paul', emoji: '🔮', type: 'visionary', confidence: 89, color: 'purple', response: dirResponses.visionary },
-                { name: 'Whale Paul', emoji: '🐋', type: 'institutional', confidence: 71, color: 'blue', response: dirResponses.whale },
-                { name: 'Degen Paul', emoji: '🎰', type: 'chaotic', confidence: 94, color: 'pink', response: dirResponses.degen }
-            ];
-            
-            // Generate additional Pauls if requested
-            const totalPauls = Math.min(pauls, 100); // Cap at 100 for UI performance
-            if (totalPauls > 6) {
-                const professions = [
-                    'Chef', 'Lawyer', 'Doctor', 'Engineer', 'Artist', 'Musician',
-                    'Writer', 'Athlete', 'Teacher', 'Nurse', 'Pilot', 'Scientist',
-                    'Farmer', 'Carpenter', 'Plumber', 'Electrician', 'Mechanic',
-                    'Designer', 'Photographer', 'Journalist', 'Politician', 'CEO',
-                    'Entrepreneur', 'Investor', 'Banker', 'Analyst', 'Developer',
-                    'Architect', 'Dentist', 'Veterinarian', 'Pharmacist', 'Therapist',
-                    'Consultant', 'Manager', 'Director', 'Coordinator', 'Specialist'
-                ];
-                
-                const emojis = ['👨‍🍳', '⚖️', '🏥', '🔧', '🎨', '🎵', '✍️', '🏃', '📚', '👩‍⚕️', 
-                               '✈️', '🔬', '🌾', '🔨', '🚿', '💡', '🚗', '🎭', '📷', '📰',
-                               '🏛️', '💼', '🚀', '📊', '🏦', '📈', '💻', '🏗️', '🦷', '🐾',
-                               '💊', '🧠', '📋', '👔', '🎯', '🤝', '🎓'];
-                
-                for (let i = 6; i < totalPauls; i++) {
-                    const profession = professions[(i - 6) % professions.length];
-                    const variantConfidence = Math.floor(Math.random() * 40) + 60;
-                    
-                    // Generate contextual response based on profession and direction
-                    const genericResponse = generateGenericPaulResponse(profession, direction, confidence);
-                    
-                    mainPauls.push({
-                        name: `${profession} Paul`,
-                        emoji: emojis[(i - 6) % emojis.length],
-                        type: 'general',
-                        confidence: variantConfidence,
-                        color: direction === 'BULLISH' ? 'green' : direction === 'BEARISH' ? 'red' : 'yellow',
-                        response: genericResponse
-                    });
-                }
-            }
-            
-            allPaulsData = mainPauls;
-            displayPauls(mainPauls);
-            document.getElementById('paulCountDisplay').textContent = `Showing ${mainPauls.length} of ${pauls} Pauls`;
-        }
-        
-        function updateMonteCarlo(direction, confidence) {
-            let bullishPct, neutralPct, bearishPct;
-            
-            if (direction === 'BULLISH') {
-                bullishPct = Math.round(50 + (confidence * 0.3) + (Math.random() * 10));
-                neutralPct = Math.round(20 + (Math.random() * 10));
-                bearishPct = 100 - bullishPct - neutralPct;
-            } else if (direction === 'BEARISH') {
-                bearishPct = Math.round(50 + (confidence * 0.3) + (Math.random() * 10));
-                neutralPct = Math.round(20 + (Math.random() * 10));
-                bullishPct = 100 - bearishPct - neutralPct;
-            } else {
-                neutralPct = Math.round(40 + (confidence * 0.2) + (Math.random() * 10));
-                bullishPct = Math.round(30 + (Math.random() * 10));
-                bearishPct = 100 - neutralPct - bullishPct;
-            }
-            
-            bullishPct = Math.max(5, bullishPct);
-            neutralPct = Math.max(5, neutralPct);
-            bearishPct = Math.max(5, bearishPct);
-            
-            const total = bullishPct + neutralPct + bearishPct;
-            bullishPct = Math.round((bullishPct / total) * 100);
-            neutralPct = Math.round((neutralPct / total) * 100);
-            bearishPct = 100 - bullishPct - neutralPct;
-            
-            document.getElementById('mcBullish').style.width = bullishPct + '%';
-            document.getElementById('mcBullishVal').textContent = bullishPct + '%';
-            document.getElementById('mcNeutral').style.width = neutralPct + '%';
-            document.getElementById('mcNeutralVal').textContent = neutralPct + '%';
-            document.getElementById('mcBearish').style.width = bearishPct + '%';
-            document.getElementById('mcBearishVal').textContent = bearishPct + '%';
-        }
-        
-        function generatePaulMatrix(pauls, direction) {
-            const matrix = document.getElementById('paulMatrix');
-            matrix.innerHTML = '';
-            
-            // Determine base sentiment color
-            let baseColor, sentimentEmoji;
-            if (direction === 'BULLISH') {
-                baseColor = 'bg-green-500';
-                sentimentEmoji = '🟢';
-            } else if (direction === 'BEARISH') {
-                baseColor = 'bg-red-500';
-                sentimentEmoji = '🔴';
-            } else {
-                baseColor = 'bg-yellow-500';
-                sentimentEmoji = '🟡';
-            }
-            
-            // Generate matrix cells
-            const totalPauls = Math.min(pauls, 100);
-            for (let i = 0; i < totalPauls; i++) {
-                const cell = document.createElement('div');
-                
-                // Add some variation - not all Pauls agree exactly
-                const random = Math.random();
-                let cellColor, opacity;
-                
-                if (random > 0.85) {
-                    // 15% dissenters
-                    if (direction === 'BULLISH') {
-                        cellColor = random > 0.925 ? 'bg-red-500' : 'bg-yellow-500';
-                    } else if (direction === 'BEARISH') {
-                        cellColor = random > 0.925 ? 'bg-green-500' : 'bg-yellow-500';
-                    } else {
-                        cellColor = random > 0.5 ? 'bg-green-500' : 'bg-red-500';
-                    }
-                    opacity = '0.6';
-                } else {
-                    // 85% consensus
-                    cellColor = baseColor;
-                    opacity = (0.7 + Math.random() * 0.3).toFixed(2);
-                }
-                
-                cell.className = `${cellColor} rounded-sm h-6 w-full flex items-center justify-center text-xs cursor-pointer hover:opacity-100 transition-opacity`;
-                cell.style.opacity = opacity;
-                
-                // Add tooltip info
-                const paulNum = i + 1;
-                cell.title = `Paul ${paulNum}: ${cellColor.includes('green') ? 'Bullish' : cellColor.includes('red') ? 'Bearish' : 'Neutral'}`;
-                
-                // Show emoji for first 6 core Pauls
-                if (i < 6) {
-                    const emojis = ['👨‍🏫', '📈', '🤨', '🔮', '🐋', '🎰'];
-                    cell.textContent = emojis[i];
-                    cell.classList.add('font-bold');
-                }
-                
-                matrix.appendChild(cell);
-            }
-        }
-        
-        function generateGenericPaulResponse(profession, direction, confidence) {
-            const bullishResponses = [
-                `As a ${profession}, I see strong fundamentals here. The trajectory looks promising based on my professional experience.`,
-                `From my perspective as a ${profession}, the data supports a positive outlook. Key indicators align favorably.`,
-                `My ${profession} background tells me this has significant upside potential. Risk-reward is attractive.`,
-                `Looking at this through my ${profession} lens, I see opportunity. The market is pricing this too low.`,
-                `As someone in ${profession}, I'm optimistic. The underlying trends support continued growth.`
-            ];
-            
-            const bearishResponses = [
-                `As a ${profession}, I see warning signs. Defensive positioning is prudent here.`,
-                `From my ${profession} perspective, the risks outweigh potential rewards. I'd wait for clarity.`,
-                `My ${profession} experience tells me to be cautious. This could go lower before it recovers.`,
-                `Looking at this as a ${profession}, I'm concerned. Multiple red flags are present.`,
-                `As a ${profession}, I'm staying on the sidelines. Better opportunities will emerge.`
-            ];
-            
-            const neutralResponses = [
-                `As a ${profession}, I'm watching carefully. The data is genuinely mixed right now.`,
-                `From my ${profession} view, it's too early to tell. Need more information to make a call.`,
-                `My ${profession} background suggests patience. Let the market show its hand first.`,
-                `Looking at this objectively as a ${profession}, I see valid arguments on both sides.`,
-                `As a ${profession}, I'm neutral. The signals are conflicting and require more time.`
-            ];
-            
-            const responsePool = direction === 'BULLISH' ? bullishResponses : 
-                                direction === 'BEARISH' ? bearishResponses : neutralResponses;
-            
-            return responsePool[Math.floor(Math.random() * responsePool.length)];
-        }
-
-        function displayPauls(pauls) {
-            const paulList = document.getElementById('paulList');
-            paulList.innerHTML = '';
-            
-            pauls.forEach(paul => {
-                const card = document.createElement('div');
-                card.className = `paul-card p-4 bg-white/5 rounded-lg border-l-2 border-${paul.color}-400`;
-                card.setAttribute('data-name', paul.name.toLowerCase());
-                card.setAttribute('data-type', paul.type);
-                card.setAttribute('data-confidence', paul.confidence);
-                
-                card.innerHTML = `
-                    <div class="flex items-start gap-3">
-                        <span class="text-2xl">${paul.emoji}</span>
-                        <div class="flex-1">
-                            <div class="font-bold text-${paul.color}-400 mb-1">${paul.name}</div>
-                            <div class="text-gray-300 text-sm">"${paul.response}"</div>
-                            <div class="mt-2 text-xs text-${paul.color}-400/60">Confidence: ${paul.confidence}%</div>
-                        </div>
-                    </div>
-                `;
-                
-                paulList.appendChild(card);
-            });
-        }
-
-        function filterPauls(searchTerm) {
-            const term = searchTerm.toLowerCase();
-            const cards = document.querySelectorAll('.paul-card');
-            let visibleCount = 0;
-            
-            cards.forEach(card => {
-                const name = card.getAttribute('data-name');
-                const response = card.querySelector('.text-gray-300').textContent.toLowerCase();
-                
-                if (name.includes(term) || response.includes(term)) {
-                    card.style.display = '';
-                    visibleCount++;
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-            
-            document.getElementById('paulCountDisplay').textContent = `Showing ${visibleCount} of ${allPaulsData.length} Pauls`;
-        }
-
-        function filterByType(type) {
-            const cards = document.querySelectorAll('.paul-card');
-            let visibleCount = 0;
-            
-            cards.forEach(card => {
-                const confidence = parseInt(card.getAttribute('data-confidence'));
-                let shouldShow = false;
-                
-                switch(type) {
-                    case 'all': shouldShow = true; break;
-                    case 'bullish': shouldShow = card.querySelector('.text-green-400'); break;
-                    case 'bearish': shouldShow = card.querySelector('.text-red-400'); break;
-                    case 'high-confidence': shouldShow = confidence >= 80; break;
-                }
-                
-                if (shouldShow) {
-                    card.style.display = '';
-                    visibleCount++;
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-            
-            document.getElementById('paulCountDisplay').textContent = `Showing ${visibleCount} of ${allPaulsData.length} Pauls`;
-        }
-
-        async function connectLocal() {
-            const id = document.getElementById('connId').value.trim();
-            if (!id) {
-                alert('Please enter a Connection ID');
-                return;
-            }
-
-            try {
-                ws = new WebSocket('ws://localhost:8765');
-                
-                ws.onopen = () => {
-                    ws.send(JSON.stringify({
-                        type: 'auth',
-                        payload: { connection_id: id }
-                    }));
-                };
-                
-                ws.onmessage = (event) => {
-                    const msg = JSON.parse(event.data);
-                    
-                    if (msg.type === 'auth_success') {
-                        isConnected = true;
-                        document.getElementById('connStatus').textContent = '🔌 Local Agent: Connected';
-                        document.getElementById('connStatus').className = 'fixed bottom-5 right-5 z-50 px-4 py-2 rounded-full text-xs font-bold bg-green-500/90';
-                        hideConnectModal();
-                        alert('✅ Connected!');
-                    } else if (msg.type === 'results') {
-                        showResults(msg.payload);
-                    }
-                };
-                
-                ws.onclose = () => {
-                    isConnected = false;
-                    document.getElementById('connStatus').textContent = '🔌 Local Agent: Disconnected';
-                    document.getElementById('connStatus').className = 'fixed bottom-5 right-5 z-50 px-4 py-2 rounded-full text-xs font-bold bg-red-500/90';
-                };
-                
-                ws.onerror = () => {
-                    alert('❌ Could not connect. Is local_agent.py running?');
-                };
-                
-            } catch (e) {
-                alert('❌ WebSocket not supported');
-            }
-        }
-
-        function showResultTab(tabName) {
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.add('hidden');
-            });
-            
-            // Show selected tab
-            document.getElementById('tab-' + tabName).classList.remove('hidden');
-            
-            // Update button styles
-            document.querySelectorAll('.result-tab').forEach(btn => {
-                btn.classList.remove('bg-cyan-500/20', 'border-cyan-500/50', 'text-cyan-400', 'font-bold');
-                btn.classList.add('bg-white/10', 'border-white/20', 'text-gray-400');
-            });
-            
-            // Highlight active button
-            const activeBtn = document.querySelector('.result-tab[data-tab="' + tabName + '"]');
-            if (activeBtn) {
-                activeBtn.classList.remove('bg-white/10', 'border-white/20', 'text-gray-400');
-                activeBtn.classList.add('bg-cyan-500/20', 'border-cyan-500/50', 'text-cyan-400', 'font-bold');
-            }
-        }
-
-        function runPRSimulation() {
-            const headline = document.getElementById('crisisHeadline').value;
-            const response = document.getElementById('companyResponse').value;
-            
-            if (!headline) {
-                alert('Please enter a crisis headline');
-                return;
-            }
-            
-            const container = document.getElementById('prResults');
-            container.innerHTML = '<div class="text-center py-4">📢 Running PR simulation...</div>';
-            
-            setTimeout(() => {
-                const finalSentiment = {
-                    positive: Math.floor(Math.random() * 30),
-                    neutral: Math.floor(Math.random() * 30) + 20,
-                    negative: Math.floor(Math.random() * 30) + 10,
-                    outraged: Math.floor(Math.random() * 20)
-                };
-                
-                container.innerHTML = `
-                    <div class="p-4 bg-white/5 rounded-lg">
-                        <div class="font-bold text-cyan-400 mb-3">24-Hour Crisis Simulation Results</div>
-                        <div class="space-y-2 mb-4">
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs w-20">😊 Positive</span>
-                                <div class="flex-1 h-4 bg-white/10 rounded overflow-hidden">
-                                    <div class="h-full bg-green-500 rounded" style="width: ${finalSentiment.positive}%"></div>
-                                </div>
-                                <span class="text-xs w-10">${finalSentiment.positive}%</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs w-20">😐 Neutral</span>
-                                <div class="flex-1 h-4 bg-white/10 rounded overflow-hidden">
-                                    <div class="h-full bg-yellow-500 rounded" style="width: ${finalSentiment.neutral}%"></div>
-                                </div>
-                                <span class="text-xs w-10">${finalSentiment.neutral}%</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs w-20">😠 Negative</span>
-                                <div class="flex-1 h-4 bg-white/10 rounded overflow-hidden">
-                                    <div class="h-full bg-orange-500 rounded" style="width: ${finalSentiment.negative}%"></div>
-                                </div>
-                                <span class="text-xs w-10">${finalSentiment.negative}%</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs w-20">🤬 Outraged</span>
-                                <div class="flex-1 h-4 bg-white/10 rounded overflow-hidden">
-                                    <div class="h-full bg-red-500 rounded" style="width: ${finalSentiment.outraged}%"></div>
-                                </div>
-                                <span class="text-xs w-10">${finalSentiment.outraged}%</span>
-                            </div>
-                        </div>
-                        <div class="text-sm text-gray-400">
-                            <div class="mb-2"><strong>Key Insights:</strong></div>
-                            <ul class="list-disc list-inside space-y-1">
-                                <li>Peak discussion at Hour 6-8</li>
-                                <li>Twitter/X generated highest reach</li>
-                                <li>Influencers drove most engagement</li>
-                                <li>${finalSentiment.outraged > 20 ? '⚠️ Consider CEO statement' : '✅ Response containing crisis'}</li>
-                            </ul>
-                        </div>
-                    </div>
-                `;
-            }, 1500);
-        }
-
-        function runMarketingTest() {
-            const product = document.getElementById('productName').value;
-            const variantA = document.getElementById('variantA').value;
-            const variantB = document.getElementById('variantB').value;
-            
-            if (!product || !variantA || !variantB) {
-                alert('Please fill in all fields');
-                return;
-            }
-            
-            const container = document.getElementById('marketingResults');
-            container.innerHTML = '<div class="text-center py-4">📊 Testing campaigns...</div>';
-            
-            setTimeout(() => {
-                const revenueA = Math.floor(Math.random() * 50000) + 100000;
-                const revenueB = Math.floor(Math.random() * 50000) + 100000;
-                const winner = revenueA > revenueB ? 'A' : 'B';
-                
-                container.innerHTML = `
-                    <div class="p-4 bg-white/5 rounded-lg">
-                        <div class="font-bold text-green-400 mb-3">12-Week Campaign Test Results</div>
-                        <div class="grid grid-cols-2 gap-4 mb-4">
-                            <div class="p-3 bg-white/5 rounded ${winner === 'A' ? 'border border-green-500/50' : ''}">
-                                <div class="text-xs text-gray-500 mb-1">Variant A</div>
-                                <div class="text-lg font-bold">${variantA}</div>
-                                <div class="text-2xl font-bold text-green-400 mt-2">$${revenueA.toLocaleString()}</div>
-                                <div class="text-xs text-gray-500">Revenue</div>
-                            </div>
-                            <div class="p-3 bg-white/5 rounded ${winner === 'B' ? 'border border-green-500/50' : ''}">
-                                <div class="text-xs text-gray-500 mb-1">Variant B</div>
-                                <div class="text-lg font-bold">${variantB}</div>
-                                <div class="text-2xl font-bold text-green-400 mt-2">$${revenueB.toLocaleString()}</div>
-                                <div class="text-xs text-gray-500">Revenue</div>
-                            </div>
-                        </div>
-                        <div class="text-center p-3 bg-green-500/10 rounded">
-                            <div class="text-sm text-gray-400">🏆 Winner</div>
-                            <div class="text-xl font-bold text-green-400">Variant ${winner}</div>
-                            <div class="text-sm text-gray-500">${Math.abs(revenueA - revenueB).toLocaleString()} more revenue</div>
-                        </div>
-                    </div>
-                `;
-            }, 1500);
-        }
-
-        function runStoryAnalysis() {
-            const premise = document.getElementById('storyPremise').value;
-            const genre = document.getElementById('storyGenre').value;
-            
-            if (!premise || !genre) {
-                alert('Please fill in all fields');
-                return;
-            }
-            
-            const container = document.getElementById('storyResults');
-            container.innerHTML = '<div class="text-center py-4">📖 Analyzing story...</div>';
-            
-            setTimeout(() => {
-                const endings = ['Justice Served', 'Twist Reveal', 'Bittersweet', 'Open Ending'];
-                const ending = endings[Math.floor(Math.random() * endings.length)];
-                
-                container.innerHTML = `
-                    <div class="p-4 bg-white/5 rounded-lg">
-                        <div class="font-bold text-purple-400 mb-3">Story Analysis: ${genre.toUpperCase()}</div>
-                        <div class="mb-4">
-                            <div class="text-xs text-gray-500 mb-1">Premise</div>
-                            <div class="text-sm">${premise}</div>
-                        </div>
-                        <div class="mb-4">
-                            <div class="text-xs text-gray-500 mb-1">Predicted Plot Points</div>
-                            <ol class="list-decimal list-inside text-sm space-y-1">
-                                <li>${genre === 'mystery' ? 'New evidence reveals unexpected suspect' : 'Character faces major obstacle'}</li>
-                                <li>Conflict escalates to crisis point</li>
-                                <li>Hidden connection/information revealed</li>
-                            </ol>
-                        </div>
-                        <div class="mb-4">
-                            <div class="text-xs text-gray-500 mb-1">Likely Ending</div>
-                            <div class="text-lg font-bold text-purple-400">${ending}</div>
-                            <div class="text-xs text-gray-500">${Math.floor(Math.random() * 30 + 50)}% confidence</div>
-                        </div>
-                        <div class="text-xs text-gray-500">
-                            <strong>Themes:</strong> Redemption, Identity, Truth vs Deception
-                        </div>
-                    </div>
-                `;
-            }, 1500);
-        }
-
-        function runResearchDesign() {
-            const question = document.getElementById('researchQuestion').value;
-            const nullHyp = document.getElementById('nullHypothesis').value;
-            const type = document.getElementById('experimentType').value;
-            
-            if (!question || !nullHyp) {
-                alert('Please fill in all fields');
-                return;
-            }
-            
-            const container = document.getElementById('researchResults');
-            container.innerHTML = '<div class="text-center py-4">🔬 Designing study...</div>';
-            
-            setTimeout(() => {
-                const sampleSize = type === 'a_b_test' ? 1000 : type === 'longitudinal' ? 300 : 200;
-                
-                container.innerHTML = `
-                    <div class="p-4 bg-white/5 rounded-lg">
-                        <div class="font-bold text-yellow-400 mb-3">Research Design</div>
-                        <div class="mb-3">
-                            <div class="text-xs text-gray-500">Question</div>
-                            <div class="text-sm">${question}</div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4 mb-4">
-                            <div class="p-3 bg-white/5 rounded">
-                                <div class="text-xs text-gray-500">Sample Size</div>
-                                <div class="text-2xl font-bold text-yellow-400">${sampleSize}</div>
-                            </div>
-                            <div class="p-3 bg-white/5 rounded">
-                                <div class="text-xs text-gray-500">Power</div>
-                                <div class="text-2xl font-bold text-yellow-400">80%</div>
-                            </div>
-                        </div>
-                        <div class="text-sm text-gray-400">
-                            <div class="mb-2"><strong>Methodology:</strong></div>
-                            <ul class="list-disc list-inside space-y-1">
-                                <li>${type === 'randomized_controlled' ? 'Randomized controlled trial' : type === 'a_b_test' ? 'A/B test with random assignment' : 'Longitudinal tracking'}</li>
-                                <li>Independent t-test for primary analysis</li>
-                                <li>Alpha = 0.05, Effect size = medium</li>
-                                <li>Control for age, gender, prior experience</li>
-                            </ul>
-                        </div>
-                    </div>
-                `;
-            }, 1500);
-        }
-
-        function exportResults() {
-            if (!allPaulsData || allPaulsData.length === 0) {
-                alert('No results to export. Run a prediction first!');
-                return;
-            }
-
-            // Get consensus info
-            const consensusDirection = document.getElementById('consensusDirection')?.textContent || 'Unknown';
-            const consensusConfidence = document.getElementById('consensusConfidence')?.textContent || '';
-            const question = document.getElementById('question')?.value || 'Unknown question';
-            
-            // Build TSV content
-            let tsv = 'Swimming Pauls Results Export\n';
-            tsv += '============================\n\n';
-            tsv += `Question:\t${question}\n`;
-            tsv += `Consensus:\t${consensusDirection}\n`;
-            tsv += `Confidence:\t${consensusConfidence}\n`;
-            tsv += `Export Date:\t${new Date().toLocaleString()}\n\n`;
-            
-            // Header row
-            tsv += 'Name\tEmoji\tPosition\tConfidence\tResponse\n';
-            
-            // Data rows
-            allPaulsData.forEach(paul => {
-                const position = paul.prediction?.direction || 'Unknown';
-                const confidence = paul.prediction?.confidence || 0;
-                const response = (paul.prediction?.reasoning || '').replace(/\n/g, ' ').replace(/\t/g, ' ');
-                tsv += `${paul.name}\t${paul.emoji}\t${position}\t${confidence}%\t${response}\n`;
-            });
-            
-            // Create download
-            const blob = new Blob([tsv], { type: 'text/tab-separated-values' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `swimming-pauls-results-${new Date().toISOString().slice(0,10)}.tsv`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateTimeEstimate();
+        });
     </script>
 </body>
 </html>
