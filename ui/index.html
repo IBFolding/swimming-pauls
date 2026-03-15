@@ -8,43 +8,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'Space Mono', monospace; }
-        body {
-            background: #0a0a0f;
-            color: #fff;
-        }
+        body { background: #0a0a0f; color: #fff; }
         .scanline {
             background: linear-gradient(to bottom, transparent 50%, rgba(0,255,255,0.02) 50%);
             background-size: 100% 4px;
             pointer-events: none;
         }
-        .connection-status {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 100;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        .status-disconnected {
-            background: rgba(239,68,68,0.9);
-        }
-        .status-connected {
-            background: rgba(34,197,94,0.9);
-        }
     </style>
 </head>
 <body class="min-h-screen relative">
-
     <div class="scanline fixed inset-0 z-50"></div>
 
     <!-- Connection Status -->
-    <div id="connStatus" class="connection-status status-disconnected">
+    <div id="connStatus" class="fixed bottom-5 right-5 z-50 px-4 py-2 rounded-full text-xs font-bold bg-red-500/90">
         🔌 Local Agent: Disconnected
     </div>
-
-    <div class="scanline fixed inset-0 z-50"></div>
 
     <!-- Header -->
     <header class="p-6 flex justify-between items-center border-b border-white/10">
@@ -52,299 +30,53 @@
             <img src="paul.jpg" alt="PAUL" class="w-12 h-12 rounded-lg object-cover">
             <span class="text-xl font-bold tracking-tighter">SWIMMING_PAULS</span>
         </div>
-        
         <div class="flex items-center gap-3">
-            <a href="https://github.com/IBFolding/swimming-pauls" target="_blank"
-               class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded text-sm">
-                🐙 GitHub
-            </a>
-            
-            <button onclick="showConnectModal()" 
-                    class="px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 rounded text-sm text-cyan-400">
-                🔌 Connect Local
-            </button>
+            <a href="https://github.com/IBFolding/swimming-pauls" target="_blank" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded text-sm">🐙 GitHub</a>
+            <button onclick="showConnectModal()" class="px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 rounded text-sm text-cyan-400">🔌 Connect Local</button>
         </div>
     </header>
 
     <main class="max-w-4xl mx-auto p-6">
-        
         <!-- Hero -->
         <section class="text-center py-12">
-            <img src="paul.jpg" alt="PAUL" 
-                 class="w-48 h-48 mx-auto rounded-2xl object-cover mb-8 shadow-2xl shadow-cyan-500/20"
-            >
-            
-            <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tighter">
-                SWIMMING
-                <br>
-                <span class="text-cyan-400">PAULS</span>
-            </h1>
-            
+            <img src="paul.jpg" alt="PAUL" class="w-48 h-48 mx-auto rounded-2xl object-cover mb-8 shadow-2xl shadow-cyan-500/20">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tighter">SWIMMING<br><span class="text-cyan-400">PAULS</span></h1>
             <p class="text-xl text-gray-400 mb-4 italic">"Let the Pauls cook."</p>
-            
-            <p class="text-gray-500 max-w-xl mx-auto">
-                Run 100+ AI agents on your machine. Local. Private. No cloud.
-            </p>
+            <p class="text-gray-500 max-w-xl mx-auto">Run 100+ AI agents on your machine. Local. Private. No cloud.</p>
         </section>
 
-        <!-- Origin Story -->
+        <!-- Cast the Pool -->
         <section class="border border-white/10 rounded-xl p-6 mb-8">
-            <h2 class="text-lg font-bold mb-4 text-cyan-400">📖 THE ORIGIN STORY</h2>
-            
-            <div class="space-y-4 text-sm text-gray-300">
-                <p>
-                    It started on Sunset Boulevard. 2 AM. A self-driving Tesla with no one in it.
-                </p>
-                
-                <p>
-                    Inside, someone was listening to <span class="text-cyan-400">Swimming Paul</span> on repeat, 
-                    texting OpenClaw about MiroFish, and realizing... this is too complicated for regular people.
-                </p>
-                
-                <p>
-                    The idea hit like a lightning bolt: <strong class="text-white">What if we made it simple?</strong>
-                </p>
-                
-                <p>
-                    No cloud APIs. No complicated setup. Just download, run, and cast the pool. 
-                    Let 100+ AI personas argue about your question until they reach consensus.
-                </p>
-                
-                <p>
-                    Professor Paul brings the data. Trader Paul brings the markets. Skeptic Paul keeps everyone honest. 
-                    Visionary Paul sees around corners. And Degen Paul... well, Degen Paul is just here for the vibe.
-                </p>
-                
-                <p class="text-cyan-400 italic">
-                    "Let the Pauls cook."
-                </p>
-            </div>
-        </section>
-
-        <!-- What Is Swimming Pauls -->
-        <section class="border border-white/10 rounded-xl p-6 mb-8">
-            <h2 class="text-lg font-bold mb-4 text-cyan-400">🐟 WHAT IS SWIMMING PAULS?</h2>
-            
-            <div class="grid md:grid-cols-2 gap-6 text-sm">
-                <div class="space-y-3">
-                    <p class="text-gray-300">
-                        Swimming Pauls is a <strong class="text-white">multi-agent prediction engine</strong> 
-                        that runs entirely on your machine. No cloud. No API keys. No data leaving your computer.
-                    </p>
-                    
-                    <p class="text-gray-300">
-                        You ask a question. The Pauls argue about it. They debate, deliberate, and eventually 
-                        reach consensus. Each Paul has a unique perspective:
-                    </p>
-                    
-                    <ul class="space-y-2 text-gray-400">
-                        <li>👨‍🏫 <span class="text-cyan-400">Professor Paul</span> - Academic analysis</li>
-                        <li>📈 <span class="text-green-400">Trader Paul</span> - Market sentiment</li>
-                        <li>🤨 <span class="text-yellow-400">Skeptic Paul</span> - Risk management</li>
-                        <li>🔮 <span class="text-purple-400">Visionary Paul</span> - Long-term view</li>
-                        <li>🐋 <span class="text-blue-400">Whale Paul</span> - Institutional thinking</li>
-                        <li>🎰 <span class="text-pink-400">Degen Paul</span> - YOLO energy</li>
-                    </ul>
-                </div>
-                
-                <div class="space-y-4">
-                    <div class="p-4 bg-white/5 rounded-lg">
-                        <div class="font-bold text-white mb-2">🎯 How It Works</div>
-                        <ol class="text-gray-400 space-y-1 text-xs">
-                            <li>Connect your local agent</li>
-                            <li>Ask any question</li>
-                            <li>Pauls simulate & debate</li>
-                            <li>Get consensus + confidence</li>
-                        </ol>
-                    </div>
-                    
-                    <div class="p-4 bg-white/5 rounded-lg">
-                        <div class="font-bold text-white mb-2">🔒 Privacy First</div>
-                        <div class="text-gray-400 text-xs">
-                            Everything runs locally. Your questions never hit a server. 
-                            Your data stays on your machine. Even the AI models run locally.
-                        </div>
-                    </div>
-                    
-                    <div class="p-4 bg-white/5 rounded-lg">
-                        <div class="font-bold text-white mb-2">💰 Token ($PAUL)</div>
-                        <div class="text-gray-400 text-xs">
-                            Launching on Pump.fun. No airdrops. No free money. 
-                            Buy if you believe. Sell if you don't. Simple.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Connection Modal -->
-        <div id="connectModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center">
-            <div class="bg-gray-900 border border-cyan-500/30 rounded-2xl p-6 max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-2xl font-bold text-cyan-400">🔌 Connect Local Agent</h2>
-                    <button onclick="hideConnectModal()" class="text-gray-500 hover:text-white text-2xl leading-none">&times;</button>
-                </div>
-                
-                <p class="text-gray-400 mb-4 text-sm">
-                    Run the Swimming Pauls agent on your machine:
-                </p>
-                
-                <!-- Clone Step -->
-                <div class="mb-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm text-green-400 font-bold">1. Clone (if needed)</span>
-                        <button onclick="copyCode(this, 'cloneCode')" class="text-xs text-cyan-400 hover:text-cyan-300 px-2 py-1 bg-white/10 rounded">📋 Copy</button>
-                    </div>
-                    <div id="cloneCode" class="bg-black/70 p-3 rounded-lg font-mono text-xs text-gray-300 border border-white/10">
-                        <div class="select-all">cd ~ && git clone https://github.com/IBFolding/swimming-pauls.git</div>
-                    </div>
-                </div>
-                
-                <!-- Install Step -->
-                <div class="mb-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm text-green-400 font-bold">2. Install (first time)</span>
-                        <button onclick="copyCode(this, 'installCode')" class="text-xs text-cyan-400 hover:text-cyan-300 px-2 py-1 bg-white/10 rounded">📋 Copy</button>
-                    </div>
-                    <div id="installCode" class="bg-black/70 p-3 rounded-lg font-mono text-xs text-gray-300 border border-white/10">
-                        <div class="select-all">pip3 install websockets</div>
-                    </div>
-                </div>
-                
-                <!-- Run Step -->
-                <div class="mb-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm text-green-400 font-bold">3. Start Agent</span>
-                        <button onclick="copyCode(this, 'runCode')" class="text-xs text-cyan-400 hover:text-cyan-300 px-2 py-1 bg-white/10 rounded">📋 Copy</button>
-                    </div>
-                    <div id="runCode" class="bg-black/70 p-3 rounded-lg font-mono text-xs text-gray-300 border border-white/10">
-                        <div class="select-all">cd ~/swimming-pauls && python3 local_agent.py</div>
-                    </div>
-                </div>
-                
-                <!-- Step 4 -->
-                <div class="mb-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm text-green-400 font-bold">4. Connect</span>
-                    </div>
-                    
-                    <input type="text" id="connId" placeholder="Paste Connection ID from terminal..." 
-                           class="w-full p-3 bg-black/50 border border-cyan-500/30 rounded-lg text-white mb-3 focus:border-cyan-400 focus:outline-none text-sm"
-                    >
-                    
-                    <div class="flex gap-3">
-                        <button onclick="connectLocal()" class="flex-1 py-2 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-lg transition-colors text-sm">
-                            🔌 Connect
-                        </button>
-                        
-                        <button onclick="startDemoMode()" class="flex-1 py-2 bg-green-500/20 hover:bg-green-500/30 border border-green-500/50 text-green-400 font-bold rounded-lg transition-colors text-sm">
-                            🎮 Demo
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Tips -->
-                <div class="bg-white/5 rounded-lg p-3 text-xs">
-                    <div class="font-bold text-gray-400 mb-1">💡 Tips:</div>
-                    <ul class="text-gray-500 space-y-1 list-disc list-inside">
-                        <li>Use <code class="text-cyan-400">Demo Mode</code> to test without Python</li>
-                        <li>Connection ID appears in terminal when agent starts</li>
-                        <li>If <code class="text-cyan-400">python3</code> doesn't work, try <code class="text-cyan-400">python</code></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Simple App -->
-        <section class="border border-white/10 rounded-xl p-6">
             <h2 class="text-lg font-bold mb-4 text-cyan-400">CAST THE POOL</h2>
+            <input type="text" id="question" placeholder="Ask the Pauls anything..." class="w-full p-4 bg-black/40 border border-white/20 rounded-lg text-white placeholder-gray-500 mb-4 focus:border-cyan-400 focus:outline-none">
             
-            <input type="text" id="question" placeholder="Ask the Pauls anything..."
-                   class="w-full p-4 bg-black/40 border border-white/20 rounded-lg text-white placeholder-gray-500 mb-4 focus:border-cyan-400 focus:outline-none"
-            >
-            
-            <div class="flex gap-4 mb-2">
+            <div class="flex gap-4 mb-4">
                 <div class="flex-1">
                     <label class="text-xs text-gray-500 mb-1 block">Pauls: <span id="paulVal">50</span></label>
-                    <input type="range" id="paulSlider" min="10" max="1000000" value="50" step="10"
-                           class="w-full" style="accent-color: #22d3ee"
-                           oninput="updatePauls(this.value)"
-                    >
-                    <div class="flex justify-between text-xs text-gray-600 mt-1">
-                        <span>10</span>
-                        <span>1M</span>
-                    </div>
+                    <input type="range" id="paulSlider" min="10" max="1000000" value="50" step="10" class="w-full" style="accent-color: #22d3ee" oninput="updatePauls(this.value)">
                 </div>
-                
                 <div class="flex-1">
                     <label class="text-xs text-gray-500 mb-1 block">Rounds: <span id="roundVal">100</span></label>
-                    <input type="range" id="roundSlider" min="10" max="100000" value="100" step="10"
-                           class="w-full" style="accent-color: #22d3ee"
-                           oninput="updateRounds(this.value)"
-                    >
-                    <div class="flex justify-between text-xs text-gray-600 mt-1">
-                        <span>10</span>
-                        <span>100K</span>
-                    </div>
+                    <input type="range" id="roundSlider" min="10" max="100000" value="100" step="10" class="w-full" style="accent-color: #22d3ee" oninput="updateRounds(this.value)">
                 </div>
             </div>
-            
+
             <div class="mb-4 p-3 bg-white/5 rounded text-xs text-gray-400 flex justify-between items-center">
                 <span>⏱️ Estimated time: <span id="timeEstimate" class="text-cyan-400 font-bold">~2 seconds</span></span>
-                <span class="text-gray-500">Based on your hardware</span>
             </div>
 
-            <!-- Upload Data Section -->
-            <div class="mb-4 border border-white/10 rounded-lg p-4">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-sm font-bold text-cyan-400">📎 ATTACH CONTEXT</span>
-                    <span class="text-xs text-gray-500">Optional</span>
-                </div>
-                
-                <!-- Link Input -->
-                <div class="mb-3">
-                    <input type="text" id="linkInput" placeholder="Paste URL (article, tweet, chart...)"
-                           class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white placeholder-gray-600 text-sm focus:border-cyan-400 focus:outline-none"
-                    >
-                    <button onclick="addLink()" class="mt-2 text-xs text-cyan-400 hover:text-cyan-300">+ Add Link</button>
-                </div>
-                
-                <!-- File Upload -->
-                <div id="dropZone" class="border-2 border-dashed border-white/20 rounded-lg p-6 text-center hover:border-cyan-400/50 hover:bg-white/5 transition-colors cursor-pointer"
-                     onclick="document.getElementById('fileInput').click()"
-                     ondragover="event.preventDefault(); this.classList.add('border-cyan-400', 'bg-cyan-500/10');"
-                     ondragleave="this.classList.remove('border-cyan-400', 'bg-cyan-500/10');"
-                     ondrop="handleDrop(event)"
-                >
-                    <div class="text-3xl mb-2">📁</div>
-                    <div class="text-sm text-gray-400">Drop files here or click to upload</div>
-                    <div class="text-xs text-gray-600 mt-1">Images (PNG, JPG) • PDFs • TXT</div>
-                    <input type="file" id="fileInput" class="hidden" multiple 
-                           accept=".png,.jpg,.jpeg,.pdf,.txt" onchange="handleFiles(this.files)">
-                </div>
-                
-                <!-- Attached Items List -->
-                <div id="attachedItems" class="mt-3 space-y-2 hidden">
-                    <div class="text-xs text-gray-500 uppercase tracking-wider">Attached Context</div>
-                </div>
-            </div>
-
-            <button onclick="cast()" class="w-full py-4 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-lg transition-colors">
-                🐟 CAST THE POOL 🐟
-            </button>
+            <button onclick="cast()" class="w-full py-4 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-lg transition-colors">🐟 CAST THE POOL 🐟</button>
 
             <!-- Results -->
             <div id="results" class="mt-6 hidden">
-                <!-- Consensus Header -->
-                <div id="consensusHeader" class="text-center py-8 border border-white/10 rounded-lg mb-6">
+                <div class="text-center py-8 border border-white/10 rounded-lg mb-6">
                     <div class="text-5xl mb-3">🦷</div>
                     <div id="consensusDirection" class="text-4xl font-bold mb-2">BULLISH</div>
                     <div id="consensusConfidence" class="text-gray-400 text-lg">78% confidence</div>
                     <div id="consensusMessage" class="mt-4 text-sm text-gray-500 max-w-md mx-auto"></div>
                 </div>
 
-                <!-- Stats Grid -->
-                <div id="statsGrid" class="grid grid-cols-3 gap-4 mb-6">
+                <div class="grid grid-cols-3 gap-4 mb-6">
                     <div class="p-4 bg-white/5 rounded-lg text-center">
                         <div id="statRounds" class="text-2xl font-bold text-cyan-400">20</div>
                         <div class="text-xs text-gray-500">Rounds</div>
@@ -359,401 +91,57 @@
                     </div>
                 </div>
 
-                <!-- Agent Perspectives -->
-                <div class="space-y-3 text-sm" id="paulResponses">
+                <!-- THE PAULS SAY -->
+                <div class="mt-6 p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-lg">
+                    <div class="font-bold text-cyan-400 mb-3 text-lg">🦷 THE PAULS SAY</div>
+                    <div id="thePaulsSay" class="text-gray-300 text-sm leading-relaxed"></div>
+                </div>
+
+                <!-- Search/Filter -->
+                <div class="mt-6">
                     <div class="flex items-center justify-between mb-2">
                         <div class="text-xs text-gray-500 uppercase tracking-wider">What The Pauls Said</div>
                         <div class="text-xs text-gray-500" id="paulCountDisplay">Showing 6 of 6 Pauls</div>
                     </div>
-                    
-                    <!-- Search/Filter -->
-                    <div class="mb-3">
-                        <input type="text" id="paulSearch" placeholder="Search Pauls... (e.g., 'bullish', 'professor', 'high confidence')"
-                               class="w-full p-2 bg-black/40 border border-white/20 rounded-lg text-white placeholder-gray-600 text-xs focus:border-cyan-400 focus:outline-none"
-                               oninput="filterPauls(this.value)">
-                        
-                        <div class="flex gap-2 mt-2 text-xs flex-wrap">
-                            <button onclick="filterByType('all')" class="px-2 py-1 bg-white/10 hover:bg-white/20 rounded text-gray-400">All</button>
-                            <button onclick="filterByType('bullish')" class="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 rounded text-green-400">Bullish</button>
-                            <button onclick="filterByType('bearish')" class="px-2 py-1 bg-red-500/20 hover:bg-red-500/30 rounded text-red-400">Bearish</button>
-                            <button onclick="filterByType('high-confidence')" class="px-2 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 rounded text-cyan-400">High Conf (>80%)</button>
-                            <button onclick="filterByType('analytical')" class="px-2 py-1 bg-purple-500/20 hover:bg-purple-500/30 rounded text-purple-400">Analytical</button>
-                        </div>
+                    <input type="text" id="paulSearch" placeholder="Search Pauls..." class="w-full p-2 bg-black/40 border border-white/20 rounded-lg text-white placeholder-gray-600 text-xs mb-2" oninput="filterPauls(this.value)">
+                    <div class="flex gap-2 mb-3 text-xs flex-wrap">
+                        <button onclick="filterByType('all')" class="px-2 py-1 bg-white/10 hover:bg-white/20 rounded text-gray-400">All</button>
+                        <button onclick="filterByType('bullish')" class="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 rounded text-green-400">Bullish</button>
+                        <button onclick="filterByType('bearish')" class="px-2 py-1 bg-red-500/20 hover:bg-red-500/30 rounded text-red-400">Bearish</button>
+                        <button onclick="filterByType('high-confidence')" class="px-2 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 rounded text-cyan-400">High Conf</button>
                     </div>
-                    
-                    <div id="paulList" class="space-y-3 max-h-[500px] overflow-y-auto">
-                        <!-- Pauls will be dynamically generated here -->
-                    </div>
-                </div>
-
-                <!-- Key Insights -->
-                <div class="mt-6 p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-lg">
-                    <div class="font-bold text-cyan-400 mb-2">🔑 Key Insights</div>
-                    <ul id="keyInsights" class="text-sm text-gray-300 space-y-2">
-                        <li>• Strong consensus among analytical agents (Professor, Trader)</li>
-                        <li>• Skeptic Paul acknowledges upside despite risk concerns</li>
-                        <li>• Visionary Paul sees structural shift, not just cyclical move</li>
-                        <li>• Degen Paul's euphoria suggests possible local top - exercise caution</li>
-                    </ul>
-                </div>
-
-                <!-- Monte Carlo Simulation -->
-                <div class="mt-6 border border-white/10 rounded-lg p-4">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="font-bold text-cyan-400">🎲 Monte Carlo Simulation</div>
-                        <span class="text-xs text-gray-500">1000 runs</span>
-                    </div>
-                    
-                    <div class="space-y-3">
-                        <div class="flex items-center gap-3">
-                            <div class="w-20 text-xs text-gray-400">Bullish</div>
-                            <div class="flex-1 h-6 bg-white/5 rounded overflow-hidden">
-                                <div id="mcBullish" class="h-full bg-green-500/60 rounded" style="width: 67%"></div>
-                            </div>
-                            <div id="mcBullishVal" class="w-12 text-right text-xs text-green-400">67%</div>
-                        </div>
-                        
-                        <div class="flex items-center gap-3">
-                            <div class="w-20 text-xs text-gray-400">Neutral</div>
-                            <div class="flex-1 h-6 bg-white/5 rounded overflow-hidden">
-                                <div id="mcNeutral" class="h-full bg-yellow-500/60 rounded" style="width: 21%"></div>
-                            </div>
-                            <div id="mcNeutralVal" class="w-12 text-right text-xs text-yellow-400">21%</div>
-                        </div>
-                        
-                        <div class="flex items-center gap-3">
-                            <div class="w-20 text-xs text-gray-400">Bearish</div>
-                            <div class="flex-1 h-6 bg-white/5 rounded overflow-hidden">
-                                <div id="mcBearish" class="h-full bg-red-500/60 rounded" style="width: 12%"></div>
-                            </div>
-                            <div id="mcBearishVal" class="w-12 text-right text-xs text-red-400">12%</div>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-3 text-xs text-gray-500">
-                        Based on 1000 randomized simulation runs with varying market conditions
-                    </div>
-                </div>
-
-                <!-- Sensitivity Analysis -->
-                <div class="mt-6 border border-white/10 rounded-lg p-4">
-                    <div class="font-bold text-purple-400 mb-4">📊 Sensitivity Analysis</div>
-                    
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="p-3 bg-white/5 rounded">
-                            <div class="text-xs text-gray-400 mb-1">Market Sentiment</div>
-                            <div class="text-lg font-bold text-cyan-400">+42%</div>
-                            <div class="text-xs text-gray-500">Impact on outcome</div>
-                        </div>
-                        
-                        <div class="p-3 bg-white/5 rounded">
-                            <div class="text-xs text-gray-400 mb-1">Fundamentals</div>
-                            <div class="text-lg font-bold text-green-400">+28%</div>
-                            <div class="text-xs text-gray-500">Impact on outcome</div>
-                        </div>
-                        
-                        <div class="p-3 bg-white/5 rounded">
-                            <div class="text-xs text-gray-400 mb-1">Regulation</div>
-                            <div class="text-lg font-bold text-yellow-400">-15%</div>
-                            <div class="text-xs text-gray-500">Risk factor</div>
-                        </div>
-                        
-                        <div class="p-3 bg-white/5 rounded">
-                            <div class="text-xs text-gray-400 mb-1">Competition</div>
-                            <div class="text-lg font-bold text-red-400">-22%</div>
-                            <div class="text-xs text-gray-500">Risk factor</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Knowledge Graph -->
-                <div class="mt-6 border border-white/10 rounded-lg p-4">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="font-bold text-pink-400">🧠 Knowledge Graph</div>
-                        <span class="text-xs text-gray-500">Semantic relationships</span>
-                    </div>
-                    
-                    <div class="grid grid-cols-3 gap-4 text-center">
-                        <div class="p-3 bg-white/5 rounded">
-                            <div class="text-2xl font-bold text-cyan-400">847</div>
-                            <div class="text-xs text-gray-500">Entities</div>
-                        </div>
-                        
-                        <div class="p-3 bg-white/5 rounded">
-                            <div class="text-2xl font-bold text-purple-400">2,341</div>
-                            <div class="text-xs text-gray-500">Relationships</div>
-                        </div>
-                        
-                        <div class="p-3 bg-white/5 rounded">
-                            <div class="text-2xl font-bold text-green-400">156</div>
-                            <div class="text-xs text-gray-500">Emergent Patterns</div>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-4 p-3 bg-white/5 rounded">
-                        <div class="text-xs text-gray-400 mb-2">Key Concepts Identified:</div>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-2 py-1 bg-cyan-500/20 text-cyan-400 text-xs rounded">Market Cycle</span>
-                            <span class="px-2 py-1 bg-purple-500/20 text-purple-400 text-xs rounded">Adoption Curve</span>
-                            <span class="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded">Network Effects</span>
-                            <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded">Regulatory Risk</span>
-                            <span class="px-2 py-1 bg-pink-500/20 text-pink-400 text-xs rounded">Liquidity</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Backtesting -->
-                <div class="mt-6 border border-white/10 rounded-lg p-4">
-                    <div class="font-bold text-orange-400 mb-4">📉 Backtesting Results</div>
-                    
-                    <div class="grid grid-cols-4 gap-3">
-                        <div class="text-center">
-                            <div class="text-2xl font-bold text-cyan-400">78%</div>
-                            <div class="text-xs text-gray-500">Accuracy</div>
-                        </div>
-                        
-                        <div class="text-center">
-                            <div class="text-2xl font-bold text-green-400">+23%</div>
-                            <div class="text-xs text-gray-500">Avg Return</div>
-                        </div>
-                        
-                        <div class="text-center">
-                            <div class="text-2xl font-bold text-yellow-400">1.8</div>
-                            <div class="text-xs text-gray-500">Sharpe Ratio</div>
-                        </div>
-                        
-                        <div class="text-center">
-                            <div class="text-2xl font-bold text-red-400">-12%</div>
-                            <div class="text-xs text-gray-500">Max Drawdown</div>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-3 text-xs text-gray-500">
-                        Tested against 47 historical scenarios with similar characteristics
-                    </div>
+                    <div id="paulList" class="space-y-3 max-h-[500px] overflow-y-auto"></div>
                 </div>
             </div>
         </section>
-
-        <!-- Create Your Own Paul -->
-        <section class="border border-white/10 rounded-xl p-6 mb-8">
-            <h2 class="text-lg font-bold mb-4 text-cyan-400">🎨 CREATE YOUR PAUL</h2>
-            
-            <p class="text-gray-400 mb-4 text-sm">
-                Don't see a Paul that fits? Create your own persona and add them to the pool.
-            </p>
-            
-            <div class="grid md:grid-cols-2 gap-4">
-                <div>
-                    <input type="text" id="newPaulName" placeholder="Paul Name (e.g., Chef Paul)" 
-                           class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white placeholder-gray-500 mb-3 focus:border-cyan-400 focus:outline-none"
-                    >
-                    
-                    <select id="newPaulStyle" class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white mb-3 focus:border-cyan-400 focus:outline-none">
-                        <option value="">Select Style...</option>
-                        <option value="analytical">📊 Analytical - Data-driven, logical</option>
-                        <option value="emotional">❤️ Emotional - Gut feel, intuitive</option>
-                        <option value="contrarian">🔄 Contrarian - Devil's advocate</option>
-                        <option value="optimistic">🌟 Optimistic - Glass half full</option>
-                        <option value="pessimistic">🌧️ Pessimistic - Risk-focused</option>
-                        <option value="chaotic">🎲 Chaotic - Random, unpredictable</option>
-                    </select>
-                </div>
-                
-                <div>
-                    <textarea id="newPaulPrompt" placeholder="Describe your Paul's personality and expertise..." rows="3"
-                              class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none"
-                    ></textarea>
-                </div>
-            </div>
-            
-            <button onclick="createPaul()" class="mt-4 w-full py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-sm font-bold transition-colors">
-                ➕ ADD PAUL TO POOL
-            </button>
-            
-            <div id="customPauls" class="mt-4 space-y-2 hidden">
-                <div class="text-xs text-gray-500 uppercase tracking-wider mb-2">Your Custom Pauls</div>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer class="text-center py-12 text-gray-500 text-sm">
-            <p>Built by HOWARD • 100% Local • No Cloud</p>
-            <p class="mt-2">🐙 <a href="https://github.com/IBFolding/swimming-pauls" class="text-cyan-400 hover:underline">github.com/IBFolding/swimming-pauls</a></p>
-            
-            <!-- Optional: OpenClaw Skill (for advanced users) -->
-            <details class="mt-6 text-left max-w-md mx-auto">
-                <summary class="cursor-pointer text-xs text-gray-600 hover:text-gray-400">
-                    🔧 Advanced: OpenClaw CLI integration (optional)
-                </summary>
-                <div class="mt-3 p-3 bg-black/30 rounded text-xs font-mono">
-                    <div class="text-green-400"># For OpenClaw users only:</div>
-                    <div class="text-gray-400">openclaw run swimming-pauls</div>
-                </div>
-            </details>
-        </footer>
     </main>
 
-    <script>
-        // Attached context storage
-        let attachedContext = {
-            files: [],
-            links: []
-        };
-
-        function handleDrop(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            
-            const dropZone = document.getElementById('dropZone');
-            dropZone.classList.remove('border-cyan-400', 'bg-cyan-500/10');
-            
-            const files = event.dataTransfer.files;
-            handleFiles(files);
-        }
-
-        function handleFiles(files) {
-            const container = document.getElementById('attachedItems');
-            container.classList.remove('hidden');
-            
-            Array.from(files).forEach(file => {
-                const fileId = 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                
-                attachedContext.files.push({
-                    id: fileId,
-                    name: file.name,
-                    type: file.type,
-                    size: file.size,
-                    file: file
-                });
-                
-                // Display file
-                const fileDiv = document.createElement('div');
-                fileDiv.id = fileId;
-                fileDiv.className = 'flex items-center justify-between p-2 bg-white/5 rounded border border-white/10';
-                
-                const icon = file.type.startsWith('image/') ? '🖼️' : 
-                            file.type === 'application/pdf' ? '📄' : '📃';
-                
-                const sizeStr = file.size < 1024 ? file.size + ' B' :
-                               file.size < 1024*1024 ? (file.size/1024).toFixed(1) + ' KB' :
-                               (file.size/(1024*1024)).toFixed(1) + ' MB';
-                
-                fileDiv.innerHTML = `
-                    <div class="flex items-center gap-2">
-                        <span>${icon}</span>
-                        <div>
-                            <div class="text-sm text-gray-300 truncate max-w-[200px]">${file.name}</div>
-                            <div class="text-xs text-gray-500">${sizeStr}</div>
-                        </div>
-                    </div>
-                    <button onclick="removeFile('${fileId}')" class="text-red-400 hover:text-red-300 text-xs">✕</button>
-                `;
-                
-                container.appendChild(fileDiv);
-            });
-        }
-
-        function removeFile(fileId) {
-            const index = attachedContext.files.findIndex(f => f.id === fileId);
-            if (index > -1) {
-                attachedContext.files.splice(index, 1);
-                document.getElementById(fileId)?.remove();
-                
-                if (attachedContext.files.length === 0 && attachedContext.links.length === 0) {
-                    document.getElementById('attachedItems').classList.add('hidden');
-                }
-            }
-        }
-
-        function addLink() {
-            const input = document.getElementById('linkInput');
-            const url = input.value.trim();
-            
-            if (!url) return;
-            
-            // Basic URL validation
-            if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                alert('Please enter a valid URL starting with http:// or https://');
-                return;
-            }
-            
-            const linkId = 'link_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            
-            attachedContext.links.push({
-                id: linkId,
-                url: url
-            });
-            
-            const container = document.getElementById('attachedItems');
-            container.classList.remove('hidden');
-            
-            const linkDiv = document.createElement('div');
-            linkDiv.id = linkId;
-            linkDiv.className = 'flex items-center justify-between p-2 bg-white/5 rounded border border-white/10';
-            
-            // Extract domain for display
-            let domain = url;
-            try {
-                domain = new URL(url).hostname;
-            } catch (e) {}
-            
-            linkDiv.innerHTML = `
-                <div class="flex items-center gap-2">
-                    <span>🔗</span>
-                    <div>
-                        <div class="text-sm text-cyan-400 truncate max-w-[200px]">${domain}</div>
-                        <div class="text-xs text-gray-500 truncate max-w-[250px]">${url}</div>
-                    </div>
+    <!-- Connect Modal -->
+    <div id="connectModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center">
+        <div class="bg-gray-900 border border-cyan-500/30 rounded-2xl p-6 max-w-lg w-full mx-4">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-2xl font-bold text-cyan-400">🔌 Connect Local Agent</h2>
+                <button onclick="hideConnectModal()" class="text-gray-500 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div class="space-y-3">
+                <div class="bg-black/70 p-3 rounded-lg font-mono text-xs text-gray-300">
+                    <div>cd ~ && git clone https://github.com/IBFolding/swimming-pauls.git</div>
+                    <div>pip3 install websockets</div>
+                    <div>cd ~/swimming-pauls && python3 local_agent.py</div>
                 </div>
-                <button onclick="removeLink('${linkId}')" class="text-red-400 hover:text-red-300 text-xs">✕</button>
-            `;
-            
-            container.appendChild(linkDiv);
-            input.value = '';
-        }
+                <input type="text" id="connId" placeholder="Connection ID..." class="w-full p-3 bg-black/50 border border-cyan-500/30 rounded-lg text-white text-sm">
+                <div class="flex gap-3">
+                    <button onclick="connectLocal()" class="flex-1 py-2 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-lg text-sm">Connect</button>
+                    <button onclick="startDemoMode()" class="flex-1 py-2 bg-green-500/20 hover:bg-green-500/30 border border-green-500/50 text-green-400 font-bold rounded-lg text-sm">Demo</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        function removeLink(linkId) {
-            const index = attachedContext.links.findIndex(l => l.id === linkId);
-            if (index > -1) {
-                attachedContext.links.splice(index, 1);
-                document.getElementById(linkId)?.remove();
-                
-                if (attachedContext.files.length === 0 && attachedContext.links.length === 0) {
-                    document.getElementById('attachedItems').classList.add('hidden');
-                }
-            }
-        }
-
+    <script>
         let ws = null;
         let isConnected = false;
-
-        function copyToClipboard(elementId, btn) {
-            const element = document.getElementById(elementId);
-            const text = element.innerText;
-            
-            navigator.clipboard.writeText(text).then(() => {
-                // Show feedback
-                const originalText = btn.textContent;
-                btn.textContent = '✅ Copied!';
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy:', err);
-                // Fallback: select the text
-                const range = document.createRange();
-                range.selectNode(element);
-                window.getSelection().removeAllRanges();
-                window.getSelection().addRange(range);
-                alert('Text selected! Press Ctrl+C to copy');
-            });
-        }
-
-        // Alias for backwards compatibility
-        function copyCode(btn, elementId) {
-            copyToClipboard(elementId, btn);
-        }
+        let allPaulsData = [];
 
         function updatePauls(val) {
             document.getElementById('paulVal').textContent = parseInt(val).toLocaleString();
@@ -768,277 +156,85 @@
         function updateTimeEstimate() {
             const pauls = parseInt(document.getElementById('paulSlider').value);
             const rounds = parseInt(document.getElementById('roundSlider').value);
-            
-            // Rough estimate: ~0.05ms per Paul per round on decent hardware
-            // With overhead for consensus calculations
-            const baseTimePerPaulPerRound = 0.00005; // seconds
-            const overhead = 0.5; // base overhead seconds
-            const totalSeconds = (pauls * rounds * baseTimePerPaulPerRound) + overhead;
+            const totalSeconds = (pauls * rounds * 0.00005) + 0.5;
             
             let timeText;
-            if (totalSeconds < 1) {
-                timeText = '<1 second';
-            } else if (totalSeconds < 60) {
-                timeText = `~${Math.round(totalSeconds)} seconds`;
-            } else if (totalSeconds < 3600) {
-                timeText = `~${Math.round(totalSeconds / 60)} minutes`;
-            } else if (totalSeconds < 86400) {
-                timeText = `~${(totalSeconds / 3600).toFixed(1)} hours`;
-            } else {
-                timeText = `~${(totalSeconds / 86400).toFixed(1)} days`;
-            }
+            if (totalSeconds < 1) timeText = '<1 second';
+            else if (totalSeconds < 60) timeText = `~${Math.round(totalSeconds)} seconds`;
+            else if (totalSeconds < 3600) timeText = `~${Math.round(totalSeconds / 60)} minutes`;
+            else timeText = `~${(totalSeconds / 3600).toFixed(1)} hours`;
             
-            const el = document.getElementById('timeEstimate');
-            el.textContent = timeText;
-            
-            // Warn for very large simulations
-            if (pauls > 100000 || rounds > 10000) {
-                el.className = 'text-yellow-400 font-bold';
-                el.innerHTML = timeText + ' ⚠️ Heavy load';
-            } else {
-                el.className = 'text-cyan-400 font-bold';
-            }
+            document.getElementById('timeEstimate').textContent = timeText;
         }
 
         function showConnectModal() {
             document.getElementById('connectModal').classList.remove('hidden');
-            // Auto-focus the input
-            setTimeout(() => {
-                document.getElementById('connId').focus();
-            }, 100);
         }
 
         function hideConnectModal() {
             document.getElementById('connectModal').classList.add('hidden');
         }
 
-        async function connectLocal() {
-            const id = document.getElementById('connId').value.trim();
-            if (!id) {
-                alert('Please enter a Connection ID');
-                return;
-            }
-
-            // Update status to connecting
-            const status = document.getElementById('connStatus');
-            status.textContent = '🔌 Connecting...';
-            status.className = 'connection-status';
-            status.style.background = 'rgba(234, 179, 8, 0.9)'; // Yellow
-
-            console.log('Attempting to connect to ws://localhost:8765 with ID:', id);
-
-            try {
-                ws = new WebSocket('ws://localhost:8765');
-                
-                // Set a connection timeout
-                const timeout = setTimeout(() => {
-                    if (ws.readyState !== WebSocket.OPEN) {
-                        ws.close();
-                        alert('❌ Connection timeout.\n\nMake sure local_agent.py is running:\n\ncd swimming-pauls\npython local_agent.py');
-                        updateConnectionStatus(false);
-                    }
-                }, 5000);
-                
-                ws.onopen = () => {
-                    clearTimeout(timeout);
-                    console.log('WebSocket connected, sending auth...');
-                    ws.send(JSON.stringify({
-                        type: 'auth',
-                        payload: { connection_id: id }
-                    }));
-                };
-                
-                ws.onmessage = (event) => {
-                    console.log('Received message:', event.data);
-                    const msg = JSON.parse(event.data);
-                    
-                    if (msg.type === 'auth_success') {
-                        isConnected = true;
-                        updateConnectionStatus(true);
-                        hideConnectModal();
-                        alert('✅ Connected to local agent!');
-                    } else if (msg.type === 'auth_failed') {
-                        alert('❌ Invalid connection ID');
-                        ws.close();
-                    } else if (msg.type === 'results') {
-                        showResults(msg.payload);
-                    } else if (msg.type === 'stream') {
-                        updateProgress(msg.payload);
-                    }
-                };
-                
-                ws.onclose = (event) => {
-                    console.log('WebSocket closed:', event.code, event.reason);
-                    isConnected = false;
-                    updateConnectionStatus(false);
-                    if (!event.wasClean && !isConnected) {
-                        // Only show alert if we never successfully connected
-                    }
-                };
-                
-                ws.onerror = (err) => {
-                    clearTimeout(timeout);
-                    console.error('WebSocket error:', err);
-                    alert('❌ Could not connect to local agent.\n\nMake sure to run:\ncd swimming-pauls\npython local_agent.py');
-                    updateConnectionStatus(false);
-                };
-                
-            } catch (e) {
-                console.error('Exception:', e);
-                alert('❌ WebSocket not supported or blocked');
-                updateConnectionStatus(false);
-            }
-        }
-
         function startDemoMode() {
-            // Simulate a connected state without actual WebSocket
             isConnected = true;
-            updateConnectionStatus(true);
+            document.getElementById('connStatus').textContent = '🔌 Local Agent: Demo Mode';
+            document.getElementById('connStatus').className = 'fixed bottom-5 right-5 z-50 px-4 py-2 rounded-full text-xs font-bold bg-green-500/90';
             hideConnectModal();
             
-            // Create mock WebSocket object
             ws = {
                 send: function(data) {
                     const msg = JSON.parse(data);
-                    handleDemoMessage(msg);
-                },
-                close: function() {
-                    isConnected = false;
-                    updateConnectionStatus(false);
-                }
-            };
-            
-            alert('🎮 Demo Mode activated! Simulating 6 Pauls with realistic responses.');
-        }
-        
-        async function handleDemoMessage(msg) {
-            if (msg.type === 'command' && msg.payload.command === 'cast_pool') {
-                const params = msg.payload.params;
-                const totalRounds = params.rounds;
-                const pauls = params.pauls;
-                const context = params.context || { files: [], links: [] };
-                
-                // Show progress
-                document.getElementById('results').classList.remove('hidden');
-                
-                let contextMsg = '';
-                if (context.files.length > 0 || context.links.length > 0) {
-                    const parts = [];
-                    if (context.files.length > 0) parts.push(`${context.files.length} file(s)`);
-                    if (context.links.length > 0) parts.push(`${context.links.length} link(s)`);
-                    contextMsg = `
-                        <div class="text-center text-xs text-cyan-400 mt-2">
-                            📎 Analyzing with: ${parts.join(', ')}
-                        </div>
-                    `;
-                }
-                
-                // Simulate streaming progress
-                for (let i = 1; i <= Math.min(totalRounds, 10); i++) {
-                    await new Promise(r => setTimeout(r, 200));
-                    
-                    let statusMsg = `Round ${i}: Pauls deliberating...`;
-                    if (i === 3 && context.files.length > 0) statusMsg = `Round ${i}: Analyzing uploaded files...`;
-                    if (i === 5 && context.links.length > 0) statusMsg = `Round ${i}: Reading linked content...`;
-                    
-                    updateProgress({
-                        round: i,
-                        total: totalRounds,
-                        progress: i / totalRounds,
-                        status: statusMsg
-                    });
-                    
-                    // Add context message after first update
-                    if (i === 1 && contextMsg) {
-                        document.getElementById('results').innerHTML += contextMsg;
+                    if (msg.type === 'command' && msg.payload.command === 'cast_pool') {
+                        handleDemoCast(msg.payload.params);
                     }
                 }
-                
-                // Generate random but realistic result
-                const directions = ['BULLISH', 'BEARISH', 'NEUTRAL'];
-                const direction = directions[Math.floor(Math.random() * directions.length)];
-                const confidence = 0.5 + (Math.random() * 0.4);
-                const sentiment = (Math.random() * 2) - 1;
-                
-                // Show final results
-                showResults({
-                    consensus: { direction, confidence },
-                    sentiment,
-                    pauls,
-                    rounds_completed: totalRounds,
-                    message: `${pauls.toLocaleString()} Pauls reached consensus after ${totalRounds.toLocaleString()} rounds of deliberation.`
-                });
-            }
+            };
         }
 
-        function updateConnectionStatus(connected) {
-            const status = document.getElementById('connStatus');
-            if (connected) {
-                status.textContent = '🔌 Local Agent: Connected';
-                status.classList.remove('status-disconnected');
-                status.classList.add('status-connected');
-            } else {
-                status.textContent = '🔌 Local Agent: Disconnected';
-                status.classList.remove('status-connected');
-                status.classList.add('status-disconnected');
+        async function handleDemoCast(params) {
+            const totalRounds = params.rounds;
+            const pauls = params.pauls;
+            
+            document.getElementById('results').classList.remove('hidden');
+            
+            for (let i = 1; i <= Math.min(totalRounds, 10); i++) {
+                await new Promise(r => setTimeout(r, 200));
             }
+            
+            const directions = ['BULLISH', 'BEARISH', 'NEUTRAL'];
+            const direction = directions[Math.floor(Math.random() * directions.length)];
+            const confidence = 0.5 + (Math.random() * 0.4);
+            const sentiment = (Math.random() * 2) - 1;
+            
+            showResults({
+                consensus: { direction, confidence },
+                sentiment,
+                pauls,
+                rounds_completed: totalRounds,
+                message: `${pauls.toLocaleString()} Pauls reached consensus after ${totalRounds.toLocaleString()} rounds.`
+            });
         }
 
         function cast() {
             const q = document.getElementById('question').value.trim();
             if (!q) return;
-
+            
             if (!isConnected) {
-                // Auto-start demo mode if not connected
                 startDemoMode();
             }
-
-            // Perform cast (works for both demo and real connection)
-            performCast(q);
-        }
-        
-        function performCast(q) {
-            const pauls = document.getElementById('paulVal').textContent;
-            const rounds = document.getElementById('roundVal').textContent;
-
-            // Prepare context
-            const context = {
-                files: attachedContext.files.map(f => ({
-                    name: f.name,
-                    type: f.type,
-                    size: f.size
-                })),
-                links: attachedContext.links.map(l => l.url)
-            };
-
+            
+            const pauls = parseInt(document.getElementById('paulVal').textContent.replace(/,/g, ''));
+            const rounds = parseInt(document.getElementById('roundVal').textContent.replace(/,/g, ''));
+            
             ws.send(JSON.stringify({
                 type: 'command',
                 payload: {
                     command: 'cast_pool',
-                    params: {
-                        question: q,
-                        pauls: parseInt(pauls),
-                        rounds: parseInt(rounds),
-                        context: context
-                    }
+                    params: { question: q, pauls, rounds }
                 }
             }));
-
-            document.getElementById('results').classList.remove('hidden');
-            document.getElementById('results').innerHTML = '<div class="text-center py-8">🦷 Casting the pool...</div>';
             
-            // Show context summary if any
-            if (context.files.length > 0 || context.links.length > 0) {
-                const ctxSummary = [];
-                if (context.files.length > 0) ctxSummary.push(`${context.files.length} file(s)`);
-                if (context.links.length > 0) ctxSummary.push(`${context.links.length} link(s)`);
-                
-                document.getElementById('results').innerHTML += `
-                    <div class="text-center text-xs text-gray-500 mt-2">
-                        Analyzing with: ${ctxSummary.join(', ')}
-                    </div>
-                `;
-            }
+            document.getElementById('results').classList.remove('hidden');
         }
 
         function showResults(payload) {
@@ -1054,186 +250,81 @@
             };
             const colorClass = colors[direction] || colors['NEUTRAL'];
             
-            // Update consensus header
             document.getElementById('consensusDirection').textContent = direction;
             document.getElementById('consensusDirection').className = `text-4xl font-bold mb-2 ${colorClass}`;
             document.getElementById('consensusConfidence').textContent = `${confidence}% confidence`;
-            document.getElementById('consensusMessage').textContent = payload.message || `${payload.pauls || 50} Pauls reached consensus after ${payload.rounds_completed || 20} rounds of deliberation.`;
+            document.getElementById('consensusMessage').textContent = payload.message || '';
             
-            // Update stats
             document.getElementById('statRounds').textContent = payload.rounds_completed || 20;
             document.getElementById('statPauls').textContent = payload.pauls || 50;
             document.getElementById('statSentiment').textContent = (sentiment > 0 ? '+' : '') + sentiment.toFixed(2);
             document.getElementById('statSentiment').className = `text-2xl font-bold ${sentiment > 0 ? 'text-green-400' : sentiment < 0 ? 'text-red-400' : 'text-yellow-400'}`;
             
-            // Generate dynamic Paul responses based on direction and number of Pauls
+            // Generate THE PAULS SAY summary
+            const thePaulsSay = generateThePaulsSay(direction, confidence);
+            document.getElementById('thePaulsSay').textContent = thePaulsSay;
+            
+            // Generate Paul cards
             generatePaulCards(payload.pauls || 50, direction, confidence);
             
-            // Update insights with Monte Carlo and backtesting
-            const insights = generateInsights(direction, confidence, sentiment);
-            document.getElementById('keyInsights').innerHTML = insights.map(i => `<li>• ${i}</li>`).join('');
-            
-            // Update Monte Carlo visualization
-            updateMonteCarlo(direction, confidence);
-            
-            // Scroll to results
             document.getElementById('results').scrollIntoView({behavior: 'smooth', block: 'start'});
         }
-        
-        function generatePaulResponses(direction, confidence) {
-            const responses = {
-                BULLISH: {
-                    prof: `After running extensive regression analysis on 127 comparable historical scenarios, the data presents a compelling case. The R-squared value of 0.84 indicates strong predictive power, with ${confidence}% probability of upward movement given current market conditions. Key factors include: (1) Structural market shifts aligning with 2017 and 2020 patterns, (2) Institutional inflow metrics showing sustained accumulation over 90-day periods, (3) Developer activity indices at 18-month highs suggesting genuine utility growth. The Monte Carlo simulations across 10,000 iterations consistently project positive outcomes within 2 standard deviations. However, I must note that past performance doesn't guarantee future results, and black swan events remain outside this model's confidence intervals. My Bayesian updating suggests we should revise priors upward based on new on-chain data.`,
-                    
-                    trader: `I've been watching order flow for 12 hours straight and the tape doesn't lie. We're seeing consistent bid support at every dip - that's institutional algos accumulating, not retail FOMO. The volume profile shows a massive volume node building between here and 20% higher, which typically acts as a magnet for price. I've seen this exact setup three times this year: February (worked), May (worked), and August (chopped but eventually broke out). The risk/reward here is asymmetric - you're risking maybe 8% downside for 35-50% upside potential. Funding rates are neutral, which means we're not in euphoria territory yet. My edge cases: if we lose the 200D MA with volume, I'm out. Otherwise, this is a high-conviction long. Size accordingly.`,
-                    
-                    skeptic: `Look, I've been doing this long enough to know when something feels too easy. The bullish case is compelling - I'll grant you that. The technical setup is clean, fundamentals have improved, and sentiment metrics aren't overheated. But here's what keeps me up at night: (1) Correlation with risk assets is at 0.89 - if equities dump 20%, this follows, (2) Regulatory overhang remains unresolved with 3 major jurisdictions considering restrictive frameworks, (3) On-chain metrics show 40% of supply moved in last 30 days - that's distribution, not accumulation. My base case: +15% upside before reality check. My tail risk case: -60% if macro cracks. Position size for the downside scenario, not the upside. Trust me, I've seen this movie before. The ending isn't always happy.`,
-                    
-                    visionary: `We're witnessing something profound that most market participants won't recognize until it's obvious in hindsight. This isn't just another cyclical move - it's a paradigm shift in how value accrues in decentralized systems. Consider: (1) The infrastructure moat being built today will seem impenetrable by 2026, (2) Network effects are crossing critical thresholds where marginal utility creates exponential adoption, (3) The generational wealth transfer from boomers to digital natives favors this asset class structurally. I've mapped 47 similar technological inflection points in history - railroads, electricity, internet, mobile. In every case, the 'bubble' calls came early, and the real growth happened after the skeptics gave up. We're entering the deployment phase of a 20-year adoption S-curve. Position for the decade, not the quarter.`,
-                    
-                    whale: `I've spoken with six institutional desks this week. The consensus among sophisticated allocators is shifting rapidly. Three months ago: 'Interesting technology, regulatory uncertainty.' Today: 'Core allocation thesis, building positions methodically.' Here's what matters for large capital deployment: (1) Liquidity depth now supports $50M+ entries without excessive slippage, (2) Custody solutions from 12 major providers eliminate operational risk, (3) Regulatory clarity in major jurisdictions creates compliance framework for pension/endowment capital. We're seeing systematic allocation from family offices and smaller hedge funds. The sovereign wealth funds aren't in yet - that's the next phase. My accumulation zone has been $X-Y for 6 months. This breakout confirms what our models projected 18 months ago.`,
-                    
-                    degen: `BRO. BROOOO. Do you see what I'm seeing?? Chart looks like a coiled spring ready to EXPLODE! 🚀🚀🚀 Listen, I've been in 47 discords and everyone's saying the same thing - VIBES ARE IMMACULATE. The meme momentum alone is worth 2x. You know what happens when Professor Paul and Whale Paul agree? That's the signal. That's THE SIGNAL. I've mortgaged my cat's future on this (don't ask). Liquidation price? Irrelevant. We're going so vertical that shorts will be begging for mercy. I calculated it - if we hit my price target, I can finally afford the lambo WITH the spoiler. Not financial advice but also definitely financial advice. WAGMI! SEND IT! Apes together strong! 💎🙌🦍`
-                },
-                BEARISH: {
-                    prof: `The statistical evidence warrants significant caution. Running the same regression models that served us well in January and September of last year, I'm seeing divergence signals that preceded 30%+ corrections. Specifically: (1) Momentum indicators showing bearish divergence on 4h, daily, and weekly timeframes - this multi-timeframe confluence is rare and historically significant, (2) Funding rate normalized against volatility is at 92nd percentile - crowded long positioning, (3) Options skew has flipped puts-over-calls for first time since March crash. The ${confidence}% probability of decline reflects not just technical factors but structural market dynamics. Liquidity metrics from primary venues show 40% reduction in market depth over past 2 weeks. My models suggest defensive positioning until these imbalances resolve.`,
-                    
-                    trader: `I'm cutting risk here. Hard. The setup that looked so clean 48 hours ago has degraded rapidly. Key concerns: (1) Failed breakout above resistance with volume divergence - that's distribution, not accumulation, (2) We're trading below the volume-weighted average price for 7 consecutive sessions - institutions are underwater and may puke, (3) Correlation with high-beta tech has flipped positive again - this trades like a risk asset, not an uncorrelated hedge. My system flipped short on the 4h close below $X. I've seen this pattern before - the February fakeout that chopped 30% longs before the real move. Not saying we crash, but probability favors lower prices near-term. Stops are tight. Cash is a position. Protect your capital.`,
-                    
-                    skeptic: `Finally, some sanity returns to this market. I've been the voice in the wilderness for months, and now the data validates what I've been saying. Let's be clear about what we're facing: (1) Unsustainable tokenomics with 15% annual inflation while user growth flatlines, (2) Regulatory noose tightening with three enforcement actions pending that could freeze major liquidity venues, (3) Technical deterioration across every timeframe that matters. The bulls will tell you 'this time is different' - they always do. It's never different. Markets cycle. Euphoria fades. The bill comes due. My conservative target is -35% from here. The bear case? -70% if macro cracks coincide with regulatory action. I've positioned defensively since January. The pain trade is lower, not higher. Wait for blood in the streets.`,
-                    
-                    visionary: `We're not ready for the next leg up. The infrastructure, the adoption, the regulatory clarity - it's all 18-24 months away from where the bulls think we are today. I've mapped the adoption curves for every major technological shift in history. The pattern is clear: initial hype, crash of expectations, silent building phase, then sustained growth. We're still in the crash-of-expectations phase. What I'm watching: (1) Real user adoption metrics (not speculative trading) remain below 2021 peaks, (2) Developer ecosystem growth has plateaued for 9 months, (3) No killer app has emerged to drive mainstream usage. The visionary case remains intact - but the timeline extends. Position for 2026-2027, not Q2 2025. Patience will be rewarded. Premature conviction will be punished.`,
-                    
-                    whale: `We're reducing exposure. Methodically. The liquidity that supported our accumulation phase is drying up faster than public data suggests. Private market color: (1) Three major market makers have reduced risk limits by 40% in past month, (2) OTC flow has flipped 60% sell-side despite price stability - smart money distributing, (3) Prime brokerage desks reporting forced liquidations from levered players who bought the local top. We're not panic selling - we're risk managing. The institutional adoption thesis remains valid long-term, but near-term catalysts are exhausted. My target re-entry is 30-40% lower, where forced liquidations create dislocation. For now, cash is king. Don't confuse a bull market with brains. The tide is going out.`,
-                    
-                    degen: `Uh oh... guys? Is this... is this the dump? 😰 I've been refreshing the chart every 3 seconds for 6 hours and it just keeps going down. My liquidation price is getting AWFULLY CLOSE. Maybe... maybe I shouldn't have used 50x leverage? My mom's gonna kill me if I lose her retirement fund again. BUT DIAMOND HANDS! 💎🙌 We HODL through the pain! Right? RIGHT?! *checks portfolio* *sees -40%* *nervous sweating intensifies* Okay maybe I should have listened to Skeptic Paul just this once. But it's too late now! If I sell, I realize the loss! If I hold, maybe... maybe it comes back? This is fine. Everything is fine. *internal screaming*`
-                },
-                NEUTRAL: {
-                    prof: `The data presents a genuinely ambiguous picture that warrants intellectual humility. Running our full suite of models: (1) Trend-following systems are long but weakening, (2) Mean-reversion signals are neutral, (3) Volatility regime models suggest transition period with elevated uncertainty. The ${confidence}% confidence interval spans both significant upside and downside scenarios. Key variables I'm monitoring: macro liquidity conditions (Fed balance sheet trajectory), regulatory clarity timeline, and real economic activity metrics vs. speculative flows. My Bayesian prior has widened considerably - the signal-to-noise ratio in current price action is poor. The prudent approach is reduced position sizing until directional conviction emerges. This is a 'don't know' environment masquerading as a 'do know' one.`,
-                    
-                    trader: `Sitting on my hands. Choppy, range-bound price action with no edge. Here's what I'm seeing: (1) We're stuck between support at $X and resistance at $Y for 23 sessions - that's consolidation, not accumulation, (2) Volatility compression to 6-month lows suggests explosive move coming, but direction is coin flip, (3) Order book shows passive two-sided interest - algos collecting spread, not positioning directionally. I've tried fading the range twice and got chopped. Cost of doing business, but I'm done until we see a clean breakout with volume. Funding is neutral, sentiment is neutral, flow is neutral. Sometimes the best trade is no trade. Preserving capital for when opportunity presents. Alert set for breaks of $X or $Y. Until then, observing.`,
-                    
-                    skeptic: `This is exactly what I expected - nobody knows anything, and the certainty you hear from both bulls and bears is performative nonsense. Let's catalog what we DON'T know: (1) Macro trajectory with conflicting Fed signals and sticky inflation, (2) Regulatory outcomes in three major jurisdictions with opaque timelines, (3) True user adoption vs. speculative wash trading. Anyone claiming high conviction here is selling you something. The range-bound price action reflects genuine uncertainty, not 'accumulation before the breakout' or 'distribution before the crash.' Both scenarios are possible. My base case: continued chop with occasional fakeouts in both directions that liquidate leveraged players on both sides. Position small, stay flexible, and don't let anyone convince you they know what's next. The market will make fools of us all eventually.`,
-                    
-                    visionary: `We're in the messy middle of a major transition. Not the beginning, not the end - the hard work phase where infrastructure gets built quietly while speculators lose interest. This is actually the most interesting period if you zoom out: (1) Fundamental capabilities are expanding while price stagnates - classic value building, (2) The next generation of applications is being built by developers who survived the last cycle, not tourists, (3) Institutional infrastructure is being laid for the next wave of adoption. The price will eventually reflect this progress, but timing is genuinely uncertain. Could be months, could be years. The visionary play is to build through this period, not trade it. Accumulate knowledge, relationships, and strategic positions. The winners of the next cycle are being determined right now, in the quiet, while everyone else argues about price.`,
-                    
-                    whale: `Sideways. Institutional flow is neutral - small inflows offset by small outflows. We're not accumulating aggressively, but we're not distributing either. Watching: (1) Correlation breakdown with traditional risk assets - if this decouples, it becomes a unique portfolio diversifier, (2) Regulatory developments in Asia that could unlock significant capital, (3) Real-world adoption metrics from enterprise partnerships. Until one of these catalysts triggers, we're range-bound. My bias is higher eventually, but 'eventually' is doing a lot of work. For now, maintaining core position with dry powder for either a breakdown (buy) or breakout (chase). The patient capital wins in these environments. No rush. The market will still be there in six months.`,
-                    
-                    degen: `Idk man... chart looks like a flatline. Is this thing dead? 😴 I've been waiting for volatility for DAYS and nothing. Where's the pump? Where's the dump? Just give me SOMETHING. My adrenaline is fading. My dopamine is crashing. This is worse than a dump - at least dumps are EXCITING. This is just... boring. Wen volatility? Wen lambo? Wen moon? I'm gonna go touch grass or something. Wake me up when something happens. *refresh* *refresh* *refresh* Still nothing. Okay fine, I'll study for my exam or whatever. BUT I'M KEEPING THE TAB OPEN. 👀`
-                }
-            };
-            return responses[direction] || responses.NEUTRAL;
-        }
-        
-        function generateInsights(direction, confidence, sentiment) {
-            const base = [
-                `Strong consensus among analytical agents (${confidence}% confidence)`,
-                sentiment > 0.3 ? 'Sentiment metrics indicate growing optimism' : sentiment < -0.3 ? 'Sentiment metrics showing caution' : 'Sentiment remains mixed'
-            ];
-            
-            if (direction === 'BULLISH') {
-                base.push('Visionary Paul sees structural shift, not just cyclical move');
-                base.push(confidence > 75 ? 'Degen Paul euphoria suggests possible local top - exercise caution' : 'Room to run before euphoria kicks in');
-            } else if (direction === 'BEARISH') {
-                base.push('Skeptic Paul vindicated - risk management pays off');
-                base.push('Consider cost averaging if long-term bullish');
-            } else {
-                base.push('Multiple valid scenarios - position for volatility');
-                base.push('Wait for directional conviction before sizing up');
-            }
-            
-            return base;
-        }
 
-        // Store all generated Pauls for filtering
-        let allPaulsData = [];
+        function generateThePaulsSay(direction, confidence) {
+            const summaries = {
+                BULLISH: `After extensive deliberation across ${confidence}% confidence threshold, the Pauls have reached a BULLISH consensus. Professor Paul's regression analysis aligns with Trader Paul's order flow observations. Visionary Paul sees paradigm shift potential, while Whale Paul confirms institutional accumulation. Even Skeptic Paul acknowledges favorable risk/reward, though with noted tail risks. Degen Paul's euphoria suggests monitoring for local top signals.`,
+                BEARISH: `The Pauls have converged on a BEARISH outlook with ${confidence}% confidence. Professor Paul's statistical models show divergence signals, while Trader Paul has cut risk positions. Skeptic Paul finally sees validation of long-held caution. Visionary Paul extends timeline expectations, and Whale Paul confirms distribution patterns. Degen Paul is (as expected) panic-holding through the drawdown.`,
+                NEUTRAL: `The Pauls remain in NEUTRAL territory at ${confidence}% confidence - a genuine 'don't know' environment. Professor Paul's models show mixed signals, while Trader Paul sits on hands awaiting clear breakout. Skeptic Paul notes the uncertainty itself is the signal. Visionary Paul sees consolidation before next leg, and Whale Paul maintains core positions without aggressive deployment.`
+            };
+            return summaries[direction] || summaries.NEUTRAL;
+        }
 
         function generatePaulCards(pauls, direction, confidence) {
             const paulList = document.getElementById('paulList');
             paulList.innerHTML = '';
             allPaulsData = [];
             
-            const basePauls = [
-                { name: 'Professor Paul', emoji: '👨‍🏫', type: 'analytical', baseConfidence: 82, color: 'cyan' },
-                { name: 'Trader Paul', emoji: '📈', type: 'market', baseConfidence: 76, color: 'green' },
-                { name: 'Skeptic Paul', emoji: '🤨', type: 'contrarian', baseConfidence: 61, color: 'yellow' },
-                { name: 'Visionary Paul', emoji: '🔮', type: 'visionary', baseConfidence: 89, color: 'purple' },
-                { name: 'Whale Paul', emoji: '🐋', type: 'institutional', baseConfidence: 71, color: 'blue' },
-                { name: 'Degen Paul', emoji: '🎰', type: 'chaotic', baseConfidence: 94, color: 'pink' }
-            ];
-            
-            const responses = generatePaulResponses(direction, confidence);
-            
-            // Generate the 6 main Pauls
-            const mainPauls = [
-                { ...basePauls[0], response: responses.prof },
-                { ...basePauls[1], response: responses.trader },
-                { ...basePauls[2], response: responses.skeptic },
-                { ...basePauls[3], response: responses.visionary },
-                { ...basePauls[4], response: responses.whale },
-                { ...basePauls[5], response: responses.degen }
-            ];
-            
-            // If more Pauls requested, generate additional ones
-            if (pauls > 6) {
-                const professions = [
-                    'Chef', 'Lawyer', 'Doctor', 'Engineer', 'Artist', 'Musician',
-                    'Writer', 'Athlete', 'Teacher', 'Nurse', 'Pilot', 'Scientist',
-                    'Farmer', 'Carpenter', 'Plumber', 'Electrician', 'Mechanic',
-                    'Designer', 'Photographer', 'Journalist', 'Politician', 'CEO',
-                    'Entrepreneur', 'Investor', 'Banker', 'Real Estate', 'Sales',
-                    'Marketing', 'HR', 'Consultant', 'Analyst', 'Developer'
-                ];
-                
-                for (let i = 6; i < Math.min(pauls, 50); i++) {
-                    const profession = professions[(i - 6) % professions.length];
-                    const variantConfidence = Math.floor(Math.random() * 40) + 60;
-                    const sentiment = Math.random() > 0.5 ? 'bullish' : (Math.random() > 0.5 ? 'bearish' : 'neutral');
-                    
-                    mainPauls.push({
-                        name: `${profession} Paul`,
-                        emoji: ['👨‍🍳', '⚖️', '🏥', '🔧', '🎨', '🎵', '✍️', '🏃', '📚', '👩‍⚕️', '✈️', '🔬', '🌾', '🔨', '🚿', '💡', '🚗', '🎭', '📷', '📰', '🏛️', '💼'][i % 22],
-                        type: 'general',
-                        baseConfidence: variantConfidence,
-                        color: sentiment === 'bullish' ? 'green' : sentiment === 'bearish' ? 'red' : 'yellow',
-                        response: generateGenericPaulResponse(profession, direction, sentiment),
-                        sentiment: sentiment
-                    });
-                }
-            }
-            
-            // Store for filtering
-            allPaulsData = mainPauls;
-            
-            // Display all
-            displayPauls(mainPauls);
-            
-            // Update count
-            document.getElementById('paulCountDisplay').textContent = `Showing ${mainPauls.length} of ${pauls} Pauls`;
-        }
-
-        function generateGenericPaulResponse(profession, direction, sentiment) {
             const responses = {
                 BULLISH: {
-                    positive: `As a ${profession}, I see strong fundamentals here. The trajectory looks promising based on my professional experience.`,
-                    neutral: `From my perspective as a ${profession}, this has potential but requires careful monitoring.`,
-                    cautious: `While others are bullish, my ${profession} background tells me to proceed with measured optimism.`
+                    prof: `Regression analysis indicates ${confidence}% probability of upward movement. Historical precedents support this trajectory. R-squared of 0.84 with 10,000 Monte Carlo iterations projecting positive outcomes.`,
+                    trader: `Order flow is bullish. Smart money accumulating. Volume profile shows magnet at 20% higher. Risk/reward asymmetric - 8% downside vs 35-50% upside.`,
+                    skeptic: `While risks exist, risk/reward shifted favorably. Correlation with risk assets at 0.89 remains concern. Position size for downside scenario.`,
+                    visionary: `We're at inflection point. Next 6 months obvious in hindsight. 20-year adoption S-curve deployment phase. Position for decade, not quarter.`,
+                    whale: `Liquidity sufficient for institutional entry. Smart money positioning. Accumulation zone confirmed. Sovereign wealth next phase.`,
+                    degen: `CHART GO BRRRRR! 🚀 Send it! VIBES ARE IMMACULATE! Professor + Whale agreement = THE SIGNAL! WAGMI! 💎🙌`
                 },
                 BEARISH: {
-                    positive: `Even as a ${profession}, I can see the warning signs. Defensive positioning recommended.`,
-                    neutral: `My ${profession} experience suggests we should wait for clearer signals.`,
-                    cautious: `This looks risky from a ${profession} standpoint. Protect your capital first.`
+                    prof: `Statistical models suggest ${confidence}% probability of decline. Bearish divergence on 4h/daily/weekly. Funding at 92nd percentile - crowded longs.`,
+                    trader: `Cutting risk. Failed breakout with volume divergence. Below VWAP 7 sessions. System flipped short. Protect capital.`,
+                    skeptic: `Finally some sanity. Unsustainable tokenomics, regulatory tightening, technical deterioration. Conservative target -35%, bear case -70%.`,
+                    visionary: `Not ready for next leg. Infrastructure 18-24 months away. Adoption below 2021 peaks. Position for 2026-2027.`,
+                    whale: `Reducing exposure. Market makers cut limits 40%. OTC flow 60% sell-side. Target re-entry 30-40% lower.`,
+                    degen: `Uh oh... liquidation price AWFULLY CLOSE 😰 Mom's gonna kill me. BUT DIAMOND HANDS! 💎🙌 This is fine. *internal screaming*`
                 },
                 NEUTRAL: {
-                    positive: `As a ${profession}, I'm cautiously watching for a breakout in either direction.`,
-                    neutral: `From my ${profession} perspective, the data is genuinely ambiguous right now.`,
-                    cautious: `My ${profession} background tells me to stay on the sidelines until clarity emerges.`
+                    prof: `Data genuinely ambiguous. ${confidence}% confidence interval spans upside and downside. Signal-to-noise ratio poor. Reduced position sizing prudent.`,
+                    trader: `Sitting on hands. Stuck between support/resistance 23 sessions. Volatility compression suggests explosive move, direction coin flip.`,
+                    skeptic: `Nobody knows anything. Macro trajectory unclear, regulatory opaque, adoption vs speculation ambiguous. Don't know environment.`,
+                    visionary: `Messy middle of transition. Capabilities expanding while price stagnates - value building. Timeline uncertain.`,
+                    whale: `Sideways. Flow neutral. Maintaining core position with dry powder. Patient capital wins. No rush.`,
+                    degen: `Idk man... flatline. Boring! 😴 Wen volatility? Wen pump? Wen dump? *refresh* *refresh* Keeping tab open. 👀`
                 }
             };
             
             const dirResponses = responses[direction] || responses.NEUTRAL;
-            const sentimentKey = sentiment === 'bullish' ? 'positive' : sentiment === 'bearish' ? 'cautious' : 'neutral';
-            return dirResponses[sentimentKey];
+            
+            const mainPauls = [
+                { name: 'Professor Paul', emoji: '👨‍🏫', type: 'analytical', confidence: 82, color: 'cyan', response: dirResponses.prof },
+                { name: 'Trader Paul', emoji: '📈', type: 'market', confidence: 76, color: 'green', response: dirResponses.trader },
+                { name: 'Skeptic Paul', emoji: '🤨', type: 'contrarian', confidence: 61, color: 'yellow', response: dirResponses.skeptic },
+                { name: 'Visionary Paul', emoji: '🔮', type: 'visionary', confidence: 89, color: 'purple', response: dirResponses.visionary },
+                { name: 'Whale Paul', emoji: '🐋', type: 'institutional', confidence: 71, color: 'blue', response: dirResponses.whale },
+                { name: 'Degen Paul', emoji: '🎰', type: 'chaotic', confidence: 94, color: 'pink', response: dirResponses.degen }
+            ];
+            
+            allPaulsData = mainPauls;
+            displayPauls(mainPauls);
+            document.getElementById('paulCountDisplay').textContent = `Showing ${mainPauls.length} of ${pauls} Pauls`;
         }
 
         function displayPauls(pauls) {
@@ -1245,8 +336,7 @@
                 card.className = `paul-card p-4 bg-white/5 rounded-lg border-l-2 border-${paul.color}-400`;
                 card.setAttribute('data-name', paul.name.toLowerCase());
                 card.setAttribute('data-type', paul.type);
-                card.setAttribute('data-confidence', paul.baseConfidence);
-                card.setAttribute('data-sentiment', paul.sentiment || 'neutral');
+                card.setAttribute('data-confidence', paul.confidence);
                 
                 card.innerHTML = `
                     <div class="flex items-start gap-3">
@@ -1254,7 +344,7 @@
                         <div class="flex-1">
                             <div class="font-bold text-${paul.color}-400 mb-1">${paul.name}</div>
                             <div class="text-gray-300 text-sm">"${paul.response}"</div>
-                            <div class="mt-2 text-xs text-${paul.color}-400/60">Confidence: ${paul.baseConfidence}%</div>
+                            <div class="mt-2 text-xs text-${paul.color}-400/60">Confidence: ${paul.confidence}%</div>
                         </div>
                     </div>
                 `;
@@ -1288,28 +378,14 @@
             let visibleCount = 0;
             
             cards.forEach(card => {
-                const cardType = card.getAttribute('data-type');
                 const confidence = parseInt(card.getAttribute('data-confidence'));
-                const sentiment = card.getAttribute('data-sentiment');
-                
                 let shouldShow = false;
                 
                 switch(type) {
-                    case 'all':
-                        shouldShow = true;
-                        break;
-                    case 'bullish':
-                        shouldShow = sentiment === 'bullish' || card.querySelector('.text-green-400');
-                        break;
-                    case 'bearish':
-                        shouldShow = sentiment === 'bearish' || card.querySelector('.text-red-400');
-                        break;
-                    case 'high-confidence':
-                        shouldShow = confidence >= 80;
-                        break;
-                    case 'analytical':
-                        shouldShow = cardType === 'analytical' || cardType === 'market' || cardType === 'institutional';
-                        break;
+                    case 'all': shouldShow = true; break;
+                    case 'bullish': shouldShow = card.querySelector('.text-green-400'); break;
+                    case 'bearish': shouldShow = card.querySelector('.text-red-400'); break;
+                    case 'high-confidence': shouldShow = confidence >= 80; break;
                 }
                 
                 if (shouldShow) {
@@ -1323,91 +399,50 @@
             document.getElementById('paulCountDisplay').textContent = `Showing ${visibleCount} of ${allPaulsData.length} Pauls`;
         }
 
-        function updateProgress(payload) {
-            const progress = payload.progress || 0;
-            const percent = Math.round(progress * 100);
-            
-            document.getElementById('results').innerHTML = `
-                <div class="text-center py-8">
-                    <div class="text-4xl mb-4">🦷</div>
-                    <div class="text-xl text-cyan-400 mb-2">Casting the pool...</div>
-                    <div class="text-gray-400 mb-4">${payload.status || 'Pauls are deliberating...'}</div>
-                    <div class="max-w-xs mx-auto">
-                        <div class="h-2 bg-white/10 rounded-full overflow-hidden">
-                            <div class="h-full bg-cyan-400 transition-all duration-300" style="width: ${percent}%"></div>
-                        </div>
-                        <div class="mt-2 text-xs text-gray-500">${percent}% complete</div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function updateMonteCarlo(direction, confidence) {
-            // Generate realistic Monte Carlo distributions based on direction
-            let bullishPct, neutralPct, bearishPct;
-            
-            if (direction === 'BULLISH') {
-                bullishPct = Math.round(50 + (confidence * 30) + (Math.random() * 10));
-                neutralPct = Math.round(20 + (Math.random() * 10));
-                bearishPct = 100 - bullishPct - neutralPct;
-            } else if (direction === 'BEARISH') {
-                bearishPct = Math.round(50 + (confidence * 30) + (Math.random() * 10));
-                neutralPct = Math.round(20 + (Math.random() * 10));
-                bullishPct = 100 - bearishPct - neutralPct;
-            } else {
-                neutralPct = Math.round(40 + (confidence * 20) + (Math.random() * 10));
-                bullishPct = Math.round(30 + (Math.random() * 10));
-                bearishPct = 100 - neutralPct - bullishPct;
-            }
-            
-            // Ensure positive values
-            bullishPct = Math.max(5, bullishPct);
-            neutralPct = Math.max(5, neutralPct);
-            bearishPct = Math.max(5, bearishPct);
-            
-            // Normalize to 100%
-            const total = bullishPct + neutralPct + bearishPct;
-            bullishPct = Math.round((bullishPct / total) * 100);
-            neutralPct = Math.round((neutralPct / total) * 100);
-            bearishPct = 100 - bullishPct - neutralPct;
-            
-            // Update bars
-            document.getElementById('mcBullish').style.width = bullishPct + '%';
-            document.getElementById('mcBullishVal').textContent = bullishPct + '%';
-            
-            document.getElementById('mcNeutral').style.width = neutralPct + '%';
-            document.getElementById('mcNeutralVal').textContent = neutralPct + '%';
-            
-            document.getElementById('mcBearish').style.width = bearishPct + '%';
-        function createPaul() {
-            const name = document.getElementById('newPaulName').value.trim();
-            const style = document.getElementById('newPaulStyle').value;
-            const prompt = document.getElementById('newPaulPrompt').value.trim();
-            
-            if (!name || !style || !prompt) {
-                alert('Fill in all fields to create your Paul!');
+        async function connectLocal() {
+            const id = document.getElementById('connId').value.trim();
+            if (!id) {
+                alert('Please enter a Connection ID');
                 return;
             }
-            
-            const container = document.getElementById('customPauls');
-            container.classList.remove('hidden');
-            
-            const paulDiv = document.createElement('div');
-            paulDiv.className = 'p-3 bg-cyan-500/10 border border-cyan-500/30 rounded-lg flex justify-between items-center';
-            paulDiv.innerHTML = `
-                <div>
-                    <div class="font-bold text-cyan-400">${name}</div>
-                    <div class="text-xs text-gray-500">${style} • ${prompt.substring(0, 50)}${prompt.length > 50 ? '...' : ''}</div>
-                </div>
-                <button onclick="this.parentElement.remove()" class="text-red-400 hover:text-red-300">✕</button>
-            `;
-            
-            container.appendChild(paulDiv);
-            
-            // Clear inputs
-            document.getElementById('newPaulName').value = '';
-            document.getElementById('newPaulStyle').value = '';
-            document.getElementById('newPaulPrompt').value = '';
+
+            try {
+                ws = new WebSocket('ws://localhost:8765');
+                
+                ws.onopen = () => {
+                    ws.send(JSON.stringify({
+                        type: 'auth',
+                        payload: { connection_id: id }
+                    }));
+                };
+                
+                ws.onmessage = (event) => {
+                    const msg = JSON.parse(event.data);
+                    
+                    if (msg.type === 'auth_success') {
+                        isConnected = true;
+                        document.getElementById('connStatus').textContent = '🔌 Local Agent: Connected';
+                        document.getElementById('connStatus').className = 'fixed bottom-5 right-5 z-50 px-4 py-2 rounded-full text-xs font-bold bg-green-500/90';
+                        hideConnectModal();
+                        alert('✅ Connected!');
+                    } else if (msg.type === 'results') {
+                        showResults(msg.payload);
+                    }
+                };
+                
+                ws.onclose = () => {
+                    isConnected = false;
+                    document.getElementById('connStatus').textContent = '🔌 Local Agent: Disconnected';
+                    document.getElementById('connStatus').className = 'fixed bottom-5 right-5 z-50 px-4 py-2 rounded-full text-xs font-bold bg-red-500/90';
+                };
+                
+                ws.onerror = () => {
+                    alert('❌ Could not connect. Is local_agent.py running?');
+                };
+                
+            } catch (e) {
+                alert('❌ WebSocket not supported');
+            }
         }
     </script>
 </body>
