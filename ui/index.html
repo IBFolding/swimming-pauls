@@ -360,73 +360,29 @@
                 </div>
 
                 <!-- Agent Perspectives -->
-                <div class="space-y-3 text-sm">
-                    <div class="text-xs text-gray-500 uppercase tracking-wider mb-2">What The Pauls Said</div>
+                <div class="space-y-3 text-sm" id="paulResponses">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="text-xs text-gray-500 uppercase tracking-wider">What The Pauls Said</div>
+                        <div class="text-xs text-gray-500" id="paulCountDisplay">Showing 6 of 6 Pauls</div>
+                    </div>
                     
-                    <div class="p-4 bg-white/5 rounded-lg border-l-2 border-cyan-400">
-                        <div class="flex items-start gap-3">
-                            <span class="text-2xl">👨‍🏫</span>
-                            <div class="flex-1">
-                                <div class="font-bold text-cyan-400 mb-1">Professor Paul</div>
-                                <div id="profPaul" class="text-gray-300">"Historical data aligns. The regression analysis shows a 73% probability of upward movement, given current market conditions and comparable precedents."</div>
-                                <div class="mt-2 text-xs text-cyan-400/60">Confidence: 82%</div>
-                            </div>
+                    <!-- Search/Filter -->
+                    <div class="mb-3">
+                        <input type="text" id="paulSearch" placeholder="Search Pauls... (e.g., 'bullish', 'professor', 'high confidence')"
+                               class="w-full p-2 bg-black/40 border border-white/20 rounded-lg text-white placeholder-gray-600 text-xs focus:border-cyan-400 focus:outline-none"
+                               oninput="filterPauls(this.value)">
+                        
+                        <div class="flex gap-2 mt-2 text-xs flex-wrap">
+                            <button onclick="filterByType('all')" class="px-2 py-1 bg-white/10 hover:bg-white/20 rounded text-gray-400">All</button>
+                            <button onclick="filterByType('bullish')" class="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 rounded text-green-400">Bullish</button>
+                            <button onclick="filterByType('bearish')" class="px-2 py-1 bg-red-500/20 hover:bg-red-500/30 rounded text-red-400">Bearish</button>
+                            <button onclick="filterByType('high-confidence')" class="px-2 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 rounded text-cyan-400">High Conf (>80%)</button>
+                            <button onclick="filterByType('analytical')" class="px-2 py-1 bg-purple-500/20 hover:bg-purple-500/30 rounded text-purple-400">Analytical</button>
                         </div>
                     </div>
-
-                    <div class="p-4 bg-white/5 rounded-lg border-l-2 border-green-400">
-                        <div class="flex items-start gap-3">
-                            <span class="text-2xl">📈</span>
-                            <div class="flex-1">
-                                <div class="font-bold text-green-400 mb-1">Trader Paul</div>
-                                <div id="traderPaul" class="text-gray-300">"Order books looking thick. Retail FOMO kicking in. I've seen this pattern before - usually precedes a 20-30% move. Risk/reward is solid here."</div>
-                                <div class="mt-2 text-xs text-green-400/60">Confidence: 76%</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="p-4 bg-white/5 rounded-lg border-l-2 border-yellow-400">
-                        <div class="flex items-start gap-3">
-                            <span class="text-2xl">🤨</span>
-                            <div class="flex-1">
-                                <div class="font-bold text-yellow-400 mb-1">Skeptic Paul</div>
-                                <div id="skepticPaul" class="text-gray-300">"While consensus is bullish, tail risks remain significant. Black swan events could reverse trajectory. Manage position size accordingly."</div>
-                                <div class="mt-2 text-xs text-yellow-400/60">Confidence: 61%</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="p-4 bg-white/5 rounded-lg border-l-2 border-purple-400">
-                        <div class="flex items-start gap-3">
-                            <span class="text-2xl">🔮</span>
-                            <div class="flex-1">
-                                <div class="font-bold text-purple-400 mb-1">Visionary Paul</div>
-                                <div id="visionaryPaul" class="text-gray-300">"Paradigm shift is here. What seemed impossible now feels inevitable. The next 6 months will look obvious in hindsight."</div>
-                                <div class="mt-2 text-xs text-purple-400/60">Confidence: 89%</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="p-4 bg-white/5 rounded-lg border-l-2 border-blue-400">
-                        <div class="flex items-start gap-3">
-                            <span class="text-2xl">🐋</span>
-                            <div class="flex-1">
-                                <div class="font-bold text-blue-400 mb-1">Whale Paul</div>
-                                <div id="whalePaul" class="text-gray-300">"Liquidity depth is sufficient for institutional entry. Smart money has been accumulating. This is the calm before the storm."</div>
-                                <div class="mt-2 text-xs text-blue-400/60">Confidence: 71%</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="p-4 bg-white/5 rounded-lg border-l-2 border-pink-400">
-                        <div class="flex items-start gap-3">
-                            <span class="text-2xl">🎰</span>
-                            <div class="flex-1">
-                                <div class="font-bold text-pink-400 mb-1">Degen Paul</div>
-                                <div id="degenPaul" class="text-gray-300">"Vibes are immaculate. Chart looks like it's about to go vertical. Send it. WAGMI. 🚀🚀🚀"</div>
-                                <div class="mt-2 text-xs text-pink-400/60">Confidence: 94% (unreliable)</div>
-                            </div>
-                        </div>
+                    
+                    <div id="paulList" class="space-y-3 max-h-[500px] overflow-y-auto">
+                        <!-- Pauls will be dynamically generated here -->
                     </div>
                 </div>
 
@@ -1193,6 +1149,184 @@
             }
             
             return base;
+        }
+
+        // Store all generated Pauls for filtering
+        let allPaulsData = [];
+
+        function generatePaulCards(pauls, direction, confidence) {
+            const paulList = document.getElementById('paulList');
+            paulList.innerHTML = '';
+            allPaulsData = [];
+            
+            const basePauls = [
+                { name: 'Professor Paul', emoji: '👨‍🏫', type: 'analytical', baseConfidence: 82, color: 'cyan' },
+                { name: 'Trader Paul', emoji: '📈', type: 'market', baseConfidence: 76, color: 'green' },
+                { name: 'Skeptic Paul', emoji: '🤨', type: 'contrarian', baseConfidence: 61, color: 'yellow' },
+                { name: 'Visionary Paul', emoji: '🔮', type: 'visionary', baseConfidence: 89, color: 'purple' },
+                { name: 'Whale Paul', emoji: '🐋', type: 'institutional', baseConfidence: 71, color: 'blue' },
+                { name: 'Degen Paul', emoji: '🎰', type: 'chaotic', baseConfidence: 94, color: 'pink' }
+            ];
+            
+            const responses = generatePaulResponses(direction, confidence);
+            
+            // Generate the 6 main Pauls
+            const mainPauls = [
+                { ...basePauls[0], response: responses.prof },
+                { ...basePauls[1], response: responses.trader },
+                { ...basePauls[2], response: responses.skeptic },
+                { ...basePauls[3], response: responses.visionary },
+                { ...basePauls[4], response: responses.whale },
+                { ...basePauls[5], response: responses.degen }
+            ];
+            
+            // If more Pauls requested, generate additional ones
+            if (pauls > 6) {
+                const professions = [
+                    'Chef', 'Lawyer', 'Doctor', 'Engineer', 'Artist', 'Musician',
+                    'Writer', 'Athlete', 'Teacher', 'Nurse', 'Pilot', 'Scientist',
+                    'Farmer', 'Carpenter', 'Plumber', 'Electrician', 'Mechanic',
+                    'Designer', 'Photographer', 'Journalist', 'Politician', 'CEO',
+                    'Entrepreneur', 'Investor', 'Banker', 'Real Estate', 'Sales',
+                    'Marketing', 'HR', 'Consultant', 'Analyst', 'Developer'
+                ];
+                
+                for (let i = 6; i < Math.min(pauls, 50); i++) {
+                    const profession = professions[(i - 6) % professions.length];
+                    const variantConfidence = Math.floor(Math.random() * 40) + 60;
+                    const sentiment = Math.random() > 0.5 ? 'bullish' : (Math.random() > 0.5 ? 'bearish' : 'neutral');
+                    
+                    mainPauls.push({
+                        name: `${profession} Paul`,
+                        emoji: ['👨‍🍳', '⚖️', '🏥', '🔧', '🎨', '🎵', '✍️', '🏃', '📚', '👩‍⚕️', '✈️', '🔬', '🌾', '🔨', '🚿', '💡', '🚗', '🎭', '📷', '📰', '🏛️', '💼'][i % 22],
+                        type: 'general',
+                        baseConfidence: variantConfidence,
+                        color: sentiment === 'bullish' ? 'green' : sentiment === 'bearish' ? 'red' : 'yellow',
+                        response: generateGenericPaulResponse(profession, direction, sentiment),
+                        sentiment: sentiment
+                    });
+                }
+            }
+            
+            // Store for filtering
+            allPaulsData = mainPauls;
+            
+            // Display all
+            displayPauls(mainPauls);
+            
+            // Update count
+            document.getElementById('paulCountDisplay').textContent = `Showing ${mainPauls.length} of ${pauls} Pauls`;
+        }
+
+        function generateGenericPaulResponse(profession, direction, sentiment) {
+            const responses = {
+                BULLISH: {
+                    positive: `As a ${profession}, I see strong fundamentals here. The trajectory looks promising based on my professional experience.`,
+                    neutral: `From my perspective as a ${profession}, this has potential but requires careful monitoring.`,
+                    cautious: `While others are bullish, my ${profession} background tells me to proceed with measured optimism.`
+                },
+                BEARISH: {
+                    positive: `Even as a ${profession}, I can see the warning signs. Defensive positioning recommended.`,
+                    neutral: `My ${profession} experience suggests we should wait for clearer signals.`,
+                    cautious: `This looks risky from a ${profession} standpoint. Protect your capital first.`
+                },
+                NEUTRAL: {
+                    positive: `As a ${profession}, I'm cautiously watching for a breakout in either direction.`,
+                    neutral: `From my ${profession} perspective, the data is genuinely ambiguous right now.`,
+                    cautious: `My ${profession} background tells me to stay on the sidelines until clarity emerges.`
+                }
+            };
+            
+            const dirResponses = responses[direction] || responses.NEUTRAL;
+            const sentimentKey = sentiment === 'bullish' ? 'positive' : sentiment === 'bearish' ? 'cautious' : 'neutral';
+            return dirResponses[sentimentKey];
+        }
+
+        function displayPauls(pauls) {
+            const paulList = document.getElementById('paulList');
+            paulList.innerHTML = '';
+            
+            pauls.forEach(paul => {
+                const card = document.createElement('div');
+                card.className = `paul-card p-4 bg-white/5 rounded-lg border-l-2 border-${paul.color}-400`;
+                card.setAttribute('data-name', paul.name.toLowerCase());
+                card.setAttribute('data-type', paul.type);
+                card.setAttribute('data-confidence', paul.baseConfidence);
+                card.setAttribute('data-sentiment', paul.sentiment || 'neutral');
+                
+                card.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <span class="text-2xl">${paul.emoji}</span>
+                        <div class="flex-1">
+                            <div class="font-bold text-${paul.color}-400 mb-1">${paul.name}</div>
+                            <div class="text-gray-300 text-sm">"${paul.response}"</div>
+                            <div class="mt-2 text-xs text-${paul.color}-400/60">Confidence: ${paul.baseConfidence}%</div>
+                        </div>
+                    </div>
+                `;
+                
+                paulList.appendChild(card);
+            });
+        }
+
+        function filterPauls(searchTerm) {
+            const term = searchTerm.toLowerCase();
+            const cards = document.querySelectorAll('.paul-card');
+            let visibleCount = 0;
+            
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name');
+                const response = card.querySelector('.text-gray-300').textContent.toLowerCase();
+                
+                if (name.includes(term) || response.includes(term)) {
+                    card.style.display = '';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            document.getElementById('paulCountDisplay').textContent = `Showing ${visibleCount} of ${allPaulsData.length} Pauls`;
+        }
+
+        function filterByType(type) {
+            const cards = document.querySelectorAll('.paul-card');
+            let visibleCount = 0;
+            
+            cards.forEach(card => {
+                const cardType = card.getAttribute('data-type');
+                const confidence = parseInt(card.getAttribute('data-confidence'));
+                const sentiment = card.getAttribute('data-sentiment');
+                
+                let shouldShow = false;
+                
+                switch(type) {
+                    case 'all':
+                        shouldShow = true;
+                        break;
+                    case 'bullish':
+                        shouldShow = sentiment === 'bullish' || card.querySelector('.text-green-400');
+                        break;
+                    case 'bearish':
+                        shouldShow = sentiment === 'bearish' || card.querySelector('.text-red-400');
+                        break;
+                    case 'high-confidence':
+                        shouldShow = confidence >= 80;
+                        break;
+                    case 'analytical':
+                        shouldShow = cardType === 'analytical' || cardType === 'market' || cardType === 'institutional';
+                        break;
+                }
+                
+                if (shouldShow) {
+                    card.style.display = '';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            document.getElementById('paulCountDisplay').textContent = `Showing ${visibleCount} of ${allPaulsData.length} Pauls`;
         }
 
         function updateProgress(payload) {
