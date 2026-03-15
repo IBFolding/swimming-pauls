@@ -202,11 +202,24 @@
                 
                 <div class="flex gap-3">
                     <button onclick="connectLocal()" class="flex-1 py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-lg">
-                        Connect
+                        🔌 Connect Local
                     </button>
-                    <button onclick="hideConnectModal()" class="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg">
-                        Cancel
+                    <button onclick="startDemoMode()" class="flex-1 py-3 bg-green-500/20 hover:bg-green-500/30 border border-green-500/50 text-green-400 font-bold rounded-lg">
+                        🎮 Demo Mode
                     </button>
+                </div>
+                
+                <div class="mt-4 pt-4 border-t border-white/10 text-xs text-gray-500">
+                    <p>🎮 <strong>Demo Mode:</strong> Simulates local agent for testing. No Python required.</p>
+                    <p class="mt-1">🔌 <strong>Local Mode:</strong> Run python local_agent.py for real simulations.</p>
+                </div>
+            </div>
+        </div>
+                </div>
+                
+                <div class="mt-4 pt-4 border-t border-white/10 text-xs text-gray-500">
+                    <p>🎮 <strong>Demo Mode:</strong> Simulates local agent for testing. No Python required.</p>
+                    <p class="mt-1">🔌 <strong>Local Mode:</strong> Run python local_agent.py for real simulations.</p>
                 </div>
             </div>
         </div>
@@ -551,6 +564,64 @@
             }
         }
 
+        function startDemoMode() {
+            // Simulate a connected state without actual WebSocket
+            isConnected = true;
+            updateConnectionStatus(true);
+            hideConnectModal();
+            
+            // Create mock WebSocket object
+            ws = {
+                send: function(data) {
+                    const msg = JSON.parse(data);
+                    handleDemoMessage(msg);
+                },
+                close: function() {
+                    isConnected = false;
+                    updateConnectionStatus(false);
+                }
+            };
+            
+            alert('🎮 Demo Mode activated! Simulating 6 Pauls with realistic responses.');
+        }
+        
+        async function handleDemoMessage(msg) {
+            if (msg.type === 'command' && msg.payload.command === 'cast_pool') {
+                const params = msg.payload.params;
+                const totalRounds = params.rounds;
+                const pauls = params.pauls;
+                
+                // Show progress
+                document.getElementById('results').classList.remove('hidden');
+                
+                // Simulate streaming progress
+                for (let i = 1; i <= Math.min(totalRounds, 10); i++) {
+                    await new Promise(r => setTimeout(r, 200));
+                    updateProgress({
+                        round: i,
+                        total: totalRounds,
+                        progress: i / totalRounds,
+                        status: `Round ${i}: Pauls deliberating...`
+                    });
+                }
+                
+                // Generate random but realistic result
+                const directions = ['BULLISH', 'BEARISH', 'NEUTRAL'];
+                const direction = directions[Math.floor(Math.random() * directions.length)];
+                const confidence = 0.5 + (Math.random() * 0.4);
+                const sentiment = (Math.random() * 2) - 1;
+                
+                // Show final results
+                showResults({
+                    consensus: { direction, confidence },
+                    sentiment,
+                    pauls,
+                    rounds_completed: totalRounds,
+                    message: `${pauls.toLocaleString()} Pauls reached consensus after ${totalRounds.toLocaleString()} rounds of deliberation.`
+                });
+            }
+        }
+
         function updateConnectionStatus(connected) {
             const status = document.getElementById('connStatus');
             if (connected) {
@@ -569,10 +640,21 @@
             if (!q) return;
 
             if (!isConnected) {
-                alert('Connect local agent first! (Click 🔌 Connect Local)');
+                // Auto-start demo mode if not connected
+                startDemoMode();
+                // Small delay to let demo mode init, then cast
+                setTimeout(() => {
+                    if (isConnected) {
+                        performCast(q);
+                    }
+                }, 100);
                 return;
             }
 
+            performCast(q);
+        }
+        
+        function performCast(q) {
             const pauls = document.getElementById('paulVal').textContent;
             const rounds = document.getElementById('roundVal').textContent;
 
