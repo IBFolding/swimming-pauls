@@ -812,6 +812,10 @@
 
         function showConnectModal() {
             document.getElementById('connectModal').classList.remove('hidden');
+            // Auto-focus the input
+            setTimeout(() => {
+                document.getElementById('connId').focus();
+            }, 100);
         }
 
         function hideConnectModal() {
@@ -820,12 +824,34 @@
 
         async function connectLocal() {
             const id = document.getElementById('connId').value.trim();
-            if (!id) return;
+            if (!id) {
+                alert('Please enter a Connection ID');
+                return;
+            }
+
+            // Update status to connecting
+            const status = document.getElementById('connStatus');
+            status.textContent = '🔌 Connecting...';
+            status.className = 'connection-status';
+            status.style.background = 'rgba(234, 179, 8, 0.9)'; // Yellow
+
+            console.log('Attempting to connect to ws://localhost:8765 with ID:', id);
 
             try {
                 ws = new WebSocket('ws://localhost:8765');
                 
+                // Set a connection timeout
+                const timeout = setTimeout(() => {
+                    if (ws.readyState !== WebSocket.OPEN) {
+                        ws.close();
+                        alert('❌ Connection timeout.\n\nMake sure local_agent.py is running:\n\ncd swimming-pauls\npython local_agent.py');
+                        updateConnectionStatus(false);
+                    }
+                }, 5000);
+                
                 ws.onopen = () => {
+                    clearTimeout(timeout);
+                    console.log('WebSocket connected, sending auth...');
                     ws.send(JSON.stringify({
                         type: 'auth',
                         payload: { connection_id: id }
@@ -833,6 +859,7 @@
                 };
                 
                 ws.onmessage = (event) => {
+                    console.log('Received message:', event.data);
                     const msg = JSON.parse(event.data);
                     
                     if (msg.type === 'auth_success') {
@@ -850,18 +877,26 @@
                     }
                 };
                 
-                ws.onclose = () => {
+                ws.onclose = (event) => {
+                    console.log('WebSocket closed:', event.code, event.reason);
                     isConnected = false;
                     updateConnectionStatus(false);
+                    if (!event.wasClean && !isConnected) {
+                        // Only show alert if we never successfully connected
+                    }
                 };
                 
                 ws.onerror = (err) => {
+                    clearTimeout(timeout);
                     console.error('WebSocket error:', err);
-                    alert('❌ Could not connect. Is local_agent.py running?');
+                    alert('❌ Could not connect to local agent.\n\nMake sure to run:\ncd swimming-pauls\npython local_agent.py');
+                    updateConnectionStatus(false);
                 };
                 
             } catch (e) {
+                console.error('Exception:', e);
                 alert('❌ WebSocket not supported or blocked');
+                updateConnectionStatus(false);
             }
         }
 
