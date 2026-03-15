@@ -6,6 +6,8 @@
 
 ![Swimming Pauls](ui/paul.jpg)
 
+**🌐 Live Demo:** https://swimming-pauls.vercel.app
+
 **Swimming Pauls** is a **multi-agent prediction pool** that simulates hundreds or thousands of AI personas debating and predicting outcomes. Born on Sunset Boulevard in a self-driving car while listening to Swimming Paul and texting OpenClaw.
 
 Ask a question. 100, 1000, or even 700,000+ Pauls argue about it. They debate, deliberate, and reach consensus.
@@ -36,14 +38,17 @@ Ask a question. 100, 1000, or even 700,000+ Pauls argue about it. They debate, d
 
 ## 🚀 Quick Start
 
-### Option 1: Demo Mode (Fastest)
-1. Open `http://localhost:3005` (or open `ui/index.html` directly)
-2. Select your mode tab (Prediction, PR Sim, Marketing, Story, Research)
-3. Type a question / enter parameters
-4. Click "🐟 CAST THE POOL 🐟"
-5. The Pauls will debate and reach consensus
+### Option 1: Live Demo (Fastest)
+🌐 **https://swimming-pauls.vercel.app**
 
-### Option 2: Local Agent (Full Power)
+1. Select your mode tab (Prediction, PR Sim, Marketing, Story, Research)
+2. Type a question / enter parameters
+3. Click "🐟 CAST THE POOL 🐟"
+4. The Pauls will debate and reach consensus
+
+*Note: Demo mode runs entirely in browser. Connect local agent for LLM-powered predictions.*
+
+### Option 2: Local Agent with LLM (Full Power)
 ```bash
 # Clone the pool
 git clone https://github.com/IBFolding/swimming-pauls.git
@@ -52,11 +57,17 @@ cd swimming-pauls
 # Install dependencies
 pip install -r requirements.txt
 
-# Start local agent
+# Start local agent (connects to your local LLM)
 python local_agent.py
 
-# Open UI and click "🔌 Connect Local"
+# Open https://swimming-pauls.vercel.app
+# Click "🔌 Connect Local" and enter the Connection ID shown in terminal
 ```
+
+**Local LLM Options:**
+- **Ollama:** `ollama run llama3` (default: localhost:11434)
+- **LM Studio:** Start server (default: localhost:1234)
+- **LocalAI:** Any OpenAI-compatible endpoint
 
 ### Option 3: OpenClaw Skill (One Command)
 
@@ -70,8 +81,9 @@ openclaw run swimming-pauls
 This will:
 1. Clone the repo (first time only)
 2. Install dependencies
-3. Start the local agent
+3. Start the local agent with LLM support
 4. Open your browser automatically
+5. Show Connection ID for linking to the UI
 
 ---
 
