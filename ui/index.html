@@ -263,6 +263,41 @@
                 <span class="text-gray-500">Based on your hardware</span>
             </div>
 
+            <!-- Upload Data Section -->
+            <div class="mb-4 border border-white/10 rounded-lg p-4">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-sm font-bold text-cyan-400">📎 ATTACH CONTEXT</span>
+                    <span class="text-xs text-gray-500">Optional</span>
+                </div>
+                
+                <!-- Link Input -->
+                <div class="mb-3">
+                    <input type="text" id="linkInput" placeholder="Paste URL (article, tweet, chart...)"
+                           class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white placeholder-gray-600 text-sm focus:border-cyan-400 focus:outline-none"
+                    >
+                    <button onclick="addLink()" class="mt-2 text-xs text-cyan-400 hover:text-cyan-300">+ Add Link</button>
+                </div>
+                
+                <!-- File Upload -->
+                <div id="dropZone" class="border-2 border-dashed border-white/20 rounded-lg p-6 text-center hover:border-cyan-400/50 hover:bg-white/5 transition-colors cursor-pointer"
+                     onclick="document.getElementById('fileInput').click()"
+                     ondragover="event.preventDefault(); this.classList.add('border-cyan-400', 'bg-cyan-500/10');"
+                     ondragleave="this.classList.remove('border-cyan-400', 'bg-cyan-500/10');"
+                     ondrop="handleDrop(event)"
+                >
+                    <div class="text-3xl mb-2">📁</div>
+                    <div class="text-sm text-gray-400">Drop files here or click to upload</div>
+                    <div class="text-xs text-gray-600 mt-1">Images (PNG, JPG) • PDFs • TXT</div>
+                    <input type="file" id="fileInput" class="hidden" multiple 
+                           accept=".png,.jpg,.jpeg,.pdf,.txt" onchange="handleFiles(this.files)">
+                </div>
+                
+                <!-- Attached Items List -->
+                <div id="attachedItems" class="mt-3 space-y-2 hidden">
+                    <div class="text-xs text-gray-500 uppercase tracking-wider">Attached Context</div>
+                </div>
+            </div>
+
             <button onclick="cast()" class="w-full py-4 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-lg transition-colors">
                 🐟 CAST THE POOL 🐟
             </button>
@@ -461,6 +496,136 @@
     </main>
 
     <script>
+        // Attached context storage
+        let attachedContext = {
+            files: [],
+            links: []
+        };
+
+        function handleDrop(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            const dropZone = document.getElementById('dropZone');
+            dropZone.classList.remove('border-cyan-400', 'bg-cyan-500/10');
+            
+            const files = event.dataTransfer.files;
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            const container = document.getElementById('attachedItems');
+            container.classList.remove('hidden');
+            
+            Array.from(files).forEach(file => {
+                const fileId = 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                
+                attachedContext.files.push({
+                    id: fileId,
+                    name: file.name,
+                    type: file.type,
+                    size: file.size,
+                    file: file
+                });
+                
+                // Display file
+                const fileDiv = document.createElement('div');
+                fileDiv.id = fileId;
+                fileDiv.className = 'flex items-center justify-between p-2 bg-white/5 rounded border border-white/10';
+                
+                const icon = file.type.startsWith('image/') ? '🖼️' : 
+                            file.type === 'application/pdf' ? '📄' : '📃';
+                
+                const sizeStr = file.size < 1024 ? file.size + ' B' :
+                               file.size < 1024*1024 ? (file.size/1024).toFixed(1) + ' KB' :
+                               (file.size/(1024*1024)).toFixed(1) + ' MB';
+                
+                fileDiv.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span>${icon}</span>
+                        <div>
+                            <div class="text-sm text-gray-300 truncate max-w-[200px]">${file.name}</div>
+                            <div class="text-xs text-gray-500">${sizeStr}</div>
+                        </div>
+                    </div>
+                    <button onclick="removeFile('${fileId}')" class="text-red-400 hover:text-red-300 text-xs">✕</button>
+                `;
+                
+                container.appendChild(fileDiv);
+            });
+        }
+
+        function removeFile(fileId) {
+            const index = attachedContext.files.findIndex(f => f.id === fileId);
+            if (index > -1) {
+                attachedContext.files.splice(index, 1);
+                document.getElementById(fileId)?.remove();
+                
+                if (attachedContext.files.length === 0 && attachedContext.links.length === 0) {
+                    document.getElementById('attachedItems').classList.add('hidden');
+                }
+            }
+        }
+
+        function addLink() {
+            const input = document.getElementById('linkInput');
+            const url = input.value.trim();
+            
+            if (!url) return;
+            
+            // Basic URL validation
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                alert('Please enter a valid URL starting with http:// or https://');
+                return;
+            }
+            
+            const linkId = 'link_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            
+            attachedContext.links.push({
+                id: linkId,
+                url: url
+            });
+            
+            const container = document.getElementById('attachedItems');
+            container.classList.remove('hidden');
+            
+            const linkDiv = document.createElement('div');
+            linkDiv.id = linkId;
+            linkDiv.className = 'flex items-center justify-between p-2 bg-white/5 rounded border border-white/10';
+            
+            // Extract domain for display
+            let domain = url;
+            try {
+                domain = new URL(url).hostname;
+            } catch (e) {}
+            
+            linkDiv.innerHTML = `
+                <div class="flex items-center gap-2">
+                    <span>🔗</span>
+                    <div>
+                        <div class="text-sm text-cyan-400 truncate max-w-[200px]">${domain}</div>
+                        <div class="text-xs text-gray-500 truncate max-w-[250px]">${url}</div>
+                    </div>
+                </div>
+                <button onclick="removeLink('${linkId}')" class="text-red-400 hover:text-red-300 text-xs">✕</button>
+            `;
+            
+            container.appendChild(linkDiv);
+            input.value = '';
+        }
+
+        function removeLink(linkId) {
+            const index = attachedContext.links.findIndex(l => l.id === linkId);
+            if (index > -1) {
+                attachedContext.links.splice(index, 1);
+                document.getElementById(linkId)?.remove();
+                
+                if (attachedContext.files.length === 0 && attachedContext.links.length === 0) {
+                    document.getElementById('attachedItems').classList.add('hidden');
+                }
+            }
+        }
+
         let ws = null;
         let isConnected = false;
 
@@ -590,19 +755,42 @@
                 const params = msg.payload.params;
                 const totalRounds = params.rounds;
                 const pauls = params.pauls;
+                const context = params.context || { files: [], links: [] };
                 
                 // Show progress
                 document.getElementById('results').classList.remove('hidden');
                 
+                let contextMsg = '';
+                if (context.files.length > 0 || context.links.length > 0) {
+                    const parts = [];
+                    if (context.files.length > 0) parts.push(`${context.files.length} file(s)`);
+                    if (context.links.length > 0) parts.push(`${context.links.length} link(s)`);
+                    contextMsg = `
+                        <div class="text-center text-xs text-cyan-400 mt-2">
+                            📎 Analyzing with: ${parts.join(', ')}
+                        </div>
+                    `;
+                }
+                
                 // Simulate streaming progress
                 for (let i = 1; i <= Math.min(totalRounds, 10); i++) {
                     await new Promise(r => setTimeout(r, 200));
+                    
+                    let statusMsg = `Round ${i}: Pauls deliberating...`;
+                    if (i === 3 && context.files.length > 0) statusMsg = `Round ${i}: Analyzing uploaded files...`;
+                    if (i === 5 && context.links.length > 0) statusMsg = `Round ${i}: Reading linked content...`;
+                    
                     updateProgress({
                         round: i,
                         total: totalRounds,
                         progress: i / totalRounds,
-                        status: `Round ${i}: Pauls deliberating...`
+                        status: statusMsg
                     });
+                    
+                    // Add context message after first update
+                    if (i === 1 && contextMsg) {
+                        document.getElementById('results').innerHTML += contextMsg;
+                    }
                 }
                 
                 // Generate random but realistic result
@@ -658,6 +846,16 @@
             const pauls = document.getElementById('paulVal').textContent;
             const rounds = document.getElementById('roundVal').textContent;
 
+            // Prepare context
+            const context = {
+                files: attachedContext.files.map(f => ({
+                    name: f.name,
+                    type: f.type,
+                    size: f.size
+                })),
+                links: attachedContext.links.map(l => l.url)
+            };
+
             ws.send(JSON.stringify({
                 type: 'command',
                 payload: {
@@ -665,13 +863,27 @@
                     params: {
                         question: q,
                         pauls: parseInt(pauls),
-                        rounds: parseInt(rounds)
+                        rounds: parseInt(rounds),
+                        context: context
                     }
                 }
             }));
 
             document.getElementById('results').classList.remove('hidden');
             document.getElementById('results').innerHTML = '<div class="text-center py-8">🦷 Casting the pool...</div>';
+            
+            // Show context summary if any
+            if (context.files.length > 0 || context.links.length > 0) {
+                const ctxSummary = [];
+                if (context.files.length > 0) ctxSummary.push(`${context.files.length} file(s)`);
+                if (context.links.length > 0) ctxSummary.push(`${context.links.length} link(s)`);
+                
+                document.getElementById('results').innerHTML += `
+                    <div class="text-center text-xs text-gray-500 mt-2">
+                        Analyzing with: ${ctxSummary.join(', ')}
+                    </div>
+                `;
+            }
         }
 
         function showResults(payload) {
