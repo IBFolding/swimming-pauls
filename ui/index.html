@@ -219,6 +219,9 @@
     </main>
 
     <script>
+        let ws = null;
+        let isConnected = false;
+
         function toggleVideo() {
             const video = document.getElementById('videoBg');
             const btn = document.getElementById('playBtn');
@@ -242,27 +245,126 @@
             document.getElementById('connectModal').classList.add('hidden');
         }
 
-        function connectLocal() {
-            const id = document.getElementById('connId').value;
+        async function connectLocal() {
+            const id = document.getElementById('connId').value.trim();
             if (!id) return;
-            
-            // Simulate connection
-            document.getElementById('connStatus').textContent = '🔌 Local Agent: Connected';
-            document.getElementById('connStatus').classList.remove('status-disconnected');
-            document.getElementById('connStatus').classList.add('status-connected');
-            
-            hideConnectModal();
+
+            try {
+                ws = new WebSocket('ws://localhost:8765');
+                
+                ws.onopen = () => {
+                    ws.send(JSON.stringify({
+                        type: 'auth',
+                        payload: { connection_id: id }
+                    }));
+                };
+                
+                ws.onmessage = (event) => {
+                    const msg = JSON.parse(event.data);
+                    
+                    if (msg.type === 'auth_success') {
+                        isConnected = true;
+                        updateConnectionStatus(true);
+                        hideConnectModal();
+                        alert('✅ Connected to local agent!');
+                    } else if (msg.type === 'auth_failed') {
+                        alert('❌ Invalid connection ID');
+                        ws.close();
+                    } else if (msg.type === 'results') {
+                        showResults(msg.payload);
+                    } else if (msg.type === 'stream') {
+                        updateProgress(msg.payload);
+                    }
+                };
+                
+                ws.onclose = () => {
+                    isConnected = false;
+                    updateConnectionStatus(false);
+                };
+                
+                ws.onerror = (err) => {
+                    console.error('WebSocket error:', err);
+                    alert('❌ Could not connect. Is local_agent.py running?');
+                };
+                
+            } catch (e) {
+                alert('❌ WebSocket not supported or blocked');
+            }
+        }
+
+        function updateConnectionStatus(connected) {
+            const status = document.getElementById('connStatus');
+            if (connected) {
+                status.textContent = '🔌 Local Agent: Connected';
+                status.classList.remove('status-disconnected');
+                status.classList.add('status-connected');
+            } else {
+                status.textContent = '🔌 Local Agent: Disconnected';
+                status.classList.remove('status-connected');
+                status.classList.add('status-disconnected');
+            }
         }
 
         function cast() {
-            const q = document.getElementById('question').value;
-            if (!q.trim()) return;
-            
+            const q = document.getElementById('question').value.trim();
+            if (!q) return;
+
+            if (!isConnected) {
+                alert('Connect local agent first! (Click 🔌 Connect Local)');
+                return;
+            }
+
+            const pauls = document.getElementById('paulVal').textContent;
+            const rounds = document.getElementById('roundVal').textContent;
+
+            ws.send(JSON.stringify({
+                type: 'command',
+                payload: {
+                    command: 'cast_pool',
+                    params: {
+                        question: q,
+                        pauls: parseInt(pauls),
+                        rounds: parseInt(rounds)
+                    }
+                }
+            }));
+
             document.getElementById('results').classList.remove('hidden');
-            document.getElementById('results').scrollIntoView({behavior: 'smooth'});
+            document.getElementById('results').innerHTML = '<div class="text-center py-8">🦷 Casting the pool...</div>';
         }
 
-        // Initialize play button state
+        function showResults(payload) {
+            const consensus = payload.consensus || {};
+            const direction = consensus.direction || 'NEUTRAL';
+            const confidence = Math.round((consensus.confidence || 0.5) * 100);
+            
+            const colors = {
+                'BULLISH': 'text-green-400 border-green-400',
+                'BEARISH': 'text-red-400 border-red-400',
+                'NEUTRAL': 'text-yellow-400 border-yellow-400'
+            };
+            const color = colors[direction] || colors['NEUTRAL'];
+            
+            document.getElementById('results').innerHTML = `
+                <div class="text-center py-8 border border-white/10 rounded-lg">
+                    <div class="text-4xl mb-2">🦷</div>
+                    <div class="text-3xl font-bold mb-2 ${color.split(' ')[0]}">${direction}</div>
+                    <div class="text-gray-400">${confidence}% confidence</div>
+                    <div class="mt-4 text-sm text-gray-500">${payload.message || ''}</div>
+                </div>
+            `;
+        }
+
+        function updateProgress(payload) {
+            document.getElementById('results').innerHTML = `
+                <div class="text-center py-8">
+                    <div class="text-2xl mb-2">🦷</div>
+                    <div class="text-gray-400">${payload.status || 'Running...'}</div>
+                    <div class="mt-2 text-sm text-cyan-400">Round ${payload.round || 0}/${payload.total || 0}</div>
+                </div>
+            `;
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const video = document.getElementById('videoBg');
             const btn = document.getElementById('playBtn');
@@ -271,7 +373,6 @@
                 btn.innerHTML = '⏸️';
                 btn.classList.add('playing');
             }).catch(() => {
-                // Autoplay blocked, show play button
                 btn.innerHTML = '▶️';
             });
         });
