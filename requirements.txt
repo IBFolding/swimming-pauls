@@ -4,6 +4,9 @@
 # WebSocket server
 websockets>=11.0.0
 
+# HTTP client for web scraping
+httpx>=0.25.0
+
 # QR Code generation
 qrcode>=7.4.0
 pillow>=10.0.0

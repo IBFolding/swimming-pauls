@@ -15,6 +15,7 @@ Ask a question. 100, 1000, or even 700,000+ Pauls argue about it. They debate, d
 ## 🎯 Features
 
 - 🎭 **Hundreds of Personas** - From 6 archetypes to 700,000+ unique perspectives
+- 🌐 **Web Research** - Pauls automatically search the internet for current data before predicting
 - 🔮 **Monte Carlo Simulation** - 1000-run probability distributions
 - 📊 **Sensitivity Analysis** - Which variables actually matter
 - 🧠 **Knowledge Graph** - Semantic entity extraction and relationships
