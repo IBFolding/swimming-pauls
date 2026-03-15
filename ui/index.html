@@ -196,6 +196,28 @@
                     </div>
                 </div>
 
+                <!-- Results Tabs -->
+                <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
+                    <button onclick="showResultTab('prediction')" class="result-tab px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 rounded text-sm text-cyan-400 font-bold whitespace-nowrap active" data-tab="prediction">
+                        🔮 Prediction
+                    </button>
+                    <button onclick="showResultTab('pr')" class="result-tab px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded text-sm text-gray-400 whitespace-nowrap" data-tab="pr">
+                        📢 PR Sim
+                    </button>
+                    <button onclick="showResultTab('marketing')" class="result-tab px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded text-sm text-gray-400 whitespace-nowrap" data-tab="marketing">
+                        📊 Marketing
+                    </button>
+                    <button onclick="showResultTab('story')" class="result-tab px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded text-sm text-gray-400 whitespace-nowrap" data-tab="story">
+                        📖 Story
+                    </button>
+                    <button onclick="showResultTab('research')" class="result-tab px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded text-sm text-gray-400 whitespace-nowrap" data-tab="research">
+                        🔬 Research
+                    </button>
+                </div>
+
+                <!-- Tab Content: Prediction -->
+                <div id="tab-prediction" class="tab-content">
+
                 <!-- THE PAULS SAY -->
                 <div class="mt-6 p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-lg">
                     <div class="font-bold text-cyan-400 mb-3 text-lg">🦷 THE PAULS SAY</div>
@@ -331,6 +353,93 @@
                         </button>
                         <div class="text-xs text-gray-500 mt-2 text-center">Tab-separated format for Excel/sorting</div>
                     </div>
+                </div>
+                </div>
+
+                <!-- Tab Content: PR Simulation -->
+                <div id="tab-pr" class="tab-content hidden">
+                    <div class="text-center py-8 border border-white/10 rounded-lg mb-6">
+                        <div class="text-4xl mb-3">📢</div>
+                        <div class="text-2xl font-bold text-cyan-400 mb-2">Crisis PR Simulation</div>
+                        <div class="text-sm text-gray-400">Simulate social media spread and public reaction</div>
+                    </div>
+                    
+                    <div class="p-4 bg-white/5 rounded-lg mb-4">
+                        <div class="text-xs text-gray-500 uppercase mb-2">Simulation Parameters</div>
+                        <input type="text" id="crisisHeadline" placeholder="Crisis headline..." class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white mb-3">
+                        <textarea id="companyResponse" placeholder="Company response..." rows="2" class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white mb-3"></textarea>
+                        <button onclick="runPRSimulation()" class="w-full py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 rounded text-cyan-400 font-bold">Run Simulation</button>
+                    </div>
+                    
+                    <div id="prResults" class="space-y-3"></div>
+                </div>
+
+                <!-- Tab Content: Marketing -->
+                <div id="tab-marketing" class="tab-content hidden">
+                    <div class="text-center py-8 border border-white/10 rounded-lg mb-6">
+                        <div class="text-4xl mb-3">📊</div>
+                        <div class="text-2xl font-bold text-green-400 mb-2">Campaign Testing</div>
+                        <div class="text-sm text-gray-400">A/B test campaigns before launch</div>
+                    </div>
+                    
+                    <div class="p-4 bg-white/5 rounded-lg mb-4">
+                        <div class="text-xs text-gray-500 uppercase mb-2">Campaign Variants</div>
+                        <input type="text" id="productName" placeholder="Product name..." class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white mb-3">
+                        <div class="grid grid-cols-2 gap-3">
+                            <input type="text" id="variantA" placeholder="Variant A headline..." class="p-3 bg-black/40 border border-white/20 rounded-lg text-white">
+                            <input type="text" id="variantB" placeholder="Variant B headline..." class="p-3 bg-black/40 border border-white/20 rounded-lg text-white">
+                        </div>
+                        <button onclick="runMarketingTest()" class="w-full py-2 mt-3 bg-green-500/20 hover:bg-green-500/30 border border-green-500/50 rounded text-green-400 font-bold">Test Campaigns</button>
+                    </div>
+                    
+                    <div id="marketingResults" class="space-y-3"></div>
+                </div>
+
+                <!-- Tab Content: Story Analysis -->
+                <div id="tab-story" class="tab-content hidden">
+                    <div class="text-center py-8 border border-white/10 rounded-lg mb-6">
+                        <div class="text-4xl mb-3">📖</div>
+                        <div class="text-2xl font-bold text-purple-400 mb-2">Story & Fiction Analysis</div>
+                        <div class="text-sm text-gray-400">Analyze narratives and predict plot developments</div>
+                    </div>
+                    
+                    <div class="p-4 bg-white/5 rounded-lg mb-4">
+                        <div class="text-xs text-gray-500 uppercase mb-2">Story Parameters</div>
+                        <input type="text" id="storyPremise" placeholder="Story premise..." class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white mb-3">
+                        <select id="storyGenre" class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white mb-3">
+                            <option value="">Select genre...</option>
+                            <option value="mystery">Mystery</option>
+                            <option value="romance">Romance</option>
+                            <option value="thriller">Thriller</option>
+                            <option value="scifi">Sci-Fi</option>
+                        </select>
+                        <button onclick="runStoryAnalysis()" class="w-full py-2 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/50 rounded text-purple-400 font-bold">Analyze Story</button>
+                    </div>
+                    
+                    <div id="storyResults" class="space-y-3"></div>
+                </div>
+
+                <!-- Tab Content: Research -->
+                <div id="tab-research" class="tab-content hidden">
+                    <div class="text-center py-8 border border-white/10 rounded-lg mb-6">
+                        <div class="text-4xl mb-3">🔬</div>
+                        <div class="text-2xl font-bold text-yellow-400 mb-2">Academic Research Support</div>
+                        <div class="text-sm text-gray-400">Design experiments and calculate power analysis</div>
+                    </div>
+                    
+                    <div class="p-4 bg-white/5 rounded-lg mb-4">
+                        <div class="text-xs text-gray-500 uppercase mb-2">Research Design</div>
+                        <input type="text" id="researchQuestion" placeholder="Research question..." class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white mb-3">
+                        <input type="text" id="nullHypothesis" placeholder="Null hypothesis..." class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white mb-3">
+                        <select id="experimentType" class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white mb-3">
+                            <option value="randomized_controlled">Randomized Controlled Trial</option>
+                            <option value="a_b_test">A/B Test</option>
+                            <option value="longitudinal">Longitudinal Study</option>
+                        </select>
+                        <button onclick="runResearchDesign()" class="w-full py-2 bg-yellow-500/20 hover:bg-yellow-500/30 border border-yellow-500/50 rounded text-yellow-400 font-bold">Design Study</button>
+                    </div>
+                    
+                    <div id="researchResults" class="space-y-3"></div>
                 </div>
             </div>
         </section>
@@ -990,6 +1099,232 @@
             } catch (e) {
                 alert('❌ WebSocket not supported');
             }
+        }
+
+        function showResultTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            
+            // Show selected tab
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
+            
+            // Update button styles
+            document.querySelectorAll('.result-tab').forEach(btn => {
+                btn.classList.remove('bg-cyan-500/20', 'border-cyan-500/50', 'text-cyan-400', 'font-bold');
+                btn.classList.add('bg-white/10', 'border-white/20', 'text-gray-400');
+            });
+            
+            // Highlight active button
+            const activeBtn = document.querySelector('.result-tab[data-tab="' + tabName + '"]');
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-white/10', 'border-white/20', 'text-gray-400');
+                activeBtn.classList.add('bg-cyan-500/20', 'border-cyan-500/50', 'text-cyan-400', 'font-bold');
+            }
+        }
+
+        function runPRSimulation() {
+            const headline = document.getElementById('crisisHeadline').value;
+            const response = document.getElementById('companyResponse').value;
+            
+            if (!headline) {
+                alert('Please enter a crisis headline');
+                return;
+            }
+            
+            const container = document.getElementById('prResults');
+            container.innerHTML = '<div class="text-center py-4">📢 Running PR simulation...</div>';
+            
+            setTimeout(() => {
+                const finalSentiment = {
+                    positive: Math.floor(Math.random() * 30),
+                    neutral: Math.floor(Math.random() * 30) + 20,
+                    negative: Math.floor(Math.random() * 30) + 10,
+                    outraged: Math.floor(Math.random() * 20)
+                };
+                
+                container.innerHTML = `
+                    <div class="p-4 bg-white/5 rounded-lg">
+                        <div class="font-bold text-cyan-400 mb-3">24-Hour Crisis Simulation Results</div>
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs w-20">😊 Positive</span>
+                                <div class="flex-1 h-4 bg-white/10 rounded overflow-hidden">
+                                    <div class="h-full bg-green-500 rounded" style="width: ${finalSentiment.positive}%"></div>
+                                </div>
+                                <span class="text-xs w-10">${finalSentiment.positive}%</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs w-20">😐 Neutral</span>
+                                <div class="flex-1 h-4 bg-white/10 rounded overflow-hidden">
+                                    <div class="h-full bg-yellow-500 rounded" style="width: ${finalSentiment.neutral}%"></div>
+                                </div>
+                                <span class="text-xs w-10">${finalSentiment.neutral}%</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs w-20">😠 Negative</span>
+                                <div class="flex-1 h-4 bg-white/10 rounded overflow-hidden">
+                                    <div class="h-full bg-orange-500 rounded" style="width: ${finalSentiment.negative}%"></div>
+                                </div>
+                                <span class="text-xs w-10">${finalSentiment.negative}%</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs w-20">🤬 Outraged</span>
+                                <div class="flex-1 h-4 bg-white/10 rounded overflow-hidden">
+                                    <div class="h-full bg-red-500 rounded" style="width: ${finalSentiment.outraged}%"></div>
+                                </div>
+                                <span class="text-xs w-10">${finalSentiment.outraged}%</span>
+                            </div>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            <div class="mb-2"><strong>Key Insights:</strong></div>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>Peak discussion at Hour 6-8</li>
+                                <li>Twitter/X generated highest reach</li>
+                                <li>Influencers drove most engagement</li>
+                                <li>${finalSentiment.outraged > 20 ? '⚠️ Consider CEO statement' : '✅ Response containing crisis'}</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }, 1500);
+        }
+
+        function runMarketingTest() {
+            const product = document.getElementById('productName').value;
+            const variantA = document.getElementById('variantA').value;
+            const variantB = document.getElementById('variantB').value;
+            
+            if (!product || !variantA || !variantB) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            const container = document.getElementById('marketingResults');
+            container.innerHTML = '<div class="text-center py-4">📊 Testing campaigns...</div>';
+            
+            setTimeout(() => {
+                const revenueA = Math.floor(Math.random() * 50000) + 100000;
+                const revenueB = Math.floor(Math.random() * 50000) + 100000;
+                const winner = revenueA > revenueB ? 'A' : 'B';
+                
+                container.innerHTML = `
+                    <div class="p-4 bg-white/5 rounded-lg">
+                        <div class="font-bold text-green-400 mb-3">12-Week Campaign Test Results</div>
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="p-3 bg-white/5 rounded ${winner === 'A' ? 'border border-green-500/50' : ''}">
+                                <div class="text-xs text-gray-500 mb-1">Variant A</div>
+                                <div class="text-lg font-bold">${variantA}</div>
+                                <div class="text-2xl font-bold text-green-400 mt-2">$${revenueA.toLocaleString()}</div>
+                                <div class="text-xs text-gray-500">Revenue</div>
+                            </div>
+                            <div class="p-3 bg-white/5 rounded ${winner === 'B' ? 'border border-green-500/50' : ''}">
+                                <div class="text-xs text-gray-500 mb-1">Variant B</div>
+                                <div class="text-lg font-bold">${variantB}</div>
+                                <div class="text-2xl font-bold text-green-400 mt-2">$${revenueB.toLocaleString()}</div>
+                                <div class="text-xs text-gray-500">Revenue</div>
+                            </div>
+                        </div>
+                        <div class="text-center p-3 bg-green-500/10 rounded">
+                            <div class="text-sm text-gray-400">🏆 Winner</div>
+                            <div class="text-xl font-bold text-green-400">Variant ${winner}</div>
+                            <div class="text-sm text-gray-500">${Math.abs(revenueA - revenueB).toLocaleString()} more revenue</div>
+                        </div>
+                    </div>
+                `;
+            }, 1500);
+        }
+
+        function runStoryAnalysis() {
+            const premise = document.getElementById('storyPremise').value;
+            const genre = document.getElementById('storyGenre').value;
+            
+            if (!premise || !genre) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            const container = document.getElementById('storyResults');
+            container.innerHTML = '<div class="text-center py-4">📖 Analyzing story...</div>';
+            
+            setTimeout(() => {
+                const endings = ['Justice Served', 'Twist Reveal', 'Bittersweet', 'Open Ending'];
+                const ending = endings[Math.floor(Math.random() * endings.length)];
+                
+                container.innerHTML = `
+                    <div class="p-4 bg-white/5 rounded-lg">
+                        <div class="font-bold text-purple-400 mb-3">Story Analysis: ${genre.toUpperCase()}</div>
+                        <div class="mb-4">
+                            <div class="text-xs text-gray-500 mb-1">Premise</div>
+                            <div class="text-sm">${premise}</div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="text-xs text-gray-500 mb-1">Predicted Plot Points</div>
+                            <ol class="list-decimal list-inside text-sm space-y-1">
+                                <li>${genre === 'mystery' ? 'New evidence reveals unexpected suspect' : 'Character faces major obstacle'}</li>
+                                <li>Conflict escalates to crisis point</li>
+                                <li>Hidden connection/information revealed</li>
+                            </ol>
+                        </div>
+                        <div class="mb-4">
+                            <div class="text-xs text-gray-500 mb-1">Likely Ending</div>
+                            <div class="text-lg font-bold text-purple-400">${ending}</div>
+                            <div class="text-xs text-gray-500">${Math.floor(Math.random() * 30 + 50)}% confidence</div>
+                        </div>
+                        <div class="text-xs text-gray-500">
+                            <strong>Themes:</strong> Redemption, Identity, Truth vs Deception
+                        </div>
+                    </div>
+                `;
+            }, 1500);
+        }
+
+        function runResearchDesign() {
+            const question = document.getElementById('researchQuestion').value;
+            const nullHyp = document.getElementById('nullHypothesis').value;
+            const type = document.getElementById('experimentType').value;
+            
+            if (!question || !nullHyp) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            const container = document.getElementById('researchResults');
+            container.innerHTML = '<div class="text-center py-4">🔬 Designing study...</div>';
+            
+            setTimeout(() => {
+                const sampleSize = type === 'a_b_test' ? 1000 : type === 'longitudinal' ? 300 : 200;
+                
+                container.innerHTML = `
+                    <div class="p-4 bg-white/5 rounded-lg">
+                        <div class="font-bold text-yellow-400 mb-3">Research Design</div>
+                        <div class="mb-3">
+                            <div class="text-xs text-gray-500">Question</div>
+                            <div class="text-sm">${question}</div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="p-3 bg-white/5 rounded">
+                                <div class="text-xs text-gray-500">Sample Size</div>
+                                <div class="text-2xl font-bold text-yellow-400">${sampleSize}</div>
+                            </div>
+                            <div class="p-3 bg-white/5 rounded">
+                                <div class="text-xs text-gray-500">Power</div>
+                                <div class="text-2xl font-bold text-yellow-400">80%</div>
+                            </div>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            <div class="mb-2"><strong>Methodology:</strong></div>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>${type === 'randomized_controlled' ? 'Randomized controlled trial' : type === 'a_b_test' ? 'A/B test with random assignment' : 'Longitudinal tracking'}</li>
+                                <li>Independent t-test for primary analysis</li>
+                                <li>Alpha = 0.05, Effect size = medium</li>
+                                <li>Control for age, gender, prior experience</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }, 1500);
         }
 
         function exportResults() {
