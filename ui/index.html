@@ -219,22 +219,35 @@
                    class="w-full p-4 bg-black/40 border border-white/20 rounded-lg text-white placeholder-gray-500 mb-4 focus:border-cyan-400 focus:outline-none"
             >
             
-            <div class="flex gap-4 mb-4">
+            <div class="flex gap-4 mb-2">
                 <div class="flex-1">
                     <label class="text-xs text-gray-500 mb-1 block">Pauls: <span id="paulVal">50</span></label>
-                    <input type="range" min="10" max="1000" value="50" 
+                    <input type="range" id="paulSlider" min="10" max="1000000" value="50" step="10"
                            class="w-full" style="accent-color: #22d3ee"
-                           oninput="document.getElementById('paulVal').textContent=this.value"
+                           oninput="updatePauls(this.value)"
                     >
+                    <div class="flex justify-between text-xs text-gray-600 mt-1">
+                        <span>10</span>
+                        <span>1M</span>
+                    </div>
                 </div>
                 
                 <div class="flex-1">
                     <label class="text-xs text-gray-500 mb-1 block">Rounds: <span id="roundVal">100</span></label>
-                    <input type="range" min="10" max="500" value="100" 
+                    <input type="range" id="roundSlider" min="10" max="100000" value="100" step="10"
                            class="w-full" style="accent-color: #22d3ee"
-                           oninput="document.getElementById('roundVal').textContent=this.value"
+                           oninput="updateRounds(this.value)"
                     >
+                    <div class="flex justify-between text-xs text-gray-600 mt-1">
+                        <span>10</span>
+                        <span>100K</span>
+                    </div>
                 </div>
+            </div>
+            
+            <div class="mb-4 p-3 bg-white/5 rounded text-xs text-gray-400 flex justify-between items-center">
+                <span>⏱️ Estimated time: <span id="timeEstimate" class="text-cyan-400 font-bold">~2 seconds</span></span>
+                <span class="text-gray-500">Based on your hardware</span>
             </div>
 
             <button onclick="cast()" class="w-full py-4 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-lg transition-colors">
@@ -438,6 +451,51 @@
         let ws = null;
         let isConnected = false;
 
+        function updatePauls(val) {
+            document.getElementById('paulVal').textContent = parseInt(val).toLocaleString();
+            updateTimeEstimate();
+        }
+
+        function updateRounds(val) {
+            document.getElementById('roundVal').textContent = parseInt(val).toLocaleString();
+            updateTimeEstimate();
+        }
+
+        function updateTimeEstimate() {
+            const pauls = parseInt(document.getElementById('paulSlider').value);
+            const rounds = parseInt(document.getElementById('roundSlider').value);
+            
+            // Rough estimate: ~0.05ms per Paul per round on decent hardware
+            // With overhead for consensus calculations
+            const baseTimePerPaulPerRound = 0.00005; // seconds
+            const overhead = 0.5; // base overhead seconds
+            const totalSeconds = (pauls * rounds * baseTimePerPaulPerRound) + overhead;
+            
+            let timeText;
+            if (totalSeconds < 1) {
+                timeText = '<1 second';
+            } else if (totalSeconds < 60) {
+                timeText = `~${Math.round(totalSeconds)} seconds`;
+            } else if (totalSeconds < 3600) {
+                timeText = `~${Math.round(totalSeconds / 60)} minutes`;
+            } else if (totalSeconds < 86400) {
+                timeText = `~${(totalSeconds / 3600).toFixed(1)} hours`;
+            } else {
+                timeText = `~${(totalSeconds / 86400).toFixed(1)} days`;
+            }
+            
+            const el = document.getElementById('timeEstimate');
+            el.textContent = timeText;
+            
+            // Warn for very large simulations
+            if (pauls > 100000 || rounds > 10000) {
+                el.className = 'text-yellow-400 font-bold';
+                el.innerHTML = timeText + ' ⚠️ Heavy load';
+            } else {
+                el.className = 'text-cyan-400 font-bold';
+            }
+        }
+
         function showConnectModal() {
             document.getElementById('connectModal').classList.remove('hidden');
         }
@@ -576,28 +634,43 @@
         function generatePaulResponses(direction, confidence) {
             const responses = {
                 BULLISH: {
-                    prof: `Regression analysis indicates ${confidence}% probability of upward movement. Historical precedents support this trajectory.`,
-                    trader: `Order flow is bullish. Smart money accumulating. I've seen this setup before - usually precedes a significant move.`,
-                    skeptic: `While risks exist, the risk/reward has shifted favorably. Not euphoric yet, but momentum is building.`,
-                    visionary: `We're at an inflection point. The next 6 months will seem obvious in hindsight. Early still.`,
-                    whale: `Liquidity sufficient for institutional entry. Smart money positioning. This is accumulation phase.`,
-                    degen: `CHART GO BRRRRR! 🚀 Send it! WAGMI! ${confidence}%? That's basically guaranteed!`
+                    prof: `After running extensive regression analysis on 127 comparable historical scenarios, the data presents a compelling case. The R-squared value of 0.84 indicates strong predictive power, with ${confidence}% probability of upward movement given current market conditions. Key factors include: (1) Structural market shifts aligning with 2017 and 2020 patterns, (2) Institutional inflow metrics showing sustained accumulation over 90-day periods, (3) Developer activity indices at 18-month highs suggesting genuine utility growth. The Monte Carlo simulations across 10,000 iterations consistently project positive outcomes within 2 standard deviations. However, I must note that past performance doesn't guarantee future results, and black swan events remain outside this model's confidence intervals. My Bayesian updating suggests we should revise priors upward based on new on-chain data.`,
+                    
+                    trader: `I've been watching order flow for 12 hours straight and the tape doesn't lie. We're seeing consistent bid support at every dip - that's institutional algos accumulating, not retail FOMO. The volume profile shows a massive volume node building between here and 20% higher, which typically acts as a magnet for price. I've seen this exact setup three times this year: February (worked), May (worked), and August (chopped but eventually broke out). The risk/reward here is asymmetric - you're risking maybe 8% downside for 35-50% upside potential. Funding rates are neutral, which means we're not in euphoria territory yet. My edge cases: if we lose the 200D MA with volume, I'm out. Otherwise, this is a high-conviction long. Size accordingly.`,
+                    
+                    skeptic: `Look, I've been doing this long enough to know when something feels too easy. The bullish case is compelling - I'll grant you that. The technical setup is clean, fundamentals have improved, and sentiment metrics aren't overheated. But here's what keeps me up at night: (1) Correlation with risk assets is at 0.89 - if equities dump 20%, this follows, (2) Regulatory overhang remains unresolved with 3 major jurisdictions considering restrictive frameworks, (3) On-chain metrics show 40% of supply moved in last 30 days - that's distribution, not accumulation. My base case: +15% upside before reality check. My tail risk case: -60% if macro cracks. Position size for the downside scenario, not the upside. Trust me, I've seen this movie before. The ending isn't always happy.`,
+                    
+                    visionary: `We're witnessing something profound that most market participants won't recognize until it's obvious in hindsight. This isn't just another cyclical move - it's a paradigm shift in how value accrues in decentralized systems. Consider: (1) The infrastructure moat being built today will seem impenetrable by 2026, (2) Network effects are crossing critical thresholds where marginal utility creates exponential adoption, (3) The generational wealth transfer from boomers to digital natives favors this asset class structurally. I've mapped 47 similar technological inflection points in history - railroads, electricity, internet, mobile. In every case, the 'bubble' calls came early, and the real growth happened after the skeptics gave up. We're entering the deployment phase of a 20-year adoption S-curve. Position for the decade, not the quarter.`,
+                    
+                    whale: `I've spoken with six institutional desks this week. The consensus among sophisticated allocators is shifting rapidly. Three months ago: 'Interesting technology, regulatory uncertainty.' Today: 'Core allocation thesis, building positions methodically.' Here's what matters for large capital deployment: (1) Liquidity depth now supports $50M+ entries without excessive slippage, (2) Custody solutions from 12 major providers eliminate operational risk, (3) Regulatory clarity in major jurisdictions creates compliance framework for pension/endowment capital. We're seeing systematic allocation from family offices and smaller hedge funds. The sovereign wealth funds aren't in yet - that's the next phase. My accumulation zone has been $X-Y for 6 months. This breakout confirms what our models projected 18 months ago.`,
+                    
+                    degen: `BRO. BROOOO. Do you see what I'm seeing?? Chart looks like a coiled spring ready to EXPLODE! 🚀🚀🚀 Listen, I've been in 47 discords and everyone's saying the same thing - VIBES ARE IMMACULATE. The meme momentum alone is worth 2x. You know what happens when Professor Paul and Whale Paul agree? That's the signal. That's THE SIGNAL. I've mortgaged my cat's future on this (don't ask). Liquidation price? Irrelevant. We're going so vertical that shorts will be begging for mercy. I calculated it - if we hit my price target, I can finally afford the lambo WITH the spoiler. Not financial advice but also definitely financial advice. WAGMI! SEND IT! Apes together strong! 💎🙌🦍`
                 },
                 BEARISH: {
-                    prof: `Statistical models suggest ${confidence}% probability of decline. Multiple converging factors point downward.`,
-                    trader: `Distribution happening. Weak hands buying the dip that keeps dipping. Protect capital first.`,
-                    skeptic: `Finally, some sanity. The exuberance was unsustainable. This correction was overdue.`,
-                    visionary: `The paradigm hasn't shifted yet. We're still in the old regime. Patience required.`,
-                    whale: `Exiting positions. Liquidity drying up. Institutional flows negative. Wait for capitulation.`,
-                    degen: `Uh oh... maybe I should've taken profits? Nah, hodl! Diamond hands! 💎🙌 (nervous sweating)`
+                    prof: `The statistical evidence warrants significant caution. Running the same regression models that served us well in January and September of last year, I'm seeing divergence signals that preceded 30%+ corrections. Specifically: (1) Momentum indicators showing bearish divergence on 4h, daily, and weekly timeframes - this multi-timeframe confluence is rare and historically significant, (2) Funding rate normalized against volatility is at 92nd percentile - crowded long positioning, (3) Options skew has flipped puts-over-calls for first time since March crash. The ${confidence}% probability of decline reflects not just technical factors but structural market dynamics. Liquidity metrics from primary venues show 40% reduction in market depth over past 2 weeks. My models suggest defensive positioning until these imbalances resolve.`,
+                    
+                    trader: `I'm cutting risk here. Hard. The setup that looked so clean 48 hours ago has degraded rapidly. Key concerns: (1) Failed breakout above resistance with volume divergence - that's distribution, not accumulation, (2) We're trading below the volume-weighted average price for 7 consecutive sessions - institutions are underwater and may puke, (3) Correlation with high-beta tech has flipped positive again - this trades like a risk asset, not an uncorrelated hedge. My system flipped short on the 4h close below $X. I've seen this pattern before - the February fakeout that chopped 30% longs before the real move. Not saying we crash, but probability favors lower prices near-term. Stops are tight. Cash is a position. Protect your capital.`,
+                    
+                    skeptic: `Finally, some sanity returns to this market. I've been the voice in the wilderness for months, and now the data validates what I've been saying. Let's be clear about what we're facing: (1) Unsustainable tokenomics with 15% annual inflation while user growth flatlines, (2) Regulatory noose tightening with three enforcement actions pending that could freeze major liquidity venues, (3) Technical deterioration across every timeframe that matters. The bulls will tell you 'this time is different' - they always do. It's never different. Markets cycle. Euphoria fades. The bill comes due. My conservative target is -35% from here. The bear case? -70% if macro cracks coincide with regulatory action. I've positioned defensively since January. The pain trade is lower, not higher. Wait for blood in the streets.`,
+                    
+                    visionary: `We're not ready for the next leg up. The infrastructure, the adoption, the regulatory clarity - it's all 18-24 months away from where the bulls think we are today. I've mapped the adoption curves for every major technological shift in history. The pattern is clear: initial hype, crash of expectations, silent building phase, then sustained growth. We're still in the crash-of-expectations phase. What I'm watching: (1) Real user adoption metrics (not speculative trading) remain below 2021 peaks, (2) Developer ecosystem growth has plateaued for 9 months, (3) No killer app has emerged to drive mainstream usage. The visionary case remains intact - but the timeline extends. Position for 2026-2027, not Q2 2025. Patience will be rewarded. Premature conviction will be punished.`,
+                    
+                    whale: `We're reducing exposure. Methodically. The liquidity that supported our accumulation phase is drying up faster than public data suggests. Private market color: (1) Three major market makers have reduced risk limits by 40% in past month, (2) OTC flow has flipped 60% sell-side despite price stability - smart money distributing, (3) Prime brokerage desks reporting forced liquidations from levered players who bought the local top. We're not panic selling - we're risk managing. The institutional adoption thesis remains valid long-term, but near-term catalysts are exhausted. My target re-entry is 30-40% lower, where forced liquidations create dislocation. For now, cash is king. Don't confuse a bull market with brains. The tide is going out.`,
+                    
+                    degen: `Uh oh... guys? Is this... is this the dump? 😰 I've been refreshing the chart every 3 seconds for 6 hours and it just keeps going down. My liquidation price is getting AWFULLY CLOSE. Maybe... maybe I shouldn't have used 50x leverage? My mom's gonna kill me if I lose her retirement fund again. BUT DIAMOND HANDS! 💎🙌 We HODL through the pain! Right? RIGHT?! *checks portfolio* *sees -40%* *nervous sweating intensifies* Okay maybe I should have listened to Skeptic Paul just this once. But it's too late now! If I sell, I realize the loss! If I hold, maybe... maybe it comes back? This is fine. Everything is fine. *internal screaming*`
                 },
                 NEUTRAL: {
-                    prof: `Mixed signals in the data. ${confidence}% confidence reflects genuine uncertainty in current conditions.`,
-                    trader: `Choppy waters. No clear edge. Better to sit on hands than force trades in this environment.`,
-                    skeptic: `As expected - nobody knows anything. The certainty in markets is always overstated.`,
-                    visionary: `Consolidation before the next leg. Which direction? Time will tell. Both scenarios possible.`,
-                    whale: `Sideways accumulation. Big players waiting for clarity. Low volume = no conviction.`,
-                    degen: `Idk man... chart looks like a flatline. Boring! Wen volatility? 😴`
+                    prof: `The data presents a genuinely ambiguous picture that warrants intellectual humility. Running our full suite of models: (1) Trend-following systems are long but weakening, (2) Mean-reversion signals are neutral, (3) Volatility regime models suggest transition period with elevated uncertainty. The ${confidence}% confidence interval spans both significant upside and downside scenarios. Key variables I'm monitoring: macro liquidity conditions (Fed balance sheet trajectory), regulatory clarity timeline, and real economic activity metrics vs. speculative flows. My Bayesian prior has widened considerably - the signal-to-noise ratio in current price action is poor. The prudent approach is reduced position sizing until directional conviction emerges. This is a 'don't know' environment masquerading as a 'do know' one.`,
+                    
+                    trader: `Sitting on my hands. Choppy, range-bound price action with no edge. Here's what I'm seeing: (1) We're stuck between support at $X and resistance at $Y for 23 sessions - that's consolidation, not accumulation, (2) Volatility compression to 6-month lows suggests explosive move coming, but direction is coin flip, (3) Order book shows passive two-sided interest - algos collecting spread, not positioning directionally. I've tried fading the range twice and got chopped. Cost of doing business, but I'm done until we see a clean breakout with volume. Funding is neutral, sentiment is neutral, flow is neutral. Sometimes the best trade is no trade. Preserving capital for when opportunity presents. Alert set for breaks of $X or $Y. Until then, observing.`,
+                    
+                    skeptic: `This is exactly what I expected - nobody knows anything, and the certainty you hear from both bulls and bears is performative nonsense. Let's catalog what we DON'T know: (1) Macro trajectory with conflicting Fed signals and sticky inflation, (2) Regulatory outcomes in three major jurisdictions with opaque timelines, (3) True user adoption vs. speculative wash trading. Anyone claiming high conviction here is selling you something. The range-bound price action reflects genuine uncertainty, not 'accumulation before the breakout' or 'distribution before the crash.' Both scenarios are possible. My base case: continued chop with occasional fakeouts in both directions that liquidate leveraged players on both sides. Position small, stay flexible, and don't let anyone convince you they know what's next. The market will make fools of us all eventually.`,
+                    
+                    visionary: `We're in the messy middle of a major transition. Not the beginning, not the end - the hard work phase where infrastructure gets built quietly while speculators lose interest. This is actually the most interesting period if you zoom out: (1) Fundamental capabilities are expanding while price stagnates - classic value building, (2) The next generation of applications is being built by developers who survived the last cycle, not tourists, (3) Institutional infrastructure is being laid for the next wave of adoption. The price will eventually reflect this progress, but timing is genuinely uncertain. Could be months, could be years. The visionary play is to build through this period, not trade it. Accumulate knowledge, relationships, and strategic positions. The winners of the next cycle are being determined right now, in the quiet, while everyone else argues about price.`,
+                    
+                    whale: `Sideways. Institutional flow is neutral - small inflows offset by small outflows. We're not accumulating aggressively, but we're not distributing either. Watching: (1) Correlation breakdown with traditional risk assets - if this decouples, it becomes a unique portfolio diversifier, (2) Regulatory developments in Asia that could unlock significant capital, (3) Real-world adoption metrics from enterprise partnerships. Until one of these catalysts triggers, we're range-bound. My bias is higher eventually, but 'eventually' is doing a lot of work. For now, maintaining core position with dry powder for either a breakdown (buy) or breakout (chase). The patient capital wins in these environments. No rush. The market will still be there in six months.`,
+                    
+                    degen: `Idk man... chart looks like a flatline. Is this thing dead? 😴 I've been waiting for volatility for DAYS and nothing. Where's the pump? Where's the dump? Just give me SOMETHING. My adrenaline is fading. My dopamine is crashing. This is worse than a dump - at least dumps are EXCITING. This is just... boring. Wen volatility? Wen lambo? Wen moon? I'm gonna go touch grass or something. Wake me up when something happens. *refresh* *refresh* *refresh* Still nothing. Okay fine, I'll study for my exam or whatever. BUT I'M KEEPING THE TAB OPEN. 👀`
                 }
             };
             return responses[direction] || responses.NEUTRAL;
