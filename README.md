@@ -6,7 +6,7 @@
 
 ![Swimming Pauls](ui/paul.jpg)
 
-**🌐 Live Demo:** https://swimming-pauls.vercel.app
+**🌐 Live Demo:** https://swimming-pauls-deploy.vercel.app
 
 **Swimming Pauls** is a **multi-agent prediction pool** that simulates hundreds or thousands of AI personas debating and predicting outcomes. Born on Sunset Boulevard in a self-driving car while listening to Swimming Paul and texting OpenClaw.
 
@@ -60,7 +60,7 @@ pip install -r requirements.txt
 # Start local agent (connects to your local LLM)
 python local_agent.py
 
-# Open https://swimming-pauls.vercel.app
+# Open https://swimming-pauls-deploy.vercel.app
 # Click "🔌 Connect Local" and enter the Connection ID shown in terminal
 ```
 
