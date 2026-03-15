@@ -111,6 +111,13 @@
     </style>
 </head>
 <body class="antialiased">
+    <!-- Background Music -->
+    <div id="musicPlayer" class="fixed bottom-4 right-4 z-50">
+        <button onclick="toggleMusic()" id="musicToggle" class="w-12 h-12 rounded-full bg-indigo-600 hover:bg-indigo-500 flex items-center justify-center text-xl shadow-lg transition-all">
+            🎵
+        </button>
+        <iframe id="youtubePlayer" width="0" height="0" src="" frameborder="0" allow="autoplay" class="hidden"></iframe>
+    </div>
     <!-- Header -->
     <header class="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-white/10">
         <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -136,8 +143,211 @@
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="pt-24 pb-12 px-6 max-w-7xl mx-auto">
+    <!-- Landing Page / Tokenomics -->
+    <section id="landingPage" class="min-h-screen pt-24 pb-12">
+        <!-- Hero -->
+        <div class="max-w-6xl mx-auto px-6 text-center mb-16">
+            <div class="inline-block mb-8">
+                <div class="w-32 h-32 mx-auto rounded-3xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-6xl shadow-2xl shadow-indigo-500/30">
+                    🦷
+                </div>
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                SWIMMING PAULS
+            </h1>
+            
+            <p class="text-xl md:text-2xl text-gray-300 mb-4">
+                "When MiroFish is too hard, ask Paul. And his multiples."
+            </p>
+            
+            <p class="text-gray-400 max-w-2xl mx-auto mb-8">
+                A parallel world simulation engine where 100+ diverse Paul agents debate and predict the future. 
+                Seed the world with real data, watch the simulation unfold, and surface consensus from chaos.
+            </p>
+
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button onclick="showApp()" class="px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-lg transition-all shadow-lg shadow-indigo-500/30">
+                    🚀 Launch Simulation
+                </button>
+                <button onclick="document.getElementById('tokenomics').scrollIntoView({behavior: 'smooth'})" class="px-8 py-4 rounded-xl border border-indigo-500 text-indigo-400 hover:bg-indigo-500/10 font-bold text-lg transition-all">
+                    💎 $PAUL Token
+                </button>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+                <div class="glass-panel rounded-xl p-4">
+                    <div class="text-3xl font-bold text-indigo-400">100+</div>
+                    <div class="text-sm text-gray-400">Paul Agents</div>
+                </div>
+                <div class="glass-panel rounded-xl p-4">
+                    <div class="text-3xl font-bold text-purple-400">4</div>
+                    <div class="text-sm text-gray-400">AI Models</div>
+                </div>
+                <div class="glass-panel rounded-xl p-4">
+                    <div class="text-3xl font-bold text-pink-400">∞</div>
+                    <div class="text-sm text-gray-400">Simulations</div>
+                </div>
+                <div class="glass-panel rounded-xl p-4">
+                    <div class="text-3xl font-bold text-cyan-400">100%</div>
+                    <div class="text-sm text-gray-400">Local</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tokenomics Section -->
+        <div id="tokenomics" class="max-w-5xl mx-auto px-6 mb-16">
+            <div class="glass-panel rounded-2xl p-8 neon-border">
+                <div class="text-center mb-8">
+                    <span class="text-4xl">💎</span>
+                    <h2 class="text-3xl font-bold mt-2">$PAUL Tokenomics</h2>
+                    <p class="text-gray-400 mt-2">Stake to access premium simulations and earn rewards</p>
+                </div>
+
+                <!-- Distribution -->
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="font-semibold text-indigo-400 mb-4">Token Distribution</h3>
+                        
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span>Liquidity Pool</span>
+                                <span class="font-bold text-indigo-400">40%</span>
+                            </div>
+                            <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-indigo-500 w-[40%]"></div>
+                            </div>
+
+                            <div class="flex justify-between items-center">
+                                <span>Team/Marketing</span>
+                                <span class="font-bold text-purple-400">20%</span>
+                            </div>
+                            <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-purple-500 w-[20%]"></div>
+                            </div>
+
+                            <div class="flex justify-between items-center">
+                                <span>Community Rewards</span>
+                                <span class="font-bold text-pink-400">20%</span>
+                            </div>
+                            <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-pink-500 w-[20%]"></div>
+                            </div>
+
+                            <div class="flex justify-between items-center">
+                                <span>Development Fund</span>
+                                <span class="font-bold text-cyan-400">15%</span>
+                            </div>
+                            <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-cyan-500 w-[15%]"></div>
+                            </div>
+
+                            <div class="flex justify-between items-center">
+                                <span>Airdrop</span>
+                                <span class="font-bold text-green-400">5%</span>
+                            </div>
+                            <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-green-500 w-[5%]"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="font-semibold text-indigo-400 mb-4">Utility Tiers</h3>
+                        
+                        <div class="space-y-3">
+                            <div class="p-4 rounded-xl bg-gradient-to-r from-gray-800 to-gray-700 border border-gray-600">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold">🥉 Bronze</span>
+                                    <span class="text-gray-400">10K $PAUL</span>
+                                </div>
+                                <p class="text-sm text-gray-400 mt-1">Basic simulation access</p>
+                            </div>
+
+                            <div class="p-4 rounded-xl bg-gradient-to-r from-indigo-900/50 to-purple-900/50 border border-indigo-500/50">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold text-indigo-400">🥈 Silver</span>
+                                    <span class="text-indigo-400">100K $PAUL</span>
+                                </div>
+                                <p class="text-sm text-gray-400 mt-1">25% fee discount + priority queue</p>
+                            </div>
+
+                            <div class="p-4 rounded-xl bg-gradient-to-r from-yellow-900/30 to-orange-900/30 border border-yellow-500/50">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold text-yellow-400">🥇 Gold</span>
+                                    <span class="text-yellow-400">500K $PAUL</span>
+                                </div>
+                                <p class="text-sm text-gray-400 mt-1">50% discount + revenue share</p>
+                            </div>
+
+                            <div class="p-4 rounded-xl bg-gradient-to-r from-purple-900/50 to-pink-900/50 border border-purple-500">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold text-purple-400">💎 Diamond</span>
+                                    <span class="text-purple-400">1M $PAUL</span>
+                                </div>
+                                <p class="text-sm text-gray-400 mt-1">Free access + max revenue + governance</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <button class="px-8 py-3 rounded-xl bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold transition-all"
+003e
+                        🚀 Buy $PAUL on Pump.fun
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <div class="max-w-5xl mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-8">How It Works</h2>
+            
+            <div class="grid md:grid-cols-4 gap-4">
+                <div class="glass-panel rounded-xl p-6 text-center">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-indigo-600 flex items-center justify-center text-xl font-bold mb-4">1</div>
+                    <h3 class="font-semibold mb-2">Seed Injection</h3>
+                    <p class="text-sm text-gray-400">Upload reports, news, data</p>
+                </div>
+
+                <div class="glass-panel rounded-xl p-6 text-center">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-purple-600 flex items-center justify-center text-xl font-bold mb-4">2</div>
+                    <h3 class="font-semibold mb-2">World Build</h3>
+                    <p class="text-sm text-gray-400">Spawn 100+ Paul agents</p>
+                </div>
+
+                <div class="glass-panel rounded-xl p-6 text-center">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-pink-600 flex items-center justify-center text-xl font-bold mb-4">3</div>
+                    <h3 class="font-semibold mb-2">Simulate</h3>
+                    <p class="text-sm text-gray-400">Run parallel worlds</p>
+                </div>
+
+                <div class="glass-panel rounded-xl p-6 text-center">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-cyan-600 flex items-center justify-center text-xl font-bold mb-4">4</div>
+                    <h3 class="font-semibold mb-2">Predict</h3>
+                    <p class="text-sm text-gray-400">Surface consensus</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-20 py-8 border-t border-gray-800 text-center">
+            <p class="text-gray-400">🦷 Swimming Pauls // Built by HOWARD</p>
+            <p class="text-gray-500 text-sm mt-1">Born on Sunset Blvd • 100% Local • No Cloud</p>
+        </footer>
+    </section>
+
+    <script>
+        function showApp() {
+            document.getElementById('landingPage').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+        }
+    </script>
+
+    <!-- Main App (Hidden initially) -->
+    <div id="mainApp" class="hidden">
         
         <!-- Step 1: Seed Material -->
         <section id="step1" class="mb-8">
@@ -506,6 +716,26 @@
                     }, 1000);
                 }
             }, 100);
+        }
+
+        // Music player
+        let musicPlaying = false;
+        function toggleMusic() {
+            const btn = document.getElementById('musicToggle');
+            const player = document.getElementById('youtubePlayer');
+            
+            if (!musicPlaying) {
+                // Start playing Swimming Paul
+                player.src = 'https://www.youtube.com/embed?listType=user_uploads&list=swimmingpaulmusic&autoplay=1&loop=1';
+                btn.innerHTML = '🔊';
+                btn.classList.add('animate-pulse');
+                musicPlaying = true;
+            } else {
+                player.src = '';
+                btn.innerHTML = '🎵';
+                btn.classList.remove('animate-pulse');
+                musicPlaying = false;
+            }
         }
 
         function connectWallet() {
