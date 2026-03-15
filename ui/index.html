@@ -193,7 +193,7 @@
                 <div class="mb-4">
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-sm text-green-400 font-bold">Step 1: Open Terminal</span>
-                        <button onclick="copyToClipboard('step1')" class="text-xs text-cyan-400 hover:text-cyan-300">📋 Copy</button>
+                        <button onclick="copyToClipboard('step1', this)" class="text-xs text-cyan-400 hover:text-cyan-300">📋 Copy</button>
                     </div>
                     <div id="step1" class="bg-black/70 p-3 rounded-lg font-mono text-xs text-gray-300 space-y-1 border border-white/10">
                         <div class="select-all">cd ~/.openclaw/workspace/swimming_pauls</div>
@@ -230,14 +230,6 @@
                         <li>The Connection ID appears when local_agent.py starts</li>
                         <li>Demo Mode works without Python for testing</li>
                     </ul>
-                </div>
-            </div>
-        </div>
-                </div>
-                
-                <div class="mt-4 pt-4 border-t border-white/10 text-xs text-gray-500">
-                    <p>🎮 <strong>Demo Mode:</strong> Simulates local agent for testing. No Python required.</p>
-                    <p class="mt-1">🔌 <strong>Local Mode:</strong> Run python local_agent.py for real simulations.</p>
                 </div>
             </div>
         </div>
@@ -783,13 +775,12 @@
         let ws = null;
         let isConnected = false;
 
-        function copyToClipboard(elementId) {
+        function copyToClipboard(elementId, btn) {
             const element = document.getElementById(elementId);
             const text = element.innerText;
             
             navigator.clipboard.writeText(text).then(() => {
                 // Show feedback
-                const btn = event.target;
                 const originalText = btn.textContent;
                 btn.textContent = '✅ Copied!';
                 setTimeout(() => {
@@ -802,6 +793,7 @@
                 range.selectNode(element);
                 window.getSelection().removeAllRanges();
                 window.getSelection().addRange(range);
+                alert('Text selected! Press Ctrl+C to copy');
             });
         }
 
