@@ -97,9 +97,32 @@ echo "   Rounds: $ROUNDS"
 echo "   WebSocket: ws://localhost:8765"
 echo "   Connection ID: $CONN_ID"
 echo ""
-echo "1. Agent is starting..."
-echo "2. Open http://localhost:3005 in your browser"
-echo "3. Click 'Connect Local' and enter: $CONN_ID"
+
+# Start UI server in background
+echo "🌐 Starting UI server..."
+cd "$WORKSPACE/ui"
+python3 -m http.server 3005 --bind 127.0.0.1 &
+UI_PID=$!
+cd "$WORKSPACE"
+
+# Cleanup on exit
+cleanup() {
+    echo ""
+    echo "🛑 Stopping..."
+    kill $UI_PID 2>/dev/null || true
+    exit 0
+}
+trap cleanup INT TERM
+
+# Give UI time to start
+sleep 1
+
+# Open browser
+echo "🌍 Opening browser..."
+open "http://localhost:3005" 2>/dev/null || xdg-open "http://localhost:3005" 2>/dev/null || echo "   (Please open http://localhost:3005 manually)"
+
+echo ""
+echo "✅ Agent starting... Click 'Connect Local' in browser and enter: $CONN_ID"
 echo ""
 echo "Press Ctrl+C to stop"
 echo ""
