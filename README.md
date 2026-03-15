@@ -1,142 +1,250 @@
-# Swimming Pauls - Local Agent Connector
+# 🐟 Swimming Pauls
 
-A WebSocket server that connects local pool simulations to the Vercel UI.
+> **"When MiroFish is too hard, ask Paul. And his multiples."**
+>
+> Many Pauls from many universes and many professions contemplate the future of your question.
 
-## Features
+![Swimming Pauls](docs/logo.png)
 
-- 🔗 **WebSocket Server** - Real-time bidirectional communication
-- 📱 **QR Code Pairing** - Easy mobile/desktop connection setup
-- 🎣 **Pool Simulation** - Virtual fishing with customizable parameters
-- 📊 **Real-time Streaming** - Live simulation progress updates
-- 🔐 **Connection ID Auth** - Secure pairing system
+**Swimming Pauls** is a **multi-agent prediction pool** that simulates diverse personas debating and predicting outcomes. Born from the realization that single-agent AI predictions are limited, Swimming Pauls casts a pool of specialized agents - each with unique expertise, biases, and perspectives - and lets them debate until consensus emerges.
 
-## Installation
+Like fish in a school, individual Pauls have limited perspective. But together, swimming through data in parallel, they create **emergent intelligence** greater than any single agent. The collective surfaces truth through disagreement and debate.
+
+---
+
+## 🎯 Why Swimming Pauls?
+
+Most AI predictions come from a single model with a single perspective. But real decisions benefit from **diverse viewpoints**:
+
+- The **Analyst** sees patterns in data
+- The **Skeptic** finds the blindspots  
+- The **Visionary** imagines futures
+- The **Hedgie** protects against downside
+- The **Entrepreneur** spots opportunities
+
+Swimming Pauls brings all these perspectives together, lets them debate, and surfaces a **weighted consensus** that reflects multi-dimensional thinking.
+
+---
+
+## ✨ Features
+
+- 🎭 **100+ Personas** - Professors, lawyers, mechanics, artists, moms, dads, young, old, all walks of life
+- 🔮 **Multi-Agent Simulation** - Async debates with weighted consensus
+- 📊 **Monte Carlo** - 1000+ scenario probability distributions
+- 📈 **Sensitivity Analysis** - Which variables actually matter
+- 📉 **Backtesting** - Validate predictions against history
+- 🎨 **Rich Visualizations** - Terminal charts, HTML reports, PNG exports
+- 🧠 **Knowledge Graphs** - Semantic memory and reasoning
+- 💾 **100% Local** - No APIs, no cloud, no data leaves your machine
+
+---
+
+## 🚀 Quick Start
 
 ```bash
-cd swimming_pauls
+# Clone the pool
+git clone https://github.com/howardtherekt/swimming-pauls.git
+cd swimming-pauls
+
+# Install (optional dependencies for enhanced features)
 pip install -r requirements.txt
+
+# Cast the Pauls
+python main.py --topic "Will my startup succeed?" --rounds 20
 ```
 
-## Usage
+---
 
-### Start the Local Agent
+## 🐟 Meet the Pauls
+
+| Paul | Type | Bias | Strength |
+|------|------|------|----------|
+| **Analyst Paul** | Data-driven | Neutral | Pattern recognition |
+| **Trader Paul** | Short-term | Reactive | Market timing |
+| **Visionary Paul** | Long-term | Bullish | Future casting |
+| **Skeptic Paul** | Contrarian | Bearish | Blindspot detection |
+| **Producer Paul** | Budget-focused | Conservative | ROI analysis |
+| **Director Paul** | Creative | Optimistic | Trend spotting |
+| **Hedgie Paul** | Risk-manager | Defensive | Downside protection |
+| **Entrepreneur Paul** | Innovation | Aggressive | Opportunity spotting |
+| **Academic Paul** | Research | Cautious | Evidence-based |
+| **Journalist Paul** | Narrative | Inquisitive | Story sensing |
+| **+ 90+ more** | Various | Various | Various |
+
+---
+
+## 💬 Example Session
 
 ```bash
-python local_agent.py
+$ python main.py --topic "Should I launch a coffee maker that mines Bitcoin?"
+
+🐟 Casting 8 Pauls for analysis...
+
+📊 Round 1/10
+   Consensus: BULLISH (confidence: 0.60, strength: strong)
+   [Entrepreneur Paul and Visionary Paul are excited]
+
+📊 Round 5/10
+   Consensus: NEUTRAL (confidence: 0.52, strength: moderate)
+   [Skeptic Paul and Hedgie Paul are pushing back...]
+
+📊 Round 10/10
+   Consensus: BULLISH (confidence: 0.48, strength: moderate)
+
+🏁 FINAL CONSENSUS
+Direction: BULLISH
+Confidence: 48%
+Sentiment: +0.47
+
+🟢 THE PAULS SAY: This might actually work (as a meme product)
+
+Key insights:
+  → Viral marketing potential
+  → Crypto bros buy anything with "mine Bitcoin" on it
+  → But the economics are impossible
+  → And the fire risk is real
+
+Recommendation: Launch as novelty hardware with disclaimers.
+Don't promise actual mining profits.
 ```
 
-Optional arguments:
+---
+
+## 🎮 Commands
+
+### Basic Prediction
 ```bash
-python local_agent.py --host 0.0.0.0 --port 9000
+# Standard prediction
+python main.py --topic "Netflix stock price next quarter"
+
+# With custom team composition
+python main.py --topic "AI regulation impact" --analysts 3 --skeptics 2
+
+# Full analysis suite
+python main.py --topic "Should I quit my job?" --full-analysis
 ```
 
-### Pairing Flow
-
-1. **Start the server** - A QR code and Connection ID will be displayed
-2. **Open Vercel UI** - Navigate to the Swimming Pauls web interface
-3. **Scan QR code** or manually enter the Connection ID
-4. **Connection established** - Ready to trigger simulations
-
-### Commands
-
-| Command | Description |
-|---------|-------------|
-| `cast_pool` | Run pool simulation with parameters |
-| `get_status` | Get current agent status |
-| `get_results` | Get all simulation results |
-| `ping` | Health check |
-
-## WebSocket Protocol
-
-### Authentication
-
-```json
-{
-  "type": "auth",
-  "payload": {
-    "connection_id": "abc12345"
-  }
-}
-```
-
-### Cast Pool Command
-
-```json
-{
-  "type": "command",
-  "payload": {
-    "command": "cast_pool",
-    "params": {
-      "fish_type": "carp",
-      "bait": "corn",
-      "water_temp": 22.5,
-      "weather": "cloudy",
-      "duration": 60
-    }
-  }
-}
-```
-
-### Get Status
-
-```json
-{
-  "type": "command",
-  "payload": {
-    "command": "get_status"
-  }
-}
-```
-
-### Message Types
-
-**Client → Server:**
-- `auth` - Authenticate with connection ID
-- `command` - Execute a command
-- `ping` - Health check
-
-**Server → Client:**
-- `auth_success` - Authentication successful
-- `auth_failed` - Authentication failed
-- `status` - Agent status response
-- `results` - Simulation results
-- `stream` - Real-time simulation updates
-- `pong` - Ping response
-- `error` - Error message
-- `info` - Informational message
-
-## Development
-
-### Test Client
-
-Use the included test client to verify the connection:
-
+### Monte Carlo Simulation
 ```bash
-python test_client.py
+python main.py --topic "Bitcoin price 2026" --monte-carlo --runs 1000
 ```
 
-### Simulation Parameters
-
-- **fish_type**: carp, bass, trout, catfish, bluegill
-- **bait**: worm, corn, lure, bread, shrimp
-- **water_temp**: Temperature in Celsius (optimal around 20-25°C)
-- **weather**: sunny, cloudy, rainy, overcast
-- **duration**: Simulation duration in seconds (default: 60)
-
-## Architecture
-
-```
-┌─────────────────┐     WebSocket      ┌──────────────────┐
-│  Vercel UI      │ ◄────────────────► │  Local Agent     │
-│  (Browser)      │    ws://localhost  │  (Python Server) │
-└─────────────────┘        :8765       └──────────────────┘
-                                                  │
-                                                  ▼
-                                          ┌──────────────────┐
-                                          │  Pool Simulator  │
-                                          └──────────────────┘
+### Compare Scenarios
+```bash
+python main.py --compare --scenario-a "Launch now" --scenario-b "Wait 6 months"
 ```
 
-## License
+### Interactive Mode
+```bash
+python main.py --interactive
+```
 
-MIT
+### Web UI
+```bash
+# Start local web interface
+python -m http.server 8765 --directory ui
+
+# Open browser
+open http://localhost:8765
+```
+
+---
+
+## 📊 Output Formats
+
+- **Terminal** - ASCII charts and tables (default)
+- **JSON** - Structured data for integration
+- **HTML** - Interactive reports with Chart.js
+- **PNG** - Static charts for presentations
+
+---
+
+## 🏗️ Architecture
+
+```
+swimming-pauls/
+├── agent.py              # The Pauls themselves (100+ personas)
+├── simulation.py         # Pool orchestration & consensus
+├── persona_factory.py    # Generate custom Pauls
+├── knowledge_graph.py    # Semantic memory & reasoning
+├── memory.py            # SQLite persistence
+├── local_memory.py      # 100% local memory (no cloud)
+├── data_feeds_local.py  # Local data connectors (RSS, files, web scraping)
+├── advanced.py          # Monte Carlo, sensitivity, backtesting
+├── visualization.py     # Charts & reports
+├── main.py             # CLI entry point
+├── swimming_pauls.py   # Unified API
+└── ui/                 # Web interface
+    └── index.html
+```
+
+---
+
+## 🔒 100% Local - No Cloud
+
+Swimming Pauls runs entirely on your machine:
+- ✅ No API keys needed
+- ✅ No cloud accounts  
+- ✅ No internet required (after install)
+- ✅ No data leaves your machine
+- ✅ Fully private and auditable
+
+See [LOCAL_ONLY.md](LOCAL_ONLY.md) for details.
+
+---
+
+## 🧪 Advanced Usage
+
+```python
+from swimming_pauls import SwimmingPauls
+
+# Create the pool
+pauls = SwimmingPauls()
+
+# Cast 100 Pauls and run simulation
+result = await pauls.run_simulation(
+    topic="Will CRITIC succeed?",
+    rounds=20
+)
+
+# Monte Carlo analysis
+mc_result = await pauls.monte_carlo(runs=1000)
+
+# Generate visualizations
+pauls.visualize(format='html', output='report.html')
+
+# Full analysis suite
+await pauls.full_analysis(topic="Should I pivot?")
+```
+
+---
+
+## 📝 Origin Story
+
+Swimming Pauls was born on a drive down Sunset Boulevard, in a self-driving car, while listening to Swimming Paul and texting OpenClaw. The realization: single-agent AI is like asking one person for advice. But real decisions benefit from a **pool of perspectives** - analysts, skeptics, visionaries, and hedges all debating until truth emerges.
+
+When MiroFish felt too heavy and too cloud-dependent, Swimming Pauls was built to be **lightweight, local, and 100% private**. Your questions, your Pauls, your machine.
+
+---
+
+## 🤝 Contributing
+
+The Pauls welcome new personas! To add a Paul:
+
+1. Define their traits in `persona_factory.py`
+2. Give them a backstory and catchphrase
+3. Set their bias and confidence levels
+4. Submit a PR
+
+---
+
+## 📜 License
+
+MIT - Your machine, your Pauls, your predictions.
+
+---
+
+<p align="center">
+  <i>"When one Paul doubts, ten Pauls know."</i><br>
+  <b>🐟 Cast the pool. Surface the truth. 🐟</b>
+</p>
