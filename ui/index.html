@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Swimming Pauls 🐟</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
         @keyframes swim {
             0% { transform: translateX(-100px) translateY(0px); }
@@ -15,38 +14,38 @@
             100% { transform: translateX(calc(100vw + 100px)) translateY(0px); }
         }
         @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
         }
         @keyframes wave {
-            0% { transform: translateX(0) translateZ(0) scaleY(1); }
-            50% { transform: translateX(-25%) translateZ(0) scaleY(0.8); }
-            100% { transform: translateX(-50%) translateZ(0) scaleY(1); }
+            0% { transform: translateX(0) scaleY(1); }
+            50% { transform: translateX(-25%) scaleY(0.8); }
+            100% { transform: translateX(-50%) scaleY(1); }
         }
         @keyframes bubble {
             0% { bottom: -20px; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
             100% { bottom: 100vh; opacity: 0; }
         }
         .swimming-paul {
             position: fixed;
-            font-size: 3rem;
-            animation: swim 20s linear infinite;
-            opacity: 0.6;
+            font-size: 2.5rem;
+            animation: swim 25s linear infinite;
+            opacity: 0.4;
             z-index: 0;
             pointer-events: none;
         }
         .bubble {
             position: fixed;
-            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), rgba(6,182,212,0.4));
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.6), rgba(6,182,212,0.3));
             border-radius: 50%;
-            animation: bubble 10s linear infinite;
+            animation: bubble 12s linear infinite;
             z-index: 0;
             pointer-events: none;
         }
         body {
-            background: linear-gradient(180deg, #0f172a 0%, #1e3a5f 30%, #0c4a6e 60%, #083344 100%);
+            background: linear-gradient(180deg, #0a0a1a 0%, #1a1a3e 30%, #0d1b2a 60%, #1b263b 100%);
             min-height: 100vh;
             color: white;
             overflow-x: hidden;
@@ -58,7 +57,7 @@
             box-shadow: 0 8px 32px 0 rgba(0,0,0,0.37);
         }
         .gradient-text {
-            background: linear-gradient(135deg, #22d3ee, #a855f7, #f472b6);
+            background: linear-gradient(135deg, #22d3ee, #c084fc, #f472b6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -82,10 +81,10 @@
             height: 24px;
             width: 24px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #22d3ee, #a855f7);
+            background: linear-gradient(135deg, #22d3ee, #c084fc);
             cursor: pointer;
             margin-top: -10px;
-            box-shadow: 0 0 10px rgba(34,211,238,0.5);
+            box-shadow: 0 0 15px rgba(34,211,238,0.5);
         }
         input[type=range]::-webkit-slider-runnable-track {
             width: 100%;
@@ -101,54 +100,102 @@
             transform: translateY(-5px) scale(1.05);
             box-shadow: 0 10px 40px rgba(34,211,238,0.3);
         }
+        .music-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22d3ee, #c084fc);
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 20px rgba(34,211,238,0.4);
+            transition: all 0.3s ease;
+        }
+        .music-btn:hover {
+            transform: scale(1.1);
+        }
+        .music-btn.playing {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 4px 20px rgba(34,211,238,0.4); }
+            50% { box-shadow: 0 4px 30px rgba(34,211,238,0.8); }
+        }
+        #youtube-player {
+            position: fixed;
+            bottom: -100px;
+            right: -100px;
+            opacity: 0;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body class="relative">
     <!-- Animated Background -->
     <div class="wave-bg"></div>
     
-    <!-- Swimming Pauls -->
-    <div class="swimming-paul" style="top: 10%; animation-delay: 0s;">🐟</div>
-    <div class="swimming-paul" style="top: 20%; animation-delay: 3s;">🐠</div>
-    <div class="swimming-paul" style="top: 35%; animation-delay: 6s;">🐡</div>
-    <div class="swimming-paul" style="top: 50%; animation-delay: 9s;">🦈</div>
-    <div class="swimming-paul" style="top: 65%; animation-delay: 12s;">🐙</div>
-    <div class="swimming-paul" style="top: 80%; animation-delay: 15s;">🦑</div>
+    <!-- Swimming Pauls (diverse emojis) -->
+    <div class="swimming-paul" style="top: 5%; animation-delay: 0s;">👨‍🏫</div>
+    <div class="swimming-paul" style="top: 15%; animation-delay: 2s;">👩‍🔧</div>
+    <div class="swimming-paul" style="top: 25%; animation-delay: 4s;">👨‍⚖️</div>
+    <div class="swimming-paul" style="top: 35%; animation-delay: 6s;">👩‍⚕️</div>
+    <div class="swimming-paul" style="top: 45%; animation-delay: 8s;">👨‍🍳</div>
+    <div class="swimming-paul" style="top: 55%; animation-delay: 10s;">👩‍🎨</div>
+    <div class="swimming-paul" style="top: 65%; animation-delay: 12s;">👨‍💼</div>
+    <div class="swimming-paul" style="top: 75%; animation-delay: 14s;">👩‍🔬</div>
+    <div class="swimming-paul" style="top: 85%; animation-delay: 16s;">👨‍🌾</div>
+    <div class="swimming-paul" style="top: 10%; animation-delay: 18s;">👩‍🚀</div>
 
     <!-- Bubbles -->
     <div class="bubble" style="width: 20px; height: 20px; left: 10%; animation-delay: 0s;"></div>
-    <div class="bubble" style="width: 15px; height: 15px; left: 30%; animation-delay: 2s;"></div>
-    <div class="bubble" style="width: 25px; height: 25px; left: 50%; animation-delay: 4s;"></div>
-    <div class="bubble" style="width: 18px; height: 18px; left: 70%; animation-delay: 6s;"></div>
-    <div class="bubble" style="width: 22px; height: 22px; left: 90%; animation-delay: 8s;"></div>
+    <div class="bubble" style="width: 15px; height: 15px; left: 25%; animation-delay: 2s;"></div>
+    <div class="bubble" style="width: 25px; height: 25px; left: 40%; animation-delay: 4s;"></div>
+    <div class="bubble" style="width: 18px; height: 18px; left: 60%; animation-delay: 6s;"></div>
+    <div class="bubble" style="width: 22px; height: 22px; left: 75%; animation-delay: 8s;"></div>
+    <div class="bubble" style="width: 16px; height: 16px; left: 90%; animation-delay: 10s;"></div>
 
-    <div class="max-w-6xl mx-auto px-4 py-8 relative z-10">
-        <!-- Header -->
-        <div class="glass rounded-3xl p-8 md:p-12 text-center mb-8">
-            <h1 class="text-6xl md:text-8xl font-black mb-6 gradient-text drop-shadow-2xl">
+    <!-- Music Player Button -->
+    <button id="musicBtn" class="music-btn" onclick="toggleMusic()" title="Toggle Swimming Paul Music">
+        🎵
+    </button>
+
+    <!-- YouTube Player (hidden) -->
+    <div id="youtube-player"></div>
+
+    <div class="max-w-5xl mx-auto px-4 py-8 relative z-10">
+        <!-- Header with Logo -->
+        <div class="glass rounded-3xl p-6 md:p-10 text-center mb-8">
+            <div class="flex justify-center mb-6">
+                <div class="relative">
+                    <img src="https://i.imgur.com/PAUL_logo.jpg" 
+                         alt="Swimming Pauls Logo" 
+                         class="w-32 h-32 md:w-40 md:h-40 rounded-2xl object-cover border-4 border-cyan-400/50 shadow-2xl shadow-cyan-500/50"
+                         onerror="this.style.display='none'; document.getElementById('fallback-logo').style.display='flex';"
+                    >
+                    <div id="fallback-logo" class="hidden w-32 h-32 md:w-40 md:h-40 rounded-2xl bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center text-5xl border-4 border-cyan-400/50 shadow-2xl">
+                        🦷
+                    </div>
+                </div>
+            </div>
+
+            <h1 class="text-5xl md:text-7xl font-black mb-4 gradient-text drop-shadow-2xl">
                 Swimming Pauls
             </h1>
-            <p class="text-2xl md:text-3xl text-cyan-300 mb-4 font-light">
+            <p class="text-xl md:text-2xl text-cyan-300 mb-4 font-light">
                 "When MiroFish is too hard, ask Paul. And his multiples."
             </p>
-            <div class="flex justify-center gap-4 mt-6">
-                <span class="px-4 py-2 rounded-full bg-cyan-500/20 border border-cyan-400/30 text-cyan-300">🐟 100+ Pauls</span>
-                <span class="px-4 py-2 rounded-full bg-purple-500/20 border border-purple-400/30 text-purple-300">🔮 Multi-Agent</span>
-                <span class="px-4 py-2 rounded-full bg-pink-500/20 border border-pink-400/30 text-pink-300">💯 100% Local</span>
+            <div class="flex justify-center gap-3 flex-wrap">
+                <span class="px-4 py-2 rounded-full bg-cyan-500/20 border border-cyan-400/30 text-cyan-300 text-sm">👨‍🏫 Professors</span>
+                <span class="px-4 py-2 rounded-full bg-purple-500/20 border border-purple-400/30 text-purple-300 text-sm">👩‍🔧 Mechanics</span>
+                <span class="px-4 py-2 rounded-full bg-pink-500/20 border border-pink-400/30 text-pink-300 text-sm">⚖️ Lawyers</span>
+                <span class="px-4 py-2 rounded-full bg-green-500/20 border border-green-400/30 text-green-300 text-sm">👨‍⚕️ Doctors</span>
+                <span class="px-4 py-2 rounded-full bg-yellow-500/20 border border-yellow-400/30 text-yellow-300 text-sm">👩‍🍳 Chefs</span>
+                <span class="px-4 py-2 rounded-full bg-orange-500/20 border border-orange-400/30 text-orange-300 text-sm">+100 more</span>
             </div>
-        </div>
-
-        <!-- Swimming Paul Music -->
-        <div class="glass rounded-2xl p-6 mb-8">
-            <h2 class="text-2xl font-bold text-cyan-400 mb-4 flex items-center gap-2">
-                🎵 Swimming Paul
-            </h2>
-            <div class="rounded-xl overflow-hidden">
-                <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" 
-                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/users/swimmingpaul_music&color=%2306b6d4&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true">
-                </iframe>
-            </div>
-            <p class="text-white/60 mt-3 text-center">🎧 Listen while the Pauls swim through your questions</p>
         </div>
 
         <!-- Main Casting Interface -->
@@ -166,86 +213,105 @@
                     placeholder="e.g., Will Bitcoin hit $100k? Should I quit my job? Will CRITIC succeed?"></textarea>
             </div>
 
-            <!-- Massive Scale Controls -->
-            <div class="grid md:grid-cols-2 gap-8 mb-8">
-                <div class="p-6 rounded-2xl bg-black/30 border border-cyan-500/20">
-                    <label class="block text-cyan-300 mb-2 text-lg">🐟 Number of Pauls: <span id="paulCountDisplay" class="text-3xl font-bold text-cyan-400">50</span></label>
+            <!-- Scale Controls -->
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <div class="p-5 rounded-2xl bg-black/30 border border-cyan-500/20">
+                    <label class="block text-cyan-300 mb-2 text-lg">🐟 Pauls: <span id="paulCountDisplay" class="text-3xl font-bold text-cyan-400">50</span></label>
                     <input type="range" id="paulCount" min="10" max="100000" value="50" 
                         class="w-full h-3 rounded-lg appearance-none cursor-pointer"
-                        oninput="document.getElementById('paulCountDisplay').textContent=parseInt(this.value).toLocaleString()">
+                        oninput="document.getElementById('paulCountDisplay').textContent=parseInt(this.value).toLocaleString(); updateEstimate();">
                     <div class="flex justify-between text-white/40 text-sm mt-2">
                         <span>10</span>
                         <span>1K</span>
                         <span>10K</span>
                         <span>100K</span>
                     </div>
-                    <p class="text-white/50 text-sm mt-3">💡 More Pauls = deeper consensus</p>
                 </div>
 
-                <div class="p-6 rounded-2xl bg-black/30 border border-purple-500/20">
-                    <label class="block text-purple-300 mb-2 text-lg">🔄 Simulation Rounds: <span id="roundsDisplay" class="text-3xl font-bold text-purple-400">25</span></label>
+                <div class="p-5 rounded-2xl bg-black/30 border border-purple-500/20">
+                    <label class="block text-purple-300 mb-2 text-lg">🔄 Rounds: <span id="roundsDisplay" class="text-3xl font-bold text-purple-400">25</span></label>
                     <input type="range" id="rounds" min="5" max="100000" value="25" 
                         class="w-full h-3 rounded-lg appearance-none cursor-pointer"
-                        oninput="document.getElementById('roundsDisplay').textContent=parseInt(this.value).toLocaleString()">
+                        oninput="document.getElementById('roundsDisplay').textContent=parseInt(this.value).toLocaleString(); updateEstimate();">
                     <div class="flex justify-between text-white/40 text-sm mt-2">
                         <span>5</span>
                         <span>1K</span>
                         <span>10K</span>
                         <span>100K</span>
                     </div>
-                    <p class="text-white/50 text-sm mt-3">💡 More rounds = stronger consensus</p>
                 </div>
             </div>
 
-            <!-- Paul Army Display -->
-            <div class="mb-8 p-6 rounded-2xl bg-gradient-to-r from-cyan-900/40 to-purple-900/40 border border-white/10">
-                <h3 class="text-xl font-bold text-cyan-300 mb-4">🎭 Your Paul Army (100+ Personalities)</h3>
-                
-                <div class="grid grid-cols-5 md:grid-cols-10 gap-3">
-                    {[
-                        ['📊','Analyst'], ['📈','Trader'], ['🔮','Visionary'], ['🤨','Skeptic'], ['💰','Producer'],
-                        ['🎬','Director'], ['🛡️','Hedgie'], ['🚀','Entrepreneur'], ['🎓','Academic'], ['📰','Journalist'],
-                        ['🎭','Indie'], ['✍️','Writer'], ['⚖️','Lawyer'], ['🏥','Doctor'], ['🔬','Scientist'],
-                        ['💻','Coder'], ['🎨','Artist'], ['🏛️','Politician'], ['⚽','Athlete'], ['👨‍🍳','Chef'],
-                        ['🧘','Philosopher'], ['🔧','Engineer'], ['🌱','Activist'], ['💼','Executive'], ['🎤','Influencer'],
-                        ['📚','Historian'], ['🔍','Detective'], ['🎪','Comedian'], ['🏗️','Architect'], ['🎮','Gamer'],
-                        ['🌊','Surfer'], ['🧙','Wizard'], ['🤖','AI'], ['👽','Alien'], ['🦊','Fox'],
-                        ['🦁','Lion'], ['🦉','Owl'], ['🐺','Wolf'], ['🦅','Eagle'], ['🐘','Elephant'],
-                        ['🦋','Butterfly'], ['🐢','Turtle'], ['🦎','Lizard'], ['🐍','Snake'], ['🦂','Scorpion'],
-                        ['🦀','Crab'], ['🦞','Lobster'], ['🐙','Octopus'], ['🦑','Squid'], ['🦐','Shrimp'],
-                        ['🦪','Oyster'], ['🦈','Shark'], ['🐬','Dolphin'], ['🐳','Whale'], ['🦭','Seal'],
-                        ['🐊','Crocodile'], ['🦖','Dino'], ['🦕','Bronto'], ['🐉','Dragon'], ['🦄','Unicorn'],
-                        ['🐝','Bee'], ['🦋','Moth'], ['🐞','Ladybug'], ['🦗','Cricket'], ['🕷️','Spider'],
-                        ['🦂','Scorpion'], ['🦟','Mosquito'], ['🪰','Fly'], ['🪲','Beetle'], ['🐜','Ant'],
-                        ['🐌','Snail'], ['🦋','Caterpillar'], ['🐛','Bug'], ['🦎','Gecko'], ['🐊','Gator'],
-                        ['🦈','Shark'], ['🐋','Blue Whale'], ['🐬','Flipper'], ['🦭','Sea Lion'], ['🐙','Kraken'],
-                        ['🦑','Giant Squid'], ['🐡','Puffer'], ['🐠','Tropical'], ['🐟','Fish'], ['🦈','Megalodon'],
-                        ['🐳','Moby'], ['🦭','Seal Team'], ['🐋','Humpback'], ['🐬','Porpoise'], ['🦈','Hammerhead'],
-                        ['🐙','Cthulhu'], ['🦑','Colossal'], ['🐡','Blowfish'], ['🐠','Clownfish'], ['🐟','Nemo'],
-                        ['🦈','Great White'], ['🐳','Orca'], ['🐬','Bottlenose'], ['🦭','Walrus'], ['🐙','OctoPaul'],
-                        ['🦑','Ink Master'], ['🐡','Spiky'], ['🐠','Rainbow'], ['🐟','Goldfish'], ['🦈','Bull Shark'],
-                        ['🐳','Sperm Whale'], ['🐬','Spinner'], ['🦭','Leopard Seal'], ['🐙','Paulpus'], ['🦑','TenTacles']
-                    ].map(([emoji, name], i) => `
-                        <div class="paul-card p-3 rounded-xl bg-white/5 border border-white/10 text-center cursor-pointer hover:bg-cyan-500/20 hover:border-cyan-400/50" title="${name} Paul">
-                            <div class="text-2xl mb-1">${emoji}</div>
-                            <div class="text-xs text-white/60 truncate">${name}</div>
-                        </div>
-                    `).join('')}
+            <!-- Paul Diversity Info -->
+            <div class="mb-8 p-5 rounded-2xl bg-gradient-to-r from-cyan-900/30 to-purple-900/30 border border-white/10">
+                <h3 class="text-lg font-bold text-cyan-300 mb-3">🎭 Your Paul Pool Includes:</h3>
+                <div class="flex flex-wrap gap-2 justify-center">
+                    <span class="px-3 py-1 rounded-full bg-white/10 text-sm">👨‍🏫 Professors</span>
+                    <span class="px-3 py-1 rounded-full bg-white/10 text-sm">👩‍🔧 Mechanics</span>
+                    <span class="px-3 py-1 rounded-full bg-white/10 text-sm">⚖️ Lawyers</span>
+                    <span class="px-3 py-1 rounded-full bg-white/10 text-sm">🏥 Doctors</span>
+                    <span class="px-3 py-1 rounded-full bg-white/10 text-sm">👨‍🍳 Chefs</span>
+                    <span class="px-3 py-1 rounded-full bg-white/10 text-sm">👩‍🎨 Artists</span>
+                    <span class="px-3 py-1 rounded-full bg-white/10 text-sm">💼 Executives</span>
+                    <span class="px-3 py-1 rounded-full bg-white/10 text-sm">🔬 Scientists</span>
+                    <span class="px-3 py-1 rounded-full bg-white/10 text-sm">👨‍🌾 Farmers</span>
+                    <span class="px-3 py-1 rounded-full bg-white/10 text-sm">🚀 Astronauts</span>
+                    <span class="px-3 py-1 rounded-full bg-white/10 text-sm">👶 Young</span>
+                    <span class="px-3 py-1 rounded-full bg-white/10 text-sm">👴 Old</span>
+                    <span class="px-3 py-1 rounded-full bg-white/10 text-sm">👨 Moms</span>
+                    <span class="px-3 py-1 rounded-full bg-white/10 text-sm">👩 Dads</span>
+                    <span class="px-3 py-1 rounded-full bg-white/10 text-sm">🏳️‍🌈 LGBTQ+</span>
+                    <span class="px-3 py-1 rounded-full bg-white/10 text-sm">🌍 All Cultures</span>
+                    <span class="px-3 py-1 rounded-full bg-white/10 text-sm">+85 more...</span>
                 </div>
                 
-                <p class="text-center text-white/60 mt-4">💡 All 100+ Pauls will swim through your question simultaneously</p>
+                <button onclick="showCreatePaul()" class="mt-4 px-4 py-2 rounded-xl bg-cyan-500/20 border border-cyan-400/30 text-cyan-300 hover:bg-cyan-500/30 transition-colors text-sm">
+                    ➕ Create Your Own Paul
+                </button>
+            </div>
+
+            <!-- Create Paul Modal (hidden by default) -->
+            <div id="createPaulModal" class="hidden mb-8 p-6 rounded-2xl bg-black/50 border-2 border-cyan-500/30">
+                <h3 class="text-xl font-bold text-cyan-300 mb-4">🎨 Create Your Own Paul</h3>
+                <div class="space-y-4">
+                    <input type="text" id="newPaulName" placeholder="Paul Name (e.g., Surfer Paul)" 
+                        class="w-full p-3 rounded-xl bg-black/30 border border-white/20 text-white placeholder-white/40"
+                    >
+                    <input type="text" id="newPaulEmoji" placeholder="Emoji (e.g., 🏄)" maxlength="2"
+                        class="w-full p-3 rounded-xl bg-black/30 border border-white/20 text-white placeholder-white/40"
+                    >
+                    
+                    <select id="newPaulType" class="w-full p-3 rounded-xl bg-black/30 border border-white/20 text-white"
+                    >
+                        <option value="">Select Type...</option>
+                        <option value="analyst">Analyst</option>
+                        <option value="creative">Creative</option>
+                        <option value="technical">Technical</option>
+                        <option value="social">Social</option>
+                        <option value="other">Other</option>
+                    </select>
+                    
+                    <div class="flex gap-3">
+                        <button onclick="addPaul()" class="flex-1 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-white font-bold transition-colors">
+                            Add Paul
+                        </button>
+                        <button onclick="hideCreatePaul()" class="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <!-- Cast Button -->
             <button onclick="castPool()" 
-                class="w-full py-6 text-2xl md:text-3xl font-black uppercase tracking-widest bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 hover:from-cyan-400 hover:via-purple-400 hover:to-pink-400 rounded-2xl shadow-2xl shadow-cyan-500/25 transition-all hover:scale-[1.02] hover:shadow-cyan-400/40 flex items-center justify-center gap-4 group">
+                class="w-full py-6 text-2xl md:text-3xl font-black uppercase tracking-widest bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 hover:from-cyan-400 hover:via-purple-400 hover:to-pink-400 rounded-2xl shadow-2xl shadow-cyan-500/25 transition-all hover:scale-[1.02] flex items-center justify-center gap-4 group"
+            >
                 <span class="group-hover:animate-bounce">🐟</span>
                 Cast the Pool
                 <span class="group-hover:animate-bounce">🐟</span>
             </button>
 
-            <!-- Estimate -->
-            <p class="text-center text-white/40 mt-4">
+            <p class="text-center text-white/40 mt-4 text-sm">
                 Est. time: <span id="timeEstimate">~3 seconds</span>
             </p>
         </div>
@@ -258,9 +324,7 @@
 
         <!-- Origin Story -->
         <div class="glass rounded-3xl p-8 mb-8">
-            <h2 class="text-3xl font-bold text-cyan-400 mb-6 flex items-center gap-3">
-                📖 Origin Story
-            </h2>
+            <h2 class="text-3xl font-bold text-cyan-400 mb-6">📖 Origin Story</h2>
             
             <div class="space-y-6">
                 <div class="flex gap-4 items-start">
@@ -283,7 +347,7 @@
                     <div class="text-4xl">🐟</div>
                     <div>
                         <h3 class="text-xl font-bold text-pink-300 mb-1">The Pool</h3>
-                        <p class="text-white/70">Many Pauls from many universes and many professions contemplate the future of your question. Like fish in a school, they create emergent intelligence.</p>
+                        <p class="text-white/70">Professors, mechanics, lawyers, moms, dads, young, old, gay, straight, bi - all swimming together. Many Pauls from many universes contemplate your question.</p>
                     </div>
                 </div>
 
@@ -305,9 +369,82 @@
     </div>
 
     <script>
-        // Update time estimate
-        document.getElementById('paulCount').addEventListener('input', updateEstimate);
-        document.getElementById('rounds').addEventListener('input', updateEstimate);
+        let musicPlaying = false;
+        let youtubePlayer = null;
+
+        // Load YouTube API
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        function onYouTubeIframeAPIReady() {
+            youtubePlayer = new YT.Player('youtube-player', {
+                height: '0',
+                width: '0',
+                playerVars: {
+                    listType: 'user_uploads',
+                    list: 'swimmingpaulmusic',
+                    autoplay: 0,
+                    loop: 1
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            console.log('YouTube player ready');
+        }
+
+        function toggleMusic() {
+            const btn = document.getElementById('musicBtn');
+            if (!youtubePlayer || !youtubePlayer.playVideo) {
+                // Fallback: open YouTube in new tab
+                window.open('https://www.youtube.com/@swimmingpaulmusic', '_blank');
+                return;
+            }
+            
+            if (musicPlaying) {
+                youtubePlayer.pauseVideo();
+                btn.innerHTML = '🎵';
+                btn.classList.remove('playing');
+                musicPlaying = false;
+            } else {
+                youtubePlayer.playVideo();
+                btn.innerHTML = '🔊';
+                btn.classList.add('playing');
+                musicPlaying = true;
+            }
+        }
+
+        function showCreatePaul() {
+            document.getElementById('createPaulModal').classList.remove('hidden');
+        }
+
+        function hideCreatePaul() {
+            document.getElementById('createPaulModal').classList.add('hidden');
+        }
+
+        function addPaul() {
+            const name = document.getElementById('newPaulName').value;
+            const emoji = document.getElementById('newPaulEmoji').value;
+            const type = document.getElementById('newPaulType').value;
+            
+            if (!name || !emoji) {
+                alert('Please enter a name and emoji!');
+                return;
+            }
+            
+            alert(`${emoji} ${name} added to your pool!`);
+            hideCreatePaul();
+            
+            // Clear inputs
+            document.getElementById('newPaulName').value = '';
+            document.getElementById('newPaulEmoji').value = '';
+            document.getElementById('newPaulType').value = '';
+        }
 
         function updateEstimate() {
             const pauls = parseInt(document.getElementById('paulCount').value);
@@ -338,9 +475,9 @@
             
             document.getElementById('resultsContent').innerHTML = `
                 <div class="text-center py-12">
-                    <div class="text-6xl mb-4 animate-bounce">🐟🐠🐡</div>
+                    <div class="text-6xl mb-4 animate-bounce">👨‍🏫👩‍🔧⚖️🏥👨‍🍳</div>
                     <p class="text-2xl text-cyan-300 mb-2">The Pauls are swimming...🌊</p>
-                    <p class="text-white/60">Casting ${paulCount.toLocaleString()} Pauls through ${rounds.toLocaleString()} rounds</p>
+                    <p class="text-white/60">Casting ${paulCount.toLocaleString()} Pauls (professors, lawyers, moms, dads, all walks of life)</p>
                     <div class="mt-6 w-64 h-2 bg-white/10 rounded-full mx-auto overflow-hidden">
                         <div class="h-full bg-gradient-to-r from-cyan-500 to-purple-500 animate-pulse" style="width: 60%"></div>
                     </div>
@@ -387,13 +524,14 @@
                         </div>
 
                         <div class="text-left p-6 rounded-2xl bg-black/30">
-                            <h3 class="text-xl font-bold text-cyan-300 mb-4">💡 Key Insights from the Pool</h3>
+                            <h3 class="text-xl font-bold text-cyan-300 mb-4">💡 Insights from Your Paul Pool</h3>
                             <ul class="space-y-2 text-white/80">
-                                <li>🐟 ${paulCount.toLocaleString()} Pauls debated your question across ${rounds.toLocaleString()} rounds</li>
-                                <li>🎯 Consensus emerged after analyzing multiple perspectives</li>
-                                <li>⚖️ Risk factors were thoroughly considered by Skeptic Paul</li>
-                                <li>🔮 Visionary Paul identified long-term implications</li>
-                                <li>📊 Analyst Paul crunched the numbers</li>
+                                <li>👨‍🏫 Professor Paul provided academic analysis</li>
+                                <li>⚖️ Lawyer Paul considered legal implications</li>
+                                <li>👩‍🍳 Chef Paul added practical experience</li>
+                                <li>👶 Young Paul brought fresh perspective></li>
+                                <li>👴 Old Paul contributed wisdom</li>
+                                <li>🏳️‍🌈 Diverse Pauls ensured balanced viewpoint</li>
                             </ul>
                         </div>
 
