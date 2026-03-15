@@ -182,7 +182,7 @@
             <div class="bg-gray-900 border border-cyan-500/30 rounded-2xl p-8 max-w-lg w-full mx-4">
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-2xl font-bold text-cyan-400">🔌 Connect Local Agent</h2>
-                    <button onclick="hideConnectModal()" class="text-gray-500 hover:text-white">✕</button>
+                    <button onclick="hideConnectModal()" class="text-gray-500 hover:text-white text-2xl leading-none">&times;</button>
                 </div>
                 
                 <p class="text-gray-400 mb-4">
@@ -1033,15 +1033,9 @@
             if (!isConnected) {
                 // Auto-start demo mode if not connected
                 startDemoMode();
-                // Small delay to let demo mode init, then cast
-                setTimeout(() => {
-                    if (isConnected) {
-                        performCast(q);
-                    }
-                }, 100);
-                return;
             }
 
+            // Perform cast (works for both demo and real connection)
             performCast(q);
         }
         
