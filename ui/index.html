@@ -266,6 +266,22 @@
                     </div>
                 </div>
 
+                <!-- Paul Matrix -->
+                <div class="mt-6 border border-white/10 rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="font-bold text-cyan-400">🔲 Paul Matrix</div>
+                        <span class="text-xs text-gray-500">Visual consensus map</span>
+                    </div>
+                    <div id="paulMatrix" class="grid grid-cols-10 gap-1 max-h-[300px] overflow-y-auto p-2 bg-black/30 rounded">
+                        <!-- Matrix cells will be generated here -->
+                    </div>
+                    <div class="flex gap-4 mt-3 text-xs justify-center">
+                        <div class="flex items-center gap-1"><div class="w-3 h-3 rounded bg-green-500"></div><span class="text-gray-400">Bullish</span></div>
+                        <div class="flex items-center gap-1"><div class="w-3 h-3 rounded bg-yellow-500"></div><span class="text-gray-400">Neutral</span></div>
+                        <div class="flex items-center gap-1"><div class="w-3 h-3 rounded bg-red-500"></div><span class="text-gray-400">Bearish</span></div>
+                    </div>
+                </div>
+
                 <!-- Search/Filter -->
                 <div class="mt-6">
                     <div class="flex items-center justify-between mb-2">
@@ -482,6 +498,9 @@
             // Update Monte Carlo visualization
             updateMonteCarlo(direction, confidence);
             
+            // Generate Paul Matrix
+            generatePaulMatrix(payload.pauls || 50, direction);
+            
             document.getElementById('results').scrollIntoView({behavior: 'smooth', block: 'start'});
         }
 
@@ -610,6 +629,66 @@
             document.getElementById('mcNeutralVal').textContent = neutralPct + '%';
             document.getElementById('mcBearish').style.width = bearishPct + '%';
             document.getElementById('mcBearishVal').textContent = bearishPct + '%';
+        }
+        
+        function generatePaulMatrix(pauls, direction) {
+            const matrix = document.getElementById('paulMatrix');
+            matrix.innerHTML = '';
+            
+            // Determine base sentiment color
+            let baseColor, sentimentEmoji;
+            if (direction === 'BULLISH') {
+                baseColor = 'bg-green-500';
+                sentimentEmoji = '🟢';
+            } else if (direction === 'BEARISH') {
+                baseColor = 'bg-red-500';
+                sentimentEmoji = '🔴';
+            } else {
+                baseColor = 'bg-yellow-500';
+                sentimentEmoji = '🟡';
+            }
+            
+            // Generate matrix cells
+            const totalPauls = Math.min(pauls, 100);
+            for (let i = 0; i < totalPauls; i++) {
+                const cell = document.createElement('div');
+                
+                // Add some variation - not all Pauls agree exactly
+                const random = Math.random();
+                let cellColor, opacity;
+                
+                if (random > 0.85) {
+                    // 15% dissenters
+                    if (direction === 'BULLISH') {
+                        cellColor = random > 0.925 ? 'bg-red-500' : 'bg-yellow-500';
+                    } else if (direction === 'BEARISH') {
+                        cellColor = random > 0.925 ? 'bg-green-500' : 'bg-yellow-500';
+                    } else {
+                        cellColor = random > 0.5 ? 'bg-green-500' : 'bg-red-500';
+                    }
+                    opacity = '0.6';
+                } else {
+                    // 85% consensus
+                    cellColor = baseColor;
+                    opacity = (0.7 + Math.random() * 0.3).toFixed(2);
+                }
+                
+                cell.className = `${cellColor} rounded-sm h-6 w-full flex items-center justify-center text-xs cursor-pointer hover:opacity-100 transition-opacity`;
+                cell.style.opacity = opacity;
+                
+                // Add tooltip info
+                const paulNum = i + 1;
+                cell.title = `Paul ${paulNum}: ${cellColor.includes('green') ? 'Bullish' : cellColor.includes('red') ? 'Bearish' : 'Neutral'}`;
+                
+                // Show emoji for first 6 core Pauls
+                if (i < 6) {
+                    const emojis = ['👨‍🏫', '📈', '🤨', '🔮', '🐋', '🎰'];
+                    cell.textContent = emojis[i];
+                    cell.classList.add('font-bold');
+                }
+                
+                matrix.appendChild(cell);
+            }
         }
         
         function generateGenericPaulResponse(profession, direction, confidence) {
