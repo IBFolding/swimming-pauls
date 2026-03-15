@@ -112,7 +112,7 @@
     <main class="max-w-4xl mx-auto p-6">
         
         <!-- Hero -->
-        <section class="text-center py-16">
+        <section class="text-center py-12">
             <img src="paul.jpg" alt="PAUL" 
                  class="w-48 h-48 mx-auto rounded-2xl object-cover mb-8 shadow-2xl shadow-cyan-500/20"
             >
@@ -128,6 +128,96 @@
             <p class="text-gray-500 max-w-xl mx-auto">
                 Run 100+ AI agents on your machine. Local. Private. No cloud.
             </p>
+        </section>
+
+        <!-- Origin Story -->
+        <section class="border border-white/10 rounded-xl p-6 mb-8">
+            <h2 class="text-lg font-bold mb-4 text-cyan-400">📖 THE ORIGIN STORY</h2>
+            
+            <div class="space-y-4 text-sm text-gray-300">
+                <p>
+                    It started on Sunset Boulevard. 2 AM. A self-driving Tesla with no one in it.
+                </p>
+                
+                <p>
+                    Inside, someone was listening to <span class="text-cyan-400">Swimming Paul</span> on repeat, 
+                    texting OpenClaw about MiroFish, and realizing... this is too complicated for regular people.
+                </p>
+                
+                <p>
+                    The idea hit like a lightning bolt: <strong class="text-white">What if we made it simple?</strong>
+                </p>
+                
+                <p>
+                    No cloud APIs. No complicated setup. Just download, run, and cast the pool. 
+                    Let 100+ AI personas argue about your question until they reach consensus.
+                </p>
+                
+                <p>
+                    Professor Paul brings the data. Trader Paul brings the markets. Skeptic Paul keeps everyone honest. 
+                    Visionary Paul sees around corners. And Degen Paul... well, Degen Paul is just here for the vibe.
+                </p>
+                
+                <p class="text-cyan-400 italic">
+                    "When MiroFish is too hard, ask Paul."
+                </p>
+            </div>
+        </section>
+
+        <!-- What Is Swimming Pauls -->
+        <section class="border border-white/10 rounded-xl p-6 mb-8">
+            <h2 class="text-lg font-bold mb-4 text-cyan-400">🐟 WHAT IS SWIMMING PAULS?</h2>
+            
+            <div class="grid md:grid-cols-2 gap-6 text-sm">
+                <div class="space-y-3">
+                    <p class="text-gray-300">
+                        Swimming Pauls is a <strong class="text-white">multi-agent prediction engine</strong> 
+                        that runs entirely on your machine. No cloud. No API keys. No data leaving your computer.
+                    </p>
+                    
+                    <p class="text-gray-300">
+                        You ask a question. The Pauls argue about it. They debate, deliberate, and eventually 
+                        reach consensus. Each Paul has a unique perspective:
+                    </p>
+                    
+                    <ul class="space-y-2 text-gray-400">
+                        <li>👨‍🏫 <span class="text-cyan-400">Professor Paul</span> - Academic analysis</li>
+                        <li>📈 <span class="text-green-400">Trader Paul</span> - Market sentiment</li>
+                        <li>🤨 <span class="text-yellow-400">Skeptic Paul</span> - Risk management</li>
+                        <li>🔮 <span class="text-purple-400">Visionary Paul</span> - Long-term view</li>
+                        <li>🐋 <span class="text-blue-400">Whale Paul</span> - Institutional thinking</li>
+                        <li>🎰 <span class="text-pink-400">Degen Paul</span> - YOLO energy</li>
+                    </ul>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="p-4 bg-white/5 rounded-lg">
+                        <div class="font-bold text-white mb-2">🎯 How It Works</div>
+                        <ol class="text-gray-400 space-y-1 text-xs">
+                            <li>Connect your local agent</li>
+                            <li>Ask any question</li>
+                            <li>Pauls simulate & debate</li>
+                            <li>Get consensus + confidence</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="p-4 bg-white/5 rounded-lg">
+                        <div class="font-bold text-white mb-2">🔒 Privacy First</div>
+                        <div class="text-gray-400 text-xs">
+                            Everything runs locally. Your questions never hit a server. 
+                            Your data stays on your machine. Even the AI models run locally.
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 bg-white/5 rounded-lg">
+                        <div class="font-bold text-white mb-2">💰 Token ($PAUL)</div>
+                        <div class="text-gray-400 text-xs">
+                            Launching on Pump.fun. No airdrops. No free money. 
+                            Buy if you believe. Sell if you don't. Simple.
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- Connection Modal -->
@@ -196,17 +286,110 @@
 
             <!-- Results -->
             <div id="results" class="mt-6 hidden">
-                <div class="text-center py-8 border border-white/10 rounded-lg">
-                    <div class="text-4xl mb-2">🦷</div>
-                    <div id="consensus" class="text-3xl font-bold mb-2">BULLISH</div>
-                    <div class="text-gray-400">78% confidence</div>
+                <!-- Consensus Header -->
+                <div id="consensusHeader" class="text-center py-8 border border-white/10 rounded-lg mb-6">
+                    <div class="text-5xl mb-3">🦷</div>
+                    <div id="consensusDirection" class="text-4xl font-bold mb-2">BULLISH</div>
+                    <div id="consensusConfidence" class="text-gray-400 text-lg">78% confidence</div>
+                    <div id="consensusMessage" class="mt-4 text-sm text-gray-500 max-w-md mx-auto"></div>
                 </div>
 
-                <div class="mt-4 space-y-3 text-sm">
-                    <div class="p-4 bg-white/5 rounded-lg border-l-2 border-cyan-400">
-                        <div class="font-bold text-cyan-400 mb-1">Professor Paul 👨‍🏫</div>
-                        <div class="text-gray-300">"Historical data aligns. 73% probability."</div>
+                <!-- Stats Grid -->
+                <div id="statsGrid" class="grid grid-cols-3 gap-4 mb-6">
+                    <div class="p-4 bg-white/5 rounded-lg text-center">
+                        <div id="statRounds" class="text-2xl font-bold text-cyan-400">20</div>
+                        <div class="text-xs text-gray-500">Rounds</div>
                     </div>
+                    <div class="p-4 bg-white/5 rounded-lg text-center">
+                        <div id="statPauls" class="text-2xl font-bold text-purple-400">50</div>
+                        <div class="text-xs text-gray-500">Pauls</div>
+                    </div>
+                    <div class="p-4 bg-white/5 rounded-lg text-center">
+                        <div id="statSentiment" class="text-2xl font-bold text-green-400">+0.67</div>
+                        <div class="text-xs text-gray-500">Sentiment</div>
+                    </div>
+                </div>
+
+                <!-- Agent Perspectives -->
+                <div class="space-y-3 text-sm">
+                    <div class="text-xs text-gray-500 uppercase tracking-wider mb-2">What The Pauls Said</div>
+                    
+                    <div class="p-4 bg-white/5 rounded-lg border-l-2 border-cyan-400">
+                        <div class="flex items-start gap-3">
+                            <span class="text-2xl">👨‍🏫</span>
+                            <div class="flex-1">
+                                <div class="font-bold text-cyan-400 mb-1">Professor Paul</div>
+                                <div id="profPaul" class="text-gray-300">"Historical data aligns. The regression analysis shows a 73% probability of upward movement, given current market conditions and comparable precedents."</div>
+                                <div class="mt-2 text-xs text-cyan-400/60">Confidence: 82%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-white/5 rounded-lg border-l-2 border-green-400">
+                        <div class="flex items-start gap-3">
+                            <span class="text-2xl">📈</span>
+                            <div class="flex-1">
+                                <div class="font-bold text-green-400 mb-1">Trader Paul</div>
+                                <div id="traderPaul" class="text-gray-300">"Order books looking thick. Retail FOMO kicking in. I've seen this pattern before - usually precedes a 20-30% move. Risk/reward is solid here."</div>
+                                <div class="mt-2 text-xs text-green-400/60">Confidence: 76%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-white/5 rounded-lg border-l-2 border-yellow-400">
+                        <div class="flex items-start gap-3">
+                            <span class="text-2xl">🤨</span>
+                            <div class="flex-1">
+                                <div class="font-bold text-yellow-400 mb-1">Skeptic Paul</div>
+                                <div id="skepticPaul" class="text-gray-300">"While consensus is bullish, tail risks remain significant. Black swan events could reverse trajectory. Manage position size accordingly."</div>
+                                <div class="mt-2 text-xs text-yellow-400/60">Confidence: 61%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-white/5 rounded-lg border-l-2 border-purple-400">
+                        <div class="flex items-start gap-3">
+                            <span class="text-2xl">🔮</span>
+                            <div class="flex-1">
+                                <div class="font-bold text-purple-400 mb-1">Visionary Paul</div>
+                                <div id="visionaryPaul" class="text-gray-300">"Paradigm shift is here. What seemed impossible now feels inevitable. The next 6 months will look obvious in hindsight."</div>
+                                <div class="mt-2 text-xs text-purple-400/60">Confidence: 89%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-white/5 rounded-lg border-l-2 border-blue-400">
+                        <div class="flex items-start gap-3">
+                            <span class="text-2xl">🐋</span>
+                            <div class="flex-1">
+                                <div class="font-bold text-blue-400 mb-1">Whale Paul</div>
+                                <div id="whalePaul" class="text-gray-300">"Liquidity depth is sufficient for institutional entry. Smart money has been accumulating. This is the calm before the storm."</div>
+                                <div class="mt-2 text-xs text-blue-400/60">Confidence: 71%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-white/5 rounded-lg border-l-2 border-pink-400">
+                        <div class="flex items-start gap-3">
+                            <span class="text-2xl">🎰</span>
+                            <div class="flex-1">
+                                <div class="font-bold text-pink-400 mb-1">Degen Paul</div>
+                                <div id="degenPaul" class="text-gray-300">"Vibes are immaculate. Chart looks like it's about to go vertical. Send it. WAGMI. 🚀🚀🚀"</div>
+                                <div class="mt-2 text-xs text-pink-400/60">Confidence: 94% (unreliable)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Insights -->
+                <div class="mt-6 p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-lg">
+                    <div class="font-bold text-cyan-400 mb-2">🔑 Key Insights</div>
+                    <ul id="keyInsights" class="text-sm text-gray-300 space-y-2">
+                        <li>• Strong consensus among analytical agents (Professor, Trader)</li>
+                        <li>• Skeptic Paul acknowledges upside despite risk concerns</li>
+                        <li>• Visionary Paul sees structural shift, not just cyclical move</li>
+                        <li>• Degen Paul's euphoria suggests possible local top - exercise caution</li>
+                    </ul>
                 </div>
             </div>
         </section>
@@ -337,30 +520,106 @@
             const consensus = payload.consensus || {};
             const direction = consensus.direction || 'NEUTRAL';
             const confidence = Math.round((consensus.confidence || 0.5) * 100);
+            const sentiment = payload.sentiment || 0;
             
             const colors = {
-                'BULLISH': 'text-green-400 border-green-400',
-                'BEARISH': 'text-red-400 border-red-400',
-                'NEUTRAL': 'text-yellow-400 border-yellow-400'
+                'BULLISH': 'text-green-400',
+                'BEARISH': 'text-red-400',
+                'NEUTRAL': 'text-yellow-400'
             };
-            const color = colors[direction] || colors['NEUTRAL'];
+            const colorClass = colors[direction] || colors['NEUTRAL'];
             
-            document.getElementById('results').innerHTML = `
-                <div class="text-center py-8 border border-white/10 rounded-lg">
-                    <div class="text-4xl mb-2">🦷</div>
-                    <div class="text-3xl font-bold mb-2 ${color.split(' ')[0]}">${direction}</div>
-                    <div class="text-gray-400">${confidence}% confidence</div>
-                    <div class="mt-4 text-sm text-gray-500">${payload.message || ''}</div>
-                </div>
-            `;
+            // Update consensus header
+            document.getElementById('consensusDirection').textContent = direction;
+            document.getElementById('consensusDirection').className = `text-4xl font-bold mb-2 ${colorClass}`;
+            document.getElementById('consensusConfidence').textContent = `${confidence}% confidence`;
+            document.getElementById('consensusMessage').textContent = payload.message || `${payload.pauls || 50} Pauls reached consensus after ${payload.rounds_completed || 20} rounds of deliberation.`;
+            
+            // Update stats
+            document.getElementById('statRounds').textContent = payload.rounds_completed || 20;
+            document.getElementById('statPauls').textContent = payload.pauls || 50;
+            document.getElementById('statSentiment').textContent = (sentiment > 0 ? '+' : '') + sentiment.toFixed(2);
+            document.getElementById('statSentiment').className = `text-2xl font-bold ${sentiment > 0 ? 'text-green-400' : sentiment < 0 ? 'text-red-400' : 'text-yellow-400'}`;
+            
+            // Generate dynamic Paul responses based on direction
+            const responses = generatePaulResponses(direction, confidence);
+            document.getElementById('profPaul').textContent = `"${responses.prof}"`;
+            document.getElementById('traderPaul').textContent = `"${responses.trader}"`;
+            document.getElementById('skepticPaul').textContent = `"${responses.skeptic}"`;
+            document.getElementById('visionaryPaul').textContent = `"${responses.visionary}"`;
+            document.getElementById('whalePaul').textContent = `"${responses.whale}"`;
+            document.getElementById('degenPaul').textContent = `"${responses.degen}"`;
+            
+            // Update insights
+            const insights = generateInsights(direction, confidence, sentiment);
+            document.getElementById('keyInsights').innerHTML = insights.map(i => `<li>• ${i}</li>`).join('');
+        }
+        
+        function generatePaulResponses(direction, confidence) {
+            const responses = {
+                BULLISH: {
+                    prof: `Regression analysis indicates ${confidence}% probability of upward movement. Historical precedents support this trajectory.`,
+                    trader: `Order flow is bullish. Smart money accumulating. I've seen this setup before - usually precedes a significant move.`,
+                    skeptic: `While risks exist, the risk/reward has shifted favorably. Not euphoric yet, but momentum is building.`,
+                    visionary: `We're at an inflection point. The next 6 months will seem obvious in hindsight. Early still.`,
+                    whale: `Liquidity sufficient for institutional entry. Smart money positioning. This is accumulation phase.`,
+                    degen: `CHART GO BRRRRR! 🚀 Send it! WAGMI! ${confidence}%? That's basically guaranteed!`
+                },
+                BEARISH: {
+                    prof: `Statistical models suggest ${confidence}% probability of decline. Multiple converging factors point downward.`,
+                    trader: `Distribution happening. Weak hands buying the dip that keeps dipping. Protect capital first.`,
+                    skeptic: `Finally, some sanity. The exuberance was unsustainable. This correction was overdue.`,
+                    visionary: `The paradigm hasn't shifted yet. We're still in the old regime. Patience required.`,
+                    whale: `Exiting positions. Liquidity drying up. Institutional flows negative. Wait for capitulation.`,
+                    degen: `Uh oh... maybe I should've taken profits? Nah, hodl! Diamond hands! 💎🙌 (nervous sweating)`
+                },
+                NEUTRAL: {
+                    prof: `Mixed signals in the data. ${confidence}% confidence reflects genuine uncertainty in current conditions.`,
+                    trader: `Choppy waters. No clear edge. Better to sit on hands than force trades in this environment.`,
+                    skeptic: `As expected - nobody knows anything. The certainty in markets is always overstated.`,
+                    visionary: `Consolidation before the next leg. Which direction? Time will tell. Both scenarios possible.`,
+                    whale: `Sideways accumulation. Big players waiting for clarity. Low volume = no conviction.`,
+                    degen: `Idk man... chart looks like a flatline. Boring! Wen volatility? 😴`
+                }
+            };
+            return responses[direction] || responses.NEUTRAL;
+        }
+        
+        function generateInsights(direction, confidence, sentiment) {
+            const base = [
+                `Strong consensus among analytical agents (${confidence}% confidence)`,
+                sentiment > 0.3 ? 'Sentiment metrics indicate growing optimism' : sentiment < -0.3 ? 'Sentiment metrics showing caution' : 'Sentiment remains mixed'
+            ];
+            
+            if (direction === 'BULLISH') {
+                base.push('Visionary Paul sees structural shift, not just cyclical move');
+                base.push(confidence > 75 ? 'Degen Paul euphoria suggests possible local top - exercise caution' : 'Room to run before euphoria kicks in');
+            } else if (direction === 'BEARISH') {
+                base.push('Skeptic Paul vindicated - risk management pays off');
+                base.push('Consider cost averaging if long-term bullish');
+            } else {
+                base.push('Multiple valid scenarios - position for volatility');
+                base.push('Wait for directional conviction before sizing up');
+            }
+            
+            return base;
         }
 
         function updateProgress(payload) {
+            const progress = payload.progress || 0;
+            const percent = Math.round(progress * 100);
+            
             document.getElementById('results').innerHTML = `
                 <div class="text-center py-8">
-                    <div class="text-2xl mb-2">🦷</div>
-                    <div class="text-gray-400">${payload.status || 'Running...'}</div>
-                    <div class="mt-2 text-sm text-cyan-400">Round ${payload.round || 0}/${payload.total || 0}</div>
+                    <div class="text-4xl mb-4">🦷</div>
+                    <div class="text-xl text-cyan-400 mb-2">Casting the pool...</div>
+                    <div class="text-gray-400 mb-4">${payload.status || 'Pauls are deliberating...'}</div>
+                    <div class="max-w-xs mx-auto">
+                        <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+                            <div class="h-full bg-cyan-400 transition-all duration-300" style="width: ${percent}%"></div>
+                        </div>
+                        <div class="mt-2 text-xs text-gray-500">${percent}% complete</div>
+                    </div>
                 </div>
             `;
         }
