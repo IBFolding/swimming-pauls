@@ -17,44 +17,6 @@
             background-size: 100% 4px;
             pointer-events: none;
         }
-        #videoBg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.15;
-            z-index: -1;
-        }
-        .playBtn {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            z-index: 100;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: rgba(34,211,238,0.9);
-            border: none;
-            cursor: pointer;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-        }
-        .playBtn:hover {
-            transform: scale(1.1);
-            background: rgba(34,211,238,1);
-        }
-        .playBtn.playing {
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(34,211,238,0.7); }
-            50% { box-shadow: 0 0 0 15px rgba(34,211,238,0); }
-        }
         .connection-status {
             position: fixed;
             bottom: 20px;
@@ -74,13 +36,8 @@
     </style>
 </head>
 <body class="min-h-screen relative">
-    <!-- Video Background -->
-    <video id="videoBg" autoplay muted loop playsinline>
-        <source src="https://assets.mixkit.co/videos/preview/mixkit-underwater-view-of-the-ocean-surface-1083-large.mp4" type="video/mp4">
-    </video>
 
-    <!-- Play/Pause Button -->
-    <button id="playBtn" class="playBtn" onclick="toggleVideo()">▶️</button>
+    <div class="scanline fixed inset-0 z-50"></div>
 
     <!-- Connection Status -->
     <div id="connStatus" class="connection-status status-disconnected">
@@ -96,11 +53,11 @@
             <span class="text-xl font-bold tracking-tighter">SWIMMING_PAULS</span>
         </div>
         
-        <div class="flex items-center gap-4">
-            <button onclick="window.open('https://www.youtube.com/@swimmingpaulmusic', '_blank')" 
-                    class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded text-sm">
-                🎵 Swimming Paul
-            </button>
+        <div class="flex items-center gap-3">
+            <a href="https://github.com/IBFolding/swimming-pauls" target="_blank"
+               class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded text-sm">
+                🐙 GitHub
+            </a>
             
             <button onclick="showConnectModal()" 
                     class="px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 rounded text-sm text-cyan-400">
@@ -394,31 +351,92 @@
             </div>
         </section>
 
+        <!-- Create Your Own Paul -->
+        <section class="border border-white/10 rounded-xl p-6 mb-8">
+            <h2 class="text-lg font-bold mb-4 text-cyan-400">🎨 CREATE YOUR PAUL</h2>
+            
+            <p class="text-gray-400 mb-4 text-sm">
+                Don't see a Paul that fits? Create your own persona and add them to the pool.
+            </p>
+            
+            <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                    <input type="text" id="newPaulName" placeholder="Paul Name (e.g., Chef Paul)" 
+                           class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white placeholder-gray-500 mb-3 focus:border-cyan-400 focus:outline-none"
+                    >
+                    
+                    <select id="newPaulStyle" class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white mb-3 focus:border-cyan-400 focus:outline-none">
+                        <option value="">Select Style...</option>
+                        <option value="analytical">📊 Analytical - Data-driven, logical</option>
+                        <option value="emotional">❤️ Emotional - Gut feel, intuitive</option>
+                        <option value="contrarian">🔄 Contrarian - Devil's advocate</option>
+                        <option value="optimistic">🌟 Optimistic - Glass half full</option>
+                        <option value="pessimistic">🌧️ Pessimistic - Risk-focused</option>
+                        <option value="chaotic">🎲 Chaotic - Random, unpredictable</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <textarea id="newPaulPrompt" placeholder="Describe your Paul's personality and expertise..." rows="3"
+                              class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none"
+                    ></textarea>
+                </div>
+            </div>
+            
+            <button onclick="createPaul()" class="mt-4 w-full py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-sm font-bold transition-colors">
+                ➕ ADD PAUL TO POOL
+            </button>
+            
+            <div id="customPauls" class="mt-4 space-y-2 hidden">
+                <div class="text-xs text-gray-500 uppercase tracking-wider mb-2">Your Custom Pauls</div>
+            </div>
+        </section>
+
+        <!-- OpenClaw Skill -->
+        <section class="border border-white/10 rounded-xl p-6 mb-8">
+            <h2 class="text-lg font-bold mb-4 text-cyan-400">🔧 OPENCLAW SKILL</h2>
+            
+            <p class="text-gray-400 mb-4 text-sm">
+                Use Swimming Pauls directly from OpenClaw CLI.
+            </p>
+            
+            <div class="bg-black/50 p-4 rounded-lg font-mono text-sm space-y-2">
+                <div class="text-green-400"># Start local agent with OpenClaw</div>
+                <div class="text-gray-300">openclaw run swimming-pauls</div>
+                
+                <div class="text-green-400 mt-3"># Or with custom settings</div>
+                <div class="text-gray-300">openclaw run swimming-pauls --pauls 200 --rounds 500</div>
+                
+                <div class="text-green-400 mt-3"># Skill location</div>
+                <div class="text-gray-300">~/.openclaw/workspace/skills/swimming-pauls/</div>
+            </div>
+            
+            <div class="mt-4 grid grid-cols-3 gap-3 text-center text-xs">
+                <div class="p-3 bg-white/5 rounded">
+                    <div class="text-cyan-400 font-bold">100% Local</div>
+                    <div class="text-gray-500">No cloud calls</div>
+                </div>
+                <div class="p-3 bg-white/5 rounded">
+                    <div class="text-cyan-400 font-bold">WebSocket</div>
+                    <div class="text-gray-500">Real-time streaming</div>
+                </div>
+                <div class="p-3 bg-white/5 rounded">
+                    <div class="text-cyan-400 font-bold">Extensible</div>
+                    <div class="text-gray-500">Add custom Pauls</div>
+                </div>
+            </div>
+        </section>
+
         <!-- Footer -->
         <footer class="text-center py-12 text-gray-500 text-sm">
             <p>Built by HOWARD • 100% Local • No Cloud</p>
-            <p class="mt-2">🎧 Listen to Swimming Paul on YouTube</p>
+            <p class="mt-2">🐙 <a href="https://github.com/IBFolding/swimming-pauls" class="text-cyan-400 hover:underline">github.com/IBFolding/swimming-pauls</a></p>
         </footer>
     </main>
 
     <script>
         let ws = null;
         let isConnected = false;
-
-        function toggleVideo() {
-            const video = document.getElementById('videoBg');
-            const btn = document.getElementById('playBtn');
-            
-            if (video.paused) {
-                video.play();
-                btn.innerHTML = '⏸️';
-                btn.classList.add('playing');
-            } else {
-                video.pause();
-                btn.innerHTML = '▶️';
-                btn.classList.remove('playing');
-            }
-        }
 
         function showConnectModal() {
             document.getElementById('connectModal').classList.remove('hidden');
@@ -624,17 +642,36 @@
             `;
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const video = document.getElementById('videoBg');
-            const btn = document.getElementById('playBtn');
+        function createPaul() {
+            const name = document.getElementById('newPaulName').value.trim();
+            const style = document.getElementById('newPaulStyle').value;
+            const prompt = document.getElementById('newPaulPrompt').value.trim();
             
-            video.play().then(() => {
-                btn.innerHTML = '⏸️';
-                btn.classList.add('playing');
-            }).catch(() => {
-                btn.innerHTML = '▶️';
-            });
-        });
+            if (!name || !style || !prompt) {
+                alert('Fill in all fields to create your Paul!');
+                return;
+            }
+            
+            const container = document.getElementById('customPauls');
+            container.classList.remove('hidden');
+            
+            const paulDiv = document.createElement('div');
+            paulDiv.className = 'p-3 bg-cyan-500/10 border border-cyan-500/30 rounded-lg flex justify-between items-center';
+            paulDiv.innerHTML = `
+                <div>
+                    <div class="font-bold text-cyan-400">${name}</div>
+                    <div class="text-xs text-gray-500">${style} • ${prompt.substring(0, 50)}${prompt.length > 50 ? '...' : ''}</div>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-red-400 hover:text-red-300">✕</button>
+            `;
+            
+            container.appendChild(paulDiv);
+            
+            // Clear inputs
+            document.getElementById('newPaulName').value = '';
+            document.getElementById('newPaulStyle').value = '';
+            document.getElementById('newPaulPrompt').value = '';
+        }
     </script>
 </body>
 </html>
