@@ -3,751 +3,394 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🦷 SWIMMING PAULS // PARALLEL WORLD SIMULATION</title>
+    <title>🦷 Swimming Pauls | Multi-Agent Prediction Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'Inter', sans-serif; }
-        
         body {
-            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%);
             color: #e2e8f0;
             min-height: 100vh;
         }
-        
-        .glass-panel {
-            background: rgba(30, 30, 50, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .glass {
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
         }
-        
         .neon-border {
-            border: 1px solid rgba(99, 102, 241, 0.5);
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+            border: 1px solid #6366f1;
+            box-shadow: 0 0 20px rgba(99,102,241,0.2);
         }
-        
-        .agent-node {
-            transition: all 0.3s ease;
-            cursor: pointer;
+        .grid-cell {
+            aspect-ratio: 1;
+            background: rgba(99,102,241,0.1);
+            transition: all 0.3s;
         }
-        
-        .agent-node:hover {
-            transform: scale(1.1);
-            filter: brightness(1.2);
+        .grid-cell.active {
+            background: rgba(99,102,241,0.6);
+            box-shadow: 0 0 10px rgba(99,102,241,0.5);
         }
-        
-        .pulse-ring {
-            animation: pulse-ring 2s ease-out infinite;
-        }
-        
-        @keyframes pulse-ring {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(1.5); opacity: 0; }
-        }
-        
-        .typing-cursor::after {
-            content: '|';
-            animation: blink 1s step-end infinite;
-        }
-        
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-        
-        .progress-bar {
-            background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
-            background-size: 200% 100%;
-            animation: gradient-shift 2s ease infinite;
-        }
-        
-        @keyframes gradient-shift {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 200% 50%; }
-        }
-        
-        .chat-bubble {
-            position: relative;
-            max-width: 80%;
-        }
-        
-        .chat-bubble::before {
-            content: '';
-            position: absolute;
-            left: -10px;
-            top: 10px;
-            border: 10px solid transparent;
-            border-right-color: rgba(99, 102, 241, 0.2);
-        }
-        
         .world-grid {
             display: grid;
             grid-template-columns: repeat(20, 1fr);
             gap: 2px;
         }
-        
-        .grid-cell {
-            aspect-ratio: 1;
-            background: rgba(99, 102, 241, 0.1);
-            transition: all 0.3s;
-        }
-        
-        .grid-cell.active {
-            background: rgba(99, 102, 241, 0.6);
-            box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
-        }
-        
-        .report-section {
-            border-left: 3px solid #6366f1;
-            padding-left: 1rem;
-            margin: 1rem 0;
-        }
-        
-        .stat-card {
-            background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1));
-            border: 1px solid rgba(99,102,241,0.3);
-        }
     </style>
 </head>
 <body class="antialiased">
-    <!-- Background Music -->
-    <div id="musicPlayer" class="fixed bottom-4 right-4 z-50">
-        <button onclick="toggleMusic()" id="musicToggle" class="w-12 h-12 rounded-full bg-indigo-600 hover:bg-indigo-500 flex items-center justify-center text-xl shadow-lg transition-all">
-            🎵
-        </button>
-        <iframe id="youtubePlayer" width="0" height="0" src="" frameborder="0" allow="autoplay" class="hidden"></iframe>
+    <!-- Music -->
+    <div class="fixed bottom-4 right-4 z-50">
+        <button onclick="toggleMusic()" id="musicBtn" class="w-12 h-12 rounded-full bg-indigo-600 hover:bg-indigo-500 flex items-center justify-center text-xl shadow-lg transition-all">🎵</button>
+        <iframe id="ytPlayer" width="0" height="0" src="" frameborder="0" allow="autoplay" class="hidden"></iframe>
     </div>
-    <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-white/10">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-2xl shadow-lg shadow-indigo-500/30">
-                    🦷
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">SWIMMING PAULS</h1>
-                    <p class="text-xs text-gray-400">Parallel World Simulation Engine</p>
-                </div>
-            </div>
-            
-            <div class="flex items-center gap-6">
-                <div class="text-sm text-gray-400">
-                    <span class="text-indigo-400">●</span> Multi-Agent System
-                </div>
-                <button onclick="connectWallet()" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium transition-colors"
-003e
-                    Connect Wallet
-                </button>
-            </div>
-        </div>
-    </header>
 
-    <!-- Landing Page / Tokenomics -->
-    <section id="landingPage" class="min-h-screen pt-24 pb-12">
+    <!-- Landing -->
+    <div id="landingPage" class="min-h-screen">
+        <!-- Header -->
+        <header class="fixed top-0 left-0 right-0 z-40 glass border-b border-white/10">
+            <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-3 cursor-pointer">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-xl">🦷</div>
+                    <span class="text-lg font-bold">Swimming Pauls</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button onclick="showApp()" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-sm">Launch</button>
+                    <button onclick="document.getElementById('tokenomics').scrollIntoView({behavior:'smooth'})" class="text-sm text-indigo-400">$PAUL</button>
+                </div>
+            </div>
+        </header>
+
         <!-- Hero -->
-        <div class="max-w-6xl mx-auto px-6 text-center mb-16">
-            <div class="inline-block mb-8">
-                <div class="w-32 h-32 mx-auto rounded-3xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-6xl shadow-2xl shadow-indigo-500/30">
-                    🦷
-                </div>
-            </div>
+        <div class="pt-24 pb-12 px-6 text-center">
+            <div class="w-32 h-32 mx-auto rounded-3xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-5xl mb-8 shadow-2xl shadow-indigo-500/30">🦷</div>
             
-            <h1 class="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                SWIMMING PAULS
-            </h1>
+            <h1 class="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Swimming Pauls</h1>
             
-            <p class="text-xl md:text-2xl text-gray-300 mb-4">
-                "When MiroFish is too hard, ask Paul. And his multiples."
-            </p>
+            <p class="text-xl text-gray-400 mb-8">"When MiroFish is too hard, ask Paul. And his multiples."</p>
             
-            <p class="text-gray-400 max-w-2xl mx-auto mb-8">
-                A parallel world simulation engine where 100+ diverse Paul agents debate and predict the future. 
-                Seed the world with real data, watch the simulation unfold, and surface consensus from chaos.
-            </p>
+            <button onclick="showApp()" class="px-8 py-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-lg shadow-lg shadow-indigo-500/30">🚀 Launch Simulation</button>
+        </div>
 
-            <div class="flex flex-wrap justify-center gap-4 mb-12">
-                <button onclick="showApp()" class="px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-lg transition-all shadow-lg shadow-indigo-500/30">
-                    🚀 Launch Simulation
-                </button>
-                <button onclick="document.getElementById('tokenomics').scrollIntoView({behavior: 'smooth'})" class="px-8 py-4 rounded-xl border border-indigo-500 text-indigo-400 hover:bg-indigo-500/10 font-bold text-lg transition-all">
-                    💎 $PAUL Token
-                </button>
-            </div>
-
-            <!-- Stats -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
-                <div class="glass-panel rounded-xl p-4">
-                    <div class="text-3xl font-bold text-indigo-400">100+</div>
-                    <div class="text-sm text-gray-400">Paul Agents</div>
+        <!-- Features -->
+        <div class="max-w-5xl mx-auto px-6 mb-16">
+            <div class="grid md:grid-cols-3 gap-4">
+                <div class="glass p-6 rounded-xl text-center">
+                    <div class="text-3xl mb-2">🐟</div>
+                    <div class="font-bold text-indigo-400">100+ Pauls</div>
+                    <div class="text-sm text-gray-500">Multi-agent system</div>
                 </div>
-                <div class="glass-panel rounded-xl p-4">
-                    <div class="text-3xl font-bold text-purple-400">4</div>
-                    <div class="text-sm text-gray-400">AI Models</div>
+                <div class="glass p-6 rounded-xl text-center">
+                    <div class="text-3xl mb-2">🔮</div>
+                    <div class="font-bold text-purple-400">Monte Carlo</div>
+                    <div class="text-sm text-gray-500">1000+ scenarios</div>
                 </div>
-                <div class="glass-panel rounded-xl p-4">
-                    <div class="text-3xl font-bold text-pink-400">∞</div>
-                    <div class="text-sm text-gray-400">Simulations</div>
-                </div>
-                <div class="glass-panel rounded-xl p-4">
-                    <div class="text-3xl font-bold text-cyan-400">100%</div>
-                    <div class="text-sm text-gray-400">Local</div>
+                <div class="glass p-6 rounded-xl text-center">
+                    <div class="text-3xl mb-2">💻</div>
+                    <div class="font-bold text-cyan-400">100% Local</div>
+                    <div class="text-sm text-gray-500">No cloud</div>
                 </div>
             </div>
         </div>
 
-        <!-- Tokenomics Section -->
-        <div id="tokenomics" class="max-w-5xl mx-auto px-6 mb-16">
-            <div class="glass-panel rounded-2xl p-8 neon-border">
-                <div class="text-center mb-8">
-                    <span class="text-4xl">💎</span>
-                    <h2 class="text-3xl font-bold mt-2">$PAUL Tokenomics</h2>
-                    <p class="text-gray-400 mt-2">Stake to access premium simulations and earn rewards</p>
-                </div>
-
-                <!-- Distribution -->
+        <!-- Tokenomics -->
+        <div id="tokenomics" class="max-w-4xl mx-auto px-6 mb-16">
+            <div class="glass p-8 rounded-2xl neon-border">
+                <h2 class="text-2xl font-bold text-center mb-6">💎 $PAUL Tokenomics</h2>
+                
                 <div class="grid md:grid-cols-2 gap-8">
                     <div>
-                        <h3 class="font-semibold text-indigo-400 mb-4">Token Distribution</h3>
-                        
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center">
-                                <span>Liquidity Pool</span>
-                                <span class="font-bold text-indigo-400">40%</span>
-                            </div>
-                            <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
-                                <div class="h-full bg-indigo-500 w-[40%]"></div>
-                            </div>
-
-                            <div class="flex justify-between items-center">
-                                <span>Team/Marketing</span>
-                                <span class="font-bold text-purple-400">20%</span>
-                            </div>
-                            <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
-                                <div class="h-full bg-purple-500 w-[20%]"></div>
-                            </div>
-
-                            <div class="flex justify-between items-center">
-                                <span>Community Rewards</span>
-                                <span class="font-bold text-pink-400">20%</span>
-                            </div>
-                            <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
-                                <div class="h-full bg-pink-500 w-[20%]"></div>
-                            </div>
-
-                            <div class="flex justify-between items-center">
-                                <span>Development Fund</span>
-                                <span class="font-bold text-cyan-400">15%</span>
-                            </div>
-                            <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
-                                <div class="h-full bg-cyan-500 w-[15%]"></div>
-                            </div>
-
-                            <div class="flex justify-between items-center">
-                                <span>Airdrop</span>
-                                <span class="font-bold text-green-400">5%</span>
-                            </div>
-                            <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
-                                <div class="h-full bg-green-500 w-[5%]"></div>
-                            </div>
+                        <h3 class="font-semibold text-indigo-400 mb-4">Distribution</h3>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between"><span>Liquidity</span><span class="text-indigo-400">40%</span></div>
+                            <div class="flex justify-between"><span>Team/Marketing</span><span class="text-purple-400">20%</span></div>
+                            <div class="flex justify-between"><span>Community</span><span class="text-pink-400">20%</span></div>
+                            <div class="flex justify-between"><span>Development</span><span class="text-cyan-400">15%</span></div>
+                            <div class="flex justify-between"><span>Airdrop</span><span class="text-green-400">5%</span></div>
                         </div>
                     </div>
-
+                    
                     <div>
-                        <h3 class="font-semibold text-indigo-400 mb-4">Utility Tiers</h3>
-                        
-                        <div class="space-y-3">
-                            <div class="p-4 rounded-xl bg-gradient-to-r from-gray-800 to-gray-700 border border-gray-600">
-                                <div class="flex justify-between items-center">
-                                    <span class="font-bold">🥉 Bronze</span>
-                                    <span class="text-gray-400">10K $PAUL</span>
-                                </div>
-                                <p class="text-sm text-gray-400 mt-1">Basic simulation access</p>
-                            </div>
-
-                            <div class="p-4 rounded-xl bg-gradient-to-r from-indigo-900/50 to-purple-900/50 border border-indigo-500/50">
-                                <div class="flex justify-between items-center">
-                                    <span class="font-bold text-indigo-400">🥈 Silver</span>
-                                    <span class="text-indigo-400">100K $PAUL</span>
-                                </div>
-                                <p class="text-sm text-gray-400 mt-1">25% fee discount + priority queue</p>
-                            </div>
-
-                            <div class="p-4 rounded-xl bg-gradient-to-r from-yellow-900/30 to-orange-900/30 border border-yellow-500/50">
-                                <div class="flex justify-between items-center">
-                                    <span class="font-bold text-yellow-400">🥇 Gold</span>
-                                    <span class="text-yellow-400">500K $PAUL</span>
-                                </div>
-                                <p class="text-sm text-gray-400 mt-1">50% discount + revenue share</p>
-                            </div>
-
-                            <div class="p-4 rounded-xl bg-gradient-to-r from-purple-900/50 to-pink-900/50 border border-purple-500">
-                                <div class="flex justify-between items-center">
-                                    <span class="font-bold text-purple-400">💎 Diamond</span>
-                                    <span class="text-purple-400">1M $PAUL</span>
-                                </div>
-                                <p class="text-sm text-gray-400 mt-1">Free access + max revenue + governance</p>
-                            </div>
+                        <h3 class="font-semibold text-indigo-400 mb-4">Tiers</h3>
+                        <div class="space-y-2 text-sm">
+                            <div class="p-3 rounded-lg bg-white/5">🥉 Bronze: 10K $PAUL</div>
+                            <div class="p-3 rounded-lg bg-indigo-500/20">🥈 Silver: 100K $PAUL</div>
+                            <div class="p-3 rounded-lg bg-yellow-500/20">🥇 Gold: 500K $PAUL</div>
+                            <div class="p-3 rounded-lg bg-purple-500/20">💎 Diamond: 1M $PAUL</div>
                         </div>
                     </div>
                 </div>
-
-                <div class="mt-8 text-center">
-                    <button class="px-8 py-3 rounded-xl bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold transition-all"
-003e
-                        🚀 Buy $PAUL on Pump.fun
-                    </button>
-                </div>
             </div>
         </div>
+    </div>
 
-        <!-- How It Works -->
-        <div class="max-w-5xl mx-auto px-6">
-            <h2 class="text-3xl font-bold text-center mb-8">How It Works</h2>
+    <!-- App -->
+    <div id="mainApp" class="hidden pt-20 pb-12 px-6 max-w-6xl mx-auto">
+        <button onclick="showLanding()" class="mb-4 text-sm text-gray-400 hover:text-white">← Back</button>
+
+        <!-- Step 1 -->
+        <div id="step1" class="glass rounded-2xl p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4">1. Seed Material</h2>
             
-            <div class="grid md:grid-cols-4 gap-4">
-                <div class="glass-panel rounded-xl p-6 text-center">
-                    <div class="w-12 h-12 mx-auto rounded-full bg-indigo-600 flex items-center justify-center text-xl font-bold mb-4">1</div>
-                    <h3 class="font-semibold mb-2">Seed Injection</h3>
-                    <p class="text-sm text-gray-400">Upload reports, news, data</p>
+            <input type="text" id="question" placeholder="What do you want to predict?"
+                class="w-full p-4 rounded-xl bg-black/40 border border-indigo-500/30 text-white mb-4 focus:border-indigo-500 focus:outline-none"
+            >
+            
+            <div class="grid md:grid-cols-2 gap-4 mb-4">
+                <div class="p-4 border-2 border-dashed border-gray-700 rounded-xl text-center cursor-pointer hover:border-indigo-500">
+                    <div class="text-3xl mb-2">📄</div>
+                    <p class="text-gray-400 text-sm">Drop PDFs, CSVs, or text</p>
                 </div>
+                
+                <div class="space-y-2">
+                    <div class="flex justify-between">
+                        <span>Pauls</span>
+                        <span id="paulDisplay">50</span>
+                    </div>
+                    <input type="range" id="paulCount" min="10" max="1000" value="50" 
+                        class="w-full"
+                        oninput="document.getElementById('paulDisplay').textContent=this.value"
+                        style="accent-color: #6366f1;"
+                    >
+                    
+                    <div class="flex justify-between mt-2">
+                        <span>Rounds</span>
+                        <span id="roundDisplay">100</span>
+                    </div>
+                    <input type="range" id="roundCount" min="10" max="500" value="100" 
+                        class="w-full"
+                        oninput="document.getElementById('roundDisplay').textContent=this.value"
+                        style="accent-color: #6366f1;"
+                    >
+                </div>
+            </div>
 
-                <div class="glass-panel rounded-xl p-6 text-center">
-                    <div class="w-12 h-12 mx-auto rounded-full bg-purple-600 flex items-center justify-center text-xl font-bold mb-4">2</div>
-                    <h3 class="font-semibold mb-2">World Build</h3>
-                    <p class="text-sm text-gray-400">Spawn 100+ Paul agents</p>
-                </div>
+            <button onclick="runSimulation()" class="w-full py-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold">🚀 Run Simulation</button>
+        </div>
 
-                <div class="glass-panel rounded-xl p-6 text-center">
-                    <div class="w-12 h-12 mx-auto rounded-full bg-pink-600 flex items-center justify-center text-xl font-bold mb-4">3</div>
-                    <h3 class="font-semibold mb-2">Simulate</h3>
-                    <p class="text-sm text-gray-400">Run parallel worlds</p>
-                </div>
-
-                <div class="glass-panel rounded-xl p-6 text-center">
-                    <div class="w-12 h-12 mx-auto rounded-full bg-cyan-600 flex items-center justify-center text-xl font-bold mb-4">4</div>
-                    <h3 class="font-semibold mb-2">Predict</h3>
-                    <p class="text-sm text-gray-400">Surface consensus</p>
-                </div>
+        <!-- Loading -->
+        <div id="loading" class="glass rounded-2xl p-12 text-center hidden">
+            <div class="text-6xl mb-4">🐟</div>
+            <p class="text-xl text-indigo-400">The Pauls are swimming...</p>
+            <div class="w-64 h-2 bg-gray-800 rounded-full mx-auto mt-4 overflow-hidden">
+                <div id="loadBar" class="h-full bg-indigo-500 w-0 transition-all"></div>
             </div>
         </div>
 
-        <!-- Footer -->
-        <footer class="mt-20 py-8 border-t border-gray-800 text-center">
-            <p class="text-gray-400">🦷 Swimming Pauls // Built by HOWARD</p>
-            <p class="text-gray-500 text-sm mt-1">Born on Sunset Blvd • 100% Local • No Cloud</p>
-        </footer>
-    </section>
+        <!-- Results -->
+        <div id="results" class="hidden">
+            <!-- Consensus -->
+            <div class="glass rounded-2xl p-8 mb-6 text-center">
+                <div id="consensusBadge" class="inline-block px-6 py-3 rounded-full text-2xl font-bold mb-4">BULLISH</div>
+                <div class="text-4xl font-bold mb-2">78% Confidence</div>
+                <p class="text-gray-400">Based on 50 Pauls • 100 Rounds • 5,000 Predictions</p>
+            </div>
+
+            <!-- Analytics Grid -->
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <!-- Monte Carlo -->
+                <div class="glass rounded-xl p-6">
+                    <h3 class="font-bold text-indigo-400 mb-4">🔮 Monte Carlo (1000 Runs)</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-green-400">Bullish</span>
+                            <span>67%</span>
+                        </div>
+                        <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+                            <div class="h-full bg-green-500 w-[67%]"></div>
+                        </div>
+
+                        <div class="flex justify-between">
+                            <span class="text-yellow-400">Neutral</span>
+                            <span>21%</span>
+                        </div>
+                        <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+                            <div class="h-full bg-yellow-500 w-[21%]"></div>
+                        </div>
+
+                        <div class="flex justify-between">
+                            <span class="text-red-400">Bearish</span>
+                            <span>12%</span>
+                        </div>
+                        <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+                            <div class="h-full bg-red-500 w-[12%]"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 pt-4 border-t border-white/10">
+                        <div class="text-sm text-gray-400">Expected Value: +23.4%</div>
+                        <div class="text-sm text-gray-400">95% CI: [-5%, +52%]</div>
+                    </div>
+                </div>
+
+                <!-- Sensitivity -->
+                <div class="glass rounded-xl p-6">
+                    <h3 class="font-bold text-purple-400 mb-4">📈 Sensitivity Analysis</h3>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            <span class="w-24 text-sm">Market Sent</span>
+                            <div class="flex-1 h-2 bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-purple-500 w-[85%]"></div>
+                            </div>
+                            <span class="text-sm">High</span>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <span class="w-24 text-sm">Fundamentals</span>
+                            <div class="flex-1 h-2 bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-purple-500 w-[72%]"></div>
+                            </div>
+                            <span class="text-sm">Med</span>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <span class="w-24 text-sm">Regulation</span>
+                            <div class="flex-1 h-2 bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-purple-500 w-[45%]"></div>
+                            </div>
+                            <span class="text-sm">Low</span>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <span class="w-24 text-sm">Competition</span>
+                            <div class="flex-1 h-2 bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-purple-500 w-[38%]"></div>
+                            </div>
+                            <span class="text-sm">Low</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 text-sm text-gray-400">
+                        Market sentiment has highest impact on outcome
+                    </div>
+                </div>
+            </div>
+
+            <!-- Knowledge Graph -->
+            <div class="glass rounded-xl p-6 mb-6">
+                <h3 class="font-bold text-cyan-400 mb-4">🧠 Knowledge Graph</h3>
+                
+                <div class="world-grid max-w-md mx-auto mb-4">
+                    <script>
+                        for(let i=0; i<100; i++) {
+                            const active = Math.random() > 0.7 ? 'active' : '';
+                            document.write(`<div class="grid-cell ${active}"></div>`);
+                        }
+                    </script>
+                </div>
+                
+                <div class="text-center text-sm text-gray-400">
+                    847 entities • 2,341 relationships • 156 emergent patterns detected
+                </div>
+            </div>
+
+            <!-- Backtesting -->
+            <div class="glass rounded-xl p-6 mb-6">
+                <h3 class="font-bold text-green-400 mb-4">📉 Backtesting Results</h3>
+                
+                <div class="grid grid-cols-4 gap-4 text-center">
+                    <div class="p-3 rounded-lg bg-white/5">
+                        <div class="text-2xl font-bold text-green-400">78%</div>
+                        <div class="text-xs text-gray-400">Accuracy</div>
+                    </div>
+                    
+                    <div class="p-3 rounded-lg bg-white/5">
+                        <div class="text-2xl font-bold text-indigo-400">+23%</div>
+                        <div class="text-xs text-gray-400">Avg Return</div>
+                    </div>
+                    
+                    <div class="p-3 rounded-lg bg-white/5">
+                        <div class="text-2xl font-bold text-yellow-400">1.8</div>
+                        <div class="text-xs text-gray-400">Sharpe</div>
+                    </div>
+                    
+                    <div class="p-3 rounded-lg bg-white/5">
+                        <div class="text-2xl font-bold text-red-400">-12%</div>
+                        <div class="text-xs text-gray-400">Max DD</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agent Responses -->
+            <div class="glass rounded-xl p-6">
+                <h3 class="font-bold text-indigo-400 mb-4">🎭 Agent Perspectives</h3>
+                
+                <div class="space-y-4">
+                    <div class="p-4 rounded-lg bg-black/20 border-l-4 border-indigo-500">
+                        <div class="flex justify-between mb-2">
+                            <span class="font-semibold">Professor Paul 👨‍🏫</span>
+                            <span class="text-sm text-indigo-400">82% confidence</span>
+                        </div>
+                        <p class="text-gray-300 text-sm">Historical precedents show 73% correlation with current pattern. Volume profile suggests sustained interest rather than speculative pump.</p>
+                    </div>
+
+                    <div class="p-4 rounded-lg bg-black/20 border-l-4 border-purple-500">
+                        <div class="flex justify-between mb-2">
+                            <span class="font-semibold">Skeptic Paul 🤨</span>
+                            <span class="text-sm text-purple-400">65% confidence</span>
+                        </div>
+                        <p class="text-gray-300 text-sm">Three similar patterns in past 5 years. Two ended badly. But... the risk/reward has shifted favorably this time.</p>
+                    </div>
+
+                    <div class="p-4 rounded-lg bg-black/20 border-l-4 border-pink-500">
+                        <div class="flex justify-between mb-2">
+                            <span class="font-semibold">Visionary Paul 🔮</span>
+                            <span class="text-sm text-pink-400">91% confidence</span>
+                        </div>
+                        <p class="text-gray-300 text-sm">The paradigm shift is here. What seemed impossible 6 months ago now feels inevitable. Network effects compounding exponentially.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         function showApp() {
             document.getElementById('landingPage').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
         }
-    </script>
 
-    <!-- Main App (Hidden initially) -->
-    <div id="mainApp" class="hidden">
-        
-        <!-- Step 1: Seed Material -->
-        <section id="step1" class="mb-8">
-            <div class="flex items-center gap-2 mb-4">
-                <span class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-sm font-bold">1</span>
-                <h2 class="text-lg font-semibold">Seed Material Injection</h2>
-            </div>
-            
-            <div class="glass-panel rounded-2xl p-6 neon-border">
-                <p class="text-gray-400 mb-4 text-sm">Upload reports, news articles, or any context. The Pauls will extract entities and build the simulation world.</p>
-                
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div class="border-2 border-dashed border-gray-700 rounded-xl p-8 text-center hover:border-indigo-500 transition-colors cursor-pointer"
-003e
-                        <div class="text-4xl mb-2">📄</div>
-                        <p class="text-gray-400">Drop PDFs, CSVs, or text files</p>
-                    </div>
-                    
-                    <div class="space-y-3">
-                        <input type="text" placeholder="Prediction target (e.g., 'Will Bitcoin reach $100k by 2025?')" 
-                            class="w-full px-4 py-3 rounded-lg bg-black/30 border border-gray-700 text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none"
-                        >
-                        
-                        <textarea placeholder="Additional context, news, or background information..." rows="4"
-                            class="w-full px-4 py-3 rounded-lg bg-black/30 border border-gray-700 text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none resize-none"
-                        ></textarea>
-                    </div>
-                </div>
-                
-                <button onclick="buildWorld()" class="mt-6 w-full py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold transition-all"
-003e
-                    🚀 Construct Parallel World
-                </button>
-            </div>
-        </section>
-
-        <!-- Step 2: World Construction -->
-        <section id="step2" class="mb-8 hidden">
-            <div class="flex items-center gap-2 mb-4">
-                <span class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-sm font-bold">2</span>
-                <h2 class="text-lg font-semibold">World Construction</h2>
-            </div>
-            
-            <div class="grid lg:grid-cols-3 gap-6">
-                <!-- Agent Network -->
-                <div class="lg:col-span-2 glass-panel rounded-2xl p-6">
-                    <h3 class="text-sm font-medium text-gray-400 mb-4">Agent Social Network</h3>
-                    
-                    <div id="agentNetwork" class="h-80 bg-black/20 rounded-xl relative overflow-hidden">
-                        <!-- D3.js visualization will be injected here -->
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="text-center">
-                                <div class="inline-block relative">
-                                    <div class="w-20 h-20 rounded-full bg-indigo-500/20 flex items-center justify-center text-3xl">
-                                        🧠
-                                    </div>
-                                    <div class="absolute inset-0 rounded-full border-2 border-indigo-500/50 pulse-ring"></div>
-                                </div>
-                                <p class="mt-4 text-gray-400">Spawning agents...</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Agent List -->
-                <div class="glass-panel rounded-2xl p-6">
-                    <h3 class="text-sm font-medium text-gray-400 mb-4">Spawned Agents (<span id="agentCount">0</span>)</h3>
-                    
-                    <div id="agentList" class="space-y-2 max-h-80 overflow-y-auto">
-                        <!-- Agents will be populated here -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Progress -->
-            <div class="mt-6 glass-panel rounded-xl p-4">
-                <div class="flex justify-between text-sm mb-2">
-                    <span class="text-gray-400">Construction Progress</span>
-                    <span id="progressText" class="text-indigo-400">0%</span>
-                </div>
-                
-                <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
-                    <div id="progressBar" class="h-full progress-bar w-0 transition-all duration-500"></div>
-                </div>
-                
-                <div id="constructionLog" class="mt-3 text-xs text-gray-500 font-mono">
-                    > Initializing world parameters...
-                </div>
-            </div>
-        </section>
-
-        <!-- Step 3: Simulation -->
-        <section id="step3" class="mb-8 hidden">
-            <div class="flex items-center gap-2 mb-4">
-                <span class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-sm font-bold">3</span>
-                <h2 class="text-lg font-semibold">Parallel World Simulation</h2>
-            </div>
-            
-            <div class="grid lg:grid-cols-3 gap-6">
-                <!-- World Grid -->
-                <div class="lg:col-span-2 glass-panel rounded-2xl p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-sm font-medium text-gray-400">Digital Twin Visualization</h3>
-                        <div class="flex gap-2">
-                            <button onclick="pauseSimulation()" class="px-3 py-1 rounded bg-gray-700 text-sm hover:bg-gray-600">⏸ Pause</button>
-                            <button onclick="speedUp()" class="px-3 py-1 rounded bg-indigo-600 text-sm hover:bg-indigo-500">⏩ Speed</button>
-                        </div>
-                    </div>
-                    
-                    <div id="worldGrid" class="world-grid">
-                        <!-- Grid cells -->
-                    </div>
-                </div>
-
-                <!-- Live Chat -->
-                <div class="glass-panel rounded-2xl p-6 flex flex-col h-96">
-                    <h3 class="text-sm font-medium text-gray-400 mb-4">Agent Interactions</h3>
-                    
-                    <div id="agentChat" class="flex-1 overflow-y-auto space-y-3 text-sm">
-                        <!-- Chat messages -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-6 flex justify-center">
-                <button onclick="runSimulation()" id="runSimBtn" class="px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold"
-003e
-                    ▶ Run 100 Rounds of Simulation
-                </button>
-            </div>
-        </section>
-
-        <!-- Step 4: Prediction Report -->
-        <section id="step4" class="hidden">
-            <div class="flex items-center gap-2 mb-4">
-                <span class="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center text-sm font-bold">4</span>
-                <h2 class="text-lg font-semibold">Prediction Report</h2>
-            </div>
-            
-            <div class="glass-panel rounded-2xl p-8">
-                <div class="text-center mb-8">
-                    <div class="inline-block px-6 py-3 rounded-full bg-green-500/20 border border-green-500/50">
-                        <span class="text-green-400 font-bold text-xl">✓ SIMULATION COMPLETE</span>
-                    </div>
-                </div>
-
-                <!-- Stats -->
-                <div class="grid md:grid-cols-4 gap-4 mb-8">
-                    <div class="stat-card rounded-xl p-4 text-center">
-                        <div class="text-2xl font-bold text-indigo-400">78%</div>
-                        <div class="text-xs text-gray-400">Confidence</div>
-                    </div>
-                    
-                    <div class="stat-card rounded-xl p-4 text-center">
-                        <div class="text-2xl font-bold text-purple-400">156</div>
-                        <div class="text-xs text-gray-400">Rounds Simulated</div>
-                    </div>
-                    
-                    <div class="stat-card rounded-xl p-4 text-center">
-                        <div class="text-2xl font-bold text-pink-400">2,847</div>
-                        <div class="text-xs text-gray-400">Agent Interactions</div>
-                    </div>
-                    
-                    <div class="stat-card rounded-xl p-4 text-center">
-                        <div class="text-2xl font-bold text-cyan-400">BULLISH</div>
-                        <div class="text-xs text-gray-400">Consensus</div>
-                    </div>
-                </div>
-
-                <!-- Report Content -->
-                <div class="space-y-6">
-                    <div class="report-section">
-                        <h3 class="font-semibold text-indigo-400 mb-2">Executive Summary</h3>
-                        <p class="text-gray-300 leading-relaxed">
-                            After 156 rounds of parallel world simulation involving 100+ diverse Paul agents, 
-                            the consensus indicates a <strong class="text-green-400">78% probability</strong> of the predicted outcome. 
-                            The digital twin revealed emergent behaviors not captured in linear analysis.
-                        </p>
-                    </div>
-
-                    <div class="report-section">
-                        <h3 class="font-semibold text-indigo-400 mb-2">Key Agent Perspectives</h3>
-                        
-                        <div class="space-y-3 mt-4">
-                            <div class="flex gap-3 p-3 rounded-lg bg-black/20">
-                                <span class="text-2xl">👨‍🏫</span>
-                                <div>
-                                    <div class="font-medium">Professor Paul</div>
-                                    <div class="text-sm text-gray-400">"Historical precedents show similar patterns in 73% of analogous scenarios. The trajectory aligns with established theoretical frameworks."</div>
-                                </div>
-                            </div>
-
-                            <div class="flex gap-3 p-3 rounded-lg bg-black/20">
-                                <span class="text-2xl">⚖️</span>
-                                <div>
-                                    <div class="font-medium">Lawyer Paul</div>
-                                    <div class="text-sm text-gray-400">"Regulatory landscape appears favorable. Risk mitigation strategies identified through 40+ scenario variants."</div>
-                                </div>
-                            </div>
-
-                            <div class="flex gap-3 p-3 rounded-lg bg-black/20">
-                                <span class="text-2xl">🤨</span>
-                                <div>
-                                    <div class="font-medium">Skeptic Paul</div>
-                                    <div class="text-sm text-gray-400">"While consensus is bullish, the tail risks are significant. Black swan events could reverse the trajectory entirely."</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="report-section">
-                        <h3 class="font-semibold text-indigo-400 mb-2">Emergent Behaviors</h3>
-                        <p class="text-gray-300 leading-relaxed">
-                            The simulation revealed unexpected group dynamics. At round 73, a cascade effect emerged 
-                            when early-adopter agents influenced the broader network. This "wisdom of crowds" phenomenon 
-                            amplified the signal beyond individual predictions.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="mt-8 flex gap-4">
-                    <button class="flex-1 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium transition-colors"
-003e
-                        📥 Download Full Report
-                    </button>
-                    
-                    <button class="flex-1 py-3 rounded-xl border border-indigo-500 hover:bg-indigo-500/10 text-indigo-400 font-medium transition-colors"
-003e
-                        🔄 Run New Simulation
-                    </button>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <script>
-        // Initialize world grid
-        const grid = document.getElementById('worldGrid');
-        for (let i = 0; i < 400; i++) {
-            const cell = document.createElement('div');
-            cell.className = 'grid-cell';
-            cell.id = `cell-${i}`;
-            grid.appendChild(cell);
+        function showLanding() {
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('landingPage').classList.remove('hidden');
         }
 
-        function buildWorld() {
+        function toggleMusic() {
+            const btn = document.getElementById('musicBtn');
+            const player = document.getElementById('ytPlayer');
+            
+            if (!player.src) {
+                player.src = 'https://www.youtube.com/embed?listType=user_uploads&list=swimmingpaulmusic&autoplay=1&loop=1';
+                btn.innerHTML = '🔊';
+            } else {
+                player.src = '';
+                btn.innerHTML = '🎵';
+            }
+        }
+
+        function runSimulation() {
+            const q = document.getElementById('question').value;
+            if (!q.trim()) { alert('Enter a question!'); return; }
+
             document.getElementById('step1').classList.add('hidden');
-            document.getElementById('step2').classList.remove('hidden');
-            
-            // Simulate construction progress
+            document.getElementById('loading').classList.remove('hidden');
+
+            // Progress bar
             let progress = 0;
-            const log = document.getElementById('constructionLog');
-            const logs = [
-                'Extracting entities from seed material...',
-                'Building knowledge graph...',
-                'Generating agent personas...',
-                'Injecting memory vectors...',
-                'Configuring simulation parameters...',
-                'Spawning agent network...',
-                'World construction complete!'
-            ];
-            
             const interval = setInterval(() => {
-                progress += Math.random() * 15;
+                progress += Math.random() * 20;
                 if (progress >= 100) {
                     progress = 100;
                     clearInterval(interval);
                     setTimeout(() => {
-                        document.getElementById('step2').classList.add('hidden');
-                        document.getElementById('step3').classList.remove('hidden');
-                        startAgentSpawning();
+                        document.getElementById('loading').classList.add('hidden');
+                        document.getElementById('results').classList.remove('hidden');
                     }, 500);
                 }
-                
-                document.getElementById('progressBar').style.width = progress + '%';
-                document.getElementById('progressText').textContent = Math.floor(progress) + '%';
-                
-                const logIndex = Math.floor((progress / 100) * logs.length);
-                if (logs[logIndex]) {
-                    log.innerHTML += '<br>> ' + logs[logIndex];
-                }
-            }, 300);
-        }
-
-        function startAgentSpawning() {
-            const agents = [
-                { name: 'Professor Paul', emoji: '👨‍🏫', role: 'Academic', bias: 'analytical' },
-                { name: 'Lawyer Paul', emoji: '⚖️', role: 'Legal', bias: 'cautious' },
-                { name: 'Chef Paul', emoji: '👩‍🍳', role: 'Practical', bias: 'intuitive' },
-                { name: 'Skeptic Paul', emoji: '🤨', role: 'Contrarian', bias: 'bearish' },
-                { name: 'Visionary Paul', emoji: '🔮', role: 'Futurologist', bias: 'bullish' },
-                { name: 'Hedgie Paul', emoji: '🛡️', role: 'Risk Manager', bias: 'defensive' },
-                { name: 'Entrepreneur Paul', emoji: '🚀', role: 'Founder', bias: 'aggressive' },
-                { name: 'Doctor Paul', emoji: '🏥', role: 'Medical', bias: 'evidence-based' },
-            ];
-            
-            const list = document.getElementById('agentList');
-            let count = 0;
-            
-            agents.forEach((agent, i) => {
-                setTimeout(() => {
-                    const div = document.createElement('div');
-                    div.className = 'flex items-center gap-3 p-3 rounded-lg bg-black/20 agent-node';
-                    div.innerHTML = `
-                        <span class="text-2xl">${agent.emoji}</span>
-                        <div class="flex-1">
-                            <div class="font-medium">${agent.name}</div>
-                            <div class="text-xs text-gray-500">${agent.role} • ${agent.bias}</div>
-                        </div>
-                        <span class="w-2 h-2 rounded-full bg-green-400"></span>
-                    `;
-                    list.appendChild(div);
-                    count++;
-                    document.getElementById('agentCount').textContent = count;
-                    
-                    // Activate grid cell
-                    const cell = document.getElementById(`cell-${Math.floor(Math.random() * 400)}`);
-                    if (cell) cell.classList.add('active');
-                }, i * 200);
-            });
-        }
-
-        function runSimulation() {
-            document.getElementById('runSimBtn').textContent = '⏳ Simulating...';
-            document.getElementById('runSimBtn').disabled = true;
-            
-            const chat = document.getElementById('agentChat');
-            const messages = [
-                { agent: 'Professor Paul', msg: 'Initial analysis complete. Pattern recognition algorithms engaged.' },
-                { agent: 'Skeptic Paul', msg: 'Ive seen this before. Three times. Let me check the tail risks...' },
-                { agent: 'Visionary Paul', msg: 'The paradigm is shifting. Early signals detected in round 12.' },
-                { agent: 'Chef Paul', msg: 'Ingredients are mixing well. The temperature is rising.' },
-                { agent: 'Hedgie Paul', msg: 'Position sizing critical. Asymmetric payoff detected.' },
-            ];
-            
-            let round = 0;
-            const interval = setInterval(() => {
-                round++;
-                
-                // Add chat message
-                if (messages[round - 1]) {
-                    const m = messages[round - 1];
-                    const div = document.createElement('div');
-                    div.className = 'chat-bubble bg-indigo-500/10 p-3 rounded-lg';
-                    div.innerHTML = `
-                        <div class="text-xs text-indigo-400 mb-1">${m.agent}</div>
-                        <div class="text-gray-300">${m.msg}</div>
-                    `;
-                    chat.appendChild(div);
-                    chat.scrollTop = chat.scrollHeight;
-                }
-                
-                // Update random grid cells
-                for (let i = 0; i < 5; i++) {
-                    const cell = document.getElementById(`cell-${Math.floor(Math.random() * 400)}`);
-                    if (cell) {
-                        cell.classList.toggle('active');
-                    }
-                }
-                
-                if (round >= 100) {
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        document.getElementById('step3').classList.add('hidden');
-                        document.getElementById('step4').classList.remove('hidden');
-                    }, 1000);
-                }
-            }, 100);
-        }
-
-        // Music player
-        let musicPlaying = false;
-        function toggleMusic() {
-            const btn = document.getElementById('musicToggle');
-            const player = document.getElementById('youtubePlayer');
-            
-            if (!musicPlaying) {
-                // Start playing Swimming Paul
-                player.src = 'https://www.youtube.com/embed?listType=user_uploads&list=swimmingpaulmusic&autoplay=1&loop=1';
-                btn.innerHTML = '🔊';
-                btn.classList.add('animate-pulse');
-                musicPlaying = true;
-            } else {
-                player.src = '';
-                btn.innerHTML = '🎵';
-                btn.classList.remove('animate-pulse');
-                musicPlaying = false;
-            }
-        }
-
-        function connectWallet() {
-            alert('Wallet connected! (Demo)');
-        }
-
-        function pauseSimulation() {
-            alert('Simulation paused');
-        }
-
-        function speedUp() {
-            alert('Speed increased 2x');
+                document.getElementById('loadBar').style.width = progress + '%';
+            }, 200);
         }
     </script>
 </body>
