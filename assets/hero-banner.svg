@@ -1,0 +1,52 @@
+<svg width="1024" height="576" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f0f1a"/>
+      <stop offset="50%" stop-color="#1a1a3e"/>
+      <stop offset="100%" stop-color="#2d1b4e"/>
+    </linearGradient>
+    <linearGradient id="neon" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="576" fill="url(#bg)"/>
+  
+  <!-- Grid -->
+  <g opacity="0.1">
+    <script>
+      for(let x=0; x<1024; x+=40) {
+        document.write(`<line x1="${x}" y1="0" x2="${x}" y2="576" stroke="#6366f1" stroke-width="1"/>`);
+      }
+      for(let y=0; y<576; y+=40) {
+        document.write(`<line x1="0" y1="${y}" x2="1024" y2="${y}" stroke="#6366f1" stroke-width="1"/>`);
+      }
+    </script>
+  </g>
+  
+  <!-- Fish silhouettes -->
+  <g opacity="0.3">
+    <path d="M100 200 Q150 180 200 200 Q180 220 200 240 Q150 220 100 200" fill="url(#neon)" transform="rotate(-10 150 220)"/>
+    <path d="M800 150 Q850 130 900 150 Q880 170 900 190 Q850 170 800 150" fill="url(#neon)" transform="rotate(15 850 170)"/>
+    <path d="M300 400 Q350 380 400 400 Q380 420 400 440 Q350 420 300 400" fill="url(#neon)" transform="rotate(5 350 420)"/>
+    <path d="M700 350 Q750 330 800 350 Q780 370 800 390 Q750 370 700 350" fill="url(#neon)" transform="rotate(-20 750 370)"/>
+    <path d="M150 450 Q200 430 250 450 Q230 470 250 490 Q200 470 150 450" fill="url(#neon)" transform="rotate(25 200 470)"/>
+  </g>
+  
+  <!-- Central logo -->
+  <g transform="translate(512 288)">
+    <circle cx="0" cy="0" r="120" fill="rgba(0,0,0,0.5)" stroke="url(#neon)" stroke-width="4"/>
+    <text x="0" y="20" text-anchor="middle" font-size="80" fill="url(#neon)">🦷</text>
+  </g>
+  
+  <!-- Title -->
+  <text x="512" y="450" text-anchor="middle" font-size="48" font-family="system-ui" font-weight="bold" fill="url(#neon)">SWIMMING PAULS</text>
+  <text x="512" y="490" text-anchor="middle" font-size="20" font-family="system-ui" fill="#9ca3af">Multi-Agent Prediction Engine</text>
+  
+  <!-- Neon glow effect around center -->
+  <circle cx="512" cy="288" r="150" fill="none" stroke="url(#neon)" stroke-width="2" opacity="0.5">
+    <animate attributeName="r" values="150;160;150" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.5;0.2;0.5" dur="3s" repeatCount="indefinite"/>
+  </circle>
+</svg>

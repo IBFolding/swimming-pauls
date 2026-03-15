@@ -1,0 +1,43 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0a0f"/>
+      <stop offset="50%" stop-color="#1a1a2e"/>
+      <stop offset="100%" stop-color="#2d1b4e"/>
+    </linearGradient>
+    <linearGradient id="neon" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+  </defs>
+  
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  
+  <!-- Fish silhouette -->
+  <g opacity="0.2" transform="translate(900 150) scale(2)">
+    <path d="M0 50 Q30 30 60 50 Q50 70 60 90 Q30 70 0 50" fill="url(#neon)"/>
+  </g>
+  
+  <g opacity="0.2" transform="translate(100 400) scale(1.5) rotate(-20)">
+    <path d="M0 50 Q30 30 60 50 Q50 70 60 90 Q30 70 0 50" fill="url(#neon)"/>
+  </g>
+  
+  <!-- Central icon -->
+  <g transform="translate(200 315)">
+    <circle cx="0" cy="0" r="100" fill="rgba(0,0,0,0.5)" stroke="url(#neon)" stroke-width="3"/>
+    <text x="0" y="15" text-anchor="middle" font-size="80" fill="url(#neon)">🦷</text>
+  </g>
+  
+  <!-- Text -->
+  <text x="600" y="250" text-anchor="middle" font-size="72" font-family="system-ui" font-weight="bold" fill="url(#neon)">$PAUL</text>
+  
+  <text x="600" y="320" text-anchor="middle" font-size="36" font-family="system-ui" fill="#fff">Swimming Pauls</text>
+  
+  <text x="600" y="370" text-anchor="middle" font-size="24" font-family="system-ui" fill="#9ca3af">Multi-Agent Prediction Engine</text>
+  
+  <text x="600" y="450" text-anchor="middle" font-size="20" font-family="system-ui" fill="#6366f1">100+ AI Agents • Monte Carlo • Knowledge Graphs • 100% Local</text>
+  
+  <!-- Decorative lines -->
+  <line x1="400" y1="500" x2="800" y2="500" stroke="url(#neon)" stroke-width="2" opacity="0.5"/>
+</svg>
