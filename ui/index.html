@@ -443,9 +443,76 @@
                 { name: 'Degen Paul', emoji: '🎰', type: 'chaotic', confidence: 94, color: 'pink', response: dirResponses.degen }
             ];
             
+            // Generate additional Pauls if requested
+            const totalPauls = Math.min(pauls, 100); // Cap at 100 for UI performance
+            if (totalPauls > 6) {
+                const professions = [
+                    'Chef', 'Lawyer', 'Doctor', 'Engineer', 'Artist', 'Musician',
+                    'Writer', 'Athlete', 'Teacher', 'Nurse', 'Pilot', 'Scientist',
+                    'Farmer', 'Carpenter', 'Plumber', 'Electrician', 'Mechanic',
+                    'Designer', 'Photographer', 'Journalist', 'Politician', 'CEO',
+                    'Entrepreneur', 'Investor', 'Banker', 'Analyst', 'Developer',
+                    'Architect', 'Dentist', 'Veterinarian', 'Pharmacist', 'Therapist',
+                    'Consultant', 'Manager', 'Director', 'Coordinator', 'Specialist'
+                ];
+                
+                const emojis = ['👨‍🍳', '⚖️', '🏥', '🔧', '🎨', '🎵', '✍️', '🏃', '📚', '👩‍⚕️', 
+                               '✈️', '🔬', '🌾', '🔨', '🚿', '💡', '🚗', '🎭', '📷', '📰',
+                               '🏛️', '💼', '🚀', '📊', '🏦', '📈', '💻', '🏗️', '🦷', '🐾',
+                               '💊', '🧠', '📋', '👔', '🎯', '🤝', '🎓'];
+                
+                for (let i = 6; i < totalPauls; i++) {
+                    const profession = professions[(i - 6) % professions.length];
+                    const variantConfidence = Math.floor(Math.random() * 40) + 60;
+                    
+                    // Generate contextual response based on profession and direction
+                    const genericResponse = generateGenericPaulResponse(profession, direction, confidence);
+                    
+                    mainPauls.push({
+                        name: `${profession} Paul`,
+                        emoji: emojis[(i - 6) % emojis.length],
+                        type: 'general',
+                        confidence: variantConfidence,
+                        color: direction === 'BULLISH' ? 'green' : direction === 'BEARISH' ? 'red' : 'yellow',
+                        response: genericResponse
+                    });
+                }
+            }
+            
             allPaulsData = mainPauls;
             displayPauls(mainPauls);
             document.getElementById('paulCountDisplay').textContent = `Showing ${mainPauls.length} of ${pauls} Pauls`;
+        }
+        
+        function generateGenericPaulResponse(profession, direction, confidence) {
+            const bullishResponses = [
+                `As a ${profession}, I see strong fundamentals here. The trajectory looks promising based on my professional experience.`,
+                `From my perspective as a ${profession}, the data supports a positive outlook. Key indicators align favorably.`,
+                `My ${profession} background tells me this has significant upside potential. Risk-reward is attractive.`,
+                `Looking at this through my ${profession} lens, I see opportunity. The market is pricing this too low.`,
+                `As someone in ${profession}, I'm optimistic. The underlying trends support continued growth.`
+            ];
+            
+            const bearishResponses = [
+                `As a ${profession}, I see warning signs. Defensive positioning is prudent here.`,
+                `From my ${profession} perspective, the risks outweigh potential rewards. I'd wait for clarity.`,
+                `My ${profession} experience tells me to be cautious. This could go lower before it recovers.`,
+                `Looking at this as a ${profession}, I'm concerned. Multiple red flags are present.`,
+                `As a ${profession}, I'm staying on the sidelines. Better opportunities will emerge.`
+            ];
+            
+            const neutralResponses = [
+                `As a ${profession}, I'm watching carefully. The data is genuinely mixed right now.`,
+                `From my ${profession} view, it's too early to tell. Need more information to make a call.`,
+                `My ${profession} background suggests patience. Let the market show its hand first.`,
+                `Looking at this objectively as a ${profession}, I see valid arguments on both sides.`,
+                `As a ${profession}, I'm neutral. The signals are conflicting and require more time.`
+            ];
+            
+            const responsePool = direction === 'BULLISH' ? bullishResponses : 
+                                direction === 'BEARISH' ? bearishResponses : neutralResponses;
+            
+            return responsePool[Math.floor(Math.random() * responsePool.length)];
         }
 
         function displayPauls(pauls) {
