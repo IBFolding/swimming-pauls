@@ -287,16 +287,45 @@
             </div>
             
             <!-- Instructions -->
-            <div class="mb-6 space-y-3 text-sm text-gray-400">
-                <p>To connect your local LLM, follow these steps:</p>
-                <ol class="list-decimal list-inside space-y-2 ml-2">
-                    <li>Clone the repo: <code class="bg-black/30 px-1 rounded text-xs">git clone https://github.com/IBFolding/swimming-pauls.git</code></li>
-                    <li>Install deps: <code class="bg-black/30 px-1 rounded text-xs">pip install websockets aiohttp</code></li>
-                    <li>Start the agent: <code class="bg-black/30 px-1 rounded text-xs">python local_agent.py</code></li>
-                    <li>Copy the <strong>Connection ID</strong> shown in terminal</li>
-                    <li>Paste it below and click CONNECT</li>
-                </ol>
-                <p class="text-xs text-gray-500 mt-2">💡 Or use OpenClaw: <code class="bg-black/30 px-1 rounded">openclaw run swimming-pauls</code></p>
+            <div class="mb-6 space-y-4 text-sm text-gray-400">
+                <p class="font-bold text-cyan-400">📋 Quick Start (Choose One):</p>
+                
+                <!-- Option 1: OpenClaw -->
+                <div class="p-3 bg-white/5 rounded-lg border border-cyan-500/20">
+                    <p class="font-bold text-xs mb-2">🚀 Option 1: OpenClaw (Easiest)</p>
+                    <code class="bg-black/30 px-2 py-1 rounded text-xs block mb-1">openclaw run swimming-pauls</code>
+                    <p class="text-xs text-gray-500">Auto-installs, starts agent, opens browser</p>
+                </div>
+                
+                <!-- Option 2: Manual -->
+                <div class="p-3 bg-white/5 rounded-lg border border-white/10">
+                    <p class="font-bold text-xs mb-2">🛠️ Option 2: Manual Setup</p>
+                    <ol class="list-decimal list-inside space-y-1 text-xs">
+                        <li>Clone: <code class="bg-black/30 px-1 rounded">git clone https://github.com/IBFolding/swimming-pauls.git</code></li>
+                        <li>Install: <code class="bg-black/30 px-1 rounded">cd swimming-pauls && pip install -r requirements.txt</code></li>
+                        <li>Start LLM (see below)</li>
+                        <li>Run: <code class="bg-black/30 px-1 rounded">python local_agent.py</code></li>
+                        <li>Copy the <strong class="text-cyan-400">Connection ID</strong> from terminal</li>
+                        <li>Paste below & click CONNECT</li>
+                    </ol>
+                </div>
+                
+                <!-- LLM Setup -->
+                <div class="p-3 bg-white/5 rounded-lg border border-purple-500/20">
+                    <p class="font-bold text-xs text-purple-400 mb-2">🤖 Local LLM Setup (Pick One)</p>
+                    <div class="space-y-2 text-xs">
+                        <div>
+                            <span class="font-bold">Ollama:</span> <code class="bg-black/30 px-1 rounded">ollama run llama3</code>
+                            <span class="text-gray-500">→ localhost:11434</span>
+                        </div>
+                        <div>
+                            <span class="font-bold">LM Studio:</span> Start server → <span class="text-gray-500">localhost:1234</span>
+                        </div>
+                        <div>
+                            <span class="font-bold">LocalAI:</span> Any OpenAI-compatible endpoint
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <div class="border-t border-white/10 pt-4">
