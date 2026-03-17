@@ -7,7 +7,7 @@
 ## V1: What's Shipped ✅
 
 - Landing page with demos
-- Explorer + Visualization pages
+- Explorer + Visualization pages  
 - 40+ Paul personas
 - OpenClaw skill integration
 - 100% local execution
@@ -15,12 +15,12 @@
 
 ---
 
-## V2: Better Hardware (Q2 2025)
+## V2: Hardware (Q2 2026)
 
 **Goal:** Run more Pauls, faster
 
 - [ ] Buy first Mac Mini (M4 Pro)
-- [ ] Set up as dedicated prediction server
+- [ ] Dedicated prediction server
 - [ ] Support 500+ Pauls at once
 - [ ] Sub-5 second response times
 - [ ] Remote access for beta testers
@@ -29,19 +29,17 @@
 
 ---
 
-## V3: Community Features (Q3 2025)
+## V3: Always-On Pauls (Q3 2026)
 
-**Goal:** Make it collaborative
+**Goal:** Decentralized prediction network
 
-- [ ] Save/share Paul personas
-- [ ] Query history
-- [ ] Export results (PDF, CSV)
-- [ ] Mobile-friendly UI
-- [ ] Discord/Slack bot
+- [ ] Pauls run continuously in background
+- [ ] Learn from outcomes (was the prediction right?)
+- [ ] Adapt strategies based on results
+- [ ] Community-contributed knowledge base
+- [ ] Paul marketplace (share your custom Pauls)
 
-**If there's demand:**
-- [ ] Community Paul marketplace
-- [ ] Prediction accuracy tracking
+**The vision:** Thousands of Pauls, always learning, always predicting.
 
 ---
 
@@ -50,35 +48,19 @@
 **Intentionally excluded:**
 - ❌ $PAUL token (no utility yet)
 - ❌ Prediction markets (regulatory complexity)
-- ❌ AGI research (too speculative)
-- ❌ Multi-modal (images/video - scope creep)
-- ❌ Mobile app (web is enough for now)
+- ❌ Mobile app (web is enough)
 
-**We'll add these if users actually ask for them.**
+**We'll add if users demand it.**
 
 ---
 
 ## Economic Model
 
 **Free:** Run locally on your machine
-**Pay-per-use:** Cloud predictions (covers compute cost)
-**Revenue:** 100% to hardware → more Pauls → better predictions
+**Pay-per-use:** Cloud predictions (covers compute)
+**Revenue:** Hardware → more Pauls → better predictions
 
-No subscriptions. No locked features. Just infrastructure.
-
----
-
-## Success Criteria
-
-**V2 shipped when:**
-- 1 Mac Mini running 24/7
-- 500+ Paul queries under 5 seconds
-- Break-even on hardware costs
-
-**V3 shipped when:**
-- 100+ active weekly users
-- 10+ community Pauls shared
-- Positive feedback on new features
+No subscriptions. No locked features.
 
 ---
 
@@ -86,8 +68,6 @@ No subscriptions. No locked features. Just infrastructure.
 
 > **"If we can't ship it in 3 months, it doesn't go on the roadmap."**
 
-No 2026 promises. No "eventually." Just the next 90 days.
-
 ---
 
-*Current focus: Get first Mac Mini funded and running.*
+*Current focus: Get first Mac Mini running 24/7.*
