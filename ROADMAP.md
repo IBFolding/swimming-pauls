@@ -2,10 +2,13 @@
 
 **Current Status:** V1 Live at https://swimmingpauls.vercel.app
 
+**Main Goal:** Run locally first (OpenClaw or local models), then standalone Mac Mini infrastructure.
+
 ---
 
-## V1: What's Shipped ✅
+## V1: Local-First ✅ (LIVE)
 
+**Shipped:**
 - Landing page with demos
 - Explorer + Visualization pages  
 - 40+ Paul personas
@@ -13,67 +16,73 @@
 - 100% local execution
 - GitHub repo public
 
+**The point:** Your machine, your Pauls, your predictions. No cloud required.
+
 ---
 
-## V2: Hardware (Q2 2026)
+## V2: Mac Mini Infrastructure (Q2 2026)
 
-**Goal:** Run more Pauls, faster
+**Goal:** Standalone hardware for people who don't want to run locally
 
 - [ ] Buy first Mac Mini (M4 Pro)
-- [ ] Dedicated prediction server
-- [ ] Support 500+ Pauls at once
-- [ ] Sub-5 second response times
-- [ ] Remote access for beta testers
+- [ ] Run 500+ Pauls 24/7
+- [ ] $PAUL as prediction credits (pay per query)
+- [ ] **Paul Marketplace** - Create, buy, sell custom Pauls
+  - 2% of sales → Treasury
+  - Use $PAUL for transactions
+- [ ] Remote access for non-technical users
 
-**Funding:** Usage fees from cloud queries
-
----
-
-## V3: Always-On Pauls + $PAUL Utility (Q3 2026)
-
-**Goal:** Decentralized prediction network with token utility
-
-### Core Features
-- [ ] Pauls run continuously in background
-- [ ] Learn from outcomes (was the prediction right?)
-- [ ] Adapt strategies based on results
-- [ ] Community-contributed knowledge base
-- [ ] Paul marketplace (share your custom Pauls)
-
-### $PAUL Token Utility
-- [ ] **Buybacks** - Revenue used to buy and burn $PAUL
-- [ ] **Feature Voting** - Holders vote on what gets built next
-- [ ] **Prediction Credits** - Use $PAUL to run cloud predictions on Mac Mini infrastructure
-- [ ] **Treasury Transparency** - On-chain tracking of all fees and buybacks
-
-**The vision:** Thousands of Pauls, always learning, always predicting. Community owns the infrastructure through $PAUL.
+**Funding:** Mac Mini paid for by prediction fees. Scales with demand.
 
 ---
 
-## What's NOT on the Roadmap
+## V3: Network Effects (Q3 2026)
 
-**Intentionally excluded:**
-- ❌ Prediction markets (regulatory complexity)
-- ❌ Mobile app (web is enough)
+**Goal:** Decentralized, always-learning prediction network
 
-**$PAUL token HAS utility:** Buybacks, voting, prediction credits. That's why it's included in V3.
-
----
-
-## Economic Model
-
-**Free:** Run locally on your machine
-**Pay-per-use:** Cloud predictions (covers compute)
-**Revenue:** Hardware → more Pauls → better predictions
-
-No subscriptions. No locked features.
+- [ ] Pauls learn from outcomes (track accuracy over time)
+- [ ] Community knowledge base
+- [ ] $PAUL utility expands:
+  - Buybacks from treasury
+  - Feature voting (what gets built next)
+  - Stake for priority access
+- [ ] **Prediction Markets** (if regulations allow)
+  - Bet on Paul predictions
+  - Track accuracy leaderboards
 
 ---
 
-## The Rule
+## What's NOT Promised
 
-> **"If we can't ship it in 3 months, it doesn't go on the roadmap."**
+**We won't commit to:**
+- ❌ AGI (too speculative, can't guarantee)
+- ❌ Mobile app (web works fine)
+- ❌ Specific timeline (ship when ready)
+
+**We MIGHT do:**
+- ✅ Prediction markets (if legal)
+- ✅ More hardware (if demand exists)
+- ✅ Additional skills (if useful)
 
 ---
 
-*Current focus: Get first Mac Mini running 24/7.*
+## The Model
+
+**Free tier:** Run on your own machine (always free)
+**Paid tier:** Use our Mac Mini cluster (pay with $PAUL)
+**Marketplace:** Buy/sell Pauls (2% fee to treasury)
+
+Revenue → More Mac Minis → More capacity → Better predictions
+
+---
+
+## Success =
+
+- Anyone can run Swimming Pauls locally
+- Mac Mini cluster is self-sustaining
+- $PAUL has real utility (credits + voting)
+- Pauls actually get smarter over time
+
+---
+
+*No empty promises. Just shipping.* 🦷
