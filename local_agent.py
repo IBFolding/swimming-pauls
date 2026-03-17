@@ -10,6 +10,7 @@ import uuid
 import argparse
 import os
 import sys
+import psutil
 from datetime import datetime
 from typing import Dict, Set, Optional
 from dataclasses import dataclass, asdict
@@ -22,13 +23,14 @@ try:
     import websockets
     from websockets.server import WebSocketServerProtocol
 except ImportError:
-    print("❌ Missing websockets. Run: pip install websocks")
+    print("❌ Missing websockets. Run: pip install websockets")
     sys.exit(1)
 
 # Import Swimming Pauls simulation
 try:
     from simulation import quick_simulate
     from agent import Agent, PersonaType
+    from skill_bridge import get_skill_bridge
     SIMULATION_AVAILABLE = True
 except ImportError:
     SIMULATION_AVAILABLE = False
@@ -37,6 +39,28 @@ except ImportError:
 
 DEFAULT_HOST = "localhost"
 DEFAULT_PORT = 8765
+
+
+def get_system_limits():
+    """Check system resources and return recommended max Pauls"""
+    memory = psutil.virtual_memory()
+    available_gb = memory.available / (1024**3)
+    
+    # Rough estimate: ~50MB per Paul with LLM context
+    max_pauls = int(available_gb / 0.05)
+    
+    # Cap at reasonable limits
+    if max_pauls > 10000:
+        max_pauls = 10000
+    elif max_pauls < 10:
+        max_pauls = 10
+    
+    return {
+        "max_pauls": max_pauls,
+        "recommended": min(100, max_pauls),
+        "available_gb": round(available_gb, 1),
+        "total_gb": round(memory.total / (1024**3), 1)
+    }
 
 
 class MessageType(Enum):
@@ -189,54 +213,107 @@ class LocalAgentServer:
     
     async def handle_cast(self, websocket, params: dict):
         question = params.get("question", "What will happen?")
-        pauls = int(params.get("pauls", 50))
-        rounds = int(params.get("rounds", 20))
+        pauls = params.get("pauls")
+        rounds = params.get("rounds")
+        
+        # Get system limits
+        limits = get_system_limits()
+        
+        # If pauls not provided, prompt user
+        if pauls is None:
+            await websocket.send(json.dumps(create_message(
+                MessageType.INFO,
+                {
+                    "prompt": "pauls",
+                    "message": f"🐟 How many Pauls? (10-{limits['max_pauls']}, recommended: {limits['recommended']})",
+                    "max_pauls": limits['max_pauls'],
+                    "recommended": limits['recommended'],
+                    "available_memory_gb": limits['available_gb']
+                }
+            )))
+            return  # Wait for client to respond with pauls count
+        
+        pauls = int(pauls)
+        
+        # Validate pauls count
+        if pauls > limits['max_pauls']:
+            await self.send_error(websocket, f"Too many Pauls! Your system can handle ~{limits['max_pauls']} with {limits['available_gb']}GB available memory.")
+            return
+        
+        # If rounds not provided, prompt user
+        if rounds is None:
+            await websocket.send(json.dumps(create_message(
+                MessageType.INFO,
+                {
+                    "prompt": "rounds",
+                    "message": f"🔄 How many rounds? (10-1000, recommended: 20-100)",
+                    "default": 20
+                }
+            )))
+            return  # Wait for client to respond with rounds count
+        
+        rounds = int(rounds)
+        
+        # Now we have both values, run simulation
+        await self.run_simulation(websocket, question, pauls, rounds)
+    
+    async def run_simulation(self, websocket, question: str, pauls: int, rounds: int):
+        """Run the actual simulation with given parameters"""
         
         await websocket.send(json.dumps(create_message(
             MessageType.INFO,
-            {"message": f"Casting {pauls} Pauls for {rounds} rounds..."}
+            {"message": f"🦷 Casting {pauls} Pauls for {rounds} rounds...", "question": question}
         )))
         
+        # Initialize skill bridge for enriched predictions
+        skill_bridge = get_skill_bridge() if SIMULATION_AVAILABLE else None
+        
         if SIMULATION_AVAILABLE:
-            # Run actual simulation
-            agent_list = [
-                Agent("Professor Paul", PersonaType.ANALYST),
-                Agent("Trader Paul", PersonaType.TRADER),
-                Agent("Skeptic Paul", PersonaType.SKEPTIC),
-                Agent("Visionary Paul", PersonaType.VISIONARY),
-                Agent("Whale Paul", PersonaType.HEDGIE),
-                Agent("Degen Paul", PersonaType.ANALYST),
-            ]
+            # Generate diverse Pauls based on count
+            from persona_factory import generate_swimming_pauls_pool
+            
+            await websocket.send(json.dumps(create_message(
+                MessageType.INFO,
+                {"message": f"🎭 Generating {pauls} unique personas..."}
+            )))
+            
+            agents = generate_swimming_pauls_pool(n=pauls)
             
             # Stream progress
-            for i in range(min(rounds, 10)):
-                await asyncio.sleep(0.3)
+            for i in range(min(rounds, 20)):
+                await asyncio.sleep(0.2)
                 await websocket.send(json.dumps(create_message(
                     MessageType.STREAM,
                     {
                         "round": i + 1,
                         "total": rounds,
                         "progress": (i + 1) / rounds,
-                        "status": f"Round {i+1}: Agents deliberating..."
+                        "status": f"Round {i+1}: {pauls} Pauls deliberating..."
                     }
                 )))
             
-            # Get final result
+            # Get final result with skill enrichment
             result = await asyncio.get_event_loop().run_in_executor(
                 None,
-                lambda: asyncio.run(quick_simulate(rounds=rounds, agents=agent_list))
+                lambda: quick_simulate(rounds=rounds, agents=agents, question=question)
             )
             
             final = result.rounds[-1] if result.rounds else None
             
+            # Build enriched response
+            response_data = {
+                "consensus": final.consensus if final else {"direction": "NEUTRAL", "confidence": 0.5},
+                "sentiment": final.sentiment if final else 0,
+                "rounds_completed": len(result.rounds),
+                "pauls_count": pauls,
+                "question": question,
+                "message": f"✅ Simulation complete. {pauls} Pauls reached consensus after {rounds} rounds.",
+                "system_limits": get_system_limits()
+            }
+            
             await websocket.send(json.dumps(create_message(
                 MessageType.RESULTS,
-                {
-                    "consensus": final.consensus if final else {"direction": "NEUTRAL", "confidence": 0.5},
-                    "sentiment": final.sentiment if final else 0,
-                    "rounds_completed": len(result.rounds),
-                    "message": f"Simulation complete. {pauls} Pauls reached consensus."
-                }
+                response_data
             )))
         else:
             # Demo mode
@@ -252,10 +329,13 @@ class LocalAgentServer:
                 {
                     "consensus": {"direction": direction, "confidence": round(confidence, 2)},
                     "sentiment": random.uniform(-1, 1),
-                    "message": f"Demo result: The Pauls are {direction} ({confidence:.0%} confidence)"
+                    "pauls_count": pauls,
+                    "rounds": rounds,
+                    "question": question,
+                    "message": f"🎯 Demo result: {pauls} Pauls are {direction} ({confidence:.0%} confidence)",
+                    "system_limits": get_system_limits()
                 }
             )))
-    
     async def handle_status(self, websocket):
         await websocket.send(json.dumps(create_message(
             MessageType.STATUS,

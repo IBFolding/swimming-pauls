@@ -382,25 +382,28 @@
             const q = document.getElementById('question').value.trim();
             if (!q) return;
             
-            if (!isConnected) {
-                startDemoMode();
-            }
+            pendingQuestion = q;
             
-            const pauls = parseInt(document.getElementById('paulSlider').value);
-            const rounds = parseInt(document.getElementById('roundSlider').value);
+            if (!isConnected) {
+                // Use slider values for demo mode
+                const pauls = parseInt(document.getElementById('paulSlider').value);
+                const rounds = parseInt(document.getElementById('roundSlider').value);
+                handleDemoCast({ rounds, pauls, question: q });
+                return;
+            }
 
             if (isConnected && ws) {
+                // Send just the question - server will prompt for pauls/rounds
                 ws.send(JSON.stringify({
-                    type: 'cast',
+                    type: 'command',
                     payload: {
-                        question: q,
-                        pauls: pauls,
-                        rounds: rounds,
-                        context: attachedContext
+                        command: 'cast_pool',
+                        params: {
+                            question: q
+                            // pauls and rounds will be prompted by server
+                        }
                     }
                 }));
-            } else {
-                handleDemoCast({ rounds, pauls });
             }
         }
 
@@ -752,6 +755,176 @@
             document.getElementById('newPaulName').value = '';
             document.getElementById('newPaulStyle').value = '';
             document.getElementById('newPaulPrompt').value = '';
+        }
+
+        // WebSocket connection
+        function connectLocal() {
+            const connId = document.getElementById('connId').value.trim();
+            if (!connId) {
+                alert('Please enter the Connection ID from your terminal');
+                return;
+            }
+            
+            // Connect to WebSocket
+            const wsUrl = `ws://localhost:8765`;
+            ws = new WebSocket(wsUrl);
+            
+            ws.onopen = () => {
+                console.log('Connected to local agent');
+                ws.send(JSON.stringify({
+                    type: 'auth',
+                    payload: { connection_id: connId }
+                }));
+            };
+            
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                console.log('Received:', data);
+                
+                if (data.type === 'auth_success') {
+                    isConnected = true;
+                    hideConnectModal();
+                    updateConnectionStatus('Connected', 'bg-green-500');
+                    document.getElementById('connStatus').textContent = '🔌 Local Agent: Connected';
+                    document.getElementById('connStatus').className = 'fixed bottom-5 right-5 z-50 px-4 py-2 rounded-full text-xs font-bold bg-green-500/90';
+                } else if (data.type === 'auth_failed') {
+                    alert('Authentication failed: ' + (data.error || 'Invalid connection ID'));
+                } else if (data.type === 'info' && data.payload && data.payload.prompt) {
+                    // Handle prompt for pauls or rounds
+                    handlePrompt(data.payload);
+                } else if (data.type === 'stream') {
+                    updateProgress(data.payload);
+                } else if (data.type === 'results') {
+                    showRealResults(data.payload);
+                } else if (data.error) {
+                    showError(data.error);
+                }
+            };
+            
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                alert('Connection error. Make sure local_agent.py is running.');
+            };
+            
+            ws.onclose = () => {
+                isConnected = false;
+                updateConnectionStatus('Disconnected', 'bg-red-500');
+            };
+        }
+        
+        let pendingQuestion = null;
+        
+        function handlePrompt(payload) {
+            const promptType = payload.prompt;
+            const message = payload.message;
+            
+            if (promptType === 'pauls') {
+                const maxPauls = payload.max_pauls || 1000;
+                const recommended = payload.recommended || 100;
+                const pauls = prompt(`${message}\n\n(Available memory: ${payload.available_memory_gb}GB)`, recommended);
+                
+                if (pauls !== null) {
+                    const paulCount = parseInt(pauls);
+                    if (paulCount > 0 && paulCount <= maxPauls) {
+                        // Send back with pauls count
+                        ws.send(JSON.stringify({
+                            type: 'command',
+                            payload: {
+                                command: 'cast_pool',
+                                params: {
+                                    question: pendingQuestion,
+                                    pauls: paulCount
+                                }
+                            }
+                        }));
+                    } else {
+                        alert(`Please enter a number between 10 and ${maxPauls}`);
+                    }
+                }
+            } else if (promptType === 'rounds') {
+                const rounds = prompt(message, payload.default || 20);
+                
+                if (rounds !== null) {
+                    const roundCount = parseInt(rounds);
+                    if (roundCount > 0 && roundCount <= 1000) {
+                        // Send back with rounds count
+                        ws.send(JSON.stringify({
+                            type: 'command',
+                            payload: {
+                                command: 'cast_pool',
+                                params: {
+                                    question: pendingQuestion,
+                                    rounds: roundCount
+                                }
+                            }
+                        }));
+                    } else {
+                        alert('Please enter a number between 10 and 1000');
+                    }
+                }
+            }
+        }
+        
+        function updateConnectionStatus(status, colorClass) {
+            // Could update UI here
+        }
+        
+        function updateProgress(payload) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.classList.remove('hidden');
+            resultsDiv.innerHTML = `
+                <div class="text-center py-8">
+                    <div class="text-2xl mb-4">🦷</div>
+                    <div class="text-cyan-400 mb-2">${payload.status}</div>
+                    <div class="w-full max-w-xs mx-auto bg-white/10 rounded-full h-2">
+                        <div class="bg-cyan-500 h-2 rounded-full transition-all" style="width: ${(payload.progress * 100).toFixed(0)}%"></div>
+                    </div>
+                    <div class="text-xs text-gray-500 mt-2">Round ${payload.round} of ${payload.total}</div>
+                </div>
+            `;
+        }
+        
+        function showRealResults(payload) {
+            const consensus = payload.consensus || {};
+            const direction = consensus.direction || 'NEUTRAL';
+            const confidence = Math.round((consensus.confidence || 0.5) * 100);
+            const colorClass = direction === 'BULLISH' ? 'text-green-400' : direction === 'BEARISH' ? 'text-red-400' : 'text-yellow-400';
+            
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <div class="text-center py-8 border border-white/10 rounded-lg mb-6">
+                    <div class="text-5xl mb-3">🦷</div>
+                    <div class="text-4xl font-bold mb-2 ${colorClass}">${direction}</div>
+                    <div class="text-gray-400 text-lg">${confidence}% confidence</div>
+                    <div class="mt-4 text-sm text-gray-500">${payload.message || ''}</div>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-4 mb-6">
+                    <div class="p-4 bg-white/5 rounded-lg text-center">
+                        <div class="text-2xl font-bold text-cyan-400">${payload.rounds || payload.rounds_completed || 20}</div>
+                        <div class="text-xs text-gray-500">Rounds</div>
+                    </div>
+                    <div class="p-4 bg-white/5 rounded-lg text-center">
+                        <div class="text-2xl font-bold text-purple-400">${payload.pauls_count || 50}</div>
+                        <div class="text-xs text-gray-500">Pauls</div>
+                    </div>
+                    <div class="p-4 bg-white/5 rounded-lg text-center">
+                        <div class="text-2xl font-bold text-green-400">${(payload.sentiment || 0).toFixed(2)}</div>
+                        <div class="text-xs text-gray-500">Sentiment</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function showError(error) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.classList.remove('hidden');
+            resultsDiv.innerHTML = `
+                <div class="text-center py-8 border border-red-500/30 rounded-lg bg-red-500/10">
+                    <div class="text-2xl mb-2">❌</div>
+                    <div class="text-red-400">${error}</div>
+                </div>
+            `;
         }
 
         // Initialize
