@@ -29,28 +29,34 @@
 
 ---
 
-## V3: Always-On Pauls (Q3 2026)
+## V3: Always-On Pauls + $PAUL Utility (Q3 2026)
 
-**Goal:** Decentralized prediction network
+**Goal:** Decentralized prediction network with token utility
 
+### Core Features
 - [ ] Pauls run continuously in background
 - [ ] Learn from outcomes (was the prediction right?)
 - [ ] Adapt strategies based on results
 - [ ] Community-contributed knowledge base
 - [ ] Paul marketplace (share your custom Pauls)
 
-**The vision:** Thousands of Pauls, always learning, always predicting.
+### $PAUL Token Utility
+- [ ] **Buybacks** - Revenue used to buy and burn $PAUL
+- [ ] **Feature Voting** - Holders vote on what gets built next
+- [ ] **Prediction Credits** - Use $PAUL to run cloud predictions on Mac Mini infrastructure
+- [ ] **Treasury Transparency** - On-chain tracking of all fees and buybacks
+
+**The vision:** Thousands of Pauls, always learning, always predicting. Community owns the infrastructure through $PAUL.
 
 ---
 
 ## What's NOT on the Roadmap
 
 **Intentionally excluded:**
-- ❌ $PAUL token (no utility yet)
 - ❌ Prediction markets (regulatory complexity)
 - ❌ Mobile app (web is enough)
 
-**We'll add if users demand it.**
+**$PAUL token HAS utility:** Buybacks, voting, prediction credits. That's why it's included in V3.
 
 ---
 
