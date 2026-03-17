@@ -12,7 +12,12 @@
 - Landing page with demos
 - Explorer + Visualization pages  
 - 40+ Paul personas
-- OpenClaw skill integration
+- **OpenClaw Skill Integration** - Pauls use available skills for better predictions:
+  - 💰 Crypto prices (Trader Paul, Whale Paul)
+  - 📈 Yahoo Finance (Professor Paul, Analyst Paul)
+  - 🎯 Polymarket odds (Visionary Paul, Contrarian Paul)
+  - 📰 News sentiment (Macro Paul, Professor Paul)
+  - 🔷 Base blockchain (OnChain Paul, DeFi Paul)
 - 100% local execution
 - GitHub repo public
 
