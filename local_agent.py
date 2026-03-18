@@ -32,10 +32,11 @@ try:
     from agent import Agent, PersonaType
     from skill_bridge import get_skill_bridge
     from prediction_history import PredictionHistoryDB
+    from chat_interface import ChatInterface
     SIMULATION_AVAILABLE = True
-except ImportError:
+except ImportError as e:
     SIMULATION_AVAILABLE = False
-    print("⚠️  Swimming Pauls simulation not found. Running in demo mode.")
+    print(f"⚠️  Swimming Pauls simulation not found: {e}. Running in demo mode.")
 
 
 DEFAULT_HOST = "localhost"
@@ -307,17 +308,47 @@ class LocalAgentServer:
                 "sentiment": final.sentiment if final else 0,
                 "rounds_completed": len(result.rounds),
                 "pauls_count": pauls,
+                "rounds": rounds,
                 "question": question,
                 "message": f"✅ Simulation complete. {pauls} Pauls reached consensus after {rounds} rounds.",
-                "system_limits": get_system_limits()
+                "system_limits": get_system_limits(),
+                "agents": [{"name": a.name, "specialty": getattr(a, 'specialty', 'General'), 
+                           "reasoning": getattr(a, 'last_reasoning', 'No reasoning recorded')[:200]} 
+                          for a in agents[:10]]  # Top 10 Pauls
             }
+            
+            # Save result with ID for sharing
+            if SIMULATION_AVAILABLE:
+                try:
+                    chat_interface = ChatInterface()
+                    result_id = chat_interface.save_prediction_result(response_data)
+                    response_data["result_id"] = result_id
+                    response_data["view_urls"] = {
+                        "explorer": f"http://localhost:3005/explorer.html?id={result_id}",
+                        "visualize": f"http://localhost:3005/visualize.html?id={result_id}",
+                        "debate": f"http://localhost:3005/debate_network.html?id={result_id}"
+                    }
+                    # Also save to prediction history DB
+                    db = PredictionHistoryDB()
+                    db.record_prediction(
+                        prediction_id=result_id,
+                        question=question,
+                        consensus_direction=response_data["consensus"]["direction"],
+                        consensus_confidence=response_data["consensus"]["confidence"],
+                        sentiment_score=response_data["sentiment"],
+                        pauls_count=pauls,
+                        rounds=rounds,
+                        duration_ms=0  # Could track actual duration
+                    )
+                except Exception as e:
+                    print(f"⚠️  Could not save result: {e}")
             
             await websocket.send(json.dumps(create_message(
                 MessageType.RESULTS,
                 response_data
             )))
         else:
-            # Demo mode
+            # Demo mode - still save result with ID
             await asyncio.sleep(2)
             
             import random
@@ -325,17 +356,38 @@ class LocalAgentServer:
             direction = random.choice(directions)
             confidence = random.uniform(0.4, 0.9)
             
+            demo_result = {
+                "consensus": {"direction": direction, "confidence": round(confidence, 2)},
+                "sentiment": random.uniform(-1, 1),
+                "pauls_count": pauls,
+                "rounds": rounds,
+                "question": question,
+                "message": f"🎯 Demo result: {pauls} Pauls are {direction} ({confidence:.0%} confidence)",
+                "system_limits": get_system_limits(),
+                "demo": True,
+                "agents": [
+                    {"name": "Visionary Paul", "specialty": "Long-term", "reasoning": "Based on pattern recognition..."},
+                    {"name": "Skeptic Paul", "specialty": "Risk", "reasoning": "Counter-argument..."},
+                    {"name": "Trader Paul", "specialty": "Timing", "reasoning": "Technical analysis suggests..."}
+                ]
+            }
+            
+            # Save demo result too
+            try:
+                chat_interface = ChatInterface()
+                result_id = chat_interface.save_prediction_result(demo_result)
+                demo_result["result_id"] = result_id
+                demo_result["view_urls"] = {
+                    "explorer": f"http://localhost:3005/explorer.html?id={result_id}",
+                    "visualize": f"http://localhost:3005/visualize.html?id={result_id}",
+                    "debate": f"http://localhost:3005/debate_network.html?id={result_id}"
+                }
+            except Exception as e:
+                print(f"⚠️  Could not save demo result: {e}")
+            
             await websocket.send(json.dumps(create_message(
                 MessageType.RESULTS,
-                {
-                    "consensus": {"direction": direction, "confidence": round(confidence, 2)},
-                    "sentiment": random.uniform(-1, 1),
-                    "pauls_count": pauls,
-                    "rounds": rounds,
-                    "question": question,
-                    "message": f"🎯 Demo result: {pauls} Pauls are {direction} ({confidence:.0%} confidence)",
-                    "system_limits": get_system_limits()
-                }
+                demo_result
             )))
     async def handle_status(self, websocket):
         await websocket.send(json.dumps(create_message(
