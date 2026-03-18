@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swimming Pauls - Local Multi-Agent Prediction Engine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦷</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        * { font-family: 'Inter', sans-serif; }
+        body { background: #0a0a0a; color: #e2e8f0; }
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .tab-btn.active {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.5);
+            color: #60a5fa;
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .glow-blue { box-shadow: 0 0 30px rgba(59, 130, 246, 0.3); }
+        .icon { width: 24px; height: 24px; }
+        .icon-sm { width: 16px; height: 16px; }
+        .icon-lg { width: 40px; height: 40px; }
+    </style>
+</head>
+<body class="min-h-screen">
+    
+    <!-- SVG Icons Sprite -->
+    <svg style="display: none;">
+        <!-- Overview / Book -->
+        <symbol id="icon-overview" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        </symbol>
+        
+        <!-- Rocket / Start -->
+        <symbol id="icon-rocket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+            <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+            <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
+            <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+        </symbol>
+        
+        <!-- Globe / World -->
+        <symbol id="icon-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M2 12h20"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </symbol>
+        
+        <!-- Paint / Create -->
+        <symbol id="icon-create" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m12 19 7-7 3 3-7 7-3-3z"/>
+            <path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+            <path d="m2 2 7.5 8.6"/>
+            <path d="M22 22l-5.5-5.5"/>
+        </symbol>
+        
+        <!-- Users / The 1000 -->
+        <symbol id="icon-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </symbol>
+        
+        <!-- Swarm / Network -->
+        <symbol id="icon-swarm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="18" cy="5" r="3"/>
+            <circle cx="6" cy="12" r="3"/>
+            <circle cx="18" cy="19" r="3"/>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+        </symbol>
+        
+        <!-- Brain / Knowledge -->
+        <symbol id="icon-brain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/>
+            <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>
+        </symbol>
+        
+        <!-- Chart / Analysis -->
+        <symbol id="icon-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"/>
+            <line x1="12" y1="20" x2="12" y2="4"/>
+            <line x1="6" y1="20" x2="6" y2="14"/>
+        </symbol>
+        
+        <!-- Search / Magnifier -->
+        <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+        </symbol>
+        
+        <!-- Code / Terminal -->
+        <symbol id="icon-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="16 18 22 12 16 6"/>
+            <polyline points="8 6 2 12 8 18"/>
+        </symbol>
+        
+        <!-- Layers / Stack -->
+        <symbol id="icon-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+            <polyline points="2 17 12 22 22 17"/>
+            <polyline points="2 12 12 17 22 12"/>
+        </symbol>
+        
+        <!-- Map Pin / Location -->
+        <symbol id="icon-location" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+        </symbol>
+        
+        <!-- Zap / Energy -->
+        <symbol id="icon-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+        </symbol>
+        
+        <!-- Heart / Relationships -->
+        <symbol id="icon-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </symbol>
+        
+        <!-- GitHub -->
+        <symbol id="icon-github" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+        </symbol>
+        
+        <!-- Arrow Right -->
+        <symbol id="icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+        </symbol>
+        
+        <!-- Eye / Vision -->
+        <symbol id="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+        </symbol>
+        
+        <!-- Shield / Risk -->
+        <symbol id="icon-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </symbol>
+        
+        <!-- Trending Up -->
+        <symbol id="icon-trend" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+            <polyline points="17 6 23 6 23 12"/>
+        </symbol>
+        
+        <!-- Dollar / Money -->
+        <symbol id="icon-dollar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="1" x2="12" y2="23"/>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </symbol>
+        
+        <!-- Grid / Matrix -->
+        <symbol id="icon-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"/>
+            <rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/>
+        </symbol>
+        
+        <!-- Share / Network -->
+        <symbol id="icon-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="18" cy="5" r="3"/>
+            <circle cx="6" cy="12" r="3"/>
+            <circle cx="18" cy="19" r="3"/>
+            <line x1="8.59" y1="13.51" x2="15.41" y2="16.49"/>
+            <line x1="15.41" y1="7.51" x2="8.59" y2="10.49"/>
+        </symbol>
+        
+        <!-- Cpu / Tech -->
+        <symbol id="icon-cpu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="4" y="4" width="16" height="16" rx="2" ry="2"/>
+            <rect x="9" y="9" width="6" height="6"/>
+            <line x1="9" y1="1" x2="9" y2="4"/>
+            <line x1="15" y1="1" x2="15" y2="4"/>
+            <line x1="9" y1="20" x2="9" y2="23"/>
+            <line x1="15" y1="20" x2="15" y2="23"/>
+            <line x1="20" y1="9" x2="23" y2="9"/>
+            <line x1="20" y1="14" x2="23" y2="14"/>
+            <line x1="1" y1="9" x2="4" y2="9"/>
+            <line x1="1" y1="14" x2="4" y2="14"/>
+        </symbol>
+    </svg>
+
+    <!-- Header -->
+    <header class="border-b border-white/10">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="paul.jpg" alt="PAUL" class="w-10 h-10 rounded-full object-cover">
+                <span class="font-bold tracking-wider text-sm">SWIMMING_PAULS</span>
+            </div>
+            <a href="https://github.com/IBFolding/swimming-pauls" target="_blank" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm">
+                <svg class="icon-sm"><use href="#icon-github"/></svg>
+                <span>GitHub</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero (Always Visible) -->
+    <section class="max-w-4xl mx-auto px-6 py-12 text-center">
+        <div class="w-24 h-24 mx-auto mb-6 rounded-2xl overflow-hidden glow-blue">
+            <img src="paul.jpg" alt="Swimming Pauls" class="w-full h-full object-cover">
+        </div>
+
+        <h1 class="text-5xl md:text-6xl font-bold mb-4">
+            <span class="gradient-text">Let the Pauls</span><br>
+            <span class="text-white">Cook</span>
+        </h1>
+
+        <div class="max-w-2xl mx-auto mb-6">
+            <blockquote class="text-gray-400 text-sm leading-relaxed italic mb-2">
+                "I created Swimming Pauls after watching my friend Paul—an eccentric quant trader—correctly predict three consecutive market crashes by simply 'taking his gut.' His gut wasn't magic; it was pattern recognition from 20 years of staring at charts."
+            </blockquote>
+            <cite class="text-gray-500 text-sm not-italic">— Howard, Creator</cite>
+        </div>
+
+        <p class="text-gray-400 mb-6">Run 500+ AI agents locally on your machine. No cloud. No API keys.</p>
+
+        <div class="flex flex-wrap justify-center gap-3 mb-8">
+            <span class="px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm flex items-center gap-2">
+                <svg class="icon-sm"><use href="#icon-users"/></svg>
+                <span>1000+ Pauls</span>
+            </span>
+            
+            <span class="px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-400 text-sm flex items-center gap-2">
+                <svg class="icon-sm"><use href="#icon-layers"/></svg>
+                <span>OpenClaw Skills</span>
+            </span>
+            
+            <span class="px-4 py-2 rounded-full bg-green-500/10 border border-green-500/30 text-green-400 text-sm flex items-center gap-2">
+                <svg class="icon-sm"><use href="#icon-shield"/></svg>
+                <span>100% Local</span>
+            </span>
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-4 mb-8">
+            <a href="#" class="flex items-center gap-2 px-6 py-3 bg-pink-600 hover:bg-pink-500 rounded-lg font-medium transition-colors">
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+                <span>Buy $PAULS</span>
+            </a>
+            <a href="#" class="flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg font-medium transition-colors">
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                    <line x1="8" y1="21" x2="16" y2="21"/>
+                    <line x1="12" y1="17" x2="12" y2="21"/>
+                </svg>
+                <span>DEX Screen</span>
+            </a>
+        </div>
+
+        <div class="max-w-3xl mx-auto p-6 rounded-2xl bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 border border-white/10">
+            <p class="text-lg font-medium italic text-gray-300">
+                "The dream: A living, breathing prediction ecosystem that never stops learning."
+            </p>
+        </div>
+    </section>
+
+    <!-- Tab Navigation -->
+    <div class="sticky top-0 z-40 bg-black/90 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex gap-2 py-4 overflow-x-auto">
+                <button class="tab-btn active flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white" onclick="showTab('overview')">
+                    <svg class="icon-sm"><use href="#icon-overview"/></svg>
+                    <span>Overview</span>
+                </button>
+                
+                <button class="tab-btn flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white" onclick="showTab('started')">
+                    <svg class="icon-sm"><use href="#icon-rocket"/></svg>
+                    <span>Get Started</span>
+                </button>
+                
+                <button class="tab-btn flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white" onclick="showTab('demos')">
+                    <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                        <line x1="8" y1="21" x2="16" y2="21"/>
+                        <line x1="12" y1="17" x2="12" y2="21"/>
+                    </svg>
+                    <span>Demos</span>
+                </button>
+                
+                <button class="tab-btn flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white" onclick="showTab('world')">
+                    <svg class="icon-sm"><use href="#icon-globe"/></svg>
+                    <span>Paul's World</span>
+                </button>
+                
+                <button class="tab-btn flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white" onclick="showTab('create')">
+                    <svg class="icon-sm"><use href="#icon-create"/></svg>
+                    <span>Create Paul</span>
+                </button>
+                
+                <button class="tab-btn flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white" onclick="showTab('pauls')">
+                    <svg class="icon-sm"><use href="#icon-users"/></svg>
+                    <span>The 1000</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="max-w-6xl mx-auto px-6 py-8">
+        
+        <!-- Tab: Overview -->
+        <div id="overview" class="tab-content active">
+            
+            <div class="mb-12">
+                <h2 class="text-2xl font-bold text-center mb-8 flex items-center justify-center gap-3">
+                    <svg class="icon"><use href="#icon-grid"/></svg>
+                    What You Get
+                </h2>
+                
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="p-6 bg-white/5 rounded-xl border border-white/10">
+                        <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center mb-4">
+                            <svg class="icon text-blue-400"><use href="#icon-swarm"/></svg>
+                        </div>
+                        <h3 class="font-bold mb-2">Swarm Intelligence</h3>
+                        <p class="text-gray-400 text-sm">1000+ expert personas debate your questions. Each brings unique expertise—from quant analysts to visionary thinkers.</p>
+                    </div>
+
+                    <div class="p-6 bg-white/5 rounded-xl border border-white/10">
+                        <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center mb-4">
+                            <svg class="icon text-purple-400"><use href="#icon-brain"/></svg>
+                        </div>
+                        <h3 class="font-bold mb-2">Knowledge Graph</h3>
+                        <p class="text-gray-400 text-sm">26 market entities with relationship mapping. AI Sector, Labor Market, Automation, GDP—and their interconnections.</p>
+                    </div>
+
+                    <div class="p-6 bg-white/5 rounded-xl border border-white/10">
+                        <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center mb-4">
+                            <svg class="icon text-green-400"><use href="#icon-chart"/></svg>
+                        </div>
+                        <h3 class="font-bold mb-2">Deep Analysis</h3>
+                        <p class="text-gray-400 text-sm">Sentiment scoring, risk metrics, market regime detection, and individual agent reasoning—all transparent.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="text-2xl font-bold text-center mb-8 flex items-center justify-center gap-3">
+                    <svg class="icon"><use href="#icon-layers"/></svg>
+                    Data Sources (100% Local)
+                </h2>
+                
+                <div class="space-y-4">
+                    <div class="p-4 bg-white/5 rounded-xl border border-white/10">
+                        <div class="flex items-center gap-3 mb-2">
+                            <svg class="icon text-yellow-400"><use href="#icon-dollar"/></svg>
+                            <span class="font-bold">Layer 1: OpenClaw Skills</span>
+                        </div>
+                        <p class="text-gray-400 text-sm">Crypto prices, Yahoo Finance, Polymarket odds, News sentiment, Base blockchain, Market analysis</p>
+                    </div>
+
+                    <div class="p-4 bg-white/5 rounded-xl border border-white/10">
+                        <div class="flex items-center gap-3 mb-2">
+                            <svg class="icon text-cyan-400"><use href="#icon-search"/></svg>
+                            <span class="font-bold">Layer 2: Web Intelligence</span>
+                        </div>
+                        <p class="text-gray-400 text-sm">Multi-engine search, Wikipedia, Reddit, GitHub, Trend analysis, Article scraping, RSS feeds</p>
+                    </div>
+
+                    <div class="p-4 bg-white/5 rounded-xl border border-white/10">
+                        <div class="flex items-center gap-3 mb-2">
+                            <svg class="icon text-pink-400"><use href="#icon-code"/></svg>
+                            <span class="font-bold">Layer 3: Custom Skills (User-Defined)</span>
+                        </div>
+                        <p class="text-gray-400 text-sm">Create your own Python skills. Attach to specific Pauls. Share with community. Monetize via Skill Marketplace (V2).</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="text-2xl font-bold text-center mb-8 flex items-center justify-center gap-3">
+                    <svg class="icon"><use href="#icon-cpu"/></svg>
+                    How It Works
+                </h2>
+                
+                <div class="max-w-2xl mx-auto space-y-4">
+                    
+                    <div class="flex items-start gap-4 p-4 bg-white/5 rounded-xl">
+                        <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center font-bold text-sm shrink-0">1</div>
+                        <div>
+                            <div class="font-bold">Ask Anywhere</div>
+                            <p class="text-gray-400 text-sm">Type your question in Terminal, Telegram, or web UI. The Pauls wake up.</p>
+                        </div>
+                    </div>
+
+                    
+                    <div class="flex items-start gap-4 p-4 bg-white/5 rounded-xl">
+                        <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center font-bold text-sm shrink-0">2</div>
+                        <div>
+                            <div class="font-bold">Configure Pool</div>
+                            <p class="text-gray-400 text-sm">System asks: "How many Pauls?" and "How many rounds?" Max depends on your hardware.</p>
+                        </div>
+                    </div>
+
+                    
+                    <div class="flex items-start gap-4 p-4 bg-white/5 rounded-xl">
+                        <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center font-bold text-sm shrink-0">3</div>
+                        <div>
+                            <div class="font-bold">Swarm Deliberates</div>
+                            <p class="text-gray-400 text-sm">Pauls debate using local knowledge graph + OpenClaw skills + web intelligence.</p>
+                        </div>
+                    </div>
+
+                    
+                    <div class="flex items-start gap-4 p-4 bg-white/5 rounded-xl">
+                        <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center font-bold text-sm shrink-0">4</div>
+                        <div>
+                            <div class="font-bold">Get Consensus</div>
+                            <p class="text-gray-400 text-sm">Receive direction, confidence, sentiment, and full transparency. Explore individual Paul reasoning.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Demos -->
+        <div id="demos" class="tab-content">
+            
+            <div class="max-w-4xl mx-auto">
+                
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold mb-2">Interactive Demos</h2>
+                    <p class="text-gray-400">See Swimming Pauls in action. No installation required.</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    
+                    <!-- Explorer Demo -->
+                    <div class="p-6 bg-white/5 rounded-2xl border border-white/10 hover:border-blue-500/30 transition-colors">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center mb-4">
+                            <svg class="icon text-blue-400">
+                                <use href="#icon-eye"/>
+                            </svg>
+                        </div>
+                        
+                        <h3 class="font-bold text-lg mb-2">Explorer</h3>
+                        
+                        <p class="text-gray-400 text-sm mb-4">
+                            See full prediction results with agent perspectives, consensus headers, vote distribution, sentiment analysis, and knowledge graph visualization.
+                        </p>
+                        
+                        <a href="/explorer.html?id=demo" class="flex items-center justify-center gap-2 w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-lg font-medium transition-colors">
+                            <span>Try Demo</span>
+                            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                <polyline points="12 5 19 12 12 19"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <!-- Visualization Demo -->
+                    <div class="p-6 bg-white/5 rounded-2xl border border-white/10 hover:border-purple-500/30 transition-colors">
+                        <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center mb-4">
+                            <svg class="icon text-purple-400">
+                                <use href="#icon-swarm"/>
+                            </svg>
+                        </div>
+                        
+                        <h3 class="font-bold text-lg mb-2">Visualization</h3>
+                        
+                        <p class="text-gray-400 text-sm mb-4">
+                            Interactive D3.js force-directed graph showing 150+ Pauls. Click nodes to see details. Watch how bullish, neutral, and bearish Pauls cluster in real-time.
+                        </p>
+                        
+                        <a href="/visualize.html" class="flex items-center justify-center gap-2 w-full py-3 bg-purple-600 hover:bg-purple-500 rounded-lg font-medium transition-colors">
+                            <span>Try Demo</span>
+                            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                <polyline points="12 5 19 12 12 19"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <!-- Debate Network Demo -->
+                    <div class="p-6 bg-white/5 rounded-2xl border border-white/10 hover:border-cyan-500/30 transition-colors">
+                        <div class="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center mb-4">
+                            <svg class="icon text-cyan-400">
+                                <use href="#icon-share"/>
+                            </svg>
+                        </div>
+                        
+                        <h3 class="font-bold text-lg mb-2">Debate Network</h3>
+                        
+                        <p class="text-gray-400 text-sm mb-4">
+                            Watch persuasion flow in real-time. Temporal D3.js animation shows how Pauls influence each other round-by-round until consensus emerges.
+                        </p>
+                        
+                        <a href="/debate_network.html" class="flex items-center justify-center gap-2 w-full py-3 bg-cyan-600 hover:bg-cyan-500 rounded-lg font-medium transition-colors">
+                            <span>Try Demo</span>
+                            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                <polyline points="12 5 19 12 12 19"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mt-8 p-6 bg-white/5 rounded-2xl border border-white/10">
+                    <div class="flex items-center gap-3 mb-4">
+                        <svg class="icon text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                        <h3 class="font-bold">Static Demo Data</h3>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        These demos use pre-generated sample data for fast loading. For real-time predictions with live Paul deliberation, 
+                        <a href="#started" onclick="showTab('started')" class="text-cyan-400 hover:underline">run Swimming Pauls locally</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Get Started -->
+        <div id="started" class="tab-content">
+            
+            <div class="max-w-2xl mx-auto">
+                
+                <div class="rounded-xl bg-cyan-500/10 border border-cyan-500/30 overflow-hidden mb-6">
+                    <div class="px-4 py-3 bg-cyan-500/20 border-b border-cyan-500/30 flex items-center gap-2">
+                        <svg class="icon-sm text-cyan-400"><use href="#icon-rocket"/></svg>
+                        <span class="text-sm font-bold text-cyan-400">Easiest: OpenClaw CLI</span>
+                    </div>
+                    
+                    <div class="p-4">
+                        <p class="text-gray-400 text-sm mb-4">One command to rule them all:</p>
+                        
+                        <pre class="bg-black/50 p-3 rounded-lg text-sm text-gray-300 overflow-x-auto mb-4"><code>openclaw run swimming-pauls</code></pre>
+                        
+                        <p class="text-xs text-gray-500">Or add the skill first, then run:</p>
+                        
+                        <pre class="bg-black/50 p-3 rounded-lg text-xs text-gray-300 overflow-x-auto mt-2"><code>openclaw skills add swimming-pauls
+openclaw run swimming-pauls</code></pre>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    
+                    <div class="rounded-xl bg-black/50 border border-white/10 overflow-hidden">
+                        <div class="px-4 py-3 bg-white/5 border-b border-white/10 flex items-center gap-2">
+                            <span class="text-gray-400 font-mono">$</span>
+                            <span class="text-sm">Clone & Install</span>
+                        </div>
+                        
+                        <pre class="p-4 text-sm text-gray-300 overflow-x-auto"><code>git clone https://github.com/IBFolding/swimming-pauls.git
+cd swimming-pauls
+pip install -r requirements.txt</code></pre>
+                    </div>
+
+                    
+                    <div class="rounded-xl bg-black/50 border border-white/10 overflow-hidden">
+                        <div class="px-4 py-3 bg-white/5 border-b border-white/10 flex items-center gap-2">
+                            <span class="text-gray-400 font-mono">$</span>
+                            <span class="text-sm">Run</span>
+                        </div>
+                        
+                        <pre class="p-4 text-sm text-gray-300 overflow-x-auto"><code>python local_agent.py
+
+# In another terminal, start HTTP server
+python -m http.server 3005
+
+# Open your browser
+open http://localhost:3005</code></pre>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <a href="https://github.com/IBFolding/swimming-pauls" target="_blank" class="inline-flex items-center gap-2 text-blue-400 hover:underline text-sm">
+                        <svg class="icon-sm"><use href="#icon-github"/></svg>
+                        <span>View on GitHub</span>
+                        <svg class="icon-sm"><use href="#icon-arrow"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Paul's World -->
+        <div id="world" class="tab-content">
+            
+            <div class="max-w-4xl mx-auto">
+                
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-sm font-bold mb-4">
+                        <svg class="icon-sm"><use href="#icon-globe"/></svg>
+                        <span>EXPERIMENTAL</span>
+                    </div>
+                    
+                    <p class="text-gray-400 text-lg">What if Pauls didn't just spawn for predictions? What if they <span class="text-cyan-400">lived?</span></p>
+                </div>
+
+                <div class="p-6 bg-white/5 rounded-2xl border border-white/10 mb-6">
+                    <h3 class="font-bold text-xl mb-4 flex items-center gap-2">
+                        <svg class="icon text-purple-400"><use href="#icon-eye"/></svg>
+                        The Weird Idea
+                    </h3>
+                    
+                    <p class="text-gray-400 leading-relaxed mb-4">
+                        Imagine a virtual fish tank, but instead of fish, you have Pauls wandering around. 
+                        Some are at the <span class="text-cyan-400">Market Floor</span> checking prices. 
+                        Others are in the <span class="text-purple-400">Research Lab</span> reading papers. 
+                        A few are at the <span class="text-pink-400">Cafe</span> arguing about crypto.
+                    </p>
+                    
+                    <p class="text-gray-400 leading-relaxed">
+                        They have energy levels. They get tired. They form friendships (and rivalries). 
+                        They literally live their little Paul lives.
+                    </p>
+                </div>
+
+                <div class="p-6 bg-white/5 rounded-2xl border border-white/10 mb-6">
+                    <h3 class="font-bold text-xl mb-4 flex items-center gap-2">
+                        <svg class="icon text-cyan-400"><use href="#icon-cpu"/></svg>
+                        How Many Pauls Can You Handle?
+                    </h3>
+                    
+                    <div class="space-y-3">
+                        
+                        <div class="flex items-center justify-between p-3 bg-black/30 rounded-lg">
+                            <span class="text-sm text-gray-400">Your Laptop</span>
+                            <span class="font-bold text-yellow-400">10-100 Pauls</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-3 bg-black/30 rounded-lg">
+                            <span class="text-sm text-gray-400">Mac Mini M4</span>
+                            <span class="font-bold text-cyan-400">500+ Pauls</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-3 bg-black/30 rounded-lg">
+                            <span class="text-sm text-gray-400">Mac Mini Cluster</span>
+                            <span class="font-bold text-green-400">10,000+ Pauls</span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-xs text-gray-500 mt-3">Auto-detects your RAM and suggests perfect swarm size. Push until your fans sound like a jet engine. We won't judge.</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-4">
+                    
+                    <div class="p-4 bg-black/30 rounded-xl">
+                        <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center mb-2">
+                            <svg class="icon text-blue-400"><use href="#icon-location"/></svg>
+                        </div>
+                        <div class="font-bold mb-1">Locations</div>
+                        <p class="text-gray-500 text-sm">Market Floor, Research Lab, Cafe, Park, Home</p>
+                    </div>
+                    
+                    
+                    <div class="p-4 bg-black/30 rounded-xl">
+                        <div class="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center mb-2">
+                            <svg class="icon text-yellow-400"><use href="#icon-zap"/></svg>
+                        </div>
+                        <div class="font-bold mb-1">Needs</div>
+                        <p class="text-gray-500 text-sm">Energy, Knowledge, Social. Tired Pauls go home.</p>
+                    </div>
+                    
+                    
+                    <div class="p-4 bg-black/30 rounded-xl">
+                        <div class="w-10 h-10 rounded-lg bg-pink-500/20 flex items-center justify-center mb-2">
+                            <svg class="icon text-pink-400"><use href="#icon-heart"/></svg>
+                        </div>
+                        <div class="font-bold mb-1">Relationships</div>
+                        <p class="text-gray-500 text-sm">Trust and respect build over time</p>
+                    </div>
+                </div>
+
+                <div class="mt-6 text-center">
+                    <code class="text-sm bg-black/50 px-4 py-2 rounded-full text-gray-400">python paul_world.py run</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Create Paul -->
+        <div id="create" class="tab-content">
+            
+            <div class="max-w-2xl mx-auto">
+                
+                <div class="p-6 bg-white/5 rounded-2xl border border-white/10">
+                    
+                    
+                    <div class="mb-6">
+                        <label class="text-sm text-gray-400 mb-2 block">Paul Name</label>
+                        <input type="text" placeholder="e.g., Chef Paul, Doctor Paul, History Paul" class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white placeholder-gray-600 focus:border-cyan-400 focus:outline-none">
+                    </div>
+
+                    
+                    <div class="mb-6">
+                        <label class="text-sm text-gray-400 mb-2 block">Expertise / Background</label>
+                        <input type="text" placeholder="What does your Paul know?" class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white placeholder-gray-600 focus:border-cyan-400 focus:outline-none">
+                    </div>
+
+                    
+                    <div class="mb-6">
+                        <label class="text-sm text-gray-400 mb-2 block">Thinking Style</label>
+                        <select class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white focus:border-cyan-400 focus:outline-none mb-3">
+                            <option>Select how they approach questions...</option>
+                            <option>Analytical - Data-driven, logical</option>
+                            <option>Intuitive - Gut feel, pattern-based</option>
+                            <option>Creative - Outside-the-box, speculative</option>
+                            <option>Conservative - Risk-aware, cautious</option>
+                            <option>Optimistic - Glass half full, bullish</option>
+                            <option>Pessimistic - Devil's advocate, skeptical</option>
+                            <option>Contrarian - Goes against the crowd</option>
+                            <option>Systematic - Process-oriented, methodical</option>
+                        </select>
+                    </div>
+
+                    
+                    <div class="mb-6">
+                        <label class="text-sm text-gray-400 mb-2 block">Personality & Biases</label>
+                        <textarea rows="3" placeholder="How does your Paul think? What are their blindspots?" class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white placeholder-gray-600 focus:border-cyan-400 focus:outline-none"></textarea>
+                    </div>
+
+                    
+                    <div class="mb-6">
+                        <label class="text-sm text-gray-400 mb-2 block">Catchphrase (Optional)</label>
+                        <input type="text" placeholder="e.g., 'Trust the process', 'Show me the data'" class="w-full p-3 bg-black/40 border border-white/20 rounded-lg text-white placeholder-gray-600 focus:border-cyan-400 focus:outline-none">
+                    </div>
+
+                    
+                    <button class="w-full py-4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 rounded-lg font-bold transition-colors flex items-center justify-center gap-2">
+                        <svg class="icon-sm"><use href="#icon-create"/></svg>
+                        <span>Add Paul to Pool</span>
+                    </button>
+
+                    
+                    <div class="mt-6 p-4 bg-cyan-500/10 rounded-lg border border-cyan-500/20">
+                        <h4 class="font-bold text-sm mb-2 text-cyan-400 flex items-center gap-2">
+                            <svg class="icon-sm"><use href="#icon-github"/></svg>
+                            Submit to GitHub
+                        </h4>
+                        
+                        <p class="text-sm text-gray-400 mb-2">Want your Paul in the official directory?</p>
+                        
+                        <ol class="text-sm text-gray-500 space-y-1 list-decimal list-inside">
+                            <li>Fork repo on <a href="https://github.com/IBFolding/swimming-pauls" target="_blank" class="text-cyan-400 hover:underline">GitHub</a></li>
+                            <li>Edit <code class="bg-black/30 px-1 rounded">PAULS_EXTENDED.md</code></li>
+                            <li>Add your Paul</li>
+                            <li>Submit Pull Request</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: The 1000 -->
+        <div id="pauls" class="tab-content">
+            
+            <div class="max-w-4xl mx-auto">
+                
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold mb-2 flex items-center justify-center gap-3">
+                        <svg class="icon"><use href="#icon-users"/></svg>
+                        The 1000 Pauls
+                    </h2>
+                    
+                    <p class="text-gray-400">Every Paul has a unique profession, style, and personality.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    
+                    <div class="p-4 bg-white/5 rounded-xl border border-white/10">
+                        <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center mb-2">
+                            <svg class="icon text-purple-400"><use href="#icon-eye"/></svg>
+                        </div>
+                        <div class="font-bold text-sm">Visionary Paul</div>
+                        <div class="text-xs text-gray-500">Disruptive Innovation</div>
+                    </div>
+
+                    
+                    <div class="p-4 bg-white/5 rounded-xl border border-white/10">
+                        <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center mb-2">
+                            <svg class="icon text-blue-400"><use href="#icon-brain"/></svg>
+                        </div>
+                        <div class="font-bold text-sm">Professor Paul</div>
+                        <div class="text-xs text-gray-500">Macro Research</div>
+                    </div>
+
+                    
+                    <div class="p-4 bg-white/5 rounded-xl border border-white/10">
+                        <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center mb-2">
+                            <svg class="icon text-green-400"><use href="#icon-trend"/></svg>
+                        </div>
+                        <div class="font-bold text-sm">Trader Paul</div>
+                        <div class="text-xs text-gray-500">Market Timing</div>
+                    </div>
+
+                    
+                    <div class="p-4 bg-white/5 rounded-xl border border-white/10">
+                        <div class="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center mb-2">
+                            <svg class="icon text-red-400"><use href="#icon-shield"/></svg>
+                        </div>
+                        <div class="font-bold text-sm">Skeptic Paul</div>
+                        <div class="text-xs text-gray-500">Risk Assessment</div>
+                    </div>
+
+                    
+                    <div class="p-4 bg-white/5 rounded-xl border border-white/10">
+                        <div class="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center mb-2">
+                            <svg class="icon text-cyan-400"><use href="#icon-dollar"/></svg>
+                        </div>
+                        <div class="font-bold text-sm">Whale Paul</div>
+                        <div class="text-xs text-gray-500">Institutional Flow</div>
+                    </div>
+
+                    
+                    <div class="p-4 bg-white/5 rounded-xl border border-white/10">
+                        <div class="w-10 h-10 rounded-lg bg-pink-500/20 flex items-center justify-center mb-2">
+                            <svg class="icon text-pink-400"><use href="#icon-zap"/></svg>
+                        </div>
+                        <div class="font-bold text-sm">Degen Paul</div>
+                        <div class="text-xs text-gray-500">High Risk</div>
+                    </div>
+
+                    
+                    <div class="p-4 bg-white/5 rounded-xl border border-white/10">
+                        <div class="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center mb-2">
+                            <svg class="icon text-indigo-400"><use href="#icon-chart"/></svg>
+                        </div>
+                        <div class="font-bold text-sm">Quant Paul</div>
+                        <div class="text-xs text-gray-500">Quantitative Analysis</div>
+                    </div>
+
+                    
+                    <div class="p-4 bg-white/5 rounded-xl border border-white/10">
+                        <div class="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center mb-2">
+                            <svg class="icon text-orange-400"><use href="#icon-trend" transform="rotate(180 12 12)"/></svg>
+                        </div>
+                        <div class="font-bold text-sm">Contrarian Paul</div>
+                        <div class="text-xs text-gray-500">Contrarian Views</div>
+                    </div>
+                </div>
+
+                <div class="mt-8 p-6 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-2xl border border-white/10 text-center">
+                    <p class="text-gray-400 mb-4">Plus 992 more unique personas:</p>
+                    
+                    <div class="flex flex-wrap justify-center gap-2 text-sm">
+                        <span class="px-3 py-1 bg-white/5 rounded-full flex items-center gap-1">
+                            <svg class="icon-sm"><use href="#icon-grid"/></svg>
+                            Chef Paul
+                        </span>
+                        <span class="px-3 py-1 bg-white/5 rounded-full flex items-center gap-1">
+                            <svg class="icon-sm"><use href="#icon-brain"/></svg>
+                            Doctor Paul
+                        </span>
+                        <span class="px-3 py-1 bg-white/5 rounded-full flex items-center gap-1">
+                            <svg class="icon-sm"><use href="#icon-create"/></svg>
+                            Artist Paul
+                        </span>
+                        <span class="px-3 py-1 bg-white/5 rounded-full flex items-center gap-1">
+                            <svg class="icon-sm"><use href="#icon-cpu"/></svg>
+                            Engineer Paul
+                        </span>
+                        <span class="px-3 py-1 bg-white/5 rounded-full flex items-center gap-1">
+                            <svg class="icon-sm"><use href="#icon-location"/></svg>
+                            Farmer Paul
+                        </span>
+                        <span class="px-3 py-1 bg-white/5 rounded-full flex items-center gap-1">
+                            <svg class="icon-sm"><use href="#icon-users"/></svg>
+                            +987 more...
+                        </span>
+                    </div>
+
+                    
+                    <div class="mt-6">
+                        <a href="https://github.com/IBFolding/swimming-pauls/blob/main/PAULS.md" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg text-sm transition-colors">
+                            <span>View Full Directory</span>
+                            <svg class="icon-sm"><use href="#icon-arrow"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10 py-8 mt-12">
+        <div class="max-w-6xl mx-auto px-6 text-center text-gray-500 text-sm">
+            <p>Built by Howard | 100% Local | No Cloud</p>
+        </div>
+    </footer>
+
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            event.target.closest('.tab-btn').classList.add('active');
+            document.querySelector('.max-w-6xl.mx-auto.px-6.py-8').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorer Demo | Swimming Pauls</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+        }
+        .bullish { border-left: 3px solid #22c55e; }
+        .bearish { border-left: 3px solid #ef4444; }
+        .neutral { border-left: 3px solid #eab308; }
+        .tag { 
+            display: inline-block; 
+            padding: 4px 12px; 
+            border-radius: 20px; 
+            font-size: 11px; 
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .tag-bullish { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+        .tag-bearish { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+        .tag-neutral { background: rgba(234, 179, 8, 0.2); color: #facc15; }
+        .badge { 
+            display: inline-block; 
+            padding: 4px 10px; 
+            border-radius: 6px; 
+            font-size: 11px; 
+            font-weight: 600;
+        }
+        .badge-yellow { background: rgba(234, 179, 8, 0.2); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.3); }
+        .badge-green { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+        .badge-red { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .badge-blue { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+    </style>
+</head>
+<body class="p-6">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-3">
+                <img src="paul.jpg" alt="PAUL" class="w-10 h-10 rounded-xl object-cover">
+                <span class="font-bold tracking-wider text-sm">SWIMMING_PAULS</span>
+            </div>
+            <a href="/" class="text-gray-400 hover:text-white text-sm transition-colors">← Back to Home</a>
+        </div>
+
+        <!-- Question -->
+        <div class="glass p-6 mb-6">
+            <div class="text-sm text-gray-500 mb-2">Question</div>
+            <h2 class="text-xl font-bold">"Will AI eliminate more jobs than it creates by 2030?"</h2>
+        </div>
+
+        <!-- Consensus Header -->
+        <div class="glass p-8 mb-6 text-center">
+            <img src="paul.jpg" alt="PAUL" class="w-16 h-16 mx-auto mb-4 rounded-full object-cover">
+            <div class="text-5xl font-bold mb-2 text-white">NEUTRAL</div>
+            <div class="text-2xl text-gray-400 mb-4">74% Confidence</div>
+            <div class="badge badge-yellow mb-4">WEAK CONSENSUS</div>
+            <p class="text-gray-500 text-sm">Simulation complete. 100 Pauls reached consensus after 10 rounds.</p>
+        </div>
+
+        <!-- Vote Distribution -->
+        <div class="glass p-6 mb-6">
+            <h3 class="font-bold mb-6">Vote Distribution</h3>
+            <div class="grid grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-green-400 mb-1">35%</div>
+                    <div class="text-sm text-gray-500">Bullish (35 Pauls)</div>
+                    <div class="h-2 bg-gray-800 rounded-full mt-3 overflow-hidden">
+                        <div class="h-full bg-green-500 w-[35%]"></div>
+                    </div>
+                    <div class="text-xs text-gray-600 mt-2">Avg Confidence: 78%</div>
+                </div>
+                
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-yellow-400 mb-1">38%</div>
+                    <div class="text-sm text-gray-500">Neutral (38 Pauls)</div>
+                    <div class="h-2 bg-gray-800 rounded-full mt-3 overflow-hidden">
+                        <div class="h-full bg-yellow-500 w-[38%]"></div>
+                    </div>
+                    <div class="text-xs text-gray-600 mt-2">Avg Confidence: 70%</div>
+                </div>
+                
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-red-400 mb-1">27%</div>
+                    <div class="text-sm text-gray-500">Bearish (27 Pauls)</div>
+                    <div class="h-2 bg-gray-800 rounded-full mt-3 overflow-hidden">
+                        <div class="h-full bg-red-500 w-[27%]"></div>
+                    </div>
+                    <div class="text-xs text-gray-600 mt-2">Avg Confidence: 72%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Two Column Layout -->
+        <div class="grid md:grid-cols-2 gap-6">
+            <!-- Left Column -->
+            <div class="space-y-6">
+                <!-- Sentiment Analysis -->
+                <div class="glass p-6">
+                    <h3 class="font-bold mb-4">Sentiment Analysis</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Raw Score</span>
+                            <span class="text-yellow-400 font-mono">+0.08</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Interpretation</span>
+                            <span class="badge badge-yellow">MIXED</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Strength</span>
+                            <span class="text-gray-300">WEAK</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Directional Bias</span>
+                            <span class="text-yellow-400">SIDEWAYS</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Market Regime -->
+                <div class="glass p-6 text-center">
+                    <h3 class="font-bold mb-4 text-left">Market Regime</h3>
+                    <div class="text-3xl font-bold text-yellow-400 mb-2">RANGE BOUND</div>
+                    <p class="text-sm text-gray-500">Detected from agent prediction patterns</p>
+                </div>
+
+                <!-- Risk Metrics -->
+                <div class="glass p-6">
+                    <h3 class="font-bold mb-4">Risk Metrics</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Consensus Strength</span>
+                            <span class="badge badge-yellow">WEAK</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Uncertainty Level</span>
+                            <span class="badge badge-green">LOW</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Prediction Volatility</span>
+                            <span class="text-gray-300 font-mono">1.56</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Confidence Variance</span>
+                            <span class="text-gray-300 font-mono">0.042</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Time Analysis -->
+                <div class="glass p-6">
+                    <h3 class="font-bold mb-4">Time Analysis</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Convergence Speed</span>
+                            <span class="badge badge-green">FAST</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Rounds to Consensus</span>
+                            <span class="text-gray-300 font-mono">10</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Stability Score</span>
+                            <span class="text-green-400 font-mono">96%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agreement Metrics -->
+                <div class="glass p-6">
+                    <h3 class="font-bold mb-4">Agreement Metrics</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Disagreement Score</span>
+                            <span class="text-yellow-400 font-mono">1.56</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Consensus Quality</span>
+                            <span class="badge badge-yellow">MEDIUM</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Diversity of Opinion</span>
+                            <span class="badge badge-blue">HIGH</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-6">
+                <!-- Agent Statistics -->
+                <div class="glass p-6">
+                    <h3 class="font-bold mb-4">Agent Statistics</h3>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="glass p-4 text-center">
+                            <div class="text-3xl font-bold text-cyan-400">100</div>
+                            <div class="text-xs text-gray-500">Total Agents</div>
+                        </div>
+                        <div class="glass p-4 text-center">
+                            <div class="text-3xl font-bold text-cyan-400">100</div>
+                            <div class="text-xs text-gray-500">Active Predictors</div>
+                        </div>
+                        <div class="glass p-4 text-center">
+                            <div class="text-3xl font-bold text-purple-400">8</div>
+                            <div class="text-xs text-gray-500">Unique Specialties</div>
+                        </div>
+                        <div class="glass p-4 text-center">
+                            <div class="text-3xl font-bold text-purple-400">5</div>
+                            <div class="text-xs text-gray-500">Trading Styles</div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Avg Confidence</span>
+                            <span class="text-cyan-400">74%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Highest Confidence</span>
+                            <span class="text-green-400">Visionary Paul</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Knowledge Graph -->
+                <div class="glass p-6">
+                    <h3 class="font-bold mb-4">Knowledge Graph</h3>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-400 text-xs border border-cyan-500/30">AI Sector</span>
+                        <span class="px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 text-xs border border-purple-500/30">Labor Market</span>
+                        <span class="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-xs border border-green-500/30">Automation</span>
+                        <span class="px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-400 text-xs border border-yellow-500/30">GDP</span>
+                        <span class="px-3 py-1 rounded-full bg-red-500/20 text-red-400 text-xs border border-red-500/30">Tech Stocks</span>
+                        <span class="px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-xs border border-blue-500/30">Productivity</span>
+                        <span class="px-3 py-1 rounded-full bg-orange-500/20 text-orange-400 text-xs border border-orange-500/30">Regulation</span>
+                        <span class="px-3 py-1 rounded-full bg-pink-500/20 text-pink-400 text-xs border border-pink-500/30">Innovation</span>
+                    </div>
+                    <p class="text-xs text-gray-500">26 total entities • 10 relationships mapped</p>
+                </div>
+
+                <!-- Relationship Insights -->
+                <div class="glass p-6">
+                    <h3 class="font-bold mb-4">Relationship Insights</h3>
+                    <div class="space-y-3">
+                        <div class="p-4 bg-cyan-500/10 rounded-lg border border-cyan-500/20 text-sm">
+                            AI Sector shows 0.85 relationship with Productivity – major efficiency gains expected
+                        </div>
+                        
+                        <div class="p-4 bg-purple-500/10 rounded-lg border border-purple-500/20 text-sm">
+                            Automation has 0.78 disruption strength with Labor Market – significant job displacement risk
+                        </div>
+                        
+                        <div class="p-4 bg-green-500/10 rounded-lg border border-green-500/20 text-sm">
+                            AI Sector correlates 0.82 with Tech Stocks – equity markets already pricing in growth
+                        </div>
+                        
+                        <div class="p-4 bg-yellow-500/10 rounded-lg border border-yellow-500/20 text-sm">
+                            GDP impacts from AI adoption estimated at +2.5% annually by 2030
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skill Data -->
+                <div class="glass p-6">
+                    <h3 class="font-bold mb-4">Skill Data</h3>
+                    <p class="text-sm text-gray-500 mb-4">Market data fetched from OpenClaw skills</p>
+                    
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                            <span class="font-medium">NVDA</span>
+                            <div class="text-right">
+                                <div class="font-bold">$875.28</div>
+                                <div class="text-xs text-green-400">+2.4%</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                            <span class="font-medium">AI ETF</span>
+                            <div class="text-right">
+                                <div class="font-bold">$45.67</div>
+                                <div class="text-xs text-green-400">+1.2%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Agent Perspectives -->
+        <div class="glass p-6 mt-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="font-bold">Agent Perspectives</h3>
+                <span class="text-sm text-gray-500">(Sample of 100)</span>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-4">
+                <!-- Visionary Paul -->
+                <div class="glass p-4 bullish">
+                    <div class="flex items-start justify-between mb-2">
+                        <div>
+                            <div class="font-bold text-cyan-400">Visionary Paul</div>
+                            <div class="text-xs text-gray-500">Disruptive Innovation • Long-term</div>
+                        </div>
+                        <span class="tag tag-bullish">BULLISH 82%</span>
+                    </div>
+                    
+                    <p class="text-sm text-gray-300 mb-3">"The narrative is shifting bullish. Early adopters see AI creating more jobs than it eliminates—this is where alpha lives."</p>
+                    
+                    <div class="flex items-center gap-1 text-xs text-gray-500">
+                        <span>💡</span>
+                        <span>Knows: AI Sector, Innovation, Tech Stocks | Memory: 68% accuracy</span>
+                    </div>
+                </div>
+
+                <!-- Professor Paul -->
+                <div class="glass p-4 neutral">
+                    <div class="flex items-start justify-between mb-2">
+                        <div>
+                            <div class="font-bold text-cyan-400">Professor Paul</div>
+                            <div class="text-xs text-gray-500">Macro Research • Systematic</div>
+                        </div>
+                        <span class="tag tag-neutral">NEUTRAL 68%</span>
+                    </div>
+                    
+                    <p class="text-sm text-gray-300 mb-3">"Historical patterns suggest neutral continuation. The data shows displacement in some sectors but creation in others."</p>
+                    
+                    <div class="flex items-center gap-1 text-xs text-gray-500">
+                        <span>💡</span>
+                        <span>Knows: Labor Market, GDP, Productivity | Memory: 72% accuracy</span>
+                    </div>
+                </div>
+
+                <!-- Skeptic Paul -->
+                <div class="glass p-4 bearish">
+                    <div class="flex items-start justify-between mb-2">
+                        <div>
+                            <div class="font-bold text-cyan-400">Skeptic Paul</div>
+                            <div class="text-xs text-gray-500">Risk Assessment • Defensive</div>
+                        </div>
+                        <span class="tag tag-bearish">BEARISH 71%</span>
+                    </div>
+                    
+                    <p class="text-sm text-gray-300 mb-3">"Despite the hype, structural unemployment risks are real. I'm positioned cautiously given the uncertainty."</p>
+                    
+                    <div class="flex items-center gap-1 text-xs text-gray-500">
+                        <span>💡</span>
+                        <span>Knows: Unemployment, Labor Market, Regulation | Memory: 75% accuracy</span>
+                    </div>
+                </div>
+
+                <!-- Quant Paul -->
+                <div class="glass p-4 neutral">
+                    <div class="flex items-start justify-between mb-2">
+                        <div>
+                            <div class="font-bold text-cyan-400">Quant Paul</div>
+                            <div class="text-xs text-gray-500">Quantitative Analysis • Systematic</div>
+                        </div>
+                        <span class="tag tag-neutral">NEUTRAL 65%</span>
+                    </div>
+                    
+                    <p class="text-sm text-gray-300 mb-3">"My quantitative models indicate neutral pressure. Price action in AI-related equities shows consolidation."</p>
+                    
+                    <div class="flex items-center gap-1 text-xs text-gray-500">
+                        <span>💡</span>
+                        <span>Knows: AI Sector, Tech Stocks, Market Structure | Memory: 79% accuracy</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-6 text-center">
+                <button class="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg text-sm transition-colors">
+                    View All 100 Agent Perspectives
+                </button>
+            </div>
+        </div>
+
+        <!-- Run Your Own -->
+        <div class="glass p-6 mt-6">
+            <h3 class="font-bold mb-4 text-cyan-400">🚀 Run Your Own Predictions</h3>
+            <p class="text-gray-400 text-sm mb-4">See YOUR results in this explorer by running Swimming Pauls locally:</p>
+            
+            <div class="space-y-4">
+                <div>
+                    <div class="text-xs text-gray-500 mb-2">Step 1: Start the WebSocket Agent</div>
+                    <pre class="bg-black/50 p-3 rounded-lg text-xs text-gray-300 overflow-x-auto"><code># Terminal 1 - WebSocket for predictions
+python local_agent.py</code></pre>
+                </div>
+                
+                <div>
+                    <div class="text-xs text-gray-500 mb-2">Step 2: Start HTTP Server</div>
+                    <pre class="bg-black/50 p-3 rounded-lg text-xs text-gray-300 overflow-x-auto"><code># Terminal 2 - HTTP server for explorer
+python -m http.server 3005</code></pre>
+                </div>
+                
+                <div>
+                    <div class="text-xs text-gray-500 mb-2">Step 3: View YOUR Results</div>
+                    <ul class="text-sm text-gray-400 space-y-1">
+                        <li>• <span class="text-cyan-400">Local Explorer:</span> <code class="bg-black/30 px-2 py-1 rounded">http://localhost:3005/explorer.html</code></li>
+                        <li>• <span class="text-purple-400">Live Visualization:</span> <code class="bg-black/30 px-2 py-1 rounded">http://localhost:3005/visualize.html</code></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-gray-500 text-sm pb-8">
+            <p>Built by Howard | 100% Local | No Cloud</p>
+            <a href="/" class="text-cyan-400 hover:underline">← Back to Home</a>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debate Flow | Swimming Pauls</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        body { 
+            background: linear-gradient(135deg, #050508 0%, #0a0a12 50%, #0f0f1a 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glow-green { box-shadow: 0 0 40px rgba(34, 197, 94, 0.15); }
+        .glow-yellow { box-shadow: 0 0 40px rgba(234, 179, 8, 0.15); }
+        .glow-red { box-shadow: 0 0 40px rgba(239, 68, 68, 0.15); }
+        .glow-cyan { box-shadow: 0 0 60px rgba(6, 182, 212, 0.2); }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(6, 182, 212, 0.5); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        .animate-slide { animation: slideIn 0.6s ease-out forwards; }
+        .animate-pulse-glow { animation: pulse-glow 3s infinite; }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #22d3ee, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-border {
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.5), rgba(168, 85, 247, 0.5), rgba(236, 72, 153, 0.5));
+            padding: 1px;
+            border-radius: 16px;
+        }
+        .gradient-border-inner {
+            background: rgba(10, 10, 18, 0.9);
+            border-radius: 15px;
+            padding: 1.5rem;
+        }
+        
+        .influencer-card {
+            transition: all 0.3s ease;
+        }
+        .influencer-card:hover {
+            transform: translateX(10px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite;
+        }
+        
+        .stat-number {
+            font-variant-numeric: tabular-nums;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-6xl mx-auto">
+        
+        <!-- Animated Background Elements -->
+        <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+            <div class="absolute top-20 left-10 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl animate-float"></div>
+            <div class="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-float" style="animation-delay: 2s;"></div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-pink-500/5 rounded-full blur-3xl"></div>
+        </div>
+
+        <!-- Header -->
+        <header class="flex items-center justify-between mb-12 animate-slide">
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <img src="paul.jpg" alt="PAUL" class="w-14 h-14 rounded-2xl object-cover border-2 border-white/10">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-2xl blur opacity-30"></div>
+                </div>
+                <div>
+                    <span class="font-bold tracking-widest text-sm text-gray-400">SWIMMING_PAULS</span>
+                    <div class="text-xs text-gray-600">DEBATE_FLOW // v1.0</div>
+                </div>
+            </div>
+            <a href="/" class="group flex items-center gap-2 px-4 py-2 rounded-full glass hover:bg-white/5 transition-all">
+                <span class="text-lg">←</span>
+                <span class="text-sm text-gray-400 group-hover:text-white transition-colors">Back</span>
+            </a>
+        </header>
+
+        <!-- Hero Title -->
+        <div class="text-center mb-16 animate-slide" style="animation-delay: 0.1s;">
+            <h1 class="text-5xl md:text-7xl font-black mb-4">
+                <span class="gradient-text">DEBATE</span>
+                <span class="text-white">_FLOW</span>
+            </h1>
+            <p class="text-gray-400 text-lg max-w-xl mx-auto">
+                Watch consensus emerge in real-time. 
+                <span class="text-cyan-400">See who convinced whom.</span>
+            </p>
+        </div>
+
+        <!-- Question Card -->
+        <div class="gradient-border mb-8 animate-slide" style="animation-delay: 0.2s;">
+            <div class="gradient-border-inner">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-mono">QUERY</span>
+                    <span class="text-xs text-gray-500 font-mono">#ETH-10K-2025 // 100 PAULS</span>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">
+                    "Will ETH reach $10,000 by 2025?"
+                </h2>
+                <div class="flex items-center gap-6 text-sm">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                        <span class="text-gray-400">10 Rounds</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-cyan-500 animate-pulse"></div>
+                        <span class="text-cyan-400 font-semibold">Consensus: BULLISH (73%)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sentiment Shift Visualization -->
+        <div class="glass rounded-3xl p-8 mb-8 animate-slide glow-cyan" style="animation-delay: 0.3s;">
+            <div class="flex items-center justify-between mb-8">
+                <h3 class="text-xl font-bold flex items-center gap-3">
+                    <span class="text-2xl">📊</span>
+                    SENTIMENT_SHIFT
+                </h3>
+                <div class="flex items-center gap-2 text-xs text-gray-500">
+                    <span class="w-2 h-2 rounded-full bg-gray-600"></span>
+                    Round 1
+                    <span class="mx-2">→</span>
+                    <span class="w-2 h-2 rounded-full bg-cyan-500 animate-pulse"></span>
+                    Round 10
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Bullish -->
+                <div class="relative">
+                    <div class="flex items-center gap-4 mb-2">
+                        <span class="w-20 text-sm font-bold text-green-400">BULLISH</span>
+                        <div class="flex-1 h-12 bg-gray-800/50 rounded-xl overflow-hidden relative">
+                            <!-- Before -->
+                            <div class="absolute inset-y-0 left-0 bg-gray-700/50 rounded-l-xl transition-all duration-1000" style="width: 30%;">
+                                <div class="absolute inset-0 flex items-center justify-center text-xs text-gray-500 font-bold">30</div>
+                            </div>
+                            <!-- After -->
+                            <div class="absolute inset-y-0 left-0 bg-gradient-to-r from-green-600 to-green-400 rounded-xl transition-all duration-1000 shimmer" style="width: 73%;">
+                                <div class="absolute inset-0 flex items-center justify-end pr-4 text-sm font-bold text-black">73</div>
+                            </div>
+                        </div>
+                        <span class="w-16 text-right text-sm font-bold text-green-400 stat-number">+43</span>
+                    </div>
+                </div>
+
+                <!-- Neutral -->
+                <div class="relative">
+                    <div class="flex items-center gap-4 mb-2">
+                        <span class="w-20 text-sm font-bold text-yellow-400">NEUTRAL</span>
+                        <div class="flex-1 h-12 bg-gray-800/50 rounded-xl overflow-hidden relative">
+                            <div class="absolute inset-y-0 left-0 bg-gray-700/50 rounded-l-xl transition-all duration-1000" style="width: 40%;">
+                                <div class="absolute inset-0 flex items-center justify-center text-xs text-gray-500 font-bold">40</div>
+                            </div>
+                            <div class="absolute inset-y-0 left-0 bg-gradient-to-r from-yellow-600 to-yellow-400 rounded-xl transition-all duration-1000" style="width: 20%;">
+                                <div class="absolute inset-0 flex items-center justify-end pr-4 text-sm font-bold text-black">20</div>
+                            </div>
+                        </div>
+                        <span class="w-16 text-right text-sm font-bold text-red-400 stat-number">-20</span>
+                    </div>
+                </div>
+
+                <!-- Bearish -->
+                <div class="relative">
+                    <div class="flex items-center gap-4 mb-2">
+                        <span class="w-20 text-sm font-bold text-red-400">BEARISH</span>
+                        <div class="flex-1 h-12 bg-gray-800/50 rounded-xl overflow-hidden relative">
+                            <div class="absolute inset-y-0 left-0 bg-gray-700/50 rounded-l-xl transition-all duration-1000" style="width: 30%;">
+                                <div class="absolute inset-0 flex items-center justify-center text-xs text-gray-500 font-bold">30</div>
+                            </div>
+                            <div class="absolute inset-y-0 left-0 bg-gradient-to-r from-red-600 to-red-400 rounded-xl transition-all duration-1000" style="width: 7%;">
+                                <div class="absolute inset-0 flex items-center justify-end pr-4 text-sm font-bold text-black">7</div>
+                            </div>
+                        </div>
+                        <span class="w-16 text-right text-sm font-bold text-red-400 stat-number">-23</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Influencers -->
+        <div class="mb-8 animate-slide" style="animation-delay: 0.4s;">
+            <h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-2xl">🏆</span>
+                TOP_INFLUENCERS
+            </h3>
+
+            <div class="grid md:grid-cols-3 gap-4">
+                <!-- Rank 1 -->
+                <div class="gradient-border">
+                    <div class="gradient-border-inner influencer-card glow-green">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500/20 to-green-600/20 flex items-center justify-center text-3xl border border-green-500/30">
+                                🔮
+                            </div>
+                            <div class="text-5xl font-black text-green-500/20">01</div>
+                        </div>
+                        <h4 class="text-lg font-bold text-white mb-1">Visionary Paul</h4>
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-2 py-0.5 rounded bg-green-500/10 text-green-400 text-xs font-bold">BULLISH</span>
+                            <span class="text-xs text-gray-500">Disruptive Innovation</span>
+                        </div>
+                        <div class="text-3xl font-black text-green-400 mb-2 stat-number">+12</div>
+                        <div class="text-sm text-gray-400 mb-3">Pauls convinced</div>
+                        <div class="p-3 bg-black/40 rounded-lg border-l-2 border-green-500">
+                            <p class="text-sm text-gray-300 italic">"ETF approval is imminent. This changes everything."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rank 2 -->
+                <div class="gradient-border">
+                    <div class="gradient-border-inner influencer-card glow-green" style="animation-delay: 0.1s;">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500/20 to-cyan-600/20 flex items-center justify-center text-3xl border border-cyan-500/30">
+                                🐋
+                            </div>
+                            <div class="text-5xl font-black text-cyan-500/20">02</div>
+                        </div>
+                        <h4 class="text-lg font-bold text-white mb-1">Whale Paul</h4>
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-2 py-0.5 rounded bg-green-500/10 text-green-400 text-xs font-bold">BULLISH</span>
+                            <span class="text-xs text-gray-500">Institutional Flow</span>
+                        </div>
+                        <div class="text-3xl font-black text-cyan-400 mb-2 stat-number">+8</div>
+                        <div class="text-sm text-gray-400 mb-3">Pauls convinced</div>
+                        <div class="p-3 bg-black/40 rounded-lg border-l-2 border-cyan-500">
+                            <p class="text-sm text-gray-300 italic">"On-chain data confirms massive inflows."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rank 3 -->
+                <div class="gradient-border">
+                    <div class="gradient-border-inner influencer-card glow-yellow" style="animation-delay: 0.2s;">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-yellow-500/20 to-orange-600/20 flex items-center justify-center text-3xl border border-yellow-500/30">
+                                👨‍🏫
+                            </div>
+                            <div class="text-5xl font-black text-yellow-500/20">03</div>
+                        </div>
+                        <h4 class="text-lg font-bold text-white mb-1">Professor Paul</h4>
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-400 text-xs font-bold">NEUTRAL</span>
+                            <span class="text-xs text-gray-500">Macro Research</span>
+                        </div>
+                        <div class="text-3xl font-black text-yellow-400 mb-2 stat-number">+6</div>
+                        <div class="text-sm text-gray-400 mb-3">Pauls convinced</div>
+                        <div class="p-3 bg-black/40 rounded-lg border-l-2 border-yellow-500">
+                            <p class="text-sm text-gray-300 italic">"Macro stabilizing, but risks remain."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Isolated Pauls -->
+        <div class="glass rounded-3xl p-6 mb-8 animate-slide glow-red" style="animation-delay: 0.5s;">
+            <h3 class="text-lg font-bold mb-4 flex items-center gap-3 text-gray-400">
+                <span class="text-xl">⚠️</span>
+                ISOLATED_PAULS
+                <span class="text-xs text-gray-600 font-normal">(convinced no one)</span>
+            </h3>
+
+            <div class="flex items-center gap-4 p-4 bg-red-500/5 rounded-2xl border border-red-500/20">
+                <div class="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center text-2xl border border-red-500/30">
+                    🐻
+                </div>
+                <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-1">
+                        <span class="font-bold text-white">Contrarian Paul</span>
+                        <span class="px-2 py-0.5 rounded bg-red-500/10 text-red-400 text-xs">BEARISH</span>
+                    </div>
+                    <p class="text-sm text-gray-400 italic">"Too much euphoria. I've seen this movie before."</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-2xl font-bold text-gray-600 stat-number">0</div>
+                    <div class="text-xs text-gray-600">influenced</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Consensus Former -->
+        <div class="gradient-border animate-slide animate-pulse-glow" style="animation-delay: 0.6s;">
+            <div class="gradient-border-inner text-center py-8">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-sm font-bold mb-4">
+                    <span>🎯</span>
+                    CONSENSUS_FORMER
+                </div>
+                <h3 class="text-3xl font-bold text-white mb-2">Visionary Paul</h3>
+                <p class="text-gray-400 mb-4">Tipped the scales in <span class="text-cyan-400 font-bold">Round 5</span></p>
+                <p class="text-sm text-gray-500 max-w-md mx-auto">
+                    Visionary Paul's ETF argument convinced the remaining neutral Pauls, 
+                    pushing bullish consensus above the 50% threshold.
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-16 text-center text-gray-600 text-sm pb-8 animate-slide" style="animation-delay: 0.7s;">
+            <div class="flex items-center justify-center gap-2 mb-2">
+                <span class="text-cyan-400">🦷</span>
+                <span>Built by Howard</span>
+                <span class="text-gray-700">|</span>
+                <span>100% Local</span>
+                <span class="text-gray-700">|</span>
+                <span>No Cloud</span>
+            </div>
+            <a href="/" class="text-cyan-400 hover:text-cyan-300 transition-colors">← Back to Home</a>
+        </footer>
+    </div>
+
+    <script>
+        // Animate bars on load
+        setTimeout(() => {
+            document.querySelectorAll('[style*="width:"]').forEach(el => {
+                el.style.opacity = '1';
+            });
+        }, 500);
+    </script>
+</body>
+</html>

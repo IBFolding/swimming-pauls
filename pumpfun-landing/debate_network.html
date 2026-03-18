@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debate Network | Swimming Pauls</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        body { 
+            background: linear-gradient(135deg, #050508 0%, #0a0a12 50%, #0f0f1a 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+        }
+        .glow-green { box-shadow: 0 0 40px rgba(34, 197, 94, 0.2); }
+        .glow-yellow { box-shadow: 0 0 40px rgba(234, 179, 8, 0.2); }
+        .glow-red { box-shadow: 0 0 40px rgba(239, 68, 68, 0.2); }
+        .glow-cyan { box-shadow: 0 0 60px rgba(6, 182, 212, 0.25); }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.3); }
+            50% { box-shadow: 0 0 50px rgba(6, 182, 212, 0.6); }
+        }
+        .animate-pulse-glow { animation: pulse-glow 3s infinite; }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #22d3ee, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* D3 Styles */
+        .node {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .node:hover {
+            filter: brightness(1.4) drop-shadow(0 0 10px rgba(255,255,255,0.5));
+        }
+        .link {
+            stroke-opacity: 0.6;
+            transition: all 0.5s ease;
+        }
+        .pulse {
+            animation: pulse-line 2s infinite;
+        }
+        @keyframes pulse-line {
+            0%, 100% { stroke-opacity: 0.3; stroke-width: 1; }
+            50% { stroke-opacity: 1; stroke-width: 4; }
+        }
+        
+        .tooltip {
+            position: absolute;
+            padding: 12px;
+            background: rgba(10, 10, 18, 0.95);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            pointer-events: none;
+            font-size: 13px;
+            max-width: 280px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            z-index: 100;
+        }
+        
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #22d3ee;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(34, 211, 238, 0.5);
+            margin-top: -8px;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-7xl mx-auto">
+        
+        <!-- Background Effects -->
+        <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+            <div class="absolute top-20 left-10 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-pink-500/5 rounded-full blur-3xl"></div>
+        </div>
+
+        <!-- Header -->
+        <header class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <img src="paul.jpg" alt="PAUL" class="w-14 h-14 rounded-2xl object-cover border-2 border-white/10">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-2xl blur opacity-30"></div>
+                </div>
+                <div>
+                    <span class="font-bold tracking-widest text-sm text-gray-400">SWIMMING_PAULS</span>
+                    <div class="text-xs text-gray-600">DEBATE_NETWORK // TEMPORAL_VIEW</div>
+                </div>
+            </div>
+            <a href="/explorer.html?id=demo" class="group flex items-center gap-2 px-4 py-2 rounded-full glass hover:bg-white/5 transition-all">
+                <span class="text-gray-400 group-hover:text-white">← Back to Explorer</span>
+            </a>
+        </header>
+
+        <!-- Title -->
+        <div class="text-center mb-8">
+            <h1 class="text-5xl md:text-7xl font-black mb-4">
+                <span class="gradient-text">DEBATE</span>
+                <span class="text-white">_NETWORK</span>
+            </h1>
+            <p class="text-gray-400 text-lg max-w-xl mx-auto">
+                Watch persuasion flow through the swarm. 
+                <span class="text-cyan-400">See who convinced whom.</span>
+            </p>
+        </div>
+
+        <!-- Question Card -->
+        <div class="glass rounded-2xl p-6 mb-8">
+            <div class="flex items-center gap-3 mb-3">
+                <span class="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-mono">QUERY</span>
+                <span class="text-xs text-gray-500 font-mono">#ETH-10K-2025 // 100 PAULS</span>
+            </div>
+            <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">
+                "Will ETH reach $10,000 by 2025?"
+            </h2>
+            <div class="flex items-center gap-6 text-sm">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                    <span class="text-gray-400">10 Rounds</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-cyan-500 animate-pulse"></div>
+                    <span class="text-cyan-400 font-semibold">Consensus: BULLISH (73%)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid lg:grid-cols-4 gap-6">
+            
+            <!-- Left Panel: Controls + Stats -->
+            <div class="lg:col-span-1 space-y-4">
+                
+                <!-- Round Slider -->
+                <div class="glass p-5 rounded-2xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm font-bold text-gray-400">ROUND</span>
+                        <span id="roundDisplay" class="text-3xl font-black text-cyan-400">1</span>
+                    </div>                    
+                    
+                    <input type="range" id="roundSlider" min="1" max="10" value="1" class="mb-4">
+                    
+                    <div class="flex justify-between text-xs text-gray-500 mb-4">
+                        <span>Start</span>
+                        <span>Consensus</span>
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        <button id="playBtn" class="flex-1 py-3 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 rounded-xl text-cyan-400 font-bold transition-all">
+                            ▶ Play
+                        </button>
+                        <button id="resetBtn" class="px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-gray-400 transition-all">
+                            ↺
+                        </button>
+                        <button id="resetZoomBtn" class="px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-gray-400 transition-all" title="Reset Zoom">
+                            🔍
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Distribution Stats -->
+                <div class="glass p-5 rounded-2xl">
+                    <h3 class="text-sm font-bold text-gray-400 mb-4">SENTIMENT SHIFT</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="relative">
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-green-400 font-bold">BULLISH</span>
+                                <span id="bullishCount" class="font-bold">30 → 73</span>
+                            </div>
+                            <div class="h-3 bg-gray-800/50 rounded-lg overflow-hidden relative">
+                                <div class="absolute inset-y-0 left-0 bg-gray-700/30 rounded-l-lg" style="width: 30%;"></div>
+                                <div id="bullishBar" class="absolute inset-y-0 left-0 bg-gradient-to-r from-green-600 to-green-400 rounded-lg transition-all duration-700" style="width: 73%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="relative">
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-yellow-400 font-bold">NEUTRAL</span>
+                                <span id="neutralCount" class="font-bold">40 → 20</span>
+                            </div>
+                            <div class="h-3 bg-gray-800/50 rounded-lg overflow-hidden relative">
+                                <div class="absolute inset-y-0 left-0 bg-gray-700/30 rounded-l-lg" style="width: 40%;"></div>
+                                <div id="neutralBar" class="absolute inset-y-0 left-0 bg-gradient-to-r from-yellow-600 to-yellow-400 rounded-lg transition-all duration-700" style="width: 20%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="relative">
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-red-400 font-bold">BEARISH</span>
+                                <span id="bearishCount" class="font-bold">30 → 7</span>
+                            </div>
+                            <div class="h-3 bg-gray-800/50 rounded-lg overflow-hidden relative">
+                                <div class="absolute inset-y-0 left-0 bg-gray-700/30 rounded-l-lg" style="width: 30%;"></div>
+                                <div id="bearishBar" class="absolute inset-y-0 left-0 bg-gradient-to-r from-red-600 to-red-400 rounded-lg transition-all duration-700" style="width: 7%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Selected Paul Panel -->
+                <div id="selectedPaulPanel" class="glass p-5 rounded-2xl hidden">
+                    <h3 class="font-bold text-sm mb-3 text-cyan-400">SELECTED PAUL</h3>
+                    <div id="selectedPaulContent"></div>
+                </div>
+            </div>
+
+            <!-- Right Panel: D3 Graph -->
+            <div class="lg:col-span-3">
+                <div class="glass rounded-2xl p-4 h-[600px] relative overflow-hidden">
+                    <div class="absolute top-4 right-4 z-10">
+                        <span class="text-xs text-gray-500 bg-black/50 px-3 py-1 rounded-full">Scroll to zoom • Drag to pan</span>
+                    </div>
+                    <div id="graphContainer" class="w-full h-full"></div>
+                    
+                    <!-- Tooltip -->
+                    <div id="tooltip" class="tooltip hidden"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Influencers Grid -->
+        <div class="mt-8">
+            <h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-2xl">🏆</span>
+                TOP_INFLUENCERS
+            </h3>
+
+            <div id="influencersGrid" class="grid md:grid-cols-3 gap-4">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-gray-600 text-sm pb-8">
+            <div class="flex items-center justify-center gap-2 mb-2">
+                <span class="text-cyan-400">🦷</span>
+                <span>Built by Howard</span>
+                <span class="text-gray-700">|</span>
+                <span>100% Local</span>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Demo data - temporal debate network
+        const rounds = [
+            {
+                nodes: [
+                    { id: 'visionary', name: 'Visionary Paul', emoji: '🔮', sentiment: 'bullish', influence: 12, specialty: 'Disruptive Innovation' },
+                    { id: 'trader', name: 'Trader Paul', emoji: '📈', sentiment: 'neutral', influence: 3, specialty: 'Market Timing' },
+                    { id: 'skeptic', name: 'Skeptic Paul', emoji: '🤨', sentiment: 'bearish', influence: 2, specialty: 'Risk Assessment' },
+                    { id: 'whale', name: 'Whale Paul', emoji: '🐋', sentiment: 'neutral', influence: 8, specialty: 'Institutional Flow' },
+                    { id: 'professor', name: 'Professor Paul', emoji: '👨‍🏫', sentiment: 'neutral', influence: 6, specialty: 'Macro Research' },
+                    { id: 'degen', name: 'Degen Paul', emoji: '🎰', sentiment: 'bearish', influence: 1, specialty: 'High Risk' },
+                    { id: 'quant', name: 'Quant Paul', emoji: '📊', sentiment: 'neutral', influence: 4, specialty: 'Quantitative Analysis' },
+                    { id: 'contrarian', name: 'Contrarian Paul', emoji: '🐻', sentiment: 'bearish', influence: 0, specialty: 'Contrarian Views' },
+                ],
+                links: [],
+                stats: { bullish: 30, neutral: 40, bearish: 30 }
+            },
+            {
+                nodes: [
+                    { id: 'visionary', name: 'Visionary Paul', emoji: '🔮', sentiment: 'bullish', influence: 12, specialty: 'Disruptive Innovation' },
+                    { id: 'trader', name: 'Trader Paul', emoji: '📈', sentiment: 'bullish', influence: 3, specialty: 'Market Timing' },
+                    { id: 'skeptic', name: 'Skeptic Paul', emoji: '🤨', sentiment: 'neutral', influence: 2, specialty: 'Risk Assessment' },
+                    { id: 'whale', name: 'Whale Paul', emoji: '🐋', sentiment: 'bullish', influence: 8, specialty: 'Institutional Flow' },
+                    { id: 'professor', name: 'Professor Paul', emoji: '👨‍🏫', sentiment: 'neutral', influence: 6, specialty: 'Macro Research' },
+                    { id: 'degen', name: 'Degen Paul', emoji: '🎰', sentiment: 'neutral', influence: 1, specialty: 'High Risk' },
+                    { id: 'quant', name: 'Quant Paul', emoji: '📊', sentiment: 'bullish', influence: 4, specialty: 'Quantitative Analysis' },
+                    { id: 'contrarian', name: 'Contrarian Paul', emoji: '🐻', sentiment: 'bearish', influence: 0, specialty: 'Contrarian Views' },
+                ],
+                links: [
+                    { source: 'visionary', target: 'trader', strength: 0.8, argument: 'ETF approval imminent' },
+                    { source: 'professor', target: 'degen', strength: 0.6, argument: 'Macro stabilizing' },
+                    { source: 'visionary', target: 'quant', strength: 0.7, argument: 'Layer 2 adoption' },
+                ],
+                stats: { bullish: 45, neutral: 35, bearish: 20 }
+            },
+            {
+                nodes: [
+                    { id: 'visionary', name: 'Visionary Paul', emoji: '🔮', sentiment: 'bullish', influence: 12, specialty: 'Disruptive Innovation' },
+                    { id: 'trader', name: 'Trader Paul', emoji: '📈', sentiment: 'bullish', influence: 3, specialty: 'Market Timing' },
+                    { id: 'skeptic', name: 'Skeptic Paul', emoji: '🤨', sentiment: 'neutral', influence: 2, specialty: 'Risk Assessment' },
+                    { id: 'whale', name: 'Whale Paul', emoji: '🐋', sentiment: 'bullish', influence: 8, specialty: 'Institutional Flow' },
+                    { id: 'professor', name: 'Professor Paul', emoji: '👨‍🏫', sentiment: 'neutral', influence: 6, specialty: 'Macro Research' },
+                    { id: 'degen', name: 'Degen Paul', emoji: '🎰', sentiment: 'bullish', influence: 1, specialty: 'High Risk' },
+                    { id: 'quant', name: 'Quant Paul', emoji: '📊', sentiment: 'bullish', influence: 4, specialty: 'Quantitative Analysis' },
+                    { id: 'contrarian', name: 'Contrarian Paul', emoji: '🐻', sentiment: 'bearish', influence: 0, specialty: 'Contrarian Views' },
+                ],
+                links: [
+                    { source: 'visionary', target: 'trader', strength: 0.8 },
+                    { source: 'professor', target: 'degen', strength: 0.6 },
+                    { source: 'visionary', target: 'quant', strength: 0.7 },
+                    { source: 'whale', target: 'skeptic', strength: 0.9, argument: 'On-chain data confirms' },
+                    { source: 'professor', target: 'skeptic', strength: 0.5, argument: 'Risk/reward favorable' },
+                ],
+                stats: { bullish: 58, neutral: 27, bearish: 15 }
+            },
+            {
+                nodes: [
+                    { id: 'visionary', name: 'Visionary Paul', emoji: '🔮', sentiment: 'bullish', influence: 12, specialty: 'Disruptive Innovation' },
+                    { id: 'trader', name: 'Trader Paul', emoji: '📈', sentiment: 'bullish', influence: 3, specialty: 'Market Timing' },
+                    { id: 'skeptic', name: 'Skeptic Paul', emoji: '🤨', sentiment: 'bullish', influence: 2, specialty: 'Risk Assessment' },
+                    { id: 'whale', name: 'Whale Paul', emoji: '🐋', sentiment: 'bullish', influence: 8, specialty: 'Institutional Flow' },
+                    { id: 'professor', name: 'Professor Paul', emoji: '👨‍🏫', sentiment: 'neutral', influence: 6, specialty: 'Macro Research' },
+                    { id: 'degen', name: 'Degen Paul', emoji: '🎰', sentiment: 'bullish', influence: 1, specialty: 'High Risk' },
+                    { id: 'quant', name: 'Quant Paul', emoji: '📊', sentiment: 'bullish', influence: 4, specialty: 'Quantitative Analysis' },
+                    { id: 'contrarian', name: 'Contrarian Paul', emoji: '🐻', sentiment: 'bearish', influence: 0, specialty: 'Contrarian Views' },
+                ],
+                links: [
+                    { source: 'visionary', target: 'trader', strength: 0.8 },
+                    { source: 'professor', target: 'degen', strength: 0.6 },
+                    { source: 'visionary', target: 'quant', strength: 0.7 },
+                    { source: 'whale', target: 'skeptic', strength: 0.9 },
+                    { source: 'professor', target: 'skeptic', strength: 0.5 },
+                    { source: 'whale', target: 'professor', strength: 0.7, argument: 'Too much momentum' },
+                ],
+                stats: { bullish: 73, neutral: 20, bearish: 7 }
+            }
+        ];
+
+        // Fill intermediate rounds
+        for (let i = 1; i < 10; i++) {
+            if (!rounds[i]) {
+                rounds[i] = JSON.parse(JSON.stringify(rounds[i-1]));
+            }
+        }
+
+        let currentRound = 0;
+        let isPlaying = false;
+        let playInterval;
+        let simulation;
+        let linkElements, nodeElements;
+        let selectedNode = null;
+        let width, height;
+
+        const colorMap = {
+            bullish: '#22c55e',
+            neutral: '#eab308',
+            bearish: '#ef4444'
+        };
+
+        // Initialize dimensions
+        function updateDimensions() {
+            const container = document.getElementById('graphContainer');
+            width = container.clientWidth;
+            height = container.clientHeight;
+        }
+
+        updateDimensions();
+
+        // Setup SVG with zoom
+        const svg = d3.select('#graphContainer')
+            .append('svg')
+            .attr('width', '100%')
+            .attr('height', '100%')
+            .attr('viewBox', `0 0 ${width} ${height}`);
+
+        // Create a group for zoomable content
+        const g = svg.append('g');
+
+        // Add zoom behavior
+        const zoom = d3.zoom()
+            .scaleExtent([0.5, 4])  // Min 0.5x, max 4x zoom
+            .on('zoom', (event) => {
+                g.attr('transform', event.transform);
+            });
+
+        svg.call(zoom);
+
+        // Add glow filters to the group
+        const defs = g.append('defs');
+        
+        ['bullish', 'neutral', 'bearish'].forEach(sentiment => {
+            const filter = defs.append('filter')
+                .attr('id', `glow-${sentiment}`)
+                .attr('x', '-50%')
+                .attr('y', '-50%')
+                .attr('width', '200%')
+                .attr('height', '200%');
+            
+            filter.append('feGaussianBlur')
+                .attr('stdDeviation', '3')
+                .attr('result', 'coloredBlur');
+            
+            const merge = filter.append('feMerge');
+            merge.append('feMergeNode').attr('in', 'coloredBlur');
+            merge.append('feMergeNode').attr('in', 'SourceGraphic');
+        });
+
+        // Create simulation
+        simulation = d3.forceSimulation()
+            .force('link', d3.forceLink().id(d => d.id).distance(80))
+            .force('charge', d3.forceManyBody().strength(-300))
+            .force('center', d3.forceCenter(width / 2, height / 2))
+            .force('collision', d3.forceCollide().radius(35));
+
+        function updateGraph(roundIndex) {
+            const data = rounds[Math.min(roundIndex, rounds.length - 1)];
+            
+            // Update stats text
+            document.getElementById('roundDisplay').textContent = roundIndex + 1;
+            document.getElementById('bullishCount').textContent = `30 → ${data.stats.bullish}`;
+            document.getElementById('neutralCount').textContent = `40 → ${data.stats.neutral}`;
+            document.getElementById('bearishCount').textContent = `30 → ${data.stats.bearish}`;
+            
+            // Update bars
+            document.getElementById('bullishBar').style.width = data.stats.bullish + '%';
+            document.getElementById('neutralBar').style.width = data.stats.neutral + '%';
+            document.getElementById('bearishBar').style.width = data.stats.bearish + '%';
+
+            // Links - append to group g
+            linkElements = g.selectAll('.link')
+                .data(data.links, d => `${d.source.id || d.source}-${d.target.id || d.target}`);
+            
+            linkElements.exit().remove();
+            
+            const linkEnter = linkElements.enter()
+                .append('line')
+                .attr('class', 'link')
+                .attr('stroke', '#22d3ee')
+                .attr('stroke-width', d => Math.max(1, d.strength * 3));
+            
+            linkElements = linkEnter.merge(linkElements);
+            
+            // Pulse animation on new links
+            linkEnter.classed('pulse', true);
+            setTimeout(() => linkEnter.classed('pulse', false), 2000);
+
+            // Nodes - append to group g
+            nodeElements = g.selectAll('.node')
+                .data(data.nodes, d => d.id);
+            
+            nodeElements.exit()
+                .transition()
+                .duration(300)
+                .attr('opacity', 0)
+                .remove();
+            
+            const nodeEnter = nodeElements.enter()
+                .append('g')
+                .attr('class', 'node')
+                .call(d3.drag()
+                    .on('start', dragstarted)
+                    .on('drag', dragged)
+                    .on('end', dragended));
+            
+            // Circles
+            nodeEnter.append('circle')
+                .attr('r', d => 12 + d.influence * 1.2)
+                .attr('fill', d => colorMap[d.sentiment])
+                .attr('stroke', '#fff')
+                .attr('stroke-width', 1.5)
+                .attr('stroke-opacity', 0.4)
+                .style('filter', d => `url(#glow-${d.sentiment})`);
+            
+            // Emojis
+            nodeEnter.append('text')
+                .attr('text-anchor', 'middle')
+                .attr('dy', '0.35em')
+                .attr('font-size', '14px')
+                .text(d => d.emoji);
+            
+            // Names (desktop only)
+            if (window.innerWidth >= 768) {
+                nodeEnter.append('text')
+                    .attr('text-anchor', 'middle')
+                    .attr('dy', d => 20 + d.influence * 1.2)
+                    .attr('font-size', '10px')
+                    .attr('fill', '#9ca3af')
+                    .text(d => d.name.split(' ')[0]);
+            }
+            
+            // Interactions
+            nodeEnter
+                .on('mouseover', function(event, d) {
+                    const tooltip = document.getElementById('tooltip');
+                    tooltip.classList.remove('hidden');
+                    tooltip.innerHTML = `
+                        <div class="font-bold text-white mb-1">${d.name} ${d.emoji}</div>
+                        <div style="color: ${colorMap[d.sentiment]}; margin-bottom: 4px;">${d.sentiment.toUpperCase()}</div>
+                        <div class="text-xs text-gray-400">${d.specialty}</div>
+                        <div class="text-xs text-gray-500 mt-1">Influenced: ${d.influence} Pauls</div>
+                    `;
+                    tooltip.style.left = (event.pageX + 10) + 'px';
+                    tooltip.style.top = (event.pageY - 10) + 'px';
+                })
+                .on('mouseout', () => {
+                    document.getElementById('tooltip').classList.add('hidden');
+                })
+                .on('click', function(event, d) {
+                    showPaulDetail(d);
+                });
+            
+            nodeElements = nodeEnter.merge(nodeElements);
+            
+            // Update simulation
+            simulation.nodes(data.nodes).on('tick', () => {
+                linkElements
+                    .attr('x1', d => d.source.x)
+                    .attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x)
+                    .attr('y2', d => d.target.y);
+
+                nodeElements
+                    .attr('transform', d => `translate(${d.x},${d.y})`);
+            });
+            
+            simulation.force('link').links(data.links);
+            simulation.alpha(1).restart();
+            
+            // Update influencers grid
+            updateInfluencers(data);
+        }
+
+        function updateInfluencers(data) {
+            const sorted = [...data.nodes].sort((a, b) => b.influence - a.influence);
+            const top3 = sorted.slice(0, 3);
+            
+            const grid = document.getElementById('influencersGrid');
+            grid.innerHTML = top3.map((paul, i) => `
+                <div class="glass p-5 rounded-xl" style="border-left: 3px solid ${colorMap[paul.sentiment]}">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl" 
+                                 style="background: ${colorMap[paul.sentiment]}20; border: 1px solid ${colorMap[paul.sentiment]}40">
+                                ${paul.emoji}
+                            </div>
+                            <div>
+                                <div class="font-bold">${paul.name}</div>
+                                <div class="text-xs" style="color: ${colorMap[paul.sentiment]}">${paul.sentiment.toUpperCase()}</div>
+                            </div>
+                        </div>
+                        <div class="text-3xl font-black text-gray-700">0${i+1}</div>
+                    </div>
+                    
+                    <div class="text-2xl font-bold mb-1" style="color: ${colorMap[paul.sentiment]}">+${paul.influence}</div>
+                    <div class="text-sm text-gray-400 mb-3">Pauls convinced</div>
+                    
+                    <div class="text-xs text-gray-500">${paul.specialty}</div>
+                </div>
+            `).join('');
+        }
+
+        function showPaulDetail(d) {
+            const panel = document.getElementById('selectedPaulPanel');
+            const content = document.getElementById('selectedPaulContent');
+            
+            panel.classList.remove('hidden');
+            
+            const quotes = {
+                visionary: "ETF approval is imminent. This changes everything.",
+                trader: "Momentum is building. I'm following the trend.",
+                skeptic: "Risks remain, but the setup is improving.",
+                whale: "On-chain data confirms massive inflows.",
+                professor: "Macro environment stabilizing. Cautiously optimistic.",
+                degen: "Too much euphoria. Taking profits here.",
+                quant: "Models flipping bullish. Statistical edge.",
+                contrarian: "I've seen this movie before. Not convinced."
+            };
+            
+            content.innerHTML = `
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="text-4xl">${d.emoji}</div>
+                    <div>
+                        <div class="font-bold text-lg">${d.name}</div>
+                        <div style="color: ${colorMap[d.sentiment]}">${d.sentiment.toUpperCase()}</div>
+                    </div>
+                </div>
+                
+                <div class="text-sm text-gray-400 mb-2">${d.specialty}</div>
+                <div class="text-sm text-gray-400 mb-4">Influence Score: <span class="text-white font-bold">${d.influence}</span></div>
+                
+                <div class="p-4 bg-black/30 rounded-lg border-l-2" style="border-color: ${colorMap[d.sentiment]}">
+                    <p class="text-sm italic text-gray-300">"${quotes[d.id] || 'Based on my analysis...'}"</p>
+                </div>
+                
+                <button onclick="document.getElementById('selectedPaulPanel').classList.add('hidden')" 
+                        class="mt-4 w-full py-2 bg-white/10 hover:bg-white/20 rounded-lg text-sm transition-colors">
+                    Close
+                </button>
+            `;
+        }
+
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+
+        // Controls
+        const slider = document.getElementById('roundSlider');
+        const playBtn = document.getElementById('playBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        slider.addEventListener('input', (e) => {
+            currentRound = parseInt(e.target.value) - 1;
+            updateGraph(currentRound);
+        });
+
+        playBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                clearInterval(playInterval);
+                playBtn.textContent = '▶ Play';
+                isPlaying = false;
+            } else {
+                playBtn.textContent = '⏸ Pause';
+                isPlaying = true;
+                playInterval = setInterval(() => {
+                    if (currentRound < 9) {
+                        currentRound++;
+                        slider.value = currentRound + 1;
+                        updateGraph(currentRound);
+                    } else {
+                        clearInterval(playInterval);
+                        playBtn.textContent = '▶ Play';
+                        isPlaying = false;
+                    }
+                }, 1500);
+            }
+        });
+
+        resetBtn.addEventListener('click', () => {
+            currentRound = 0;
+            slider.value = 1;
+            clearInterval(playInterval);
+            playBtn.textContent = '▶ Play';
+            isPlaying = false;
+            document.getElementById('selectedPaulPanel').classList.add('hidden');
+            
+            // Reset zoom
+            svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
+            
+            updateGraph(0);
+        });
+
+        // Reset zoom button
+        document.getElementById('resetZoomBtn').addEventListener('click', () => {
+            svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
+        });
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+            updateDimensions();
+            svg.attr('viewBox', `0 0 ${width} ${height}`);
+            simulation.force('center', d3.forceCenter(width / 2, height / 2));
+            simulation.alpha(0.3).restart();
+        });
+
+        // Initial render
+        updateGraph(0);
+    </script>
+</body>
+</html>
