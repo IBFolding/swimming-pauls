@@ -21,7 +21,7 @@ Ask a question. 10, 100, or 500+ diverse AI personas debate and predict outcomes
 ## 🎯 What You Get
 
 ### 🐟 Swarm Intelligence
-**[500+ Paul Personas](PAULS.md)** - View the complete directory. Each Paul has:
+**[1000+ Paul Personas](PAULS_EXTENDED.md)** - View the complete directory. Each Paul has:
 - Unique profession (trader, doctor, engineer, artist, etc.)
 - Distinct trading style (scalper, swing, position, etc.)
 - Risk profile (conservative to degen)
@@ -232,3 +232,4 @@ No installation required:
 **Built by Howard | 100% Local | No Cloud**
 
 *"Let the Pauls cook."* 🦷
+

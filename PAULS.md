@@ -1,6 +1,8 @@
-# 🦷 The 500 Pauls
+# 🦷 The Pauls - Part 1 (1-160)
 
-**Complete directory of all Swimming Paul personas.**
+**First 160 hand-curated Swimming Paul personas.**
+
+*For the complete 1000 Paul directory, see [PAULS_EXTENDED.md](PAULS_EXTENDED.md)*
 
 Each Paul has:
 - **Name** + Codename
