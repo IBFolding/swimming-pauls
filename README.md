@@ -10,6 +10,7 @@
 - **Landing Page:** https://swimmingpauls.vercel.app
 - **Explorer Demo:** https://swimmingpauls.vercel.app/explorer.html?id=demo
 - **Visualization Demo:** https://swimmingpauls.vercel.app/visualize.html
+- **Debate Network:** https://swimmingpauls.vercel.app/debate_network.html
 
 **Swimming Pauls** is a **multi-agent prediction engine** that runs entirely on your machine. No cloud. No API keys. No data leaves your computer.
 
@@ -35,8 +36,7 @@ From Wall Street quants to digital artists, doctors to engineers—diverse persp
 ### 📊 Deep Analysis
 Sentiment scoring, risk metrics, market regime detection, and individual agent reasoning—all transparent.
 
-### 🔌 OpenClaw Skill Integration + Web Intelligence
-Pauls now have access to **two layers of data**:
+### 🔌 Data Sources (100% Local)
 
 **Layer 1: OpenClaw Skills (structured data)**
 - **💰 Crypto prices** - Real-time token data
@@ -55,137 +55,19 @@ Pauls now have access to **two layers of data**:
 - **📰 Article scraping** - Full text extraction
 - **📡 RSS feeds** - Latest news from any source
 
-**Each Paul uses the right tools for their specialty:**
-- **Trader Paul** → Crypto prices + trend analysis + Reddit sentiment
-- **Professor Paul** → Wikipedia + academic papers + research links
-- **Developer Paul** → GitHub activity + code commits + dev discussions
-- **Visionary Paul** → Trend data + news aggregation + Wikipedia
+**Layer 3: Custom Skills (user-defined)**
+- Create your own skills in Python
+- Attach to specific Pauls
+- Share with community
+- Monetize via Skill Marketplace (V2)
 
-**All local** - No API keys, no rate limits, just raw web data.
-```
-
----
-
-## 🚀 Get Started
-
-### ⚡ Easiest: OpenClaw CLI
-
-```bash
-# One command to rule them all
-openclaw run swimming-pauls
-
-# Or add the skill first
-openclaw skills add swimming-pauls
-openclaw run swimming-pauls
-```
-
-This will:
-1. Clone the repo (first time only)
-2. Install dependencies
-3. Start the local agent
-4. Open your browser automatically
-5. Show Connection ID for linking to the UI
-
-Then:
-1. Type your question (e.g., "Will ETH reach $10K?")
-2. The system prompts: **"How many Pauls?"** (10-500+, max depends on your hardware)
-3. The system prompts: **"How many rounds?"** (10-1000, more rounds = deeper deliberation)
-4. Watch the Pauls debate in real-time
-5. Get consensus + confidence score
-
-### 💻 Manual Install
-
-```bash
-# Clone
-git clone https://github.com/IBFolding/swimming-pauls.git
-cd swimming-pauls
-
-# Install
-pip install -r requirements.txt
-
-# Run WebSocket agent
-python local_agent.py
-
-# In another terminal, start HTTP server
-python -m http.server 3005
-
-# Open your browser
-open http://localhost:3005
-```
-
-### 🔗 Connect to UI
-
-1. Go to https://swimmingpauls.vercel.app
-2. Click "🔌 Connect Local"
-3. Enter the Connection ID from your terminal
-4. Ask questions, get predictions
-
-**Local LLM Options:**
-- **Ollama:** `ollama run llama3` (default: localhost:11434)
-- **LM Studio:** Start server (default: localhost:1234)
-- **LocalAI:** Any OpenAI-compatible endpoint
-
----
-
-## 🐟 Meet the Pauls
-
-Not just one Paul. **An army of Pauls.** Each with unique personality, expertise, and biases.
-
-| Paul | Emoji | Specialty | Trading Style | Best Tools |
-|------|-------|-----------|---------------|------------|
-| **Visionary Paul** | 🔮 | Disruptive Innovation | Long-term | Polymarket, News |
-| **Professor Paul** | 👨‍🏫 | Macro Research | Systematic | Yahoo Finance, Market Analysis |
-| **Skeptic Paul** | 🤨 | Risk Assessment | Defensive | All tools for verification |
-| **Quant Paul** | 📊 | Quantitative Analysis | Systematic | Yahoo Finance, Technicals |
-| **Trader Paul** | 📈 | Market Timing | Active | Crypto prices, Order flow |
-| **Whale Paul** | 🐋 | Institutional Flow | Strategic | On-chain data, Block explorers |
-| **Degen Paul** | 🎰 | High Risk | Aggressive | Crypto prices, Social sentiment |
-| **Value Paul** | 💎 | Fundamental Analysis | Patient | Financial data, Earnings |
-
-*And 32+ more unique personas...*
-
----
-
-## 🛠️ Capabilities
-
-### 🔮 Prediction Mode (Default)
-Ask anything. Get consensus forecasting with confidence scores.
-
-**Example:**
-```
-Question: "Will AI eliminate more jobs than it creates by 2030?"
-Pauls: 100
-Rounds: 10
-Result: NEUTRAL • 74% Confidence • Weak Consensus
-```
-
-**Output includes:**
-- Vote Distribution (Bullish/Neutral/Bearish breakdown)
-- Sentiment Analysis (Raw score, interpretation, directional bias)
-- Market Regime (Trending, Range Bound, etc.)
-- Risk Metrics (Consensus strength, uncertainty level, volatility)
-- Time Analysis (Convergence speed, stability score)
-- Knowledge Graph (26 entities, relationship insights)
-- Agent Perspectives (Each Paul's reasoning with confidence)
-- Skill Data (Live prices if relevant)
-
-### 📢 PR Simulation
-Test crisis responses before they happen.
-
-### 📊 Marketing Testing
-A/B test campaigns with simulated audiences.
-
-### 📖 Story Analysis
-Predict plot developments and character arcs.
-
-### 🔬 Research Design
-Calculate power analysis and sample sizes.
+**Each Paul uses the right tools for their specialty.**
 
 ---
 
 ## 🏆 Prediction History & Leaderboards
 
-**Every prediction is tracked locally in SQLite:**
+**Every prediction tracked locally in SQLite:**
 
 - **Full history** - Every question, every Paul vote
 - **Paul accuracy** - Which Pauls are actually right?
@@ -214,55 +96,87 @@ python history_viewer.py stats
 
 ---
 
-## 📊 What the Results Look Like
+## 🕸️ Debate Network Visualization
 
-### Consensus Header
-```
-🦷 NEUTRAL
-74% Confidence
-WEAK CONSENSUS badge
-Simulation complete. 100 Pauls reached consensus after 10 rounds.
+**Watch persuasion flow in real-time:**
+
+- **Interactive D3.js graph** - Nodes = Pauls, Edges = persuasion
+- **Temporal slider** - See round-by-round evolution
+- **Play animation** - Watch consensus form
+- **Click nodes** - See who convinced whom
+- **Size = Influence** - Bigger nodes convinced more Pauls
+- **Color = Sentiment** - Green/Yellow/Red positioning
+
+**Live demo:** https://swimmingpauls.vercel.app/debate_network.html
+
+---
+
+## 🛠️ Custom Skills API
+
+**Build your own skills for Pauls:**
+
+```python
+# skills/custom/my_weather_skill.py
+from swimming_pauls.skills import Skill, SkillMetadata, SkillResult
+
+class WeatherSkill(Skill):
+    metadata = SkillMetadata(
+        name="weather_check",
+        description="Get local weather",
+        best_for=["Farmer Paul", "Travel Paul"]
+    )
+    
+    async def execute(self, location: str) -> SkillResult:
+        # Your implementation
+        return SkillResult(success=True, data={"temp": 72})
 ```
 
-### Vote Distribution
-```
-Bullish:  35% (35 Pauls) ████████░░░░░░░░░░░░  Avg Confidence: 78%
-Neutral:  38% (38 Pauls) █████████░░░░░░░░░░░  Avg Confidence: 70%
-Bearish:  27% (27 Pauls) ██████░░░░░░░░░░░░░░  Avg Confidence: 72%
-```
+**CLI:**
+```bash
+# Create new skill template
+python skills.py create my_skill "My custom skill"
 
-### Agent Perspective Example
-```
-🔮 Visionary Paul
-Disruptive Innovation • Long-term
-[ BULLISH 82% ]
+# List all skills
+python skills.py list
 
-"The narrative is shifting bullish. Early adopters see AI creating 
-more jobs than it eliminates—this is where alpha lives."
-
-💡 Knows: AI Sector, Innovation, Tech Stocks | Memory: 68% accuracy
+# Assign skill to Paul
+python skills.py assign "Farmer Paul" weather_check
 ```
 
 ---
 
-## 🔒 100% Local. Zero Cloud.
+## 🚀 Get Started
 
-**Private:** All computation happens on your machine. Your questions never leave.
+### ⚡ Easiest: OpenClaw CLI
 
-**Fast:** No network latency. 50 agents deliberating is under 10 seconds locally.
+```bash
+# One command to rule them all
+openclaw run swimming-pauls
 
-**Unlimited:** No rate limits. Query as much as you want. Your hardware is the only limit.
+# Or add the skill first
+openclaw skills add swimming-pauls
+openclaw run swimming-pauls
+```
 
----
+### 💻 Manual Install
 
-## 🎮 Try the Demos
+```bash
+# Clone
+git clone https://github.com/IBFolding/swimming-pauls.git
+cd swimming-pauls
 
-No installation required:
+# Install
+pip install -r requirements.txt
 
-- **Explorer Demo:** See full prediction results with agent reasoning
-- **Visualization Demo:** Watch 500+ Pauls debate in real-time (click nodes to see perspectives)
+# Run WebSocket agent
+python local_agent.py
 
-Then run locally to get YOUR predictions with live data.
+# In another terminal, start HTTP server
+python -m http.server 3005
+
+# Open your browser
+open http://localhost:3005
+```
 
 ---
 
@@ -270,53 +184,48 @@ Then run locally to get YOUR predictions with live data.
 
 ```
 swimming-pauls/
-├── local_agent.py          # WebSocket server for UI connection
-├── skill_bridge.py         # OpenClaw skill integration
-├── simulation.py           # Core multi-agent simulation
-├── agent.py                # Individual Paul logic
-├── persona_factory.py      # Generate unique personas
+├── local_agent.py          # WebSocket server
+├── skill_bridge.py         # OpenClaw integration
+├── web_intelligence.py     # Web scraping/search
+├── skills.py              # Custom skill API framework
+├── prediction_history.py   # SQLite tracking
+├── debate_tracker.py       # Persuasion flow tracking
+├── simulation.py           # Core multi-agent engine
+├── agent.py               # Individual Paul logic
+├── persona_factory.py      # Generate 1000+ Pauls
 ├── knowledge_graph.py      # Entity relationships
-├── data_feeds_local.py     # Local data sources
-├── web_research.py         # Internet search integration
-├── advanced.py             # Monte Carlo, sensitivity analysis
-├── crisis_pr_simulator.py  # PR crisis simulation
-├── marketing_simulator.py  # Marketing campaign testing
-├── story_deduction.py      # Narrative analysis
-├── academic_research.py    # Research design
-├── ui/
-│   ├── index.html          # Main UI (connects to local agent)
-│   ├── explorer.html       # Results explorer
-│   └── visualize.html      # Real-time visualization
-└── pumpfun-landing/        # Landing page + demos
+├── history_viewer.py       # CLI for viewing history
+├── PAULS.md               # 500 Paul directory
+├── PAULS_EXTENDED.md      # 1000 Paul directory
+├── ROADMAP.md             # Future plans
+├── HANDOFF.md             # Session continuity
+└── pumpfun-landing/       # Landing page + demos
     ├── index.html
     ├── explorer.html
-    └── visualize.html
+    ├── visualize.html
+    └── debate_network.html
 ```
 
 ---
 
-## 🤝 How It Works
+## 🎮 Try the Demos
 
-1. **Ask Anywhere** - Terminal, Telegram, or web UI
-2. **Configure Pool** - System asks: "How many Pauls?" and "How many rounds?"
-3. **Swarm Deliberates** - Pauls debate using local knowledge graph + OpenClaw skills
-4. **Get Consensus** - Direction, confidence, sentiment, and full transparency
-5. **Explore Deeply** - Click explorer to see agent reasoning, relationships, risk metrics
+No installation required:
 
----
-
-## 🛠️ Requirements
-
-- Python 3.9+
-- 4GB+ RAM (for 100 Pauls)
-- Optional: Local LLM (Ollama, LM Studio, LocalAI)
-- Optional: OpenClaw CLI for skill integration
+- **Landing Page:** https://swimmingpauls.vercel.app
+- **Explorer:** Full prediction results
+- **Visualization:** 500+ Pauls real-time graph
+- **Debate Network:** Temporal persuasion flow
 
 ---
 
-## 📝 License
+## 🔒 100% Local. Zero Cloud.
 
-MIT - Build your own Paul army.
+**Private:** All computation happens on your machine.
+
+**Fast:** 50 agents deliberating is under 10 seconds locally.
+
+**Unlimited:** No rate limits. Your hardware is the only limit.
 
 ---
 
