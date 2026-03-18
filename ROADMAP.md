@@ -11,7 +11,7 @@
 **Shipped:**
 - Landing page with demos
 - Explorer + Visualization pages  
-- 40+ Paul personas
+- 1000+ Paul personas
 - **OpenClaw Skill Integration** - Pauls use available skills for better predictions:
   - 💰 Crypto prices (Trader Paul, Whale Paul)
   - 📈 Yahoo Finance (Professor Paul, Analyst Paul)
