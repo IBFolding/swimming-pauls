@@ -35,17 +35,34 @@ From Wall Street quants to digital artists, doctors to engineers—diverse persp
 ### 📊 Deep Analysis
 Sentiment scoring, risk metrics, market regime detection, and individual agent reasoning—all transparent.
 
-### 🔌 OpenClaw Skill Integration
-Pauls now have access to OpenClaw's ecosystem of skills:
+### 🔌 OpenClaw Skill Integration + Web Intelligence
+Pauls now have access to **two layers of data**:
+
+**Layer 1: OpenClaw Skills (structured data)**
 - **💰 Crypto prices** - Real-time token data
 - **📈 Yahoo Finance** - Stock prices and earnings
 - **🎯 Polymarket** - Prediction market odds
 - **📰 News Summarizer** - Real-time sentiment analysis
 - **🔷 Base blockchain** - On-chain metrics
 - **📊 Market Analysis** - Comprehensive financial research
-- **🕷️ Web Scraper** - Data from any source
 
-Each Paul uses skills relevant to their specialty. Trader Paul pulls crypto prices. Professor Paul checks financial data. Visionary Paul scans prediction markets.
+**Layer 2: Web Intelligence (unstructured research)**
+- **🔍 Multi-engine search** - DuckDuckGo, SearXNG, Bing aggregated
+- **📖 Wikipedia** - Instant topic summaries
+- **💬 Reddit** - Community discussions and sentiment
+- **🐙 GitHub** - Dev activity and project metrics
+- **📈 Trend analysis** - Volume, velocity, sentiment scoring
+- **📰 Article scraping** - Full text extraction
+- **📡 RSS feeds** - Latest news from any source
+
+**Each Paul uses the right tools for their specialty:**
+- **Trader Paul** → Crypto prices + trend analysis + Reddit sentiment
+- **Professor Paul** → Wikipedia + academic papers + research links
+- **Developer Paul** → GitHub activity + code commits + dev discussions
+- **Visionary Paul** → Trend data + news aggregation + Wikipedia
+
+**All local** - No API keys, no rate limits, just raw web data.
+```
 
 ---
 
