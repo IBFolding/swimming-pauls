@@ -15,6 +15,7 @@
 - [x] 1000+ Paul variations via persona factory
 - [x] WebSocket local agent (local_agent.py)
 - [x] OpenClaw skill integration (skill_bridge.py)
+- [x] **Prediction History Database (prediction_history.py) - SQLite, leaderboards, outcome tracking**
 
 ### Landing Page + Demos
 - [x] Landing page with "Let the Pauls Cook" branding
