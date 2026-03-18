@@ -104,6 +104,7 @@ python history_viewer.py stats
 - **Temporal slider** - See round-by-round evolution
 - **Play animation** - Watch consensus form
 - **Click nodes** - See who convinced whom
+- **Zoom & pan** - Scroll to zoom, drag to pan
 - **Size = Influence** - Bigger nodes convinced more Pauls
 - **Color = Sentiment** - Green/Yellow/Red positioning
 
@@ -195,15 +196,16 @@ swimming-pauls/
 ├── persona_factory.py      # Generate 1000+ Pauls
 ├── knowledge_graph.py      # Entity relationships
 ├── history_viewer.py       # CLI for viewing history
-├── PAULS.md               # 500 Paul directory
-├── PAULS_EXTENDED.md      # 1000 Paul directory
+├── PAULS.md               # First 160 Paul directory
+├── PAULS_EXTENDED.md      # Full 1000 Paul directory
 ├── ROADMAP.md             # Future plans
 ├── HANDOFF.md             # Session continuity
 └── pumpfun-landing/       # Landing page + demos
-    ├── index.html
-    ├── explorer.html
-    ├── visualize.html
-    └── debate_network.html
+    ├── index.html          # Tab-based landing page
+    ├── explorer.html       # Prediction results demo
+    ├── visualize.html      # Paul network visualization
+    ├── debate_network.html # Temporal debate flow
+    └── paul.jpg            # Logo
 ```
 
 ---
@@ -214,7 +216,7 @@ No installation required:
 
 - **Landing Page:** https://swimmingpauls.vercel.app
 - **Explorer:** Full prediction results
-- **Visualization:** 500+ Pauls real-time graph
+- **Visualization:** 1000+ Pauls real-time graph
 - **Debate Network:** Temporal persuasion flow
 
 ---
@@ -232,4 +234,3 @@ No installation required:
 **Built by Howard | 100% Local | No Cloud**
 
 *"Let the Pauls cook."* 🦷
-
