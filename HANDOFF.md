@@ -15,7 +15,12 @@
 - [x] 1000+ Paul variations via persona factory
 - [x] WebSocket local agent (local_agent.py)
 - [x] OpenClaw skill integration (skill_bridge.py)
-- [x] **Prediction History Database (prediction_history.py) - SQLite, leaderboards, outcome tracking**
+- [x] Prediction History Database (prediction_history.py) - SQLite, leaderboards
+- [x] Web Intelligence (web_intelligence.py) - Multi-source data gathering
+- [x] Custom Skills API (skills.py) - User-defined skills
+- [x] Debate Flow tracker (debate_tracker.py) + visualization
+- [x] Paul World simulation (paul_world.py) - Persistent world
+- [x] Helper Agents (helper_agents.py) - Monitor, optimize, curate, analyze, coach
 
 ### Landing Page + Demos
 - [x] Landing page with "Let the Pauls Cook" branding
