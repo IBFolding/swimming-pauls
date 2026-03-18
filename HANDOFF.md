@@ -98,4 +98,29 @@
 
 ---
 
+## 🎯 POST SWIMMING PAULS (Future Project)
+
+### Terminal Session Jumper (REMEMBER TO BUILD THIS)
+**Idea:** Persistent terminal sessions like tmux integrated with OpenClaw
+
+**Problem:** When OpenClaw sessions reset, terminal history is lost
+**Solution:** Build a terminal multiplexer that preserves:
+- Full terminal state
+- Command history
+- Working directory
+- Environment variables
+- And allows "jumping" back to previous sessions
+
+**Commands imagined:**
+```
+/openclaw sessions list          # Show all active sessions
+/openclaw sessions resume <id>   # Jump back with full context
+/openclaw sessions fork <id>     # Branch from old session
+```
+
+**Priority:** After Swimming Pauls V3 ships
+**Status:** Feature request / Future build
+
+---
+
 *Last updated: 2026-03-17 5:40 PM PDT*
