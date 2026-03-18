@@ -378,14 +378,111 @@
 | 499 | **Druid Paul** | Nature | Organic growth |
 | 500 | **Ascended Paul** | Enlightenment | The Final Form |
 
+## Beyond 500: The Extended Universe (501-1000)
+
+*These Pauls are generated on-demand by the persona factory. Each is unique.*
+
+### How It Works
+
+Instead of documenting 1,000 Pauls manually, the **Persona Factory** creates them dynamically:
+
+```python
+# Generate 1000 unique Pauls
+factory = PersonaFactory()
+pauls = factory.create_diverse_pool(1000)
+```
+
+Each Paul gets:
+- **Random name**: Alpha + Codename (e.g., "Quantum Trader")
+- **Random style**: One of 10 trading styles
+- **Random risk**: Conservative to Degen
+- **Random specialties**: 2-5 domains
+- **Random backstory**: One of 40+ backgrounds
+- **Random catchphrase**: One of 40+ quotes
+
+### Sample Batch (501-550)
+
+| # | Generated Name | Style | Risk | Specialty |
+|---|----------------|-------|------|-----------|
+| 501 | Aurora Prime | Swing | Moderate | DeFi, Layer 2 |
+| 502 | Neo Titan | Algorithmic | Aggressive | NFT, Gaming |
+| 503 | Zenith Core | Position | Conservative | Macro, Bonds |
+| 504 | Flux Hunter | Scalper | Ultra-Aggressive | MEV, Arbitrage |
+| 505 | Solstice Oracle | Contrarian | Moderate | Prediction Markets |
+| 506 | Echo Ghost | Momentum | Aggressive | Social Tokens |
+| 507 | Vertex Shield | Value | Conservative | Infrastructure |
+| 508 | Pulse Rider | Event-Driven | Moderate | Governance |
+| 509 | Nexus Sage | Quantitative | Conservative | Derivatives |
+| 510 | Drift Nomad | Discretionary | Aggressive | Cross-chain |
+| 511 | Axiom Keeper | Swing | Moderate | Yield Farming |
+| 512 | Blaze Phoenix | Momentum | Ultra-Aggressive | Memecoins |
+| 513 | Frost Warden | Position | Conservative | Store of Value |
+| 514 | Spark Catalyst | Event-Driven | Aggressive | IDOs |
+| 515 | Terra Builder | Long-term | Moderate | Real World Assets |
+| 516 | Void Walker | Contrarian | Aggressive | Short Selling |
+| 517 | Solar Banker | Value | Conservative | Lending |
+| 518 | Lunar Scout | Swing | Moderate | New Chains |
+| 519 | Comet Chaser | Momentum | Aggressive | Airdrops |
+| 520 | Nebula Collector | Position | Moderate | NFTs |
+
+*(Pauls 521-1000 follow same generation pattern)*
+
 ---
 
-## The Complete 500
+## How to Add Your Paul
 
-That's all 500 Pauls. Each one brings a unique perspective to the swarm.
+### Option 1: Local (Immediate)
+```bash
+# Edit your local personas.json
+# Add your custom Paul
+# Restart local_agent.py
+```
 
-**Remember:** *"Let the Pauls cook."* 🦷
+### Option 2: Submit to GitHub (Community)
+1. **Fork** the repo: https://github.com/IBFolding/swimming-pauls
+2. **Edit** `PAULS_EXTENDED.md` - Add your Paul to the list
+3. **Submit Pull Request** with:
+   - Paul name
+   - Profession/Style
+   - Backstory (1-2 sentences)
+   - Catchphrase
+
+**Template:**
+```markdown
+| XXX | **Your Paul Name** | Profession | Style | Specialty |
+|     | "Your catchphrase here" |
+```
+
+### Option 3: Dynamic Generation (Code)
+```python
+from persona_factory import PersonaFactory
+
+factory = PersonaFactory()
+my_paul = factory.create_persona(
+    trading_style="momentum",
+    risk_profile="aggressive",
+    custom_traits={
+        "name": "Your Paul",
+        "backstory": "Your backstory..."
+    }
+)
+```
 
 ---
 
-**See also:** [PAULS.md](PAULS.md) for the first 160 Pauls.
+## The 1000 Paul Rule
+
+> **"500 documented + 500 generated = Infinite diversity"**
+
+The first 500 are hand-curated archetypes.
+The next 500+ are procedurally generated.
+
+This gives users:
+- **Familiar Pauls** they can reference (Visionary Paul, Trader Paul)
+- **Infinite variety** for large simulations
+- **Community additions** via GitHub PRs
+
+---
+
+*Want your Paul in the official list? Submit a PR.* 🦷
+
