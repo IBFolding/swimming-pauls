@@ -36,6 +36,14 @@
   - 2% of sales → Treasury
   - Use $PAUL for transactions
 - [ ] Remote access for non-technical users
+- [ ] **🌍 World History (REMEMBER THIS)** - Anonymous global predictions:
+  - Opt-in only (user chooses to share)
+  - Anonymous: no personal data, no question text
+  - Shows global consensus trends
+  - "What are all Pauls worldwide predicting?"
+  - Category-level only: "crypto", "markets", "politics"
+  - Collective accuracy tracking
+  - Hot topics trending globally
 
 **Funding:** Mac Mini paid for by prediction fees. Scales with demand.
 
