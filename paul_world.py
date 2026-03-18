@@ -243,11 +243,19 @@ class PaulWorld:
         return True
         
     async def _create_starting_world(self):
-        """Create a new world with starting Pauls."""
+        """Create a new world with dynamic Paul count based on system limits."""
         from persona_factory import generate_swimming_pauls_pool
         
-        # Generate initial Pauls
-        initial_pauls = [
+        # Detect system limits
+        limits = self._get_system_limits()
+        target_pauls = limits["recommended"]
+        
+        print(f"🌍 Creating Paul's World with {target_pauls} Pauls...")
+        print(f"   System: {limits['available_gb']}GB available RAM")
+        print(f"   Tier: {limits['tier'].upper()}")
+        
+        # Core archetypes (always present)
+        core_pauls = [
             {"name": "Visionary Paul", "emoji": "🔮", "specialty": "Disruptive Innovation"},
             {"name": "Professor Paul", "emoji": "👨‍🏫", "specialty": "Macro Research"},
             {"name": "Trader Paul", "emoji": "📈", "specialty": "Market Timing"},
@@ -258,7 +266,8 @@ class PaulWorld:
             {"name": "Contrarian Paul", "emoji": "🐻", "specialty": "Contrarian Views"},
         ]
         
-        for p in initial_pauls:
+        # Add core Pauls
+        for p in core_pauls:
             self.pauls[p["name"]] = PaulState(
                 name=p["name"],
                 emoji=p["emoji"],
@@ -266,7 +275,25 @@ class PaulWorld:
                 location=random.choice(list(Location)),
                 activity=Activity.IDLE,
             )
-            
+        
+        # Generate additional Pauls if system can handle more
+        remaining = target_pauls - len(core_pauls)
+        if remaining > 0 and generate_swimming_pauls_pool:
+            try:
+                extra_pauls = generate_swimming_pauls_pool(n=remaining)
+                for i, paul_data in enumerate(extra_pauls):
+                    name = f"{paul_data.get('name', 'Paul')} #{i+1}"
+                    self.pauls[name] = PaulState(
+                        name=name,
+                        emoji=paul_data.get('emoji', '🦷'),
+                        specialty=paul_data.get('specialty', 'Generalist'),
+                        location=random.choice(list(Location)),
+                        activity=Activity.IDLE,
+                    )
+            except:
+                # If generation fails, just use core Pauls
+                pass
+        
         # Initialize random relationships
         paul_names = list(self.pauls.keys())
         for i, name_a in enumerate(paul_names):
@@ -276,8 +303,39 @@ class PaulWorld:
                         trust=random.uniform(0.3, 0.7),
                         respect=random.uniform(0.3, 0.7),
                     )
-                    
+        
+        print(f"✅ World created with {len(self.pauls)} Pauls!")
         await self._save_world()
+    
+    def _get_system_limits(self):
+        """Detect system capabilities and return max recommended Pauls."""
+        try:
+            import psutil
+            memory = psutil.virtual_memory()
+            available_gb = memory.available / (1024**3)
+            
+            # Rough estimate: ~10MB per Paul (including state + relationships + events)
+            max_pauls = int(available_gb / 0.01)  # 10MB = 0.01GB
+            
+            # Cap at reasonable limits
+            if max_pauls > 10000:
+                max_pauls = 10000
+            elif max_pauls < 10:
+                max_pauls = 10
+                
+            return {
+                "max_pauls": max_pauls,
+                "recommended": min(max_pauls, 100 if max_pauls >= 100 else max_pauls),
+                "available_gb": round(available_gb, 1),
+                "tier": "small" if max_pauls < 100 else "medium" if max_pauls < 500 else "large" if max_pauls < 2000 else "cluster"
+            }
+        except:
+            return {
+                "max_pauls": 50,
+                "recommended": 20,
+                "available_gb": "unknown",
+                "tier": "unknown"
+            }
         
     async def _save_world(self):
         """Save world state to database."""
