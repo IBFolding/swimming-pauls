@@ -31,6 +31,7 @@ try:
     from simulation import quick_simulate
     from agent import Agent, PersonaType
     from skill_bridge import get_skill_bridge
+    from prediction_history import PredictionHistoryDB
     SIMULATION_AVAILABLE = True
 except ImportError:
     SIMULATION_AVAILABLE = False

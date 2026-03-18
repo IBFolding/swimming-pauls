@@ -166,6 +166,37 @@ Calculate power analysis and sample sizes.
 
 ---
 
+## 🏆 Prediction History & Leaderboards
+
+**Every prediction is tracked locally in SQLite:**
+
+- **Full history** - Every question, every Paul vote
+- **Paul accuracy** - Which Pauls are actually right?
+- **Win streaks** - Who's hot right now?
+- **Outcome tracking** - Mark predictions CORRECT/INCORRECT
+- **Export data** - JSON export for analysis
+
+```bash
+# View Paul leaderboard
+python history_viewer.py leaderboard
+
+# See recent predictions  
+python history_viewer.py recent
+
+# Check specific Paul's history
+python history_viewer.py paul "Visionary Paul"
+
+# Mark prediction outcome
+python history_viewer.py resolve abc123 CORRECT
+
+# View overall stats
+python history_viewer.py stats
+```
+
+**100% local** - Your prediction history stays on your machine.
+
+---
+
 ## 📊 What the Results Look Like
 
 ### Consensus Header
