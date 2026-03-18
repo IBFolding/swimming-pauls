@@ -20,7 +20,14 @@ Ask a question. 10, 100, or 500+ diverse AI personas debate and predict outcomes
 ## 🎯 What You Get
 
 ### 🐟 Swarm Intelligence
-40+ expert personas debate your questions. Each brings unique expertise—from quant analysts to visionary thinkers.
+**[500+ Paul Personas](PAULS.md)** - View the complete directory. Each Paul has:
+- Unique profession (trader, doctor, engineer, artist, etc.)
+- Distinct trading style (scalper, swing, position, etc.)
+- Risk profile (conservative to degen)
+- Specialty domains (DeFi, NFT, Macro, Tech, etc.)
+- Backstory and catchphrase
+
+From Wall Street quants to digital artists, doctors to engineers—diverse perspectives create better predictions.
 
 ### 🧠 Knowledge Graph  
 26 market entities with relationship mapping. AI Sector, Labor Market, Automation, GDP, Tech Stocks, Productivity, Regulation, Innovation—and their interconnections.
