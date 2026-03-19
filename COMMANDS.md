@@ -277,6 +277,47 @@ Runs a skill directly with test input.
 
 ---
 
+## Bankr Trading Skill
+
+Execute real trades on Base, Solana, Arbitrum via Bankr.
+
+### Get Trade Quote
+```bash
+python skills/bankr_skill.py quote base USDC ETH 100
+```
+Shows best price across DEXs on Base.
+
+### Execute Trade (Paper Mode)
+```bash
+# Configure with API key first
+export BANKR_API_KEY="your_key_here"
+
+# Execute trade
+python skills/bankr_skill.py trade base USDC ETH 100
+```
+
+### Assign Bankr Skill to Paul
+```python
+from skills import SkillRegistry
+from skills.bankr_skill import BankrSkill
+
+# Create skill
+bankr = BankrSkill(api_key="your_key")
+
+# Assign to Trader Paul
+registry = SkillRegistry()
+registry.register_skill(bankr)
+registry.assign_skill("Trader Paul", "bankr_trade")
+```
+
+### Supported Chains
+- **Base** - Uniswap, Aerodrome, BaseSwap
+- **Solana** - Jupiter, Raydium, Orca  
+- **Arbitrum** - Uniswap, Camelot, SushiSwap
+- **Ethereum** - Uniswap, SushiSwap, Curve
+
+---
+
 ## Dual Platform Commands
 
 ### Run Dual Platform Simulation

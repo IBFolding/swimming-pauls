@@ -366,6 +366,14 @@ __all__ = [
 ]
 
 
+# Import optional skills
+try:
+    from skills.bankr_skill import BankrSkill
+    BANKR_AVAILABLE = True
+except ImportError:
+    BANKR_AVAILABLE = False
+
+
 # CLI for skill management
 if __name__ == "__main__":
     import sys
