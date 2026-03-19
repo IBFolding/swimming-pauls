@@ -27,6 +27,14 @@ except ImportError:
     SKILLS_AVAILABLE = False
     print("⚠️  Skills system not available")
 
+# Import social media
+try:
+    from social_media import SocialMediaManager, SocialMediaIntegration, Platform, PostType
+    SOCIAL_MEDIA_AVAILABLE = True
+except ImportError:
+    SOCIAL_MEDIA_AVAILABLE = False
+    print("⚠️  Social media system not available")
+
 
 class Activity(Enum):
     """What a Paul can be doing."""
@@ -354,6 +362,12 @@ class PaulWorld:
         if SKILLS_AVAILABLE:
             self.skill_registry = SkillRegistry()
             self.web_intel = WebIntelligence()
+        
+        # Social media system
+        self.social_manager = None
+        self.social_integration = None
+        if SOCIAL_MEDIA_AVAILABLE:
+            self.social_manager = SocialMediaManager("data/social_media.db")
     
     async def initialize(self):
         """Initialize or load existing world."""
@@ -1171,10 +1185,14 @@ async def main():
     
     if len(sys.argv) < 2:
         print("Paul's World Commands:")
-        print("  status      - Show world status")
-        print("  run         - Start simulation")
-        print("  ask 'Q'     - Ask the world a question")
-        print("  export      - Export world state")
+        print("  status              - Show world status")
+        print("  run                 - Start simulation")
+        print("  ask 'Q'             - Ask the world a question")
+        print("  export              - Export world state")
+        print("  social setup        - Auto-create social accounts for all Pauls")
+        print("  social feed         - Show social media feeds")
+        print("  social paul <name>  - Show Paul's social stats")
+        print("  social post <paul> <platform> <msg>  - Create post")
         sys.exit(0)
     
     command = sys.argv[1]
@@ -1242,6 +1260,65 @@ async def main():
         with open("paul_world_export.json", "w") as f:
             json.dump(snapshot, f, indent=2, default=str)
         print("✅ Exported to paul_world_export.json")
+    
+    elif command == "social":
+        if not SOCIAL_MEDIA_AVAILABLE or not world.social_manager:
+            print("❌ Social media system not available")
+            sys.exit(1)
+        
+        social_cmd = sys.argv[2] if len(sys.argv) > 2 else "help"
+        
+        if social_cmd == "setup":
+            print("🌐 Setting up social media accounts for all Pauls...")
+            for paul_name in world.pauls.keys():
+                # Each Paul joins 2-4 random platforms
+                platforms = random.sample(list(Platform), random.randint(2, 4))
+                for platform in platforms:
+                    handle = f"@{paul_name.replace(' ', '').lower()}"
+                    world.social_manager.create_account(paul_name, platform, handle)
+            print(f"✅ Created accounts for {len(world.pauls)} Pauls")
+        
+        elif social_cmd == "feed":
+            print("\n📱 Social Media Feeds\n")
+            for platform in [Platform.TWITTER, Platform.DISCORD, Platform.REDDIT]:
+                posts = world.social_manager.get_feed(platform, limit=3)
+                if posts:
+                    print(f"\n{platform.value.upper()}:")
+                    for post in posts:
+                        print(f"  @{post.author}: {post.content[:60]}...")
+                        print(f"     ❤️ {post.likes}  💬 {post.replies}  🔄 {post.shares}")
+        
+        elif social_cmd == "paul" and len(sys.argv) > 3:
+            paul_name = sys.argv[3]
+            stats = world.social_manager.get_paul_social_stats(paul_name)
+            posts = world.social_manager.get_paul_posts(paul_name, limit=5)
+            
+            print(f"\n📊 @{paul_name} Social Stats\n")
+            print(f"Followers: {stats['total_followers']}")
+            print(f"Posts: {stats['total_posts']}")
+            print(f"Reputation: {stats['avg_reputation']:.2f}")
+            print(f"Viral Posts: {stats['viral_posts']}")
+            
+            print(f"\nRecent Posts:")
+            for post in posts:
+                print(f"  [{post.platform.value}] {post.content[:50]}...")
+        
+        elif social_cmd == "post" and len(sys.argv) > 5:
+            paul_name = sys.argv[3]
+            platform = Platform(sys.argv[4].lower())
+            content = " ".join(sys.argv[5:])
+            
+            post = world.social_manager.create_post(paul_name, platform, content)
+            print(f"✅ Posted: {post.id}")
+            print(f"   Platform: {platform.value}")
+            print(f"   Content: {content}")
+        
+        else:
+            print("Social Media Commands:")
+            print("  setup                           - Create accounts for all Pauls")
+            print("  feed                            - Show social feeds")
+            print("  paul <name>                     - Show Paul's social stats")
+            print("  post <paul> <platform> <msg>    - Create a post")
 
 
 if __name__ == "__main__":

@@ -5,6 +5,7 @@ Complete list of all commands and how to use them.
 ## Table of Contents
 - [Quick Start Commands](#quick-start-commands)
 - [Paul's World Commands](#pauls-world-commands)
+- [Social Media Commands](#social-media-commands)
 - [Prediction Commands](#prediction-commands)
 - [History & Analytics Commands](#history--analytics-commands)
 - [Skill Management Commands](#skill-management-commands)
@@ -72,6 +73,108 @@ Get predictions from World Pauls with knowledge, memory, and skills.
 python paul_world.py export
 ```
 Exports all Paul states to `paul_world_export.json`
+
+---
+
+## Social Media Commands
+
+Paul's World includes a full social media simulation where Pauls create accounts, post predictions, build followers, and go viral.
+
+### Setup Social Media Accounts
+```bash
+python paul_world.py social setup
+```
+Auto-creates accounts for all Pauls across Twitter, Discord, Telegram, Reddit, etc.
+
+### View Social Feeds
+```bash
+python paul_world.py social feed
+```
+Shows recent posts from all platforms (Twitter, Discord, Reddit).
+
+### View Paul's Social Profile
+```bash
+python paul_world.py social paul "Visionary Paul"
+```
+Shows:
+- Follower count across all platforms
+- Total posts
+- Reputation score
+- Viral posts
+- Recent activity
+
+### Create a Post
+```bash
+python paul_world.py social post "Trader Paul" twitter "🚀 BTC looking bullish today! 80% confidence."
+```
+Platforms: twitter, discord, telegram, reddit, github, youtube, tiktok, linkedin
+
+### Like a Post (from another Paul)
+```python
+from social_media import SocialMediaManager
+
+social = SocialMediaManager()
+social.like_post("Degen Paul", "post_id_here")
+```
+
+### Reply to a Post
+```python
+from social_media import SocialMediaManager
+
+social = SocialMediaManager()
+social.reply_to_post("Skeptic Paul", "post_id", "Not so sure about that...")
+```
+
+### Follow an Account
+```python
+from social_media import SocialMediaManager, Platform
+
+social = SocialMediaManager()
+social.follow_account("Trader Paul", "Visionary Paul", Platform.TWITTER)
+```
+
+### Get Trending Topics
+```python
+from social_media import SocialMediaManager
+
+social = SocialMediaManager()
+trends = social.get_trending(10)
+for topic, count in trends:
+    print(f"#{topic}: {count} posts")
+```
+
+### Social Media in Paul's World Simulation
+When Pauls make predictions, they can auto-post to social media:
+
+```python
+from paul_world import PaulWorld
+from social_media import SocialMediaIntegration
+
+world = PaulWorld()
+await world.initialize()
+
+# Auto-create social accounts
+for paul_name in world.pauls.keys():
+    platforms = random.sample(list(Platform), random.randint(2, 4))
+    for platform in platforms:
+        world.social_manager.create_account(paul_name, platform)
+
+# When a Paul makes a prediction, they might post it
+result = await world.ask_pauls("Will BTC go up?")
+for response in result['responses']:
+    if response['confidence'] > 0.7:  # High confidence = post
+        world.social_integration.generate_prediction_post(
+            response['paul_name'], 
+            result
+        )
+```
+
+**Features:**
+- Pauls build followers based on prediction accuracy
+- Viral posts (100+ likes) boost reputation
+- Sentiment analysis on posts
+- Cross-platform influence
+- Reply threads and engagement
 
 ---
 
@@ -284,6 +387,7 @@ All data stored in `data/` directory:
 - `predictions.db` - Prediction history
 - `paul_world.db` - Paul's World state
 - `paul_performance.db` - Paul accuracy metrics
+- `social_media.db` - Social media posts and accounts
 - `results/*.json` - Saved prediction results
 
 ### Backup Data
@@ -360,7 +464,22 @@ python paul_world.py run
 python paul_world.py ask "Based on the research, what's the outlook?"
 ```
 
-### 3. Backtesting Workflow
+### 3. Social Media Workflow
+```bash
+# Setup social accounts
+python paul_world.py social setup
+
+# Run simulation (Pauls will post predictions)
+python paul_world.py run
+
+# Check social feeds
+python paul_world.py social feed
+
+# Check a Paul's social profile
+python paul_world.py social paul "Trader Paul"
+```
+
+### 4. Backtesting Workflow
 ```bash
 # Run prediction
 python ask_pauls.py "Will ETH go up tomorrow?"
