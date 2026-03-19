@@ -210,6 +210,28 @@ swimming-pauls/
 
 ---
 
+## 🚀 What's Next
+
+Swimming Pauls is constantly evolving. Here's what we're learning from the multi-agent ecosystem:
+
+### 📚 Learning from MiroFish & The Community
+
+| Innovation | What It Means for Swimming Pauls |
+|------------|----------------------------------|
+| **Temporal Memory** | Pauls that update beliefs dynamically over simulation time—not just static knowledge |
+| **Dual Platform Consensus** | Running parallel simulations across different hardware for higher confidence |
+| **Automated Report Generation** | Smart ReportAgent that compiles findings with integrated tool outputs |
+| **GraphRAG** | Structured knowledge extraction from documents—beyond simple text parsing |
+
+### 🛤️ V2 Roadmap (Mac Mini Infrastructure)
+- **24/7 Operation**: Always-on Paul's World simulation
+- **Web Dashboard**: Monitor your Pauls from anywhere
+- **$PAULS Token Integration**: Stake for prediction credits
+- **Skill Marketplace**: Buy/sell custom Paul skills
+- **World Network**: Multiple Mac Minis, Pauls traveling between worlds
+
+---
+
 ## 🎮 Try the Demos
 
 No installation required:
