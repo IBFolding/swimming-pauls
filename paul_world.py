@@ -1000,7 +1000,69 @@ class PaulWorld:
             "debate": f"http://localhost:3005/debate_network.html?id={result_id}",
         }
         
+        # Auto-post high-confidence predictions to social media
+        if SOCIAL_MEDIA_AVAILABLE and self.social_manager:
+            await self._auto_post_predictions(result, responses)
+        
         return result
+    
+    async def _auto_post_predictions(self, result: Dict, responses: List[Dict]):
+        """Auto-post high-confidence predictions to social media."""
+        consensus = result.get('consensus', {})
+        direction = consensus.get('direction', 'NEUTRAL')
+        confidence = consensus.get('confidence', 0)
+        
+        # Only post if confidence > 70%
+        if confidence < 0.7:
+            return
+        
+        # Post from top 3 most confident Pauls
+        top_pauls = sorted(
+            [r for r in responses if r['sentiment'] == direction],
+            key=lambda x: x['confidence'],
+            reverse=True
+        )[:3]
+        
+        for paul_response in top_pauls:
+            paul_name = paul_response['paul_name']
+            paul_confidence = paul_response['confidence']
+            
+            # Generate post content based on sentiment
+            emoji_map = {'BULLISH': '🚀', 'BEARISH': '🔻', 'NEUTRAL': '⚖️'}
+            emoji = emoji_map.get(direction, '📊')
+            
+            # Create post content
+            content = f"{emoji} {direction}! {int(paul_confidence * 100)}% confidence. {result['question'][:50]}..."
+            
+            # Choose platform based on specialty
+            if 'Trader' in paul_name or 'Degen' in paul_name:
+                platform = Platform.TWITTER
+            elif 'Professor' in paul_name:
+                platform = Platform.LINKEDIN
+            else:
+                platform = random.choice([Platform.TWITTER, Platform.DISCORD])
+            
+            # Create account if doesn't exist
+            if (paul_name, platform) not in self.social_manager.accounts:
+                handle = f"@{paul_name.replace(' ', '').lower()}"
+                self.social_manager.create_account(paul_name, platform, handle)
+            
+            # Create post
+            try:
+                post = self.social_manager.create_post(
+                    paul_name,
+                    platform,
+                    content,
+                    post_type=PostType.PREDICTION,
+                    topic=result['question'][:30]
+                )
+                
+                # Simulate engagement from other Pauls
+                self.social_manager.simulate_engagement(post)
+                
+            except Exception as e:
+                # Silent fail - don't break prediction flow
+                pass
     
     def _extract_topics(self, question: str) -> List[str]:
         """Extract relevant topics from question."""
