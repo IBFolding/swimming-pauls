@@ -35,6 +35,14 @@ except ImportError:
     SOCIAL_MEDIA_AVAILABLE = False
     print("⚠️  Social media system not available")
 
+# Import paper trading
+try:
+    from paper_trading import PaperTradingManager, PaperTradingMode, handle_prediction_with_paper_trading
+    PAPER_TRADING_AVAILABLE = True
+except ImportError:
+    PAPER_TRADING_AVAILABLE = False
+    print("⚠️  Paper trading system not available")
+
 
 class Activity(Enum):
     """What a Paul can be doing."""
@@ -368,6 +376,11 @@ class PaulWorld:
         self.social_integration = None
         if SOCIAL_MEDIA_AVAILABLE:
             self.social_manager = SocialMediaManager("data/social_media.db")
+        
+        # Paper trading system
+        self.paper_trading = None
+        if PAPER_TRADING_AVAILABLE:
+            self.paper_trading = PaperTradingManager("data/paper_trading.db", mode=PaperTradingMode.OFF)
     
     async def initialize(self):
         """Initialize or load existing world."""
@@ -1004,6 +1017,10 @@ class PaulWorld:
         if SOCIAL_MEDIA_AVAILABLE and self.social_manager:
             await self._auto_post_predictions(result, responses)
         
+        # Execute paper trades for high-confidence predictions
+        if PAPER_TRADING_AVAILABLE and self.paper_trading and self.paper_trading.mode != PaperTradingMode.OFF:
+            await handle_prediction_with_paper_trading(result, self.paper_trading)
+        
         return result
     
     async def _auto_post_predictions(self, result: Dict, responses: List[Dict]):
@@ -1255,6 +1272,11 @@ async def main():
         print("  social feed         - Show social media feeds")
         print("  social paul <name>  - Show Paul's social stats")
         print("  social post <paul> <platform> <msg>  - Create post")
+        print("  paper create <paul> - Create paper trading portfolio")
+        print("  paper enable <paul> - Enable paper trading")
+        print("  paper enable-all    - Enable for all Pauls")
+        print("  paper leaderboard   - Show trading rankings")
+        print("  paper proven        - List proven traders")
         sys.exit(0)
     
     command = sys.argv[1]
@@ -1381,6 +1403,108 @@ async def main():
             print("  feed                            - Show social feeds")
             print("  paul <name>                     - Show Paul's social stats")
             print("  post <paul> <platform> <msg>    - Create a post")
+    
+    elif command == "paper":
+        if not PAPER_TRADING_AVAILABLE or not world.paper_trading:
+            print("❌ Paper trading system not available")
+            sys.exit(1)
+        
+        paper_cmd = sys.argv[2] if len(sys.argv) > 2 else "help"
+        
+        if paper_cmd == "create" and len(sys.argv) > 3:
+            paul_name = sys.argv[3]
+            if paul_name in world.pauls:
+                portfolio = world.paper_trading.create_portfolio(paul_name)
+                print(f"✅ Created paper trading portfolio for {paul_name}: ${portfolio.initial_balance:,.2f}")
+            else:
+                print(f"❌ Paul '{paul_name}' not found in world")
+        
+        elif paper_cmd == "enable" and len(sys.argv) > 3:
+            paul_name = sys.argv[3]
+            if paul_name in world.paper_trading.portfolios:
+                world.paper_trading.portfolios[paul_name].enabled = True
+                world.paper_trading._save_portfolio(world.paper_trading.portfolios[paul_name])
+                print(f"✅ Paper trading enabled for {paul_name}")
+            else:
+                print(f"❌ No portfolio for {paul_name}. Create with: paper create {paul_name}")
+        
+        elif paper_cmd == "disable" and len(sys.argv) > 3:
+            paul_name = sys.argv[3]
+            if paul_name in world.paper_trading.portfolios:
+                world.paper_trading.portfolios[paul_name].enabled = False
+                world.paper_trading._save_portfolio(world.paper_trading.portfolios[paul_name])
+                print(f"✅ Paper trading disabled for {paul_name}")
+        
+        elif paper_cmd == "status" and len(sys.argv) > 3:
+            paul_name = sys.argv[3]
+            if paul_name not in world.paper_trading.portfolios:
+                print(f"❌ No portfolio for {paul_name}")
+            else:
+                p = world.paper_trading.portfolios[paul_name]
+                print(f"\n📊 {paul_name} Paper Trading Portfolio")
+                print(f"   Status: {'Enabled' if p.enabled else 'Disabled'}")
+                print(f"   Total Value: ${p.get_total_value():,.2f} ({p.get_roi():+.1%})")
+                print(f"   Cash: ${p.cash:,.2f}")
+                print(f"   Positions: {len(p.positions)}")
+                print(f"   Trades: {p.total_trades} (Win rate: {p.get_win_rate():.0%})")
+                if p.get_win_rate() > 0.6 and p.total_trades >= 50:
+                    print(f"   🏆 PROVEN TRADER")
+        
+        elif paper_cmd == "leaderboard":
+            leaderboard = world.paper_trading.get_leaderboard(20)
+            print("\n🏆 Paper Trading Leaderboard\n")
+            for paul in leaderboard:
+                badge = "🏆" if paul.get('proven_trader') else ""
+                print(f"  {paul['rank']}. {paul['paul_name']} {badge}")
+                print(f"     Value: ${paul['total_value']:,.2f} ({paul['roi']:+.1%})")
+                print(f"     Win Rate: {paul['win_rate']:.0%} | Trades: {paul['total_trades']}")
+        
+        elif paper_cmd == "proven":
+            proven = world.paper_trading.get_proven_traders()
+            print(f"\n🏆 Proven Traders ({len(proven)} total)\n")
+            for paul_name in proven:
+                print(f"  ✓ {paul_name}")
+        
+        elif paper_cmd == "competition":
+            comp_cmd = sys.argv[3] if len(sys.argv) > 3 else "status"
+            
+            if comp_cmd == "start" and len(sys.argv) > 4:
+                days = int(sys.argv[4])
+                world.paper_trading.start_competition(days)
+                print(f"🏆 Competition started for {days} days!")
+            elif comp_cmd == "end":
+                results = world.paper_trading.end_competition()
+                print(f"\n🏆 Competition Results")
+                print(f"   Winner: {results['winner']['paul_name']}")
+                print(f"   ROI: {results['winner']['roi']:+.1%}")
+            elif comp_cmd == "status":
+                if world.paper_trading.mode == PaperTradingMode.COMPETITION:
+                    print(f"🏆 Competition running!")
+                    print(f"   Ends: {world.paper_trading.competition_end.strftime('%Y-%m-%d %H:%M')}")
+                else:
+                    print("No active competition")
+        
+        elif paper_cmd == "enable-all":
+            print("📊 Enabling paper trading for all Pauls...")
+            for paul_name in world.pauls.keys():
+                if paul_name not in world.paper_trading.portfolios:
+                    world.paper_trading.create_portfolio(paul_name)
+                world.paper_trading.portfolios[paul_name].enabled = True
+                world.paper_trading._save_portfolio(world.paper_trading.portfolios[paul_name])
+            print(f"✅ Paper trading enabled for {len(world.pauls)} Pauls")
+        
+        else:
+            print("Paper Trading Commands:")
+            print("  create <paul>                  - Create paper portfolio")
+            print("  enable <paul>                  - Enable paper trading")
+            print("  disable <paul>                 - Disable paper trading")
+            print("  enable-all                     - Enable for all Pauls")
+            print("  status <paul>                  - Show portfolio status")
+            print("  leaderboard                    - Show rankings")
+            print("  proven                         - List proven traders")
+            print("  competition start <days>       - Start competition")
+            print("  competition end                - End competition")
+            print("  competition status             - Show competition status")
 
 
 if __name__ == "__main__":
