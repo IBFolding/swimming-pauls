@@ -1,12 +1,30 @@
-# Swimming Pauls - Local Agent Connector
-# Python dependencies
+# Swimming Pauls - Dependencies
+# Install: pip install -r requirements.txt
 
-# WebSocket server
+# Core dependencies
 websockets>=11.0.0
-
-# HTTP client for web scraping
 httpx>=0.25.0
+aiohttp>=3.9.0
+
+# Data processing
+numpy>=1.24.0
+pandas>=2.0.0
+
+# Visualization
+plotext>=5.2.0
+pillow>=10.0.0
 
 # QR Code generation
 qrcode>=7.4.0
-pillow>=10.0.0
+
+# GraphRAG (optional but recommended)
+scikit-learn>=1.3.0
+networkx>=3.0.0
+PyPDF2>=3.0.0
+
+# Semantic search (optional)
+# sentence-transformers>=2.2.0  # Uncomment if needed
+
+# Development
+pytest>=7.4.0
+pytest-asyncio>=0.21.0

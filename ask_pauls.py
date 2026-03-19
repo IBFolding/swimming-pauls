@@ -36,7 +36,7 @@ async def ask_pauls(question: str, pauls: int = 50, rounds: int = 20):
         from prediction_history import PredictionHistoryDB
         
         # Generate Pauls
-        agents = generate_swimming_pauls_pool(n=pauls)
+        agents = generate_swimming_pauls_pool(count=pauls)
         
         # Run simulation
         result = quick_simulate(rounds=rounds, agents=agents, question=question)
