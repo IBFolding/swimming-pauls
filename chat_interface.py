@@ -161,6 +161,54 @@ class ResultsHandler(BaseHTTPRequestHandler):
             else:
                 self._send_json(500, {'error': 'Interface not initialized'})
         
+        elif path == '/api/social/feed':
+            # Get social media feed
+            try:
+                from social_media import SocialMediaManager, Platform
+                social = SocialMediaManager()
+                platform = query.get('platform', ['twitter'])[0]
+                limit = int(query.get('limit', [20])[0])
+                
+                posts = social.get_feed(Platform(platform), limit)
+                self._send_json(200, {
+                    'platform': platform,
+                    'posts': [p.to_dict() for p in posts]
+                })
+            except Exception as e:
+                self._send_json(500, {'error': str(e)})
+        
+        elif path == '/api/social/paul':
+            # Get Paul's social stats
+            try:
+                from social_media import SocialMediaManager
+                social = SocialMediaManager()
+                paul_name = query.get('name', [None])[0]
+                
+                if paul_name:
+                    stats = social.get_paul_social_stats(paul_name)
+                    posts = social.get_paul_posts(paul_name, limit=10)
+                    self._send_json(200, {
+                        'paul': paul_name,
+                        'stats': stats,
+                        'posts': [p.to_dict() for p in posts]
+                    })
+                else:
+                    self._send_json(400, {'error': 'Missing Paul name'})
+            except Exception as e:
+                self._send_json(500, {'error': str(e)})
+        
+        elif path == '/api/social/trending':
+            # Get trending topics
+            try:
+                from social_media import SocialMediaManager
+                social = SocialMediaManager()
+                limit = int(query.get('limit', [10])[0])
+                
+                trends = social.get_trending(limit)
+                self._send_json(200, {'trending': trends})
+            except Exception as e:
+                self._send_json(500, {'error': str(e)})
+        
         else:
             self._send_json(404, {'error': 'Not found'})
     
