@@ -6,6 +6,7 @@ A comprehensive platform for multi-agent prediction and analysis.
 ✅ 100% LOCAL - NO API KEYS REQUIRED:
 - Agent-based predictions with personas
 - Simulation orchestration  
+- 🎯 Dual Platform: Parallel simulations across configurations for higher confidence
 - Local data feeds (RSS, files, web scraping, demo mode)
 - Persistent SQLite memory
 - Rich terminal visualizations
@@ -21,6 +22,20 @@ Quick Start:
     pauls = SwimmingPauls()
     result = await pauls.run_simulation(rounds=20)
     pauls.visualize()
+
+Dual Platform Quick Start:
+    from swimming_pauls import DualPlatformSimulator, DualPlatformBuilder
+    
+    # Run parallel simulations across different configurations
+    simulator = (DualPlatformBuilder()
+        .add_conservative_platform()
+        .add_aggressive_platform()
+        .add_balanced_platform()
+        .build())
+    
+    result = await simulator.run()
+    print(result.dual_consensus.direction)
+    print(result.dual_consensus.confidence)
 
 Paul's World Quick Start:
     from swimming_pauls import PaulWorldSwimmingPauls
@@ -148,6 +163,20 @@ from .prediction import (
     export_json,
 )
 
+# 🎯 Dual Platform Simulation
+from .dual_platform import (
+    PlatformType,
+    PlatformConfig,
+    PlatformResult,
+    DualPlatformConsensus,
+    DualPlatformResult,
+    PlatformAgentFactory,
+    DualPlatformSimulator,
+    DualPlatformBuilder,
+    DualPlatformChatInterface,
+    quick_dual_simulation,
+)
+
 # 🌍 Paul's World Imports - Knowledge Graph & Memory
 from .knowledge_graph import (
     KnowledgeGraph,
@@ -194,6 +223,55 @@ try:
     ZEP_AVAILABLE = True
 except ImportError:
     ZEP_AVAILABLE = False
+
+# ReportAgent - Automated report generation with skill integration
+try:
+    from .report_agent import (
+        ReportAgent,
+        ReportCompiler,
+        ReportStorage,
+        SkillIntegrator,
+        ReportFormatter,
+        Report,
+        ReportMetadata,
+        ConsensusSummary,
+        AgentReasoning,
+        SkillData,
+        ReportFormat,
+        quick_report,
+        format_report_markdown,
+        format_report_html,
+    )
+    from .report_api import (
+        ReportAPIServer,
+        ReportAPIHandler,
+        start_report_api,
+    )
+    REPORT_AGENT_AVAILABLE = True
+except ImportError as e:
+    REPORT_AGENT_AVAILABLE = False
+
+# 🧠 Temporal Memory - Dynamic belief evolution
+try:
+    from .temporal_memory import (
+        TemporalMemory,
+        TemporalMemoryManager,
+        Belief,
+        BeliefStatus,
+        Evidence,
+        TemporalContext,
+        create_temporal_prediction_reasoning,
+        simulate_belief_evolution,
+    )
+    from .temporal_integration import (
+        TemporalPaulState,
+        TemporalPaulWorld,
+        create_temporal_world,
+        quick_temporal_simulation,
+    )
+    TEMPORAL_MEMORY_AVAILABLE = True
+except ImportError as e:
+    TEMPORAL_MEMORY_AVAILABLE = False
 
 __all__ = [
     # Version
@@ -284,6 +362,18 @@ __all__ = [
     "quick_compare",
     "quick_backtest",
     
+    # 🎯 Dual Platform Simulation
+    "PlatformType",
+    "PlatformConfig",
+    "PlatformResult",
+    "DualPlatformConsensus",
+    "DualPlatformResult",
+    "PlatformAgentFactory",
+    "DualPlatformSimulator",
+    "DualPlatformBuilder",
+    "DualPlatformChatInterface",
+    "quick_dual_simulation",
+    
     # Prediction formatting
     "PredictionFormatter",
     "SimulationReporter",
@@ -319,4 +409,37 @@ __all__ = [
     "PaulWorldConfig",
     "PaulWorldAgent",
     "quick_start",
+    
+    # 🧠 Temporal Memory - Dynamic belief evolution
+    "TemporalMemory",
+    "TemporalMemoryManager",
+    "Belief",
+    "BeliefStatus",
+    "Evidence",
+    "TemporalContext",
+    "TemporalPaulState",
+    "TemporalPaulWorld",
+    "create_temporal_world",
+    "quick_temporal_simulation",
+    "create_temporal_prediction_reasoning",
+    "simulate_belief_evolution",
+    
+    # ReportAgent
+    "ReportAgent",
+    "ReportCompiler",
+    "ReportStorage",
+    "SkillIntegrator",
+    "ReportFormatter",
+    "Report",
+    "ReportMetadata",
+    "ConsensusSummary",
+    "AgentReasoning",
+    "SkillData",
+    "ReportFormat",
+    "quick_report",
+    "format_report_markdown",
+    "format_report_html",
+    "ReportAPIServer",
+    "ReportAPIHandler",
+    "start_report_api",
 ]

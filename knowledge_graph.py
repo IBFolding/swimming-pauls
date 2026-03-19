@@ -691,3 +691,188 @@ if __name__ == "__main__":
         path = graph.find_path(entity_ids[0], entity_ids[-1])
         if path:
             print(f"\nPath found between {graph.entities[entity_ids[0]].name} and {graph.entities[entity_ids[-1]].name}")
+
+
+# ============================================================================
+# GRAPHRAG INTEGRATION
+# ============================================================================
+
+class GraphRAGIntegration:
+    """
+    Integration bridge between legacy KnowledgeGraph and new GraphRAG system.
+    
+    Allows gradual migration from the old system to GraphRAG while maintaining
+    backward compatibility.
+    """
+    
+    def __init__(self, knowledge_graph: KnowledgeGraph, graphrag=None):
+        self.kg = knowledge_graph
+        self.graphrag = graphrag
+        
+        # Try to import GraphRAG if not provided
+        if self.graphrag is None:
+            try:
+                from graphrag import GraphRAG
+                self.graphrag = GraphRAG()
+            except ImportError:
+                pass
+    
+    def to_graphrag(self):
+        """Convert KnowledgeGraph to GraphRAG format."""
+        if self.graphrag is None:
+            raise ImportError("GraphRAG not available")
+        
+        from graphrag import GraphEntity, GraphRelationship
+        
+        # Convert entities
+        for entity in self.kg.entities.values():
+            gr_entity = GraphEntity(
+                id=entity.id,
+                name=entity.name,
+                entity_type=entity.entity_type,
+                confidence=entity.confidence,
+                aliases=entity.aliases,
+                source_refs=entity.source_refs,
+                metadata=entity.metadata
+            )
+            self.graphrag._add_entity(gr_entity)
+        
+        # Convert relationships
+        for rel in self.kg.relationships.values():
+            gr_rel = GraphRelationship(
+                id=rel.id,
+                source_id=rel.source_id,
+                target_id=rel.target_id,
+                relation_type=rel.relation_type,
+                confidence=rel.confidence,
+                evidence=rel.evidence,
+                metadata=rel.metadata,
+                timestamp=rel.timestamp
+            )
+            self.graphrag._add_relationship(gr_rel)
+        
+        self.graphrag._rebuild_graph()
+        return self.graphrag
+    
+    def query_enhanced(self, question: str, top_k: int = 5) -> dict:
+        """
+        Enhanced query using GraphRAG capabilities.
+        Falls back to basic KnowledgeGraph query if GraphRAG unavailable.
+        """
+        if self.graphrag:
+            return self.graphrag.query(question)
+        
+        # Fallback to basic query
+        entities = self.kg.query_entities(name_pattern=question)
+        return {
+            'question': question,
+            'entities': [{'id': e.id, 'name': e.name, 'type': e.entity_type} for e in entities],
+            'relationships': [],
+            'summary': f"Found {len(entities)} matching entities"
+        }
+
+
+class KnowledgeGraphRAGBuilder(GraphBuilder):
+    """
+    Enhanced GraphBuilder with GraphRAG capabilities.
+    Extends the original GraphBuilder while adding semantic search.
+    """
+    
+    def __init__(self, name: str = "knowledge_graph", use_graphrag: bool = True):
+        super().__init__(name=name)
+        self.graphrag = None
+        
+        if use_graphrag:
+            try:
+                from graphrag import GraphRAG
+                self.graphrag = GraphRAG()
+            except ImportError:
+                pass
+    
+    async def add_pdf_enhanced(self, pdf_path: str) -> 'KnowledgeGraphRAGBuilder':
+        """Add PDF using GraphRAG extraction if available."""
+        if self.graphrag:
+            result = await self.graphrag.ingest_file(pdf_path)
+            print(f"Enhanced extraction: {result}")
+        
+        # Also add to traditional graph
+        return self.add_pdf(pdf_path)
+    
+    async def add_directory_enhanced(self, directory: str) -> 'KnowledgeGraphRAGBuilder':
+        """Add directory using GraphRAG."""
+        if self.graphrag:
+            results = await self.graphrag.ingest_directory(directory)
+            print(f"Ingested {len(results)} files with GraphRAG")
+        
+        # Also add to traditional graph
+        return self.add_directory(directory)
+    
+    def semantic_query(self, question: str) -> dict:
+        """Perform semantic query using GraphRAG."""
+        if self.graphrag:
+            return self.graphrag.query(question)
+        
+        # Fallback to basic query
+        return {'error': 'GraphRAG not available', 'entities': []}
+    
+    def get_graphrag(self):
+        """Get the underlying GraphRAG instance."""
+        return self.graphrag
+
+
+# ============================================================================
+# PAUL'S WORLD KNOWLEDGE SYSTEM INTEGRATION
+# ============================================================================
+
+def create_enhanced_knowledge_graph(seed_data_path: Optional[str] = None, 
+                                     use_graphrag: bool = True) -> Union[KnowledgeGraph, Any]:
+    """
+    Create an enhanced knowledge graph with GraphRAG capabilities.
+    
+    Args:
+        seed_data_path: Path to seed documents
+        use_graphrag: Whether to use GraphRAG enhancements
+    
+    Returns:
+        KnowledgeGraph or GraphRAG instance
+    """
+    if use_graphrag:
+        try:
+            from graphrag import GraphRAG
+            graphrag = GraphRAG()
+            
+            if seed_data_path:
+                asyncio.run(graphrag.ingest_directory(seed_data_path))
+            
+            return graphrag
+        except ImportError:
+            print("⚠️ GraphRAG not available, falling back to KnowledgeGraph")
+    
+    # Fallback to original
+    return create_market_knowledge_graph(seed_data_path)
+
+
+# ============================================================================
+# UTILITY FUNCTIONS
+# ============================================================================
+
+def migrate_to_graphrag(kg: KnowledgeGraph, storage_path: str = "data/graphrag") -> Any:
+    """
+    Migrate an existing KnowledgeGraph to GraphRAG format.
+    
+    Args:
+        kg: Existing KnowledgeGraph
+        storage_path: Storage path for GraphRAG
+    
+    Returns:
+        GraphRAG instance with migrated data
+    """
+    try:
+        from graphrag import GraphRAG
+        
+        graphrag = GraphRAG(storage_path=storage_path)
+        integration = GraphRAGIntegration(kg, graphrag)
+        
+        return integration.to_graphrag()
+    except ImportError:
+        raise ImportError("GraphRAG not available for migration")

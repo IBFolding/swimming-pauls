@@ -42,13 +42,62 @@ class Activity(Enum):
 
 
 class Location(Enum):
-    """Virtual world locations."""
+    """Virtual world locations - Expanded City Edition."""
+    # Original locations
     MARKET_FLOOR = "market_floor"
     RESEARCH_LAB = "research_lab"
     CAFE = "cafe"
     HOME = "home"
     CONFERENCE_ROOM = "conference_room"
     PARK = "park"
+    
+    # New city locations
+    TOWN_HALL = "town_hall"
+    BAR = "bar"
+    CARD_ROOM = "card_room"
+    GYM = "gym"
+    LIBRARY = "library"
+    RESTAURANT = "restaurant"
+    THEATER = "theater"
+    HOSPITAL = "hospital"
+    POLICE_STATION = "police_station"
+    FIRE_STATION = "fire_station"
+    SCHOOL = "school"
+    UNIVERSITY = "university"
+    MUSEUM = "museum"
+    ART_GALLERY = "art_gallery"
+    NIGHTCLUB = "nightclub"
+    COFFEE_SHOP = "coffee_shop"
+    BOOKSTORE = "bookstore"
+    SHOPPING_MALL = "shopping_mall"
+    BEACH = "beach"
+    MOUNTAIN = "mountain"
+    AIRPORT = "airport"
+    TRAIN_STATION = "train_station"
+    PORT = "port"
+    CONSTRUCTION_SITE = "construction_site"
+    FACTORY = "factory"
+    FARM = "farm"
+    VINEYARD = "vineyard"
+    BREWERY = "brewery"
+    
+    # Digital/Social locations
+    DISCORD = "discord"
+    TWITTER = "twitter"
+    TELEGRAM = "telegram"
+    REDDIT = "reddit"
+    GITHUB = "github"
+    YOUTUBE = "youtube"
+    TIKTOK = "tiktok"
+    LINKEDIN = "linkedin"
+    
+    # Financial locations
+    BANK = "bank"
+    INVESTMENT_FIRM = "investment_firm"
+    INSURANCE_OFFICE = "insurance_office"
+    REAL_ESTATE_OFFICE = "real_estate_office"
+    LAW_OFFICE = "law_office"
+    ACCOUNTING_FIRM = "accounting_firm"
 
 
 @dataclass
