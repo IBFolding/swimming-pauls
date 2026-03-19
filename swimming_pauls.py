@@ -91,7 +91,7 @@ from .prediction import (
     print_report, export_json
 )
 
-# 🐟 MiroFish Imports - Knowledge Graph, Memory & Personas
+# Paul's World Imports - Knowledge Graph, Memory & Personas
 try:
     from .knowledge_graph import (
         KnowledgeGraph, Entity, Relationship, GraphBuilder,
@@ -104,16 +104,16 @@ try:
         PaulPersonaFactory, PaulPersona, TradingStyle,
         RiskProfile, SpecialtyDomain, generate_swimming_pauls_pool,
     )
-    from .mirofish_integration import (
-        MiroFishSwimmingPauls, MiroFishConfig, MiroFishAgent,
-        quick_start as mirofish_quick_start,
+    from .paul_world_integration import (
+        PaulWorldSwimmingPauls, PaulWorldConfig, PaulWorldAgent,
+        quick_start as paul_world_quick_start,
     )
-    MIROFISH_AVAILABLE = True
+    PAUL_WORLD_AVAILABLE = True
 except ImportError as e:
-    MIROFISH_AVAILABLE = False
+    PAUL_WORLD_AVAILABLE = False
     # Log the error for debugging but don't fail
     import warnings
-    warnings.warn(f"MiroFish modules not fully available: {e}")
+    warnings.warn(f"Paul's World modules not fully available: {e}")
 
 
 @dataclass

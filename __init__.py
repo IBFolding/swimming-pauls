@@ -10,10 +10,10 @@ A comprehensive platform for multi-agent prediction and analysis.
 - Persistent SQLite memory
 - Rich terminal visualizations
 - Advanced analytics (Monte Carlo, sensitivity, backtesting)
-- 🐟 MiroFish: Knowledge graphs, graph memory, 40+ Paul personas
+- 🌍 Paul's World: Knowledge graphs, graph memory, 1000+ Paul personas
 
 All functionality works offline with local computation only.
-Optional cloud features (Zep, etc.) are truly optional.
+Optional cloud features are truly optional.
 
 Quick Start:
     from swimming_pauls import SwimmingPauls
@@ -22,12 +22,12 @@ Quick Start:
     result = await pauls.run_simulation(rounds=20)
     pauls.visualize()
 
-MiroFish Quick Start:
-    from swimming_pauls import MiroFishSwimmingPauls
+Paul's World Quick Start:
+    from swimming_pauls import PaulWorldSwimmingPauls
     
     # 100% local - no internet needed
-    mirofish = MiroFishSwimmingPauls.quick_start(paul_count=40)
-    result = mirofish.run_prediction_round(market_data)
+    paul_world = PaulWorldSwimmingPauls.quick_start(paul_count=100)
+    result = paul_world.run_prediction_round(market_data)
 
 CLI Usage:
     python -m swimming_pauls --rounds 20
@@ -148,7 +148,7 @@ from .prediction import (
     export_json,
 )
 
-# 🐟 MiroFish Imports - Knowledge Graph & Memory
+# 🌍 Paul's World Imports - Knowledge Graph & Memory
 from .knowledge_graph import (
     KnowledgeGraph,
     Entity,
@@ -175,14 +175,14 @@ from .persona_factory import (
     PAUL_ARCHETYPES,
 )
 
-from .mirofish_integration import (
-    MiroFishSwimmingPauls,
-    MiroFishConfig,
-    MiroFishAgent,
+from .paul_world_integration import (
+    PaulWorldSwimmingPauls,
+    PaulWorldConfig,
+    PaulWorldAgent,
     quick_start,
 )
 
-# Optional Zep Cloud integration
+# Optional memory integrations
 try:
     from .zep_memory import (
         ZepMemoryManager,
@@ -291,7 +291,7 @@ __all__ = [
     "print_report",
     "export_json",
     
-    # 🐟 MiroFish - Knowledge Graph
+    # 🌍 Paul's World - Knowledge Graph
     "KnowledgeGraph",
     "Entity",
     "Relationship",
@@ -299,13 +299,13 @@ __all__ = [
     "EntityExtractor",
     "create_market_knowledge_graph",
     
-    # 🐟 MiroFish - Graph Memory
+    # 🌍 Paul's World - Graph Memory
     "GraphMemory",
     "AgentKnowledge",
     "KnowledgeQuery",
     "GraphMemoryMixin",
     
-    # 🐟 MiroFish - Persona Factory
+    # 🌍 Paul's World - Persona Factory
     "PaulPersonaFactory",
     "PaulPersona",
     "TradingStyle",
@@ -314,9 +314,9 @@ __all__ = [
     "generate_swimming_pauls_pool",
     "PAUL_ARCHETYPES",
     
-    # 🐟 MiroFish - Integration
-    "MiroFishSwimmingPauls",
-    "MiroFishConfig",
-    "MiroFishAgent",
+    # 🌍 Paul's World - Integration
+    "PaulWorldSwimmingPauls",
+    "PaulWorldConfig",
+    "PaulWorldAgent",
     "quick_start",
 ]

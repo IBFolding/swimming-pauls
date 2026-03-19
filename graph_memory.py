@@ -1,11 +1,13 @@
 """
-MiroFish Graph Memory - Traversable Knowledge Storage for Agents
+Graph Memory - Traversable Knowledge Storage for Agents
 
 Stores agent knowledge as a traversable graph structure, enabling:
 - Semantic search across agent knowledge
 - Relationship-aware reasoning
 - Context retrieval for predictions
 - Knowledge sharing between agents
+
+Part of Paul's World - Enhanced Knowledge System for Swimming Pauls
 
 Author: Howard (H.O.W.A.R.D)
 """

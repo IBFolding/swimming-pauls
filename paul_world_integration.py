@@ -1,18 +1,18 @@
 """
-MiroFish Integration for Swimming Pauls
+Paul's World Integration for Swimming Pauls
 
 Main integration module that connects:
 - Knowledge Graph construction from seed data
 - Graph Memory for agent knowledge storage
-- Zep Cloud for persistent agent memory
-- 40+ Paul persona generation
+- Persistent agent memory
+- 1000+ Paul persona generation
 
 Usage:
-    from mirofish_integration import MiroFishSwimmingPauls
+    from paul_world_integration import PaulWorldSwimmingPauls
     
-    pauls = MiroFishSwimmingPauls()
+    pauls = PaulWorldSwimmingPauls()
     pauls.initialize_knowledge_graph("./seed_data")
-    pauls.spawn_paul_pool(count=40)
+    pauls.spawn_paul_pool(count=100)
     pauls.run_simulation()
 
 Author: Howard (H.O.W.A.R.D)
@@ -23,8 +23,9 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional, Union
 from dataclasses import dataclass, field
 from datetime import datetime
+import uuid
 
-# Import MiroFish components
+# Import Paul's World components
 from knowledge_graph import KnowledgeGraph, GraphBuilder, Entity, Relationship
 from graph_memory import GraphMemory, GraphMemoryMixin, KnowledgeQuery
 from persona_factory import (
@@ -32,26 +33,19 @@ from persona_factory import (
     PaulPersona, TradingStyle, RiskProfile, SpecialtyDomain
 )
 
-# Optional Zep import
-try:
-    from zep_memory import ZepMemoryManager, ZepMemoryConfig, create_memory_manager
-    ZEP_AVAILABLE = True
-except ImportError:
-    ZEP_AVAILABLE = False
-
 # Import existing Swimming Pauls
 from agent import Agent, PersonaType, PERSONA_PROFILES
 
 
 @dataclass
-class MiroFishConfig:
-    """Configuration for MiroFish-enhanced Swimming Pauls."""
+class PaulWorldConfig:
+    """Configuration for Paul's World-enhanced Swimming Pauls."""
     # Knowledge graph
     seed_data_path: Optional[str] = None
     auto_build_graph: bool = True
     
     # Agent pool
-    paul_count: int = 40
+    paul_count: int = 100
     use_diverse_personas: bool = True
     persona_seed: Optional[int] = None
     
@@ -59,23 +53,18 @@ class MiroFishConfig:
     enable_graph_memory: bool = True
     graph_memory_path: str = "~/.scales/graph_memory.db"
     
-    # Zep Cloud (optional)
-    enable_zep_memory: bool = False
-    zep_api_key: Optional[str] = None
-    zep_base_url: Optional[str] = None
-    
     # Simulation
     consensus_threshold: float = 0.6
     min_participation: float = 0.5
 
 
-class MiroFishAgent(Agent, GraphMemoryMixin):
+class PaulWorldAgent(Agent, GraphMemoryMixin):
     """
-    Enhanced Swimming Paul with MiroFish capabilities.
+    Enhanced Swimming Paul with Paul's World capabilities.
     
     Features:
     - Graph-based knowledge storage
-    - Zep Cloud memory integration
+    - Persistent memory integration
     - Persona-based decision making
     - Relationship-aware reasoning
     """
@@ -92,7 +81,6 @@ class MiroFishAgent(Agent, GraphMemoryMixin):
         self._agent_graph_memory_id: Optional[str] = None
         
         self.paul_persona = paul_persona
-        self.zep_memory = None
         self.specialties: List[str] = []
         
         if paul_persona:
@@ -114,10 +102,6 @@ class MiroFishAgent(Agent, GraphMemoryMixin):
         # Risk affects bias
         risk_val = pp.risk_profile.value
         self.bias = (risk_val - 0.5) * 0.6  # Scale to roughly -0.3 to 0.3
-    
-    def attach_zep_memory(self, zep_manager):
-        """Attach Zep Cloud memory manager."""
-        self.zep_memory = zep_manager
     
     def attach_graph_memory(self, memory: GraphMemory, agent_id: Optional[str] = None):
         """Attach a graph memory to this agent."""
@@ -142,16 +126,9 @@ class MiroFishAgent(Agent, GraphMemoryMixin):
             market_entities = self._extract_market_entities(market_data)
             knowledge_context = self.graph_memory.get_context_for_prediction(self._agent_graph_memory_id, market_entities, context_depth)
         
-        # Get Zep context if available
-        zep_context = {}
-        if self.zep_memory:
-            zep_context = self.zep_memory.get_prediction_context(
-                self.id, market_data
-            )
-        
         # Enhance prediction with context
         enhanced_reasoning = self._enhance_reasoning(
-            prediction.reasoning, knowledge_context, zep_context
+            prediction.reasoning, knowledge_context
         )
         
         # Store in memories
@@ -160,18 +137,6 @@ class MiroFishAgent(Agent, GraphMemoryMixin):
                 "prediction",
                 f"Predicted {prediction.direction} for market with {prediction.confidence:.0%} confidence",
                 confidence=prediction.confidence
-            )
-        
-        if self.zep_memory:
-            self.zep_memory.record_prediction(
-                self.id,
-                market_data.get('market_id', 'unknown'),
-                {
-                    'direction': prediction.direction,
-                    'confidence': prediction.confidence,
-                    'magnitude': prediction.magnitude,
-                    'reasoning': prediction.reasoning
-                }
             )
         
         return {
@@ -183,7 +148,6 @@ class MiroFishAgent(Agent, GraphMemoryMixin):
             'reasoning': enhanced_reasoning,
             'timestamp': prediction.timestamp,
             'knowledge_context': knowledge_context,
-            'zep_context': zep_context,
             'specialties': self.specialties
         }
     
@@ -202,8 +166,7 @@ class MiroFishAgent(Agent, GraphMemoryMixin):
         return entities
     
     def _enhance_reasoning(self, base_reasoning: str,
-                          knowledge_context: Dict,
-                          zep_context: Dict) -> str:
+                          knowledge_context: Dict) -> str:
         """Enhance reasoning with knowledge context."""
         parts = [base_reasoning]
         
@@ -216,10 +179,6 @@ class MiroFishAgent(Agent, GraphMemoryMixin):
             known = [r for r in related if r.get('known')]
             if known:
                 parts.append(f"Considering {len(known)} related entities I know about.")
-        
-        # Add memory-based insights
-        if zep_context.get('past_predictions'):
-            parts.append("Informed by my previous prediction experience.")
         
         return " ".join(parts)
     
@@ -248,9 +207,9 @@ class MiroFishAgent(Agent, GraphMemoryMixin):
         }
 
 
-class MiroFishSwimmingPauls:
+class PaulWorldSwimmingPauls:
     """
-    Main MiroFish integration for Swimming Pauls simulation.
+    Main Paul's World integration for Swimming Pauls simulation.
     
     Manages:
     - Knowledge graph construction
@@ -259,16 +218,15 @@ class MiroFishSwimmingPauls:
     - Simulation execution
     """
     
-    def __init__(self, config: Optional[MiroFishConfig] = None):
-        self.config = config or MiroFishConfig()
+    def __init__(self, config: Optional[PaulWorldConfig] = None):
+        self.config = config or PaulWorldConfig()
         
         # Knowledge systems
         self.knowledge_graph: Optional[KnowledgeGraph] = None
         self.graph_memory: Optional[GraphMemory] = None
-        self.zep_memory: Optional[Any] = None
         
         # Agents
-        self.agents: List[MiroFishAgent] = []
+        self.agents: List[PaulWorldAgent] = []
         self.persona_factory = PaulPersonaFactory(seed=self.config.persona_seed)
         
         # State
@@ -276,37 +234,20 @@ class MiroFishSwimmingPauls:
         self.session_id = datetime.now().strftime("%Y%m%d_%H%M%S")
     
     def initialize(self) -> bool:
-        """Initialize all MiroFish components."""
-        print("🐟 Initializing MiroFish Swimming Pauls...")
+        """Initialize all Paul's World components."""
+        print("🌍 Initializing Paul's World Swimming Pauls...")
         
         # Initialize graph memory
         if self.config.enable_graph_memory:
             self.graph_memory = GraphMemory(db_path=self.config.graph_memory_path)
             print(f"  ✓ Graph memory initialized")
         
-        # Initialize Zep memory (optional)
-        if self.config.enable_zep_memory and ZEP_AVAILABLE:
-            try:
-                self.zep_memory = create_memory_manager(
-                    use_zep=True,
-                    config=ZepMemoryConfig(
-                        api_key=self.config.zep_api_key or '',
-                        base_url=self.config.zep_base_url
-                    ) if self.config.zep_api_key else None
-                )
-                if hasattr(self.zep_memory, 'initialize'):
-                    self.zep_memory.initialize()
-                print(f"  ✓ Zep memory initialized")
-            except Exception as e:
-                print(f"  ⚠ Zep memory failed, using fallback: {e}")
-                self.zep_memory = create_memory_manager(use_zep=False)
-        
         # Build knowledge graph from seed data
         if self.config.auto_build_graph and self.config.seed_data_path:
             self.initialize_knowledge_graph(self.config.seed_data_path)
         
         self.initialized = True
-        print("🐟 MiroFish initialization complete!")
+        print("🌍 Paul's World initialization complete!")
         return True
     
     def initialize_knowledge_graph(self, seed_path: str) -> KnowledgeGraph:
@@ -332,8 +273,8 @@ class MiroFishSwimmingPauls:
     
     def spawn_paul(self, persona_data: Optional[Dict] = None,
                   persona_type: Optional[PersonaType] = None,
-                  paul_persona: Optional[PaulPersona] = None) -> MiroFishAgent:
-        """Spawn a single MiroFish-enhanced Paul."""
+                  paul_persona: Optional[PaulPersona] = None) -> PaulWorldAgent:
+        """Spawn a single Paul's World-enhanced Paul."""
         
         # Use provided Paul persona or create one
         if paul_persona is None:
@@ -357,7 +298,7 @@ class MiroFishSwimmingPauls:
         )
         
         # Create agent
-        agent = MiroFishAgent(
+        agent = PaulWorldAgent(
             name=paul_persona.name,
             persona=base_persona,
             paul_persona=paul_persona,
@@ -382,22 +323,9 @@ class MiroFishSwimmingPauls:
                             source="specialty_knowledge"
                         )
         
-        if self.zep_memory:
-            agent.attach_zep_memory(self.zep_memory)
-            # Create Zep session for agent
-            if hasattr(self.zep_memory, 'create_agent_session'):
-                self.zep_memory.create_agent_session(
-                    agent.id,
-                    metadata={
-                        'name': paul_persona.name,
-                        'trading_style': paul_persona.trading_style.value,
-                        'specialties': [s.value for s in paul_persona.specialties]
-                    }
-                )
-        
         return agent
     
-    def spawn_paul_pool(self, count: Optional[int] = None) -> List[MiroFishAgent]:
+    def spawn_paul_pool(self, count: Optional[int] = None) -> List[PaulWorldAgent]:
         """Spawn a diverse pool of Pauls."""
         count = count or self.config.paul_count
         print(f"🎣 Spawning {count} Swimming Pauls...")
@@ -497,8 +425,7 @@ class MiroFishSwimmingPauls:
         stats = {
             'agents': len(self.agents),
             'knowledge_graph': None,
-            'graph_memory': None,
-            'zep_memory': None
+            'graph_memory': None
         }
         
         if self.knowledge_graph:
@@ -509,9 +436,6 @@ class MiroFishSwimmingPauls:
         
         if self.graph_memory:
             stats['graph_memory'] = self.graph_memory.get_statistics()
-        
-        if self.zep_memory and hasattr(self.zep_memory, 'get_statistics'):
-            stats['zep_memory'] = self.zep_memory.get_statistics()
         
         return stats
     
@@ -528,9 +452,6 @@ class MiroFishSwimmingPauls:
         """Cleanup resources."""
         if self.graph_memory:
             self.graph_memory.close()
-        
-        if self.zep_memory and hasattr(self.zep_memory, 'close'):
-            self.zep_memory.close()
 
 
 # ============================================================================
@@ -538,30 +459,27 @@ class MiroFishSwimmingPauls:
 # ============================================================================
 
 def quick_start(seed_data_path: Optional[str] = None,
-               paul_count: int = 40,
-               enable_zep: bool = False) -> MiroFishSwimmingPauls:
+               paul_count: int = 100) -> PaulWorldSwimmingPauls:
     """
-    Quick start function to get MiroFish Swimming Pauls running.
+    Quick start function to get Paul's World Swimming Pauls running.
     
     Args:
         seed_data_path: Path to seed data for knowledge graph
         paul_count: Number of Pauls to spawn
-        enable_zep: Enable Zep Cloud memory (requires API key)
     
     Returns:
-        Initialized MiroFishSwimmingPauls instance
+        Initialized PaulWorldSwimmingPauls instance
     """
-    config = MiroFishConfig(
+    config = PaulWorldConfig(
         seed_data_path=seed_data_path,
-        paul_count=paul_count,
-        enable_zep_memory=enable_zep
+        paul_count=paul_count
     )
     
-    mirofish = MiroFishSwimmingPauls(config)
-    mirofish.initialize()
-    mirofish.spawn_paul_pool()
+    paul_world = PaulWorldSwimmingPauls(config)
+    paul_world.initialize()
+    paul_world.spawn_paul_pool()
     
-    return mirofish
+    return paul_world
 
 
 # ============================================================================
@@ -570,20 +488,19 @@ def quick_start(seed_data_path: Optional[str] = None,
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("MiroFish Swimming Pauls - Integration Demo")
+    print("Paul's World Swimming Pauls - Integration Demo")
     print("=" * 60)
     
     # Initialize without seed data for demo
-    config = MiroFishConfig(
+    config = PaulWorldConfig(
         seed_data_path=None,  # Set to a path to load seed data
         paul_count=10,  # Demo with 10 Pauls
-        enable_graph_memory=True,
-        enable_zep_memory=False,
+        enable_graph_memory=True
     )
     
-    mirofish = MiroFishSwimmingPauls(config)
-    mirofish.initialize()
-    mirofish.spawn_paul_pool()
+    paul_world = PaulWorldSwimmingPauls(config)
+    paul_world.initialize()
+    paul_world.spawn_paul_pool()
     
     # Run a demo prediction
     demo_market = {
@@ -599,7 +516,7 @@ if __name__ == "__main__":
     print("Running Demo Prediction Round")
     print("=" * 60)
     
-    result = mirofish.run_prediction_round(demo_market)
+    result = paul_world.run_prediction_round(demo_market)
     
     print(f"\nConsensus: {result['consensus']['dominant'].upper()}")
     print(f"Confidence: {result['consensus']['confidence']:.1%}")
@@ -620,12 +537,12 @@ if __name__ == "__main__":
     print("\n" + "=" * 60)
     print("System Statistics")
     print("=" * 60)
-    stats = mirofish.get_knowledge_stats()
+    stats = paul_world.get_knowledge_stats()
     print(f"Agents: {stats['agents']}")
     if stats['graph_memory']:
         print(f"Graph Memory Entities: {stats['graph_memory'].get('total_entities', 0)}")
     
     # Cleanup
-    mirofish.cleanup()
+    paul_world.cleanup()
     
     print("\n✓ Demo complete!")

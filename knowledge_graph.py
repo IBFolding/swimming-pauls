@@ -1,8 +1,10 @@
 """
-MiroFish Knowledge Graph - Semantic Graph Construction from Seed Data
+Knowledge Graph - Semantic Graph Construction from Seed Data
 
 Constructs semantic knowledge graphs from various data sources (PDFs, text, JSON)
 using entity extraction and relationship mapping.
+
+Part of Paul's World - Enhanced Knowledge System for Swimming Pauls
 
 Author: Howard (H.O.W.A.R.D)
 """

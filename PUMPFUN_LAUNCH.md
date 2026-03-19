@@ -39,8 +39,6 @@
 ## Description (for Pump.fun)
 "🦷 Swimming Pauls - Multi-Agent Prediction Engine
 
-When MiroFish is too hard, ask Paul. And his multiples.
-
 100+ AI agents from all walks of life debate and predict the future. Professors, lawyers, chefs, moms, dads - all swimming toward truth through disagreement.
 
 Features:
