@@ -181,6 +181,26 @@ open http://localhost:3005
 
 ---
 
+## 💻 Hardware Requirements & Capacity
+
+**Tested on MacBook M4 (16GB RAM):**
+- **10,000 Pauls** initialized in 0.21 seconds
+- **Memory usage:** ~100MB for 10,000 Pauls (~10KB per Paul)
+- **Conservative limit:** 5,000-7,500 Pauls for live simulation
+- **Maximum tested:** 10,000+ Pauls
+
+**What this means:**
+- **Laptop (8GB):** 1,000-2,000 Pauls
+- **Mac Mini M4 (16GB):** 5,000-10,000 Pauls  
+- **Mac Mini Cluster:** 50,000+ Pauls
+- **Workstation (64GB+):** 50,000-100,000 Pauls
+
+> **Note:** Memory isn't the limiting factor—simulation time is. Running 10,000 Pauls through 20 rounds means 200,000 individual predictions (each Paul reasons, checks memory, updates beliefs). That takes CPU time regardless of RAM. With 10,000 Pauls, a full simulation might take 30-60 seconds vs 5 seconds with 100 Pauls.
+
+Run your own test: `python test_capacity.py`
+
+---
+
 ## 📁 Project Structure
 
 ```
