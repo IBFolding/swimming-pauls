@@ -233,6 +233,8 @@ swimming-pauls/
 ## 📖 Documentation
 
 - **[COMMANDS.md](COMMANDS.md)** - Complete CLI reference with all commands
+- **[PAPER_TRADING.md](PAPER_TRADING.md)** - Paper trading system guide
+- **[SOCIAL_MEDIA.md](SOCIAL_MEDIA.md)** - Social media system
 - **[docs/](docs/)** - Detailed feature documentation
 - **[HANDOFF.md](HANDOFF.md)** - Project status and session continuity
 

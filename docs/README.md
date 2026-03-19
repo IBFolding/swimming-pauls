@@ -1,55 +1,113 @@
 # 📚 Feature Documentation
 
-This directory contains detailed documentation for each major Swimming Pauls feature.
+Complete documentation for Swimming Pauls features.
 
-## Available Features
+## Quick Start
 
-| Feature | Description | File |
-|---------|-------------|------|
-| **Paul's World** | Persistent living simulation where Pauls live, learn, and evolve | [PAUL_WORLD.md](../PAUL_WORLD.md) |
-| **Temporal Memory** | Dynamic belief system that evolves over simulation time | [TEMPORAL_MEMORY.md](../TEMPORAL_MEMORY.md) |
-| **Dual Platform** | Parallel simulations across different configurations | [dual_platform.py](../dual_platform.py) (code + docstrings) |
-| **ReportAgent** | Automated report generation with skill integration | [README_REPORT_AGENT.md](../README_REPORT_AGENT.md) |
-| **GraphRAG** | Structured knowledge extraction from documents | [GRAPHRAG_README.md](../GRAPHRAG_README.md) |
-| **Custom Skills** | Build your own skills for Pauls | [skills.py](../skills.py) (code + docstrings) |
-| **Prediction History** | Track and analyze all predictions | [prediction_history.py](../prediction_history.py) (code) |
-| **Social Media** | Pauls on Twitter, Discord, Reddit, etc. | [social_media.py](../social_media.py) (code) |
+New to Swimming Pauls? Start here:
+- [README.md](../README.md) - Installation and basics
+- [COMMANDS.md](../COMMANDS.md) - All CLI commands
+- [Quick Start Guide](#quick-start)
 
-## Quick Navigation
+## Feature Guides
 
-### For New Users
-Start with [README.md](../README.md) for installation and basic usage.
+### 🌍 Paul's World
+The living simulation where Pauls live, learn, and evolve.
 
-### For Developers
-- [COMMANDS.md](../COMMANDS.md) - Complete CLI reference
-- [skills.py](../skills.py) - Build custom skills
-- [chat_interface.py](../chat_interface.py) - HTTP API reference
-- Code architecture in module docstrings
+- **[PAUL_WORLD.md](../PAUL_WORLD.md)** - Core world simulation
+- **[SOCIAL_MEDIA.md](../SOCIAL_MEDIA.md)** - Social media system
+- **[PAPER_TRADING.md](../PAPER_TRADING.md)** - Paper trading system
 
-### For Researchers
-- [PAUL_WORLD.md](../PAUL_WORLD.md) - Living simulation
-- [TEMPORAL_MEMORY.md](../TEMPORAL_MEMORY.md) - Belief evolution
-- [GRAPHRAG_README.md](../GRAPHRAG_README.md) - Knowledge extraction
-- [HANDOFF.md](../HANDOFF.md) - Current project status
+### 🧠 Intelligence Systems
+
+- **[TEMPORAL_MEMORY.md](../TEMPORAL_MEMORY.md)** - Dynamic belief evolution
+- **[GRAPHRAG_README.md](../GRAPHRAG_README.md)** - Knowledge extraction
+- **[onchain_data.py](../onchain_data.py)** - Blockchain data (code docs)
+
+### 📊 Analysis Tools
+
+- **[README_REPORT_AGENT.md](../README_REPORT_AGENT.md)** - Automated reports
+- **[dual_platform.py](../dual_platform.py)** - Parallel simulations (code)
+
+### 📖 Reference
+
+- **[PAULS_EXTENDED.md](../PAULS_EXTENDED.md)** - 1000 Paul directory
+- **[ROADMAP.md](../ROADMAP.md)** - Future plans
+- **[HANDOFF.md](../HANDOFF.md)** - Project status
+
+## Quick Start
+
+### Run Paul's World
+
+```bash
+# Start the simulation
+python paul_world.py run
+
+# In another terminal, ask a question
+python paul_world.py ask "Will BTC hit $100K?"
+
+# Check social feeds
+python paul_world.py social feed
+
+# Enable paper trading
+python paul_world.py paper enable-all
+```
+
+### Use Specific Features
+
+**Social Media:**
+```bash
+python paul_world.py social setup          # Create accounts
+python paul_world.py social paul "Trader"  # Check stats
+```
+
+**Paper Trading:**
+```bash
+python paul_world.py paper create "Paul"   # Create portfolio
+python paul_world.py paper leaderboard     # View rankings
+```
+
+**History:**
+```bash
+python history_viewer.py leaderboard       # Top Pauls
+python history_viewer.py stats             # Overall stats
+```
 
 ## Feature Status
 
-✅ **Complete & Ready**
-- Paul's World
-- Temporal Memory
-- Dual Platform
+✅ **Production Ready**
+- Paul's World + 36 locations
+- 1000 Paul personas
+- Social media (8 platforms)
+- Paper trading (3 modes)
+- Temporal memory
+- Dual platform
 - ReportAgent
 - GraphRAG
-- Social Media System
-- Custom Skills API
-- Prediction History
+- On-chain data
 
 🚧 **In Progress**
-- Solana Skill Integration
-- Extended Locations (30+ new places)
+- Solana skill integration
+- Mac Mini cloud (V2)
+- $PAULS token
 
-📅 **V2 Roadmap**
-- Mac Mini Cloud Infrastructure
-- $PAULS Token
-- Skill Marketplace
-- World Network (Multi-Node)
+## Architecture
+
+```
+User Question
+    ↓
+Paul's World Simulation
+    ↓
+Knowledge + Memory + Skills
+    ↓
+Prediction Generated
+    ↓
+├── Social Media Post
+├── Paper Trade Executed
+└── Result Saved (viewable via web)
+```
+
+## Support
+
+- **GitHub:** https://github.com/IBFolding/swimming-pauls
+- **Live Demo:** https://swimmingpauls.vercel.app
