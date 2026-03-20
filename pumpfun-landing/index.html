@@ -1233,6 +1233,31 @@ python paul_world.py paper leaderboard</code></pre>
             event.target.closest('.tab-btn').classList.add('active');
             document.querySelector('.max-w-6xl.mx-auto.px-6.py-8').scrollIntoView({ behavior: 'smooth' });
         }
+
+        // Handle Add Paul form
+        document.addEventListener('DOMContentLoaded', function() {
+            const addPaulBtn = document.querySelector('#create button');
+            if (addPaulBtn) {
+                addPaulBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Get form values
+                    const name = document.querySelector('#create input[type="text"]')?.value || 'Custom Paul';
+                    const expertise = document.querySelectorAll('#create input[type="text"]')[1]?.value || 'General';
+                    const thinkingStyle = document.querySelector('#create select')?.value || 'Analytical';
+                    const personality = document.querySelector('#create textarea')?.value || '';
+                    const catchphrase = document.querySelectorAll('#create input[type="text"]')[2]?.value || '';
+                    
+                    // Show confirmation
+                    alert(`🦷 ${name} added to the pool!\n\nExpertise: ${expertise}\nStyle: ${thinkingStyle}\n\nNote: This is a demo. To actually add a Paul, edit PAULS_EXTENDED.md and submit a PR to GitHub.`);
+                    
+                    // Clear form
+                    document.querySelectorAll('#create input, #create textarea, #create select').forEach(field => {
+                        field.value = '';
+                    });
+                });
+            }
+        });
     </script>
 </body>
 </html>
