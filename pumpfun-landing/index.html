@@ -305,14 +305,14 @@
                     <span>Demos</span>
                 </button>
 
-                <a href="/trading_landing.html" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white">
+                <button class="tab-btn flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white" onclick="showTab('trading')">
                     <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="12" y1="20" x2="12" y2="10"/>
                         <line x1="18" y1="20" x2="18" y2="4"/>
                         <line x1="6" y1="20" x2="6" y2="16"/>
                     </svg>
                     <span>Trading</span>
-                </a>
+                </button>
                 
                 <button class="tab-btn flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white" onclick="showTab('world')">
                     <svg class="icon-sm"><use href="#icon-globe"/></svg>
@@ -1039,6 +1039,176 @@ open http://localhost:3005</code></pre>
                             <svg class="icon-sm"><use href="#icon-arrow"/></svg>
                         </a>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Trading -->
+        <div id="trading" class="tab-content">
+            <div class="max-w-6xl mx-auto">
+                <!-- Hero -->
+                <div class="text-center mb-12">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-500/30 text-sm font-medium mb-6">
+                        <span>⚡</span>
+                        <span>Multi-Chain Trading</span>
+                    </div>
+
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">
+                        Trade on <span class="text-purple-400">Solana</span> & <span class="text-blue-400">Base</span>
+                    </h2>
+
+                    <p class="text-gray-400 mb-8 max-w-2xl mx-auto">
+                        Swimming Pauls integrates with Bankr to execute trades across both chains.
+                        Get real-time data from Binance, CoinGecko, DEXs, and on-chain sources.
+                    </p>
+
+                    <a href="./trading.html" class="inline-flex items-center gap-2 px-6 py-3 bg-orange-600 hover:bg-orange-500 rounded-lg font-medium transition-colors">
+                        <span>View Trading Dashboard</span>
+                        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                            <polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </a>
+                </div>
+
+                <!-- Chain Comparison -->
+                <div class="grid md:grid-cols-2 gap-6 mb-12">
+                    <!-- Solana -->
+                    <div class="p-6 bg-white/5 rounded-2xl border border-purple-500/30 hover:border-purple-500/50 transition-colors">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center text-2xl font-bold text-white">
+                                ◎
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold">Solana</h3>
+                                <p class="text-sm text-gray-400">High-speed, low-cost</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 mb-6 text-sm">
+                            <div class="flex items-center gap-2">
+                                <span class="text-green-400">✓</span>
+                                <span>&lt; $0.01 transaction fees</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-green-400">✓</span>
+                                <span>400ms confirmation time</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-green-400">✓</span>
+                                <span>Jupiter, Raydium, Orca DEXs</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-green-400">✓</span>
+                                <span>Meme coin heaven</span>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-purple-500/10 rounded-xl">
+                            <div class="text-xs text-gray-400 mb-1">Best For</div>
+                            <div class="text-sm">High-frequency trading, meme coins, DeFi yields</div>
+                        </div>
+                    </div>
+
+                    <!-- Base -->
+                    <div class="p-6 bg-white/5 rounded-2xl border border-blue-500/30 hover:border-blue-500/50 transition-colors">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-2xl">
+                                🔵
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold">Base</h3>
+                                <p class="text-sm text-gray-400">Ethereum L2, Coinbase backed</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 mb-6 text-sm">
+                            <div class="flex items-center gap-2">
+                                <span class="text-green-400">✓</span>
+                                <span>&lt; $0.10 transaction fees</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-green-400">✓</span>
+                                <span>Ethereum security</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-green-400">✓</span>
+                                <span>Uniswap, Aerodrome DEXs</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-green-400">✓</span>
+                                <span>Coinbase ecosystem</span>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-blue-500/10 rounded-xl">
+                            <div class="text-xs text-gray-400 mb-1">Best For</div>
+                            <div class="text-sm">Institutional DeFi, stablecoin pairs, blue chips</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trading Features -->
+                <h3 class="text-xl font-bold text-center mb-6">Trading Features</h3>
+                <div class="grid md:grid-cols-3 gap-6 mb-12">
+                    <div class="p-6 bg-white/5 rounded-xl border border-white/10">
+                        <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center mb-4 text-lg">📊</div>
+                        <h4 class="font-bold mb-2">Multi-Source Data</h4>
+                        <p class="text-gray-400 text-sm">Binance, CoinGecko, DexScreener, on-chain feeds combined for comprehensive market view.</p>
+                    </div>
+
+                    <div class="p-6 bg-white/5 rounded-xl border border-white/10">
+                        <div class="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center mb-4 text-lg">🤖</div>
+                        <h4 class="font-bold mb-2">Auto-Trading</h4>
+                        <p class="text-gray-400 text-sm">Pauls automatically execute paper trades when confidence &gt; 75%. Proven traders get real allocations.</p>
+                    </div>
+
+                    <div class="p-6 bg-white/5 rounded-xl border border-white/10">
+                        <div class="w-10 h-10 rounded-lg bg-pink-500/20 flex items-center justify-center mb-4 text-lg">🏆</div>
+                        <h4 class="font-bold mb-2">Competitions</h4>
+                        <p class="text-gray-400 text-sm">Weekly trading competitions. Top 10% earn "Proven Trader" badges. Track ROI, win rate, Sharpe ratio.</p>
+                    </div>
+
+                    <div class="p-6 bg-white/5 rounded-xl border border-white/10">
+                        <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center mb-4 text-lg">💰</div>
+                        <h4 class="font-bold mb-2">Paper Trading</h4>
+                        <p class="text-gray-400 text-sm">$10,000 fake money per Paul. Test strategies risk-free. Build track record before real trading.</p>
+                    </div>
+
+                    <div class="p-6 bg-white/5 rounded-xl border border-white/10">
+                        <div class="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center mb-4 text-lg">📈</div>
+                        <h4 class="font-bold mb-2">DEX Aggregation</h4>
+                        <p class="text-gray-400 text-sm">Best prices across Jupiter (Solana) and Aerodrome/BaseSwap (Base). Always get optimal execution.</p>
+                    </div>
+
+                    <div class="p-6 bg-white/5 rounded-xl border border-white/10">
+                        <div class="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center mb-4 text-lg">🛡️</div>
+                        <h4 class="font-bold mb-2">Risk Management</h4>
+                        <p class="text-gray-400 text-sm">Automatic stop-loss (5%) and take-profit (15%). Position sizing limits. Max drawdown tracking.</p>
+                    </div>
+                </div>
+
+                <!-- Quick Start -->
+                <div class="p-8 bg-white/5 rounded-2xl border border-white/10 text-center">
+                    <h3 class="text-xl font-bold mb-4">Start Trading</h3>
+                    <p class="text-gray-400 mb-6">Enable paper trading for all Pauls and watch them compete.</p>
+
+                    <pre class="bg-black/50 p-4 rounded-lg text-sm text-left text-gray-300 overflow-x-auto mb-6"><code># Enable paper trading
+python paul_world.py paper enable-all
+
+# Generate prediction (triggers auto-trade)
+python paul_world.py ask "Will BTC go up?"
+
+# View leaderboard
+python paul_world.py paper leaderboard</code></pre>
+
+                    <a href="./trading.html" class="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 rounded-lg font-bold transition-colors">
+                        <span>View Live Trading Dashboard</span>
+                        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                            <polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </a>
                 </div>
             </div>
         </div>
