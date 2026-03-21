@@ -41,6 +41,13 @@
         .icon { width: 24px; height: 24px; }
         .icon-sm { width: 16px; height: 16px; }
         .icon-lg { width: 40px; height: 40px; }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
     </style>
 </head>
 <body class="min-h-screen">
@@ -470,63 +477,160 @@
                     Swimming Pauls vs MiroFish
                 </h2>
                 
-                <div class="max-w-4xl mx-auto overflow-x-auto">
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="border-b border-white/10">
-                                <th class="text-left py-3 px-4 text-gray-400 font-medium">Feature</th>
-                                <th class="text-center py-3 px-4 text-cyan-400 font-bold">Swimming Pauls</th>
-                                <th class="text-center py-3 px-4 text-gray-500 font-medium">MiroFish</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="border-b border-white/5">
-                                <td class="py-3 px-4 text-gray-300">Memory System</td>
-                                <td class="py-3 px-4 text-center"><span class="text-green-400">✓ 100% Local SQLite</span></td>
-                                <td class="py-3 px-4 text-center"><span class="text-yellow-400">⚠ Zep Cloud (external)</span></td>
-                            </tr>
-                            <tr class="border-b border-white/5">
-                                <td class="py-3 px-4 text-gray-300">LLM Support</td>
-                                <td class="py-3 px-4 text-center"><span class="text-green-400">✓ Local + Cloud optional</span></td>
-                                <td class="py-3 px-4 text-center"><span class="text-red-400">✗ Cloud only (Qwen)</span></td>
-                            </tr>
-                            <tr class="border-b border-white/5">
-                                <td class="py-3 px-4 text-gray-300">Max Agents</td>
-                                <td class="py-3 px-4 text-center"><span class="text-green-400">✓ 10,000+ tested (16GB M4)</span></td>
-                                <td class="py-3 px-4 text-center"><span class="text-gray-400">500K tested</span></td>
-                            </tr>
-                            <tr class="border-b border-white/5">
-                                <td class="py-3 px-4 text-gray-300">Knowledge System</td>
-                                <td class="py-3 px-4 text-center"><span class="text-green-400">✓ Documents + Real-time Skills</span></td>
-                                <td class="py-3 px-4 text-center"><span class="text-gray-400">GraphRAG only</span></td>
-                            </tr>
-                            <tr class="border-b border-white/5">
-                                <td class="py-3 px-4 text-gray-300">World Simulation</td>
-                                <td class="py-3 px-4 text-center"><span class="text-green-400">✓ Paul's World (persistent)</span></td>
-                                <td class="py-3 px-4 text-center"><span class="text-gray-400">OASIS (per-prediction)</span></td>
-                            </tr>
-                            <tr class="border-b border-white/5">
-                                <td class="py-3 px-4 text-gray-300">Data Tools</td>
-                                <td class="py-3 px-4 text-center"><span class="text-green-400">✓ OpenClaw Skills (trading, news, blockchain)</span></td>
-                                <td class="py-3 px-4 text-center"><span class="text-gray-400">ReportAgent tools</span></td>
-                            </tr>
-                            <tr class="border-b border-white/5">
-                                <td class="py-3 px-4 text-gray-300">Deployment</td>
-                                <td class="py-3 px-4 text-center"><span class="text-green-400">✓ Single command</span></td>
-                                <td class="py-3 px-4 text-center"><span class="text-gray-400">Docker</span></td>
-                            </tr>
-                            <tr class="border-b border-white/5">
-                                <td class="py-3 px-4 text-gray-300">Privacy</td>
-                                <td class="py-3 px-4 text-center"><span class="text-green-400">✓ 100% Private</span></td>
-                                <td class="py-3 px-4 text-center"><span class="text-red-400">✗ Cloud-dependent</span></td>
-                            </tr>
-                            <tr>
-                                <td class="py-3 px-4 text-gray-300">Chat Integration</td>
-                                <td class="py-3 px-4 text-center"><span class="text-green-400">✓ Telegram + Terminal</span></td>
-                                <td class="py-3 px-4 text-center"><span class="text-gray-400">Web UI only</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <!-- Comparison Slider -->
+                <div class="max-w-4xl mx-auto relative">
+                    <!-- Slider Container -->
+                    <div class="overflow-x-auto pb-4 scrollbar-hide" id="comparison-slider">
+                        <div class="flex gap-4" style="min-width: max-content;">
+                            
+                            <!-- Card 1: Memory System -->
+                            <div class="w-72 flex-shrink-0 p-4 bg-black/30 rounded-xl border border-white/10">
+                                <div class="text-gray-400 text-xs mb-2 uppercase tracking-wider">Memory System</div>
+                                <div class="space-y-3">
+                                    <div class="p-3 bg-green-500/10 rounded-lg border border-green-500/30">
+                                        <div class="text-green-400 font-bold text-sm">Swimming Pauls</div>
+                                        <div class="text-green-300 text-xs">✓ 100% Local SQLite</div>
+                                    </div>
+                                    <div class="p-3 bg-yellow-500/10 rounded-lg border border-yellow-500/30">
+                                        <div class="text-yellow-400 font-bold text-sm">MiroFish</div>
+                                        <div class="text-yellow-300 text-xs">⚠ Zep Cloud (external)</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Card 2: LLM Support -->
+                            <div class="w-72 flex-shrink-0 p-4 bg-black/30 rounded-xl border border-white/10">
+                                <div class="text-gray-400 text-xs mb-2 uppercase tracking-wider">LLM Support</div>
+                                <div class="space-y-3">
+                                    <div class="p-3 bg-green-500/10 rounded-lg border border-green-500/30">
+                                        <div class="text-green-400 font-bold text-sm">Swimming Pauls</div>
+                                        <div class="text-green-300 text-xs">✓ Local + Cloud optional</div>
+                                    </div>
+                                    <div class="p-3 bg-red-500/10 rounded-lg border border-red-500/30">
+                                        <div class="text-red-400 font-bold text-sm">MiroFish</div>
+                                        <div class="text-red-300 text-xs">✗ Cloud only (Qwen)</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Card 3: Max Agents -->
+                            <div class="w-72 flex-shrink-0 p-4 bg-black/30 rounded-xl border border-white/10">
+                                <div class="text-gray-400 text-xs mb-2 uppercase tracking-wider">Max Agents</div>
+                                <div class="space-y-3">
+                                    <div class="p-3 bg-green-500/10 rounded-lg border border-green-500/30">
+                                        <div class="text-green-400 font-bold text-sm">Swimming Pauls</div>
+                                        <div class="text-green-300 text-xs">✓ 10,000+ tested (16GB M4)</div>
+                                    </div>
+                                    <div class="p-3 bg-gray-500/10 rounded-lg border border-gray-500/30">
+                                        <div class="text-gray-400 font-bold text-sm">MiroFish</div>
+                                        <div class="text-gray-300 text-xs">500K tested</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Card 4: Knowledge System -->
+                            <div class="w-72 flex-shrink-0 p-4 bg-black/30 rounded-xl border border-white/10">
+                                <div class="text-gray-400 text-xs mb-2 uppercase tracking-wider">Knowledge System</div>
+                                <div class="space-y-3">
+                                    <div class="p-3 bg-green-500/10 rounded-lg border border-green-500/30">
+                                        <div class="text-green-400 font-bold text-sm">Swimming Pauls</div>
+                                        <div class="text-green-300 text-xs">✓ Documents + Real-time Skills</div>
+                                    </div>
+                                    <div class="p-3 bg-gray-500/10 rounded-lg border border-gray-500/30">
+                                        <div class="text-gray-400 font-bold text-sm">MiroFish</div>
+                                        <div class="text-gray-300 text-xs">GraphRAG only</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Card 5: World Simulation -->
+                            <div class="w-72 flex-shrink-0 p-4 bg-black/30 rounded-xl border border-white/10">
+                                <div class="text-gray-400 text-xs mb-2 uppercase tracking-wider">World Simulation</div>
+                                <div class="space-y-3">
+                                    <div class="p-3 bg-green-500/10 rounded-lg border border-green-500/30">
+                                        <div class="text-green-400 font-bold text-sm">Swimming Pauls</div>
+                                        <div class="text-green-300 text-xs">✓ Paul's World (persistent)</div>
+                                    </div>
+                                    <div class="p-3 bg-gray-500/10 rounded-lg border border-gray-500/30">
+                                        <div class="text-gray-400 font-bold text-sm">MiroFish</div>
+                                        <div class="text-gray-300 text-xs">OASIS (per-prediction)</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Card 6: Data Tools -->
+                            <div class="w-72 flex-shrink-0 p-4 bg-black/30 rounded-xl border border-white/10">
+                                <div class="text-gray-400 text-xs mb-2 uppercase tracking-wider">Data Tools</div>
+                                <div class="space-y-3">
+                                    <div class="p-3 bg-green-500/10 rounded-lg border border-green-500/30">
+                                        <div class="text-green-400 font-bold text-sm">Swimming Pauls</div>
+                                        <div class="text-green-300 text-xs">✓ OpenClaw Skills</div>
+                                    </div>
+                                    <div class="p-3 bg-gray-500/10 rounded-lg border border-gray-500/30">
+                                        <div class="text-gray-400 font-bold text-sm">MiroFish</div>
+                                        <div class="text-gray-300 text-xs">ReportAgent tools</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Card 7: Deployment -->
+                            <div class="w-72 flex-shrink-0 p-4 bg-black/30 rounded-xl border border-white/10">
+                                <div class="text-gray-400 text-xs mb-2 uppercase tracking-wider">Deployment</div>
+                                <div class="space-y-3">
+                                    <div class="p-3 bg-green-500/10 rounded-lg border border-green-500/30">
+                                        <div class="text-green-400 font-bold text-sm">Swimming Pauls</div>
+                                        <div class="text-green-300 text-xs">✓ Single command</div>
+                                    </div>
+                                    <div class="p-3 bg-gray-500/10 rounded-lg border border-gray-500/30">
+                                        <div class="text-gray-400 font-bold text-sm">MiroFish</div>
+                                        <div class="text-gray-300 text-xs">Docker</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Card 8: Privacy -->
+                            <div class="w-72 flex-shrink-0 p-4 bg-black/30 rounded-xl border border-white/10">
+                                <div class="text-gray-400 text-xs mb-2 uppercase tracking-wider">Privacy</div>
+                                <div class="space-y-3">
+                                    <div class="p-3 bg-green-500/10 rounded-lg border border-green-500/30">
+                                        <div class="text-green-400 font-bold text-sm">Swimming Pauls</div>
+                                        <div class="text-green-300 text-xs">✓ 100% Private</div>
+                                    </div>
+                                    <div class="p-3 bg-red-500/10 rounded-lg border border-red-500/30">
+                                        <div class="text-red-400 font-bold text-sm">MiroFish</div>
+                                        <div class="text-red-300 text-xs">✗ Cloud-dependent</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Card 9: Chat Integration -->
+                            <div class="w-72 flex-shrink-0 p-4 bg-black/30 rounded-xl border border-white/10">
+                                <div class="text-gray-400 text-xs mb-2 uppercase tracking-wider">Chat Integration</div>
+                                <div class="space-y-3">
+                                    <div class="p-3 bg-green-500/10 rounded-lg border border-green-500/30">
+                                        <div class="text-green-400 font-bold text-sm">Swimming Pauls</div>
+                                        <div class="text-green-300 text-xs">✓ Telegram + Terminal</div>
+                                    </div>
+                                    <div class="p-3 bg-gray-500/10 rounded-lg border border-gray-500/30">
+                                        <div class="text-gray-400 font-bold text-sm">MiroFish</div>
+                                        <div class="text-gray-300 text-xs">Web UI only</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Scroll Hint -->
+                    <div class="flex items-center justify-center gap-2 mt-4 text-gray-500 text-sm">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18l6-6-6-6"/>
+                        </svg>
+                        <span>Swipe to compare</span>
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18l6-6-6-6"/>
+                        </svg>
+                    </div>
                 </div>
                 
                 <div class="mt-6 grid md:grid-cols-3 gap-4 max-w-4xl mx-auto">
