@@ -48,7 +48,35 @@
         .scrollbar-hide::-webkit-scrollbar {
             display: none;
         }
+        .carousel-slide {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        .carousel-slide.active {
+            display: block;
+        }
+        .carousel-dot {
+            transition: all 0.3s ease;
+        }
+        .carousel-dot.active {
+            background: #3b82f6;
+            transform: scale(1.2);
+        }
     </style>
+    <script>
+        function showCarouselSlide(index) {
+            const slides = document.querySelectorAll('.carousel-slide');
+            const dots = document.querySelectorAll('.carousel-dot');
+            
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+            
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+    </script>
 </head>
 <body class="min-h-screen">
     
@@ -468,168 +496,214 @@
                 </div>
             </div>
 
-            <!-- Comparison Chart -->
+            <!-- Features Carousel -->
             <div class="mb-12">
                 <h2 class="text-2xl font-bold text-center mb-8 flex items-center justify-center gap-3">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                     </svg>
-                    Swimming Pauls vs MiroFish
+                    Swimming Pauls Features
                 </h2>
                 
-                <!-- Comparison Slider -->
-                <div class="max-w-4xl mx-auto relative">
-                    <!-- Slider Container -->
-                    <div class="overflow-x-auto pb-4 scrollbar-hide" id="comparison-slider">
-                        <div class="flex gap-4" style="min-width: max-content;">
-                            
-                            <!-- Card 1: Memory System -->
-                            <div class="w-72 flex-shrink-0 p-4 bg-black/30 rounded-xl border border-white/10">
-                                <div class="text-gray-400 text-xs mb-2 uppercase tracking-wider">Memory System</div>
-                                <div class="space-y-3">
-                                    <div class="p-3 bg-green-500/10 rounded-lg border border-green-500/30">
-                                        <div class="text-green-400 font-bold text-sm">Swimming Pauls</div>
-                                        <div class="text-green-300 text-xs">✓ 100% Local SQLite</div>
-                                    </div>
-                                    <div class="p-3 bg-yellow-500/10 rounded-lg border border-yellow-500/30">
-                                        <div class="text-yellow-400 font-bold text-sm">MiroFish</div>
-                                        <div class="text-yellow-300 text-xs">⚠ Zep Cloud (external)</div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Card 2: LLM Support -->
-                            <div class="w-72 flex-shrink-0 p-4 bg-black/30 rounded-xl border border-white/10">
-                                <div class="text-gray-400 text-xs mb-2 uppercase tracking-wider">LLM Support</div>
-                                <div class="space-y-3">
-                                    <div class="p-3 bg-green-500/10 rounded-lg border border-green-500/30">
-                                        <div class="text-green-400 font-bold text-sm">Swimming Pauls</div>
-                                        <div class="text-green-300 text-xs">✓ Local + Cloud optional</div>
-                                    </div>
-                                    <div class="p-3 bg-red-500/10 rounded-lg border border-red-500/30">
-                                        <div class="text-red-400 font-bold text-sm">MiroFish</div>
-                                        <div class="text-red-300 text-xs">✗ Cloud only (Qwen)</div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Card 3: Max Agents -->
-                            <div class="w-72 flex-shrink-0 p-4 bg-black/30 rounded-xl border border-white/10">
-                                <div class="text-gray-400 text-xs mb-2 uppercase tracking-wider">Max Agents</div>
-                                <div class="space-y-3">
-                                    <div class="p-3 bg-green-500/10 rounded-lg border border-green-500/30">
-                                        <div class="text-green-400 font-bold text-sm">Swimming Pauls</div>
-                                        <div class="text-green-300 text-xs">✓ 10,000+ tested (16GB M4)</div>
-                                    </div>
-                                    <div class="p-3 bg-gray-500/10 rounded-lg border border-gray-500/30">
-                                        <div class="text-gray-400 font-bold text-sm">MiroFish</div>
-                                        <div class="text-gray-300 text-xs">500K tested</div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Card 4: Knowledge System -->
-                            <div class="w-72 flex-shrink-0 p-4 bg-black/30 rounded-xl border border-white/10">
-                                <div class="text-gray-400 text-xs mb-2 uppercase tracking-wider">Knowledge System</div>
-                                <div class="space-y-3">
-                                    <div class="p-3 bg-green-500/10 rounded-lg border border-green-500/30">
-                                        <div class="text-green-400 font-bold text-sm">Swimming Pauls</div>
-                                        <div class="text-green-300 text-xs">✓ Documents + Real-time Skills</div>
-                                    </div>
-                                    <div class="p-3 bg-gray-500/10 rounded-lg border border-gray-500/30">
-                                        <div class="text-gray-400 font-bold text-sm">MiroFish</div>
-                                        <div class="text-gray-300 text-xs">GraphRAG only</div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Card 5: World Simulation -->
-                            <div class="w-72 flex-shrink-0 p-4 bg-black/30 rounded-xl border border-white/10">
-                                <div class="text-gray-400 text-xs mb-2 uppercase tracking-wider">World Simulation</div>
-                                <div class="space-y-3">
-                                    <div class="p-3 bg-green-500/10 rounded-lg border border-green-500/30">
-                                        <div class="text-green-400 font-bold text-sm">Swimming Pauls</div>
-                                        <div class="text-green-300 text-xs">✓ Paul's World (persistent)</div>
-                                    </div>
-                                    <div class="p-3 bg-gray-500/10 rounded-lg border border-gray-500/30">
-                                        <div class="text-gray-400 font-bold text-sm">MiroFish</div>
-                                        <div class="text-gray-300 text-xs">OASIS (per-prediction)</div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Card 6: Data Tools -->
-                            <div class="w-72 flex-shrink-0 p-4 bg-black/30 rounded-xl border border-white/10">
-                                <div class="text-gray-400 text-xs mb-2 uppercase tracking-wider">Data Tools</div>
-                                <div class="space-y-3">
-                                    <div class="p-3 bg-green-500/10 rounded-lg border border-green-500/30">
-                                        <div class="text-green-400 font-bold text-sm">Swimming Pauls</div>
-                                        <div class="text-green-300 text-xs">✓ OpenClaw Skills</div>
-                                    </div>
-                                    <div class="p-3 bg-gray-500/10 rounded-lg border border-gray-500/30">
-                                        <div class="text-gray-400 font-bold text-sm">MiroFish</div>
-                                        <div class="text-gray-300 text-xs">ReportAgent tools</div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Card 7: Deployment -->
-                            <div class="w-72 flex-shrink-0 p-4 bg-black/30 rounded-xl border border-white/10">
-                                <div class="text-gray-400 text-xs mb-2 uppercase tracking-wider">Deployment</div>
-                                <div class="space-y-3">
-                                    <div class="p-3 bg-green-500/10 rounded-lg border border-green-500/30">
-                                        <div class="text-green-400 font-bold text-sm">Swimming Pauls</div>
-                                        <div class="text-green-300 text-xs">✓ Single command</div>
-                                    </div>
-                                    <div class="p-3 bg-gray-500/10 rounded-lg border border-gray-500/30">
-                                        <div class="text-gray-400 font-bold text-sm">MiroFish</div>
-                                        <div class="text-gray-300 text-xs">Docker</div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Card 8: Privacy -->
-                            <div class="w-72 flex-shrink-0 p-4 bg-black/30 rounded-xl border border-white/10">
-                                <div class="text-gray-400 text-xs mb-2 uppercase tracking-wider">Privacy</div>
-                                <div class="space-y-3">
-                                    <div class="p-3 bg-green-500/10 rounded-lg border border-green-500/30">
-                                        <div class="text-green-400 font-bold text-sm">Swimming Pauls</div>
-                                        <div class="text-green-300 text-xs">✓ 100% Private</div>
-                                    </div>
-                                    <div class="p-3 bg-red-500/10 rounded-lg border border-red-500/30">
-                                        <div class="text-red-400 font-bold text-sm">MiroFish</div>
-                                        <div class="text-red-300 text-xs">✗ Cloud-dependent</div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Card 9: Chat Integration -->
-                            <div class="w-72 flex-shrink-0 p-4 bg-black/30 rounded-xl border border-white/10">
-                                <div class="text-gray-400 text-xs mb-2 uppercase tracking-wider">Chat Integration</div>
-                                <div class="space-y-3">
-                                    <div class="p-3 bg-green-500/10 rounded-lg border border-green-500/30">
-                                        <div class="text-green-400 font-bold text-sm">Swimming Pauls</div>
-                                        <div class="text-green-300 text-xs">✓ Telegram + Terminal</div>
-                                    </div>
-                                    <div class="p-3 bg-gray-500/10 rounded-lg border border-gray-500/30">
-                                        <div class="text-gray-400 font-bold text-sm">MiroFish</div>
-                                        <div class="text-gray-300 text-xs">Web UI only</div>
-                                    </div>
-                                </div>
-                            </div>
-                            
+                <div class="max-w-4xl mx-auto">
+                    <!-- Slide 1: Comparison Table -->
+                    <div class="carousel-slide active" data-slide="0">
+                        <h3 class="text-xl font-bold text-center mb-6 text-cyan-400">Swimming Pauls vs MiroFish</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead>
+                                    <tr class="border-b border-white/10">
+                                        <th class="text-left py-3 px-4 text-gray-400 font-medium">Feature</th>
+                                        <th class="text-center py-3 px-4 text-cyan-400 font-bold">Swimming Pauls</th>
+                                        <th class="text-center py-3 px-4 text-gray-500 font-medium">MiroFish</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b border-white/5">
+                                        <td class="py-3 px-4 text-gray-300">Memory System</td>
+                                        <td class="py-3 px-4 text-center"><span class="text-green-400">✓ 100% Local SQLite</span></td>
+                                        <td class="py-3 px-4 text-center"><span class="text-yellow-400">⚠ Zep Cloud (external)</span></td>
+                                    </tr>
+                                    <tr class="border-b border-white/5">
+                                        <td class="py-3 px-4 text-gray-300">LLM Support</td>
+                                        <td class="py-3 px-4 text-center"><span class="text-green-400">✓ Local + Cloud optional</span></td>
+                                        <td class="py-3 px-4 text-center"><span class="text-red-400">✗ Cloud only (Qwen)</span></td>
+                                    </tr>
+                                    <tr class="border-b border-white/5">
+                                        <td class="py-3 px-4 text-gray-300">Max Agents</td>
+                                        <td class="py-3 px-4 text-center"><span class="text-green-400">✓ 10,000+ tested (16GB M4)</span></td>
+                                        <td class="py-3 px-4 text-center"><span class="text-gray-400">500K tested</span></td>
+                                    </tr>
+                                    <tr class="border-b border-white/5">
+                                        <td class="py-3 px-4 text-gray-300">Knowledge System</td>
+                                        <td class="py-3 px-4 text-center"><span class="text-green-400">✓ Documents + Real-time Skills</span></td>
+                                        <td class="py-3 px-4 text-center"><span class="text-gray-400">GraphRAG only</span></td>
+                                    </tr>
+                                    <tr class="border-b border-white/5">
+                                        <td class="py-3 px-4 text-gray-300">World Simulation</td>
+                                        <td class="py-3 px-4 text-center"><span class="text-green-400">✓ Paul's World (persistent)</span></td>
+                                        <td class="py-3 px-4 text-center"><span class="text-gray-400">OASIS (per-prediction)</span></td>
+                                    </tr>
+                                    <tr class="border-b border-white/5">
+                                        <td class="py-3 px-4 text-gray-300">Data Tools</td>
+                                        <td class="py-3 px-4 text-center"><span class="text-green-400">✓ OpenClaw Skills (trading, news, blockchain)</span></td>
+                                        <td class="py-3 px-4 text-center"><span class="text-gray-400">ReportAgent tools</span></td>
+                                    </tr>
+                                    <tr class="border-b border-white/5">
+                                        <td class="py-3 px-4 text-gray-300">Deployment</td>
+                                        <td class="py-3 px-4 text-center"><span class="text-green-400">✓ Single command</span></td>
+                                        <td class="py-3 px-4 text-center"><span class="text-gray-400">Docker</span></td>
+                                    </tr>
+                                    <tr class="border-b border-white/5">
+                                        <td class="py-3 px-4 text-gray-300">Privacy</td>
+                                        <td class="py-3 px-4 text-center"><span class="text-green-400">✓ 100% Private</span></td>
+                                        <td class="py-3 px-4 text-center"><span class="text-red-400">✗ Cloud-dependent</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3 px-4 text-gray-300">Chat Integration</td>
+                                        <td class="py-3 px-4 text-center"><span class="text-green-400">✓ Telegram + Terminal</span></td>
+                                        <td class="py-3 px-4 text-center"><span class="text-gray-400">Web UI only</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                     
-                    <!-- Scroll Hint -->
-                    <div class="flex items-center justify-center gap-2 mt-4 text-gray-500 text-sm">
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9 18l6-6-6-6"/>
-                        </svg>
-                        <span>Swipe to compare</span>
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9 18l6-6-6-6"/>
-                        </svg>
+                    <!-- Slide 2: Add Pauls to Your App -->
+                    <div class="carousel-slide" data-slide="1">
+                        <h3 class="text-xl font-bold text-center mb-6 flex items-center justify-center gap-3">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                            </svg>
+                            Add Pauls to Your App
+                        </h3>
+                        
+                        <div class="p-6 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-2xl border border-cyan-500/30">
+                            <p class="text-gray-300 mb-6 text-center">
+                                Connect any application to swarm intelligence. Get predictions from 1,000 deep-thinking Pauls or 1,000,000 lightweight agents—your choice.
+                            </p>
+                            
+                            <div class="bg-black/50 p-4 rounded-xl font-mono text-sm text-gray-300 mb-6 overflow-x-auto">
+                                <code>
+                                    from swimming_pauls import Simulation, PersonaFactory<br/><br/>
+                                    pauls = PersonaFactory.generate_pauls(count=100)
+                                    result = Simulation.run(
+                                        question="Will this feature succeed?",
+                                        agents=pauls,
+                                        rounds=10
+                                    )
+                                </code>
+                            </div>
+                            
+                            <div class="grid md:grid-cols-2 gap-4 mb-6">
+                                <div class="p-4 bg-white/5 rounded-xl">
+                                    <div class="font-bold text-cyan-400 mb-2">What You Get</div>
+                                    <ul class="text-sm text-gray-400 space-y-1">
+                                        <li>• Consensus direction (Bullish/Bearish/Neutral)</li>
+                                        <li>• Confidence score (0-100%)</li>
+                                        <li>• Sentiment analysis</li>
+                                        <li>• Individual Paul reasoning</li>
+                                        <li>• Shareable result links</li>
+                                    </ul>
+                                </div>
+                                <div class="p-4 bg-white/5 rounded-xl">
+                                    <div class="font-bold text-cyan-400 mb-2">Use Cases</div>
+                                    <ul class="text-sm text-gray-400 space-y-1">
+                                        <li>• <strong>Trading:</strong> Predict market moves</li>
+                                        <li>• <strong>Content:</strong> Will this script succeed?</li>
+                                        <li>• <strong>Product:</strong> Will users adopt this feature?</li>
+                                        <li>• <strong>Healthcare:</strong> Treatment outcome predictions</li>
+                                        <li>• <strong>Any decision:</strong> Get swarm consensus</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                                <a href="https://github.com/IBFolding/swimming-pauls/blob/main/INTEGRATION.md" target="_blank" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-cyan-600 hover:bg-cyan-500 rounded-lg font-medium transition-colors">
+                                    <span>View Integration Guide</span>
+                                    <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="5" y1="12" x2="19" y2="12"/>
+                                        <polyline points="12 5 19 12 12 19"/>
+                                    </svg>
+                                </a>
+                                <a href="https://github.com/IBFolding/swimming-pauls" target="_blank" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg font-medium transition-colors">
+                                    <span>GitHub Repo</span>
+                                    <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 3: High-Scale Mode -->
+                    <div class="carousel-slide" data-slide="2">
+                        <h3 class="text-xl font-bold text-center mb-6 flex items-center justify-center gap-3">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                            High-Scale Mode: Millions of Pauls
+                        </h3>
+                        
+                        <div class="p-6 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-2xl border border-purple-500/30">
+                            <p class="text-gray-300 mb-6 text-center">
+                                Need to run millions of agents? Activate High-Scale Mode with batch inference.
+                            </p>
+                            
+                            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                                <div class="p-4 bg-black/30 rounded-xl">
+                                    <div class="font-bold text-purple-400 mb-2">Standard Mode</div>
+                                    <ul class="text-sm text-gray-400 space-y-1">
+                                        <li>• Full personas with skills</li>
+                                        <li>• ~10KB per Paul</li>
+                                        <li>• 10,000 tested on M4</li>
+                                        <li>• Individual API calls</li>
+                                        <li>• Rich reasoning output</li>
+                                    </ul>
+                                </div>
+                                <div class="p-4 bg-black/30 rounded-xl border border-pink-500/30">
+                                    <div class="font-bold text-pink-400 mb-2">High-Scale Mode</div>
+                                    <ul class="text-sm text-gray-400 space-y-1">
+                                        <li>• Lightweight state-only agents</li>
+                                        <li>• ~64 bytes per Paul</li>
+                                        <li>• 1,000,000+ possible</li>
+                                        <li>• Batch inference (100x faster)</li>
+                                        <li>• Fast consensus output</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-black/50 p-4 rounded-xl font-mono text-sm text-gray-300 mb-6 overflow-x-auto">
+                                <code>
+                                    from swimming_pauls import HighScaleSimulation<br/><br/>
+                                    # Run 1 million Pauls<br/>
+                                    sim = HighScaleSimulation(agent_count=1_000_000)<br/>
+                                    result = await sim.run_simulation(<br/>
+                                        question="Will BTC hit $100K?",<br/>
+                                        rounds=3<br/>
+                                    )<br/><br/>
+                                    # Memory: ~64MB | API calls: 10,000
+                                </code>
+                            </div>
+                            
+                            <div class="text-center">
+                                <a href="https://github.com/IBFolding/swimming-pauls/blob/main/high_scale_mode.py" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg font-medium transition-colors">
+                                    <span>View High-Scale Code</span>
+                                    <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="5" y1="12" x2="19" y2="12"/>
+                                        <polyline points="12 5 19 12 12 19"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Navigation Dots -->
+                    <div class="flex justify-center gap-3 mt-8">
+                        <button onclick="showCarouselSlide(0)" class="carousel-dot active w-3 h-3 rounded-full bg-gray-600 hover:bg-gray-500 transition-all"></button>
+                        <button onclick="showCarouselSlide(1)" class="carousel-dot w-3 h-3 rounded-full bg-gray-600 hover:bg-gray-500 transition-all"></button>
+                        <button onclick="showCarouselSlide(2)" class="carousel-dot w-3 h-3 rounded-full bg-gray-600 hover:bg-gray-500 transition-all"></button>
                     </div>
                 </div>
                 
@@ -649,136 +723,6 @@
                 </div>
             </div>
 
-            <!-- High-Scale Mode Section -->
-            <div class="mb-12">
-                <h2 class="text-2xl font-bold text-center mb-8 flex items-center justify-center gap-3">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                    </svg>
-                    High-Scale Mode: Millions of Pauls
-                </h2>
-                
-                <div class="max-w-4xl mx-auto p-6 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-2xl border border-purple-500/30">
-                    <p class="text-gray-300 mb-6 text-center">
-                        Need to run millions of agents? Activate High-Scale Mode with batch inference.
-                    </p>
-                    
-                    <div class="grid md:grid-cols-2 gap-6 mb-6">
-                        <div class="p-4 bg-black/30 rounded-xl">
-                            <div class="font-bold text-purple-400 mb-2">Standard Mode</div>
-                            <ul class="text-sm text-gray-400 space-y-1">
-                                <li>• Full personas with skills</li>
-                                <li>• ~10KB per Paul</li>
-                                <li>• 10,000 tested on M4</li>
-                                <li>• Individual API calls</li>
-                                <li>• Rich reasoning output</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="p-4 bg-black/30 rounded-xl border border-pink-500/30">
-                            <div class="font-bold text-pink-400 mb-2">High-Scale Mode</div>
-                            <ul class="text-sm text-gray-400 space-y-1">
-                                <li>• Lightweight state-only agents</li>
-                                <li>• ~64 bytes per Paul</li>
-                                <li>• 1,000,000+ possible</li>
-                                <li>• Batch inference (100x faster)</li>
-                                <li>• Fast consensus output</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-black/50 p-4 rounded-xl font-mono text-sm text-gray-300 mb-6 overflow-x-auto">
-                        <code>
-                            from swimming_pauls import HighScaleSimulation<br/><br/>
-                            # Run 1 million Pauls<br/>
-                            sim = HighScaleSimulation(agent_count=1_000_000)<br/>
-                            result = await sim.run_simulation(<br/>
-                            &nbsp;&nbsp;question="Will BTC hit $100K?",<br/>
-                            &nbsp;&nbsp;rounds=3<br/>
-                            )<br/><br/>
-                            # Memory: ~64MB | API calls: 10,000
-                        </code>
-                    </div>
-                    
-                    <div class="text-center">
-                        <a href="https://github.com/IBFolding/swimming-pauls/blob/main/high_scale_mode.py" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg font-medium transition-colors">
-                            <span>View High-Scale Code</span>
-                            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="5" y1="12" x2="19" y2="12"/>
-                                <polyline points="12 5 19 12 12 19"/>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Integration Section -->
-            <div class="mb-12">
-                <h2 class="text-2xl font-bold text-center mb-8 flex items-center justify-center gap-3">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-                    </svg>
-                    Add Pauls to Your App
-                </h2>
-                
-                <div class="max-w-4xl mx-auto p-6 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-2xl border border-cyan-500/30">
-                    <p class="text-gray-300 mb-6 text-center">
-                        Connect any application to swarm intelligence. Get predictions from 1,000 deep-thinking Pauls or 1,000,000 lightweight agents—your choice.
-                    </p>
-                    
-                    <div class="bg-black/50 p-4 rounded-xl font-mono text-sm text-gray-300 mb-6 overflow-x-auto">
-                        <code>
-                            from swimming_pauls import Simulation, PersonaFactory<br/><br/>
-                            pauls = PersonaFactory.generate_pauls(count=100)<br/>
-                            result = Simulation.run(<br/>
-                            &nbsp;&nbsp;question="Will this feature succeed?",<br/>
-                            &nbsp;&nbsp;agents=pauls,<br/>
-                            &nbsp;&nbsp;rounds=10<br/>
-                            )
-                        </code>
-                    </div>
-                    
-                    <div class="grid md:grid-cols-2 gap-4 mb-6">
-                        <div class="p-4 bg-white/5 rounded-xl">
-                            <div class="font-bold text-cyan-400 mb-2">What You Get</div>
-                            <ul class="text-sm text-gray-400 space-y-1">
-                                <li>• Consensus direction (Bullish/Bearish/Neutral)</li>
-                                <li>• Confidence score (0-100%)</li>
-                                <li>• Sentiment analysis</li>
-                                <li>• Individual Paul reasoning</li>
-                                <li>• Shareable result links</li>
-                            </ul>
-                        </div>
-                        <div class="p-4 bg-white/5 rounded-xl">
-                            <div class="font-bold text-cyan-400 mb-2">Use Cases</div>
-                            <ul class="text-sm text-gray-400 space-y-1">
-                                <li>• <strong>Trading:</strong> Predict market moves</li>
-                                <li>• <strong>Content:</strong> Will this script succeed?</li>
-                                <li>• <strong>Product:</strong> Will users adopt this feature?</li>
-                                <li>• <strong>Healthcare:</strong> Treatment outcome predictions</li>
-                                <li>• <strong>Any decision:</strong> Get swarm consensus</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                        <a href="https://github.com/IBFolding/swimming-pauls/blob/main/INTEGRATION.md" target="_blank" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-cyan-600 hover:bg-cyan-500 rounded-lg font-medium transition-colors">
-                            <span>View Integration Guide</span>
-                            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="5" y1="12" x2="19" y2="12"/>
-                                <polyline points="12 5 19 12 12 19"/>
-                            </svg>
-                        </a>
-                        <a href="https://github.com/IBFolding/swimming-pauls" target="_blank" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg font-medium transition-colors">
-                            <span>GitHub Repo</span>
-                            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- Tab: Demos -->
