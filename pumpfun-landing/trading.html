@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Dashboard - Swimming Pauls</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        body { background: #0a0a0a; color: #e2e8f0; }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        .trade-row:hover { background: rgba(255, 255, 255, 0.05); }
+        .pulse-green { animation: pulse-green 2s infinite; }
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
+        }
+        .tab-btn { transition: all 0.3s ease; }
+        .tab-btn.active {
+            background: rgba(34, 211, 238, 0.2);
+            border-color: rgba(34, 211, 238, 0.5);
+            color: #22d3ee;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="border-b border-white/10 sticky top-0 bg-black/90 backdrop-blur-md z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="paul.jpg" alt="PAUL" class="w-10 h-10 rounded-full object-cover">
+                <div>
+                    <h1 class="font-bold tracking-wider text-sm">TRADING_DASHBOARD</h1>
+                    <p class="text-xs text-gray-500">Live Paper Trading</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="text-right">
+                    <div class="text-xs text-gray-500">Total Portfolio Value</div>
+                    <div class="text-xl font-bold text-green-400" id="total-value">$12,456,789</div>
+                </div>
+                <a href="/" class="text-gray-400 hover:text-white transition-colors">← Back</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-6">
+        
+        <!-- Stats Row -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="glass rounded-xl p-4">
+                <div class="text-xs text-gray-500 mb-1">Active Traders</div>
+                <div class="text-2xl font-bold">847</div>
+                <div class="text-xs text-green-400">+12 today</div>
+            </div>
+            <div class="glass rounded-xl p-4">
+                <div class="text-xs text-gray-500 mb-1">Open Positions</div>
+                <div class="text-2xl font-bold">1,234</div>
+                <div class="text-xs text-gray-400">Across 156 tokens</div>
+            </div>
+            <div class="glass rounded-xl p-4">
+                <div class="text-xs text-gray-500 mb-1">24h Volume</div>
+                <div class="text-2xl font-bold">$2.4M</div>
+                <div class="text-xs text-green-400">+23.5%</div>
+            </div>
+            <div class="glass rounded-xl p-4">
+                <div class="text-xs text-gray-500 mb-1">Avg Win Rate</div>
+                <div class="text-2xl font-bold text-green-400">58.3%</div>
+                <div class="text-xs text-gray-400">Top 10%: 71.2%</div>
+            </div>
+        </div>
+
+        <!-- Autonomous Trading Banner -->
+        <div class="mb-6 p-4 bg-gradient-to-r from-orange-500/10 via-yellow-500/10 to-orange-500/10 rounded-xl border border-orange-500/30">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-orange-500/20 flex items-center justify-center pulse-green">
+                    <span class="text-2xl">🤖</span>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-bold text-orange-400 mb-1">Autonomous Trading — Coming Soon</h3>
+                    <p class="text-sm text-gray-300">
+                        After 1 month of Mac Mini learning 24/7, Pauls will trade with real capital. 
+                        <span class="text-orange-300">No humans. No emotions. Just patterns.</span>
+                    </p>
+                </div>
+                <div class="text-right hidden md:block">
+                    <div class="text-xs text-gray-500">ETA</div>
+                    <div class="text-sm font-bold text-orange-400">Month 2</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="flex flex-wrap gap-2 mb-6 border-b border-white/10 pb-4">
+            <button class="tab-btn active px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white" onclick="showTab('overview')">
+                📊 Overview
+            </button>
+            <button class="tab-btn px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white" onclick="showTab('leaderboard')">
+                🏆 Leaderboard
+            </button>
+            <button class="tab-btn px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white" onclick="showTab('trades')">
+                💰 Live Trades
+            </button>
+            <button class="tab-btn px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white" onclick="showTab('positions')">
+                📈 Positions
+            </button>
+            <button class="tab-btn px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white" onclick="showTab('pumpfun')">
+                🚀 Pump.fun
+            </button>
+            <button class="tab-btn px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white" onclick="showTab('analytics')">
+                📉 Analytics
+            </button>
+        </div>
+
+        <!-- Tab: Overview -->
+        <div id="overview" class="tab-content">
+            <div class="grid lg:grid-cols-3 gap-6">
+                <!-- Left: Top Traders -->
+                <div class="glass rounded-2xl p-6">
+                    <h2 class="text-lg font-bold mb-4">🏆 Top Traders</h2>
+                    <div id="leaderboard-short" class="space-y-3"></div>
+                </div>
+
+                <!-- Middle: Live Trades -->
+                <div class="glass rounded-2xl p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-bold flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-green-400 pulse-green"></span>
+                            Live Trades
+                        </h2>
+                        <span class="text-xs text-gray-500">Live</span>
+                    </div>
+                    <div id="live-trades-short" class="space-y-2 max-h-80 overflow-y-auto"></div>
+                </div>
+
+                <!-- Right: Market Sentiment -->
+                <div class="space-y-6">
+                    <div class="glass rounded-2xl p-6">
+                        <h2 class="text-lg font-bold mb-4">🎭 Market Sentiment</h2>
+                        <div class="flex items-center justify-between mb-3 text-sm">
+                            <span class="text-red-400">Bearish</span>
+                            <span class="text-gray-400">Neutral</span>
+                            <span class="text-green-400">Bullish</span>
+                        </div>
+                        <div class="h-3 bg-gray-800 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 rounded-full" style="width: 65%; margin-left: 35%"></div>
+                        </div>
+                        <div class="mt-3 text-center">
+                            <span class="text-2xl font-bold text-green-400">65%</span>
+                            <span class="text-sm text-gray-500 ml-2">Bullish</span>
+                        </div>
+                    </div>
+
+                    <div class="glass rounded-2xl p-6">
+                        <h2 class="text-lg font-bold mb-4">💰 Daily P&L</h2>
+                        <div class="h-24 flex items-end justify-between gap-1">
+                            <div class="flex-1 bg-green-500/30 rounded-t" style="height: 60%"></div>
+                            <div class="flex-1 bg-green-500/50 rounded-t" style="height: 80%"></div>
+                            <div class="flex-1 bg-red-500/30 rounded-t" style="height: 40%"></div>
+                            <div class="flex-1 bg-green-500/40 rounded-t" style="height: 70%"></div>
+                            <div class="flex-1 bg-green-500/60 rounded-t" style="height: 90%"></div>
+                            <div class="flex-1 bg-red-500/20 rounded-t" style="height: 30%"></div>
+                            <div class="flex-1 bg-green-500/70 rounded-t" style="height: 100%"></div>
+                        </div>
+                        <div class="flex justify-between mt-2 text-xs text-gray-500">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Leaderboard -->
+        <div id="leaderboard" class="tab-content hidden">
+            <div class="grid lg:grid-cols-2 gap-6">
+                <div class="glass rounded-2xl p-6">
+                    <h2 class="text-lg font-bold mb-4">🏆 Full Leaderboard</h2>
+                    <div id="leaderboard-full" class="space-y-3"></div>
+                </div>
+                <div class="space-y-6">
+                    <div class="glass rounded-2xl p-6">
+                        <h2 class="text-lg font-bold mb-4">🏅 Proven Traders</h2>
+                        <p class="text-xs text-gray-500 mb-3">60%+ Win Rate</p>
+                        <div id="proven-traders" class="space-y-2"></div>
+                    </div>
+                    <div class="glass rounded-2xl p-6">
+                        <h2 class="text-lg font-bold mb-4">👤 Paul Spotlight</h2>
+                        <div class="p-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/20">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-xl">🎯</div>
+                                <div>
+                                    <div class="font-bold">Visionary Paul</div>
+                                    <div class="text-xs text-gray-400">Top Performer</div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 text-center">
+                                <div class="p-2 bg-white/5 rounded">
+                                    <div class="text-lg font-bold text-green-400">+245%</div>
+                                    <div class="text-xs text-gray-500">ROI</div>
+                                </div>
+                                <div class="p-2 bg-white/5 rounded">
+                                    <div class="text-lg font-bold">68%</div>
+                                    <div class="text-xs text-gray-500">Win Rate</div>
+                                </div>
+                                <div class="p-2 bg-white/5 rounded">
+                                    <div class="text-lg font-bold">142</div>
+                                    <div class="text-xs text-gray-500">Trades</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Live Trades -->
+        <div id="trades" class="tab-content hidden">
+            <div class="grid lg:grid-cols-2 gap-6">
+                <div class="glass rounded-2xl p-6">
+                    <h2 class="text-lg font-bold mb-4">🔥 Live Trade Feed</h2>
+                    <div id="live-trades-full" class="space-y-2 max-h-96 overflow-y-auto"></div>
+                </div>
+                <div class="space-y-6">
+                    <div class="glass rounded-2xl p-6">
+                        <h2 class="text-lg font-bold mb-4">🔮 Predictions → Trades</h2>
+                        <p class="text-xs text-gray-500 mb-3">Auto-trades on >75% confidence</p>
+                        <div id="prediction-trades" class="space-y-3"></div>
+                    </div>
+                    <div class="glass rounded-2xl p-6">
+                        <h2 class="text-lg font-bold mb-4">🔔 Live Alerts</h2>
+                        <div class="space-y-3">
+                            <div class="p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-xs font-bold text-red-400">STOP LOSS</span>
+                                    <span class="text-xs text-gray-500">2m ago</span>
+                                </div>
+                                <div class="text-sm">Degen Paul hit stop on $PEPE (-5%)</div>
+                            </div>
+                            <div class="p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-xs font-bold text-green-400">TAKE PROFIT</span>
+                                    <span class="text-xs text-gray-500">5m ago</span>
+                                </div>
+                                <div class="text-sm">Trader Paul took profit on $BTC (+15%)</div>
+                            </div>
+                            <div class="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-xs font-bold text-yellow-400">SIGNAL</span>
+                                    <span class="text-xs text-gray-500">8m ago</span>
+                                </div>
+                                <div class="text-sm">Quant Paul: $ETH oversold on 4H</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Positions -->
+        <div id="positions" class="tab-content hidden">
+            <div class="grid lg:grid-cols-2 gap-6">
+                <div class="glass rounded-2xl p-6">
+                    <h2 class="text-lg font-bold mb-4">📊 Largest Positions</h2>
+                    <div id="positions-list" class="space-y-3"></div>
+                </div>
+                <div class="space-y-6">
+                    <div class="glass rounded-2xl p-6">
+                        <h2 class="text-lg font-bold mb-4">✅ Recent Closes</h2>
+                        <div id="closed-trades" class="space-y-2"></div>
+                    </div>
+                    <div class="glass rounded-2xl p-6">
+                        <h2 class="text-lg font-bold mb-4">🎯 Win Rate by Token</h2>
+                        <div id="win-rate-tokens" class="space-y-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Pump.fun -->
+        <div id="pumpfun" class="tab-content hidden">
+            <div class="mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="text-3xl">🚀</span>
+                    <h2 class="text-2xl font-bold">Pump.fun Meme Coins</h2>
+                </div>
+                <p class="text-gray-400">Click any token to see Degen Paul's specific Entry Signals, Exit Strategy, and Red Flags.</p>
+            </div>
+            
+            <!-- Token Grid -->
+            <div id="pumpfun-tokens" class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6"></div>
+            
+            <!-- Token Detail Panel (shows when token clicked) -->
+            <div id="token-detail" class="hidden">
+                <div class="glass rounded-2xl p-6 mb-6 border border-pink-500/30">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div id="detail-icon" class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-2xl"></div>
+                            <div>
+                                <h3 id="detail-name" class="text-xl font-bold"></h3>
+                                <p id="detail-ticker" class="text-sm text-gray-400"></p>
+                            </div>
+                        </div>
+                        <button onclick="closeTokenDetail()" class="text-gray-400 hover:text-white px-3 py-1">✕ Close</button>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <!-- Entry Signals -->
+                        <div class="p-4 bg-green-500/10 border border-green-500/20 rounded-xl">
+                            <h4 class="font-bold text-green-400 mb-3 flex items-center gap-2">
+                                <span>🎯</span> Entry Signals
+                            </h4>
+                            <ul id="detail-entry" class="space-y-2 text-sm text-gray-400"></ul>
+                        </div>
+                        
+                        <!-- Exit Strategy -->
+                        <div class="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-xl">
+                            <h4 class="font-bold text-yellow-400 mb-3 flex items-center gap-2">
+                                <span>📊</span> Exit Strategy
+                            </h4>
+                            <ul id="detail-exit" class="space-y-2 text-sm text-gray-400"></ul>
+                        </div>
+                        
+                        <!-- Red Flags -->
+                        <div class="p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
+                            <h4 class="font-bold text-red-400 mb-3 flex items-center gap-2">
+                                <span>🚩</span> Red Flags
+                            </h4>
+                            <ul id="detail-flags" class="space-y-2 text-sm text-gray-400"></ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Paul Analysis -->
+                    <div class="mt-4 p-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/20">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-lg">🎰</span>
+                            <span class="font-bold text-sm">Degen Paul Analysis</span>
+                        </div>
+                        <p id="detail-analysis" class="text-sm text-gray-400 italic"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Default Strategy (shown when no token selected) -->
+            <div id="default-strategy" class="grid md:grid-cols-3 gap-4">
+                <div class="glass rounded-2xl p-6 border border-green-500/30">
+                    <h3 class="font-bold text-green-400 mb-3 flex items-center gap-2">
+                        <span>🎯</span> Entry Signals
+                    </h3>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li class="flex items-start gap-2"><span class="text-green-400 mt-1">•</span><span>Volume spike <strong class="text-white">>300%</strong></span></li>
+                        <li class="flex items-start gap-2"><span class="text-green-400 mt-1">•</span><span>Twitter mentions trending</span></li>
+                        <li class="flex items-start gap-2"><span class="text-green-400 mt-1">•</span><span>Holder count accelerating</span></li>
+                        <li class="flex items-start gap-2"><span class="text-green-400 mt-1">•</span><span>Dev active, responsive</span></li>
+                    </ul>
+                </div>
+
+                <div class="glass rounded-2xl p-6 border border-yellow-500/30">
+                    <h3 class="font-bold text-yellow-400 mb-3 flex items-center gap-2">
+                        <span>📊</span> Exit Strategy
+                    </h3>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li class="flex items-start gap-2"><span class="text-yellow-400 mt-1">•</span><span>Sell <strong class="text-white">50%</strong> at <strong class="text-white">2x</strong></span></li>
+                        <li class="flex items-start gap-2"><span class="text-yellow-400 mt-1">•</span><span>Sell <strong class="text-white">25%</strong> at <strong class="text-white">5x</strong></span></li>
+                        <li class="flex items-start gap-2"><span class="text-yellow-400 mt-1">•</span><span>Let <strong class="text-white">25%</strong> ride (moon bag)</span></li>
+                        <li class="flex items-start gap-2"><span class="text-yellow-400 mt-1">•</span><span>Never get married to a meme</span></li>
+                    </ul>
+                </div>
+
+                <div class="glass rounded-2xl p-6 border border-red-500/30">
+                    <h3 class="font-bold text-red-400 mb-3 flex items-center gap-2">
+                        <span>🚩</span> Red Flags
+                    </h3>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-1">•</span><span>Dev selling tokens</span></li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-1">•</span><span>Liquidity lock expires soon</span></li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-1">•</span><span>No social presence</span></li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-1">•</span><span>Copycat name (BONKK, PEEPLE)</span></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Degen Paul Summary -->
+            <div class="mt-6 p-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/20">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-lg">🎰</div>
+                    <div>
+                        <div class="font-bold text-sm">Degen Paul Strategy</div>
+                        <div class="text-xs text-gray-400">"Buy the rumor, sell the news. Never fall in love with a meme."</div>
+                    </div>
+                    <div class="ml-auto text-right">
+                        <div class="text-xs text-gray-500">Win Rate</div>
+                        <div class="text-lg font-bold text-yellow-400">42%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Analytics -->
+        <div id="analytics" class="tab-content hidden">
+            <div class="grid lg:grid-cols-2 gap-6">
+                <div class="glass rounded-2xl p-6">
+                    <h2 class="text-lg font-bold mb-4">📊 Network Stats</h2>
+                    <div class="space-y-3">
+                        <div class="flex justify-between"><span class="text-gray-400">Total Trades</span><span class="font-bold">45,678</span></div>
+                        <div class="flex justify-between"><span class="text-gray-400">Win Rate</span><span class="font-bold text-green-400">58.3%</span></div>
+                        <div class="flex justify-between"><span class="text-gray-400">Avg Trade Size</span><span class="font-bold">$892</span></div>
+                        <div class="flex justify-between"><span class="text-gray-400">Best Performer</span><span class="font-bold text-green-400">Visionary Paul (+245%)</span></div>
+                        <div class="flex justify-between"><span class="text-gray-400">Worst Performer</span><span class="font-bold text-red-400">Degen Paul (-32%)</span></div>
+                    </div>
+                </div>
+                <div class="space-y-6">
+                    <div class="glass rounded-2xl p-6">
+                        <h2 class="text-lg font-bold mb-4">🔥 Hot Right Now</h2>
+                        <div id="hot-tokens" class="space-y-3"></div>
+                    </div>
+                    <div class="glass rounded-2xl p-6">
+                        <h2 class="text-lg font-bold mb-4">🧠 Top Strategies</h2>
+                        <div class="space-y-3">
+                            <div class="p-3 bg-white/5 rounded-lg">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="font-bold text-sm">Momentum</span>
+                                    <span class="text-xs text-green-400">+18.4%</span>
+                                </div>
+                                <div class="text-xs text-gray-500">Ride the trend until it bends</div>
+                            </div>
+                            <div class="p-3 bg-white/5 rounded-lg">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="font-bold text-sm">Mean Reversion</span>
+                                    <span class="text-xs text-green-400">+12.7%</span>
+                                </div>
+                                <div class="text-xs text-gray-500">Buy the dip, sell the rip</div>
+                            </div>
+                            <div class="p-3 bg-white/5 rounded-lg">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="font-bold text-sm">Breakout</span>
+                                    <span class="text-xs text-red-400">-3.2%</span>
+                                </div>
+                                <div class="text-xs text-gray-500">Buy high, sell higher</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Run Your Own Section -->
+        <section class="mt-8 border-t border-white/10 pt-8">
+            <div class="glass rounded-2xl p-6">
+                <h2 class="text-xl font-bold mb-4">🚀 Run Your Own Trading Dashboard</h2>
+                <p class="text-gray-400 text-sm mb-4">This demo shows simulated data. To see real paper trading with your Pauls:</p>
+                <div class="space-y-2 text-sm">
+                    <div class="flex items-start gap-2"><span class="text-cyan-400">1.</span><code class="text-gray-300">python paul_world.py paper enable-all</code><span class="text-gray-500">— Enable paper trading for all Pauls</span></div>
+                    <div class="flex items-start gap-2"><span class="text-cyan-400">2.</span><code class="text-gray-300">python paul_world.py ask "Will BTC go up?"</code><span class="text-gray-500">— Generate predictions</span></div>
+                    <div class="flex items-start gap-2"><span class="text-cyan-400">3.</span><code class="text-gray-300">python paul_world.py paper leaderboard</code><span class="text-gray-500">— View live rankings</span></div>
+                </div>
+                <div class="mt-4 p-3 bg-cyan-500/10 rounded-lg border border-cyan-500/30">
+                    <p class="text-sm text-cyan-400">💡 Each Paul starts with $10,000 fake money. High-confidence predictions (>75%) trigger auto-trades.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Demo data
+        const traders = [
+            { name: "Visionary Paul", roi: 245.6, winRate: 68, trades: 142, proven: true },
+            { name: "Trader Paul", roi: 189.3, winRate: 71, trades: 203, proven: true },
+            { name: "Quant Paul", roi: 134.7, winRate: 65, trades: 178, proven: true },
+            { name: "Whale Paul", roi: 98.2, winRate: 59, trades: 89, proven: false },
+            { name: "Professor Paul", roi: 87.4, winRate: 62, trades: 156, proven: true },
+            { name: "Skeptic Paul", roi: 67.1, winRate: 64, trades: 134, proven: true },
+            { name: "Contrarian Paul", roi: 45.8, winRate: 58, trades: 167, proven: false },
+            { name: "Degen Paul", roi: -32.4, winRate: 42, trades: 234, proven: false },
+        ];
+
+        const liveTrades = [
+            { paul: "Visionary Paul", action: "BUY", token: "BTC", amount: 0.5, price: 45234, time: "2m ago" },
+            { paul: "Trader Paul", action: "SELL", token: "ETH", amount: 2.3, price: 3456, time: "5m ago" },
+            { paul: "Quant Paul", action: "BUY", token: "SOL", amount: 50, price: 145, time: "8m ago" },
+            { paul: "Whale Paul", action: "BUY", token: "ETH", amount: 10, price: 3450, time: "12m ago" },
+            { paul: "Skeptic Paul", action: "SELL", token: "BTC", amount: 0.3, price: 45300, time: "15m ago" },
+        ];
+
+        const positions = [
+            { token: "BTC", exposure: 2456789, size: "24.5%", pnl: 12.4 },
+            { token: "ETH", exposure: 1892345, size: "18.9%", pnl: 8.7 },
+            { token: "SOL", exposure: 987654, size: "9.9%", pnl: 23.1 },
+            { token: "ARB", exposure: 456789, size: "4.6%", pnl: -5.2 },
+        ];
+
+        // Render functions
+        function renderLeaderboardShort() {
+            document.getElementById('leaderboard-short').innerHTML = traders.slice(0, 5).map((t, i) => `
+                <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-sm font-bold">${i + 1}</div>
+                        <div>
+                            <div class="font-medium">${t.name} ${t.proven ? '🏆' : ''}</div>
+                            <div class="text-xs text-gray-500">${t.trades} trades • ${t.winRate}% win</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="font-bold ${t.roi >= 0 ? 'text-green-400' : 'text-red-400'}">${t.roi >= 0 ? '+' : ''}${t.roi.toFixed(1)}%</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderLeaderboardFull() {
+            document.getElementById('leaderboard-full').innerHTML = traders.map((t, i) => `
+                <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-sm font-bold">${i + 1}</div>
+                        <div>
+                            <div class="font-medium">${t.name} ${t.proven ? '🏆' : ''}</div>
+                            <div class="text-xs text-gray-500">${t.trades} trades • ${t.winRate}% win</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="font-bold ${t.roi >= 0 ? 'text-green-400' : 'text-red-400'}">${t.roi >= 0 ? '+' : ''}${t.roi.toFixed(1)}%</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderProvenTraders() {
+            const proven = traders.filter(t => t.proven);
+            document.getElementById('proven-traders').innerHTML = proven.map(t => `
+                <div class="flex items-center gap-2 p-2">
+                    <span class="text-lg">🏅</span>
+                    <span class="text-sm">${t.name}</span>
+                    <span class="text-xs text-green-400 ml-auto">${t.winRate}%</span>
+                </div>
+            `).join('');
+        }
+
+        function renderLiveTrades(selector, limit = null) {
+            const trades = limit ? liveTrades.slice(0, limit) : liveTrades;
+            document.getElementById(selector).innerHTML = trades.map(t => `
+                <div class="trade-row flex items-center justify-between p-2 rounded text-sm">
+                    <div class="flex items-center gap-2">
+                        <span class="font-medium">${t.paul}</span>
+                        <span class="${t.action === 'BUY' ? 'text-green-400' : 'text-red-400'}">${t.action}</span>
+                        <span class="font-bold">${t.amount} ${t.token}</span>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-gray-400">$${t.price.toLocaleString()}</div>
+                        <div class="text-xs text-gray-500">${t.time}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderPositions() {
+            document.getElementById('positions-list').innerHTML = positions.map(p => `
+                <div class="p-3 bg-white/5 rounded-lg">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="font-bold">${p.token}</span>
+                        <span class="text-sm text-gray-400">${p.size}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm">$${p.exposure.toLocaleString()}</span>
+                        <span class="text-sm ${p.pnl >= 0 ? 'text-green-400' : 'text-red-400'}">${p.pnl >= 0 ? '+' : ''}${p.pnl}%</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderClosedTrades() {
+            const closed = [
+                { paul: "Trader Paul", token: "ETH", pnl: 234, pnlPercent: 12.4, time: "1h ago" },
+                { paul: "Visionary Paul", token: "BTC", pnl: 567, pnlPercent: 8.9, time: "2h ago" },
+                { paul: "Quant Paul", token: "SOL", pnl: -89, pnlPercent: -4.2, time: "3h ago" },
+            ];
+            document.getElementById('closed-trades').innerHTML = closed.map(t => `
+                <div class="flex items-center justify-between p-2 text-sm">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-gray-500">${t.paul}</span>
+                        <span class="font-medium">${t.token}</span>
+                    </div>
+                    <div class="text-right">
+                        <div class="${t.pnl >= 0 ? 'text-green-400' : 'text-red-400'}">${t.pnl >= 0 ? '+' : ''}$${t.pnl}</div>
+                        <div class="text-xs text-gray-500">${t.pnlPercent}%</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderWinRateByToken() {
+            const tokens = [
+                { token: 'BTC', trades: 156, wins: 98, rate: 62.8 },
+                { token: 'ETH', trades: 203, wins: 134, rate: 66.0 },
+                { token: 'SOL', trades: 89, wins: 52, rate: 58.4 },
+                { token: 'AVAX', trades: 45, wins: 31, rate: 68.9 },
+                { token: 'LINK', trades: 34, wins: 22, rate: 64.7 },
+            ];
+            document.getElementById('win-rate-tokens').innerHTML = tokens.map(t => `
+                <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                    <div class="flex items-center gap-3">
+                        <span class="font-bold w-12">${t.token}</span>
+                        <div class="text-xs text-gray-500">${t.trades} trades</div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-24 h-2 bg-gray-800 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-yellow-500 to-green-500 rounded-full" style="width: ${t.rate}%"></div>
+                        </div>
+                        <span class="text-sm font-bold ${t.rate >= 60 ? 'text-green-400' : 'text-yellow-400'}">${t.rate}%</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderPredictionTrades() {
+            const predictions = [
+                { paul: 'Visionary Paul', token: 'LINK', confidence: 87, action: 'BUY', amount: 500, time: '2m ago' },
+                { paul: 'Trader Paul', token: 'SOL', confidence: 82, action: 'BUY', amount: 320, time: '5m ago' },
+                { paul: 'Whale Paul', token: 'ETH', confidence: 79, action: 'BUY', amount: 1200, time: '8m ago' },
+                { paul: 'Quant Paul', token: 'BTC', confidence: 76, action: 'BUY', amount: 800, time: '12m ago' },
+            ];
+            document.getElementById('prediction-trades').innerHTML = predictions.map(p => `
+                <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg border-l-4 ${p.confidence >= 80 ? 'border-green-500' : 'border-yellow-500'}">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-gray-400">${p.paul}</span>
+                            <span class="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded">${p.confidence}%</span>
+                        </div>
+                        <div class="font-bold mt-1">${p.action} $${p.amount} ${p.token}</div>
+                    </div>
+                    <span class="text-xs text-gray-500">${p.time}</span>
+                </div>
+            `).join('');
+        }
+
+        function renderHotTokens() {
+            const hot = [
+                { token: 'LINK', mentions: 47, change: 12.4, reason: 'Oracle adoption' },
+                { token: 'AVAX', mentions: 38, change: 8.7, reason: 'Subnets launching' },
+                { token: 'RNDR', mentions: 29, change: 23.1, reason: 'AI narrative' },
+                { token: 'TAO', mentions: 25, change: 15.3, reason: 'Bittensor hype' },
+            ];
+            document.getElementById('hot-tokens').innerHTML = hot.map(t => `
+                <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg border-l-4 ${t.change >= 0 ? 'border-green-500' : 'border-red-500'}">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold">${t.token}</span>
+                            <span class="text-xs bg-white/10 px-2 py-0.5 rounded">${t.mentions} mentions</span>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-1">${t.reason}</div>
+                    </div>
+                    <div class="font-bold ${t.change >= 0 ? 'text-green-400' : 'text-red-400'}">${t.change >= 0 ? '+' : ''}${t.change}%</div>
+                </div>
+            `).join('');
+        }
+
+        // Token data with specific analysis
+        const memeCoins = [
+            { 
+                name: 'BONK', ticker: 'BONK', price: 0.000012, change: 23.4, mc: '890M', age: '2h', image: '🐕',
+                entry: ['Volume up 450% in 1h', 'Twitter trending #1', 'Dev active in Discord', 'New CEX listing rumor'],
+                exit: ['Sell 50% at 2x', 'Sell 25% at 5x', 'Hold 25% for 10x+', 'Set stop at -10%'],
+                flags: ['High volatility', 'Whale wallets moving', 'Copycat contracts'],
+                analysis: "Strong community momentum. High risk but potential for 5-10x if CEX rumors true."
+            },
+            { 
+                name: 'Dogwifhat', ticker: 'WIF', price: 2.34, change: 15.7, mc: '2.3B', age: '5h', image: '🎩',
+                entry: ['Consolidation breakout', 'Celebrity mentions', 'Strong holder growth', 'Low sell pressure'],
+                exit: ['Take profits at $3', 'Scale out on spikes', 'Core position to $5', 'Trailing stop 15%'],
+                flags: ['Already up 200%', 'Large market cap', 'Early whales selling'],
+                analysis: "Proven meme with staying power. Lower risk, steady growth expected."
+            },
+            { 
+                name: 'Book of Meme', ticker: 'BOME', price: 0.0087, change: -8.2, mc: '450M', age: '1d', image: '📖',
+                entry: ['Dip buying opportunity', 'Support holding', 'Accumulation phase', 'Dev wallet clean'],
+                exit: ['Sell 40% at recovery', 'Hold through chop', 'Target 50% gain', 'Cut if -15% more'],
+                flags: ['Down 20% from peak', 'Liquidity thinning', 'Fading interest'],
+                analysis: "Experienced dip. Could recover or dump more. High risk entry."
+            },
+            { 
+                name: 'Popcat', ticker: 'POPCAT', price: 0.67, change: 31.2, mc: '670M', age: '3d', image: '🐱',
+                entry: ['Viral TikTok trend', 'Volume surge 800%', 'Strong Asian community', 'No major sells'],
+                exit: ['Sell 30% at $1', 'Sell 30% at $1.5', 'Moon bag to $3+', 'Stop at $0.40'],
+                flags: ['Hype cycle peak', 'New holders overleveraged', 'FOMO exhaustion soon'],
+                analysis: "Viral momentum play. Ride the wave but take profits aggressively."
+            },
+            { 
+                name: 'SLERF', ticker: 'SLERF', price: 0.23, change: 45.8, mc: '120M', age: '4h', image: '🦥',
+                entry: ['Just launched', 'Dev burned liquidity', 'Organic growth', 'No paid shills'],
+                exit: ['Sell 50% at 3x', 'Sell 25% at 10x', 'Hold 25% moon', 'Stop at breakeven'],
+                flags: ['Very new, unproven', 'Low liquidity', 'Could rug'],
+                analysis: "Fresh launch, risky but early. Small position only."
+            },
+            { 
+                name: 'MEW', ticker: 'MEW', price: 0.0045, change: 12.3, mc: '280M', age: '6h', image: '🐱',
+                entry: ['Steady accumulation', 'Cat meta trending', 'Strong holder base', 'No whale dumps'],
+                exit: ['Scale out on 2x', 'Keep moon bag', 'Add on dips', 'Stop -20%'],
+                flags: ['Slow momentum', 'Needs catalyst', 'Boring price action'],
+                analysis: "Slow and steady. Good for small position while waiting for catalyst."
+            },
+            { 
+                name: 'MICHI', ticker: 'MICHI', price: 0.56, change: -5.4, mc: '190M', age: '12h', image: '🐈',
+                entry: ['Pullback to support', 'Oversold bounce', 'Low volume drop', 'Whales accumulating'],
+                exit: ['Sell on 30% bounce', 'Dont marry the bag', 'Quick flip only', 'Tight stop -8%'],
+                flags: ['Dead chat', 'No new buyers', 'Stagnant price'],
+                analysis: "Potential dead cat bounce. Quick flip only, don't hold long."
+            },
+            { 
+                name: 'GIGA', ticker: 'GIGA', price: 0.012, change: 67.2, mc: '85M', age: '30m', image: '💪',
+                entry: ['Just launched', 'Gym bro meta', 'Strong initial volume', 'Dev doxxed'],
+                exit: ['Take 50% at 2x', 'Take 25% at 5x', 'Let 25% moon', 'Stop at -30%'],
+                flags: ['EXTREME risk', 'Minutes old', 'Could go to zero', 'FOMO price'],
+                analysis: "Brand new, extreme risk/reward. Tiny position only, be ready to lose it all."
+            },
+        ];
+
+        function renderPumpFunTokens() {
+            const container = document.getElementById('pumpfun-tokens');
+            container.innerHTML = memeCoins.map((coin, index) => `
+                <div class="p-4 bg-white/5 rounded-xl border border-white/10 hover:border-purple-500/50 transition-colors cursor-pointer" onclick="showTokenDetail(${index})">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-xl">${coin.image}</div>
+                        <div>
+                            <div class="font-bold">${coin.name}</div>
+                            <div class="text-xs text-gray-500">$${coin.ticker}</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-lg font-bold">$${coin.price < 0.01 ? coin.price.toFixed(6) : coin.price.toFixed(2)}</span>
+                        <span class="text-sm ${coin.change >= 0 ? 'text-green-400' : 'text-red-400'}">${coin.change >= 0 ? '+' : ''}${coin.change}%</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-gray-500">
+                        <span>MC: $${coin.mc}</span>
+                        <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-green-400"></span>${coin.age}</span>
+                    </div>
+                    <div class="mt-2 text-xs text-cyan-400">Click for analysis →</div>
+                </div>
+            `).join('');
+        }
+
+        function showTokenDetail(index) {
+            const coin = memeCoins[index];
+            document.getElementById('default-strategy').classList.add('hidden');
+            document.getElementById('token-detail').classList.remove('hidden');
+            
+            document.getElementById('detail-icon').textContent = coin.image;
+            document.getElementById('detail-name').textContent = coin.name;
+            document.getElementById('detail-ticker').textContent = '$' + coin.ticker + ' • $' + (coin.price < 0.01 ? coin.price.toFixed(6) : coin.price.toFixed(2)) + ' • ' + (coin.change >= 0 ? '+' : '') + coin.change + '%';
+            
+            document.getElementById('detail-entry').innerHTML = coin.entry.map(e => `<li class="flex items-start gap-2"><span class="text-green-400 mt-1">✓</span><span>${e}</span></li>`).join('');
+            document.getElementById('detail-exit').innerHTML = coin.exit.map(e => `<li class="flex items-start gap-2"><span class="text-yellow-400 mt-1">→</span><span>${e}</span></li>`).join('');
+            document.getElementById('detail-flags').innerHTML = coin.flags.map(f => `<li class="flex items-start gap-2"><span class="text-red-400 mt-1">⚠</span><span>${f}</span></li>`).join('');
+            document.getElementById('detail-analysis').textContent = coin.analysis;
+        }
+
+        function closeTokenDetail() {
+            document.getElementById('token-detail').classList.add('hidden');
+            document.getElementById('default-strategy').classList.remove('hidden');
+        }
+
+        // Initialize
+        renderLeaderboardShort();
+        renderLeaderboardFull();
+        renderProvenTraders();
+        renderLiveTrades('live-trades-short', 5);
+        renderLiveTrades('live-trades-full');
+        renderPositions();
+        renderClosedTrades();
+        renderWinRateByToken();
+        renderPredictionTrades();
+        renderHotTokens();
+        renderPumpFunTokens();
+
+        // Live updates
+        setInterval(() => {
+            const baseValue = 12456789;
+            const variance = (Math.random() - 0.5) * 100000;
+            document.getElementById('total-value').textContent = '$' + (baseValue + variance).toLocaleString('en-US', {maximumFractionDigits: 0});
+        }, 5000);
+    </script>
+</body>
+</html>
