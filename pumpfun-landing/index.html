@@ -532,6 +532,69 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Integration Section -->
+            <div class="mb-12">
+                <h2 class="text-2xl font-bold text-center mb-8 flex items-center justify-center gap-3">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                    </svg>
+                    Add Pauls to Your App
+                </h2>
+                
+                <div class="max-w-4xl mx-auto p-6 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-2xl border border-cyan-500/30">
+                    <p class="text-gray-300 mb-6 text-center">
+                        Connect any application to the 1000+ Paul swarm intelligence system. Three lines of code.
+                    </p>
+                    
+                    <div class="bg-black/50 p-4 rounded-xl font-mono text-sm text-gray-300 mb-6 overflow-x-auto">
+                        <code>
+                            from swimming_pauls import Simulation, PersonaFactory<br/><br/>
+                            pauls = PersonaFactory.generate_pauls(count=100)<br/>
+                            result = Simulation.run(<br/>
+                            &nbsp;&nbsp;question="Will this feature succeed?",<br/>
+                            &nbsp;&nbsp;agents=pauls,<br/>
+                            &nbsp;&nbsp;rounds=10<br/>
+                            )
+                        </code>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-3 gap-4 mb-6">
+                        <div class="p-4 bg-white/5 rounded-xl text-center">
+                            <div class="text-3xl mb-2">🐍</div>
+                            <div class="font-bold text-sm">Python Import</div>
+                            <p class="text-xs text-gray-400 mt-1">Direct integration</p>
+                        </div>
+                        <div class="p-4 bg-white/5 rounded-xl text-center">
+                            <div class="text-3xl mb-2">🌐</div>
+                            <div class="font-bold text-sm">HTTP API</div>
+                            <p class="text-xs text-gray-400 mt-1">Any language</p>
+                        </div>
+                        <div class="p-4 bg-white/5 rounded-xl text-center">
+                            <div class="text-3xl mb-2">🛠️</div>
+                            <div class="font-bold text-sm">Custom Skills</div>
+                            <p class="text-xs text-gray-400 mt-1">Add your data</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="https://github.com/IBFolding/swimming-pauls/blob/main/INTEGRATION.md" target="_blank" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-cyan-600 hover:bg-cyan-500 rounded-lg font-medium transition-colors">
+                            <span>View Integration Guide</span>
+                            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                <polyline points="12 5 19 12 12 19"/>
+                            </svg>
+                        </a>
+                        <a href="https://github.com/IBFolding/swimming-pauls" target="_blank" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg font-medium transition-colors">
+                            <span>GitHub Repo</span>
+                            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Tab: Demos -->
@@ -615,6 +678,29 @@
                         </a>
                     </div>
                     
+                    <!-- Paul's World Demo -->
+                    <div class="p-6 bg-white/5 rounded-2xl border border-white/10 hover:border-pink-500/30 transition-colors">
+                        <div class="w-12 h-12 rounded-xl bg-pink-500/20 flex items-center justify-center mb-4">
+                            <svg class="icon text-pink-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 21h18M5 21V7l8-4 8 4v14M8 21v-5a2 2 0 0 1 4 0v5"/>
+                            </svg>
+                        </div>
+                        
+                        <h3 class="font-bold text-lg mb-2">Paul's World</h3>
+                        
+                        <p class="text-gray-400 text-sm mb-4">
+                            RPG-style city view of where the Pauls live. Explore the Financial District, Social District, and more. Watch Pauls wander between locations in real-time.
+                        </p>
+                        
+                        <a href="./pauls-world.html" class="flex items-center justify-center gap-2 w-full py-3 bg-pink-600 hover:bg-pink-500 rounded-lg font-medium transition-colors">
+                            <span>Try Demo</span>
+                            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                <polyline points="12 5 19 12 12 19"/>
+                            </svg>
+                        </a>
+                    </div>
+
                     <!-- Social Feed Demo -->
                     <div class="p-6 bg-white/5 rounded-2xl border border-white/10 hover:border-pink-500/30 transition-colors">
                         <div class="w-12 h-12 rounded-xl bg-pink-500/20 flex items-center justify-center mb-4">
@@ -1076,9 +1162,7 @@ open http://localhost:3005</code></pre>
                     <!-- Solana -->
                     <div class="p-6 bg-white/5 rounded-2xl border border-purple-500/30 hover:border-purple-500/50 transition-colors">
                         <div class="flex items-center gap-3 mb-4">
-                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center text-2xl font-bold text-white">
-                                ◎
-                            </div>
+                            <img src="solana-logo.jpg" alt="Solana" class="w-12 h-12 rounded-xl">
                             <div>
                                 <h3 class="text-xl font-bold">Solana</h3>
                                 <p class="text-sm text-gray-400">High-speed, low-cost</p>
@@ -1113,9 +1197,7 @@ open http://localhost:3005</code></pre>
                     <!-- Base -->
                     <div class="p-6 bg-white/5 rounded-2xl border border-blue-500/30 hover:border-blue-500/50 transition-colors">
                         <div class="flex items-center gap-3 mb-4">
-                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-2xl">
-                                🔵
-                            </div>
+                            <img src="base-logo.jpg" alt="Base" class="w-12 h-12 rounded-xl">
                             <div>
                                 <h3 class="text-xl font-bold">Base</h3>
                                 <p class="text-sm text-gray-400">Ethereum L2, Coinbase backed</p>
@@ -1196,11 +1278,7 @@ open http://localhost:3005</code></pre>
                     <!-- Bankr Integration Card -->
                     <div class="p-6 bg-white/5 rounded-xl border border-orange-500/30">
                         <div class="flex items-center gap-3 mb-4">
-                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/20">
-                                <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                                    <path d="M12 5v14M5 12h14"/>
-                                </svg>
-                            </div>
+                            <img src="bankr-logo.jpg" alt="Bankr" class="w-10 h-10 rounded-lg">
                             <div>
                                 <h4 class="font-bold">Bankr Integration</h4>
                                 <div class="text-xs text-gray-400">Multi-Chain Trading</div>
@@ -1263,37 +1341,6 @@ open http://localhost:3005</code></pre>
                         <a href="https://docs.openclaw.ai" target="_blank" class="mt-4 block text-center py-2 bg-cyan-600/20 hover:bg-cyan-600/30 border border-cyan-500/30 rounded-lg text-sm text-cyan-400 transition-colors">
                             Browse Skills Library →
                         </a>
-                    </div>
-
-                    <!-- Meme Coin Trading Knowledge Card -->
-                    <div class="p-6 bg-white/5 rounded-xl border border-pink-500/30">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center shadow-lg shadow-pink-500/20">
-                                <span class="text-xl">🚀</span>
-                            </div>
-                            <div>
-                                <h4 class="font-bold">Meme Coin Trading</h4>
-                                <div class="text-xs text-gray-400">Degen Paul Strategies</div>
-                            </div>
-                        </div>
-                        <div class="space-y-3 text-sm">
-                            <div class="p-2 bg-white/5 rounded">
-                                <div class="font-bold text-pink-400 mb-1">Entry Signals</div>
-                                <div class="text-gray-400">Volume spike >300%, Twitter mentions trending, holder count accelerating</div>
-                            </div>
-                            <div class="p-2 bg-white/5 rounded">
-                                <div class="font-bold text-pink-400 mb-1">Exit Strategy</div>
-                                <div class="text-gray-400">Sell 50% at 2x, 25% at 5x, let 25% ride. Never get married to a meme.</div>
-                            </div>
-                            <div class="p-2 bg-white/5 rounded">
-                                <div class="font-bold text-pink-400 mb-1">Red Flags</div>
-                                <div class="text-gray-400">Dev selling, locked liquidity expires, no social presence, copycat names</div>
-                            </div>
-                        </div>
-                        <div class="mt-4 p-3 bg-pink-500/10 border border-pink-500/20 rounded-lg">
-                            <div class="text-xs text-pink-400 font-bold mb-1">💡 Degen Paul Wisdom</div>
-                            <div class="text-sm text-gray-400 italic">"Buy the rumor, sell the news. Paper hands survive, diamond hands get rekt."</div>
-                        </div>
                     </div>
                 </div>
 
