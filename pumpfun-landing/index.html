@@ -222,15 +222,26 @@
     </header>
 
     <!-- Hero (Always Visible) -->
-    <section class="max-w-4xl mx-auto px-6 py-12 text-center">
-        <div class="w-24 h-24 mx-auto mb-6 rounded-2xl overflow-hidden glow-blue">
-            <img src="paul.jpg" alt="Swimming Pauls" class="w-full h-full object-cover">
+    <section class="relative w-full overflow-hidden">
+        <!-- Video Background -->
+        <div class="absolute inset-0 z-0">
+            <video autoplay muted loop playsinline class="w-full h-full object-cover">
+                <source src="hero-bg.mp4" type="video/mp4">
+            </video>
+            <!-- Dark overlay for text readability -->
+            <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/90"></div>
         </div>
+        
+        <!-- Hero Content -->
+        <div class="relative z-10 max-w-4xl mx-auto px-6 py-16 text-center">
+            <div class="w-24 h-24 mx-auto mb-6 rounded-2xl overflow-hidden glow-blue border-2 border-white/20">
+                <img src="paul.jpg" alt="Swimming Pauls" class="w-full h-full object-cover">
+            </div>
 
-        <h1 class="text-5xl md:text-6xl font-bold mb-4">
-            <span class="gradient-text">Let the Pauls</span><br>
-            <span class="text-white">Cook</span>
-        </h1>
+            <h1 class="text-5xl md:text-6xl font-bold mb-4 drop-shadow-lg">
+                <span class="gradient-text">Let the Pauls</span><br>
+                <span class="text-white">Cook</span>
+            </h1>
 
         <div class="max-w-2xl mx-auto mb-6">
             <blockquote class="text-gray-400 text-sm leading-relaxed italic mb-2">
@@ -275,10 +286,11 @@
             </a>
         </div>
 
-        <div class="max-w-3xl mx-auto p-6 rounded-2xl bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 border border-white/10">
+        <div class="max-w-3xl mx-auto p-6 rounded-2xl bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 border border-white/10 backdrop-blur-sm">
             <p class="text-lg font-medium italic text-gray-300">
                 "The dream: A living, breathing prediction ecosystem that never stops learning."
             </p>
+        </div>
         </div>
     </section>
 
