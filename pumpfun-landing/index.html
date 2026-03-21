@@ -533,6 +533,69 @@
                 </div>
             </div>
 
+            <!-- High-Scale Mode Section -->
+            <div class="mb-12">
+                <h2 class="text-2xl font-bold text-center mb-8 flex items-center justify-center gap-3">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    High-Scale Mode: Millions of Pauls
+                </h2>
+                
+                <div class="max-w-4xl mx-auto p-6 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-2xl border border-purple-500/30">
+                    <p class="text-gray-300 mb-6 text-center">
+                        Need to run millions of agents? Activate High-Scale Mode with batch inference.
+                    </p>
+                    
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div class="p-4 bg-black/30 rounded-xl">
+                            <div class="font-bold text-purple-400 mb-2">Standard Mode</div>
+                            <ul class="text-sm text-gray-400 space-y-1">
+                                <li>• Full personas with skills</li>
+                                <li>• ~10KB per Paul</li>
+                                <li>• 10,000 tested on M4</li>
+                                <li>• Individual API calls</li>
+                                <li>• Rich reasoning output</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="p-4 bg-black/30 rounded-xl border border-pink-500/30">
+                            <div class="font-bold text-pink-400 mb-2">High-Scale Mode</div>
+                            <ul class="text-sm text-gray-400 space-y-1">
+                                <li>• Lightweight state-only agents</li>
+                                <li>• ~64 bytes per Paul</li>
+                                <li>• 1,000,000+ possible</li>
+                                <li>• Batch inference (100x faster)</li>
+                                <li>• Fast consensus output</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-black/50 p-4 rounded-xl font-mono text-sm text-gray-300 mb-6 overflow-x-auto">
+                        <code>
+                            from swimming_pauls import HighScaleSimulation<br/><br/>
+                            # Run 1 million Pauls<br/>
+                            sim = HighScaleSimulation(agent_count=1_000_000)<br/>
+                            result = await sim.run_simulation(<br/>
+                            &nbsp;&nbsp;question="Will BTC hit $100K?",<br/>
+                            &nbsp;&nbsp;rounds=3<br/>
+                            )<br/><br/>
+                            # Memory: ~64MB | API calls: 10,000
+                        </code>
+                    </div>
+                    
+                    <div class="text-center">
+                        <a href="https://github.com/IBFolding/swimming-pauls/blob/main/high_scale_mode.py" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg font-medium transition-colors">
+                            <span>View High-Scale Code</span>
+                            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                <polyline points="12 5 19 12 12 19"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             <!-- Integration Section -->
             <div class="mb-12">
                 <h2 class="text-2xl font-bold text-center mb-8 flex items-center justify-center gap-3">
