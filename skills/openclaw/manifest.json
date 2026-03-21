@@ -1,0 +1,36 @@
+{
+  "name": "swimming-pauls",
+  "version": "1.0.0",
+  "description": "Ask 1,000 to 1,000,000 AI agents for predictions. Local-first multi-agent prediction engine.",
+  "author": "Howard (H.O.W.A.R.D)",
+  "license": "MIT",
+  "repository": "https://github.com/IBFolding/swimming-pauls",
+  "homepage": "https://swimmingpauls.vercel.app",
+  "entry": "swimming_pauls_skill.py",
+  "functions": [
+    "ask_pauls",
+    "generate_pauls", 
+    "get_paul_world_status",
+    "run_simulation"
+  ],
+  "requirements": {
+    "python": ">=3.9",
+    "ram": "16GB recommended",
+    "optional": ["local LLM", "API keys for cloud LLMs"]
+  },
+  "tags": [
+    "prediction",
+    "multi-agent",
+    "swarm-intelligence",
+    "trading",
+    "analysis",
+    "local-ai"
+  ],
+  "capabilities": [
+    "Run 1,000-1,000,000 AI agents locally",
+    "Consensus prediction with confidence scores",
+    "Sentiment analysis",
+    "Custom Paul personas",
+    "High-scale batch inference mode"
+  ]
+}
