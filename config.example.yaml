@@ -1,0 +1,58 @@
+# Swimming Pauls Configuration
+# Copy this to config.yaml and customize
+
+# Default simulation settings
+defaults:
+  pauls: 50
+  rounds: 20
+  timeout_seconds: 120
+
+# Server settings
+server:
+  websocket_port: 8765
+  ui_port: 3005
+  host: localhost
+
+# Auto-resolver settings
+auto_resolver:
+  enabled: true
+  interval_minutes: 60
+  symbols:
+    - BTC
+    - ETH
+    - SOL
+    - DOGE
+    - LINK
+
+# Price tracking
+price_tracker:
+  enabled: true
+  symbols:
+    - BTC
+    - ETH
+    - SOL
+    - DOGE
+    - LINK
+    - AVAX
+    - BNB
+    - ADA
+    - DOT
+  interval_minutes: 30
+
+# Telegram/Discord integration (optional)
+notifications:
+  enabled: false
+  # webhook_url: "YOUR_WEBHOOK_URL"
+  # auto_send_results: true
+
+# Learning system
+learning:
+  track_accuracy: true
+  min_predictions_for_leaderboard: 1
+  weight_recent_predictions: true
+  
+# Paul's World (paper trading)
+paper_trading:
+  enabled: true
+  update_interval_seconds: 30
+  max_positions: 10000

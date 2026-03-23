@@ -43,6 +43,7 @@ output/
 *.html
 !docs/*.png
 !docs/*.html
+!ui/*.html
 
 # Local config
 config/local.ini
@@ -52,3 +53,4 @@ config/local.ini
 .DS_Store
 Thumbs.db
 node_modules/
+.vercel
