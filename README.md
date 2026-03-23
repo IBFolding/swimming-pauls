@@ -1,5 +1,10 @@
 # 🦷 Swimming Pauls
 
+[![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)](https://github.com/IBFolding/swimming-pauls/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![Local First](https://img.shields.io/badge/100%25-Local-success.svg)]()
+
 > **"Let the Pauls cook."**
 > 
 > *"I created Swimming Pauls after watching my friend Paul—an eccentric quant trader—correctly predict three consecutive market crashes by simply 'taking his gut.' His gut wasn't magic; it was pattern recognition from 20 years of staring at charts. I realized: what if I could bottle that intuition? Not one Paul, but an army of Pauls—each with different expertise, biases, and blindspots—debating until consensus emerges. The Pauls don't predict the future. They surface the truth you're too biased to see."*
