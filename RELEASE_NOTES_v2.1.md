@@ -249,6 +249,7 @@ User Query (Telegram/Web)
 - `price_tracker.py` - Historical price recording
 - `openclaw-skill/skill.py` - Telegram/Discord bot
 - `ui/debate_network.html` - Interactive debate visualization
+- `CONTRIBUTING.md` - Contribution guidelines
 
 **Changed:**
 - Updated `.gitignore` to include UI HTML files
