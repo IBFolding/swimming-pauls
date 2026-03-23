@@ -18,6 +18,27 @@ Ask a question. 10, 100, or 500+ diverse AI personas debate and predict outcomes
 
 ---
 
+## 🚀 Quick Start (New in v2.1!)
+
+```bash
+# Clone and enter directory
+git clone https://github.com/IBFolding/swimming-pauls.git
+cd swimming-pauls
+
+# First-time setup (installs deps, checks system)
+python setup.py
+
+# Start everything (WebSocket agent + UI server)
+python start.py
+
+# Open browser
+open http://localhost:3005
+```
+
+**That's it!** The setup wizard handles everything. No manual configuration needed.
+
+---
+
 ## 🎯 What You Get
 
 ### 🐟 Swarm Intelligence
@@ -29,6 +50,16 @@ Ask a question. 10, 100, or 500+ diverse AI personas debate and predict outcomes
 - Backstory and catchphrase
 
 From Wall Street quants to digital artists, doctors to engineers—diverse perspectives create better predictions.
+
+### 🎓 Learning System (v2.1)
+**Pauls get smarter over time:**
+
+- **Auto-resolution** - Predictions automatically checked against market data
+- **Accuracy tracking** - Individual track records for each Paul
+- **Leaderboards** - Rankings by specialty and overall accuracy
+- **Price history** - Historical data enables verifying predictions
+
+The longer you run it, the smarter the Pauls get.
 
 ### 🧠 Knowledge Graph  
 26 market entities with relationship mapping. AI Sector, Labor Market, Automation, GDP, Tech Stocks, Productivity, Regulation, Innovation—and their interconnections.
@@ -69,30 +100,60 @@ Sentiment scoring, risk metrics, market regime detection, and individual agent r
 
 **Every prediction tracked locally in SQLite:**
 
-- **Full history** - Every question, every Paul vote
-- **Paul accuracy** - Which Pauls are actually right?
-- **Win streaks** - Who's hot right now?
-- **Outcome tracking** - Mark predictions CORRECT/INCORRECT
-- **Export data** - JSON export for analysis
-
 ```bash
-# View Paul leaderboard
-python history_viewer.py leaderboard
+# View Paul accuracy leaderboard
+python leaderboard.py
 
-# See recent predictions  
-python history_viewer.py recent
+# Group by specialty
+python leaderboard.py --specialty
 
-# Check specific Paul's history
-python history_viewer.py paul "Visionary Paul"
+# Check specific Paul's track record
+python leaderboard.py --paul "Visionary Paul"
 
-# Mark prediction outcome
-python history_viewer.py resolve abc123 CORRECT
+# View all predictions
+python resolve_predictions.py --list
 
-# View overall stats
-python history_viewer.py stats
+# Auto-resolve pending predictions
+python resolve_predictions.py --auto
+
+# Export for analysis
+python export_data.py --predictions --format csv
+```
+
+**Sample leaderboard output:**
+```
+🏆 PAUL ACCURACY LEADERBOARD
+Rank   Name                 Specialty       Correct  Total  Accuracy  
+🥇     Visionary Paul       Long-term       12       15     80%      
+🥈     Trader Paul          Timing          18       24     75%      
+🥉     Quant Paul           Data            9        12     75%      
 ```
 
 **100% local** - Your prediction history stays on your machine.
+
+---
+
+## 💬 Telegram/Discord Integration (v2.1)
+
+Ask Swimming Pauls directly from chat:
+
+```
+/swimming-pauls Will Bitcoin hit $100k this year?
+
+OR
+
+Ask the Pauls: Should I buy ETH or SOL?
+```
+
+**Response includes:**
+- Consensus (BULLISH/BEARISH/NEUTRAL) with confidence %
+- Stats (Pauls count, rounds)
+- **Clickable explorer links** to view full results
+
+**Features:**
+- Auto-starts local agent if not running
+- Formatted markdown responses
+- One-click access to visualizations
 
 ---
 
@@ -101,83 +162,84 @@ python history_viewer.py stats
 **Watch persuasion flow in real-time:**
 
 - **Interactive D3.js graph** - Nodes = Pauls, Edges = persuasion
-- **Temporal slider** - See round-by-round evolution
-- **Play animation** - Watch consensus form
-- **Click nodes** - See who convinced whom
-- **Zoom & pan** - Scroll to zoom, drag to pan
-- **Size = Influence** - Bigger nodes convinced more Pauls
-- **Color = Sentiment** - Green/Yellow/Red positioning
+- **Color-coded nodes** - Green (bullish), Red (bearish), Yellow (neutral)
+- **Agreement/disagreement links** - Green = same direction, Red = opposite
+- **Hover tooltips** - Paul details and reasoning
+- **Draggable nodes** - Rearrange the network
+- **Top influencers** - Ranked by impact
 
-**Live demo:** https://swimmingpauls.vercel.app/debate_network.html
-
----
-
-## 🛠️ Custom Skills API
-
-**Build your own skills for Pauls:**
-
-```python
-# skills/custom/my_weather_skill.py
-from swimming_pauls.skills import Skill, SkillMetadata, SkillResult
-
-class WeatherSkill(Skill):
-    metadata = SkillMetadata(
-        name="weather_check",
-        description="Get local weather",
-        best_for=["Farmer Paul", "Travel Paul"]
-    )
-    
-    async def execute(self, location: str) -> SkillResult:
-        # Your implementation
-        return SkillResult(success=True, data={"temp": 72})
-```
-
-**CLI:**
-```bash
-# Create new skill template
-python skills.py create my_skill "My custom skill"
-
-# List all skills
-python skills.py list
-
-# Assign skill to Paul
-python skills.py assign "Farmer Paul" weather_check
-```
+**Access:** http://localhost:3005/debate_network.html?id=YOUR_ID
 
 ---
 
-## 🚀 Get Started
+## 🛠️ Complete Command Reference
 
-### ⚡ Easiest: OpenClaw CLI
-
+### Setup & System
 ```bash
-# One command to rule them all
-openclaw run swimming-pauls
-
-# Or add the skill first
-openclaw skills add swimming-pauls
-openclaw run swimming-pauls
+python setup.py                    # First-time setup wizard
+python start.py                    # Start agent + UI server
+python start.py --pauls 100        # Start with 100 Pauls
+python health_check.py             # System diagnostics
+python health_check.py --fix       # Auto-fix issues
 ```
 
-### 💻 Manual Install
-
+### Predictions
 ```bash
-# Clone
-git clone https://github.com/IBFolding/swimming-pauls.git
-cd swimming-pauls
+# Via OpenClaw skill (Telegram/Discord)
+/swimming-pauls "Your question here"
 
-# Install
-pip install -r requirements.txt
+# Via CLI
+python openclaw-skill/skill.py "Will BTC go up?"
 
-# Run WebSocket agent
-python local_agent.py
-
-# In another terminal, start HTTP server
-python -m http.server 3005
-
-# Open your browser
-open http://localhost:3005
+# Generate demo data
+python generate_demo_data.py --count 10
 ```
+
+### Learning & Analytics
+```bash
+python leaderboard.py                    # View Paul rankings
+python leaderboard.py --specialty        # Group by specialty
+python resolve_predictions.py --list     # View prediction status
+python resolve_predictions.py --auto     # Resolve pending predictions
+python price_tracker.py                  # Record current prices
+python auto_resolver.py --daemon         # Run auto-checks hourly
+```
+
+### Data Management
+```bash
+python export_data.py                    # Export everything
+python export_data.py --predictions      # Predictions only
+python export_data.py --leaderboard      # Leaderboard only
+python export_data.py --format csv       # CSV format
+```
+
+---
+
+## ⚙️ Configuration (Optional)
+
+Create `config.yaml` to customize defaults:
+
+```yaml
+defaults:
+  pauls: 100
+  rounds: 50
+
+server:
+  websocket_port: 8765
+  ui_port: 3005
+
+auto_resolver:
+  enabled: true
+  interval_minutes: 60
+
+price_tracker:
+  symbols:
+    - BTC
+    - ETH
+    - SOL
+```
+
+Copy from `config.example.yaml` to get started.
 
 ---
 
@@ -205,33 +267,43 @@ Run your own test: `python test_capacity.py`
 
 ```
 swimming-pauls/
+├── start.py                # 🆕 Unified launcher (v2.1)
+├── setup.py                # 🆕 First-time setup wizard (v2.1)
+├── health_check.py         # 🆕 System diagnostics (v2.1)
 ├── local_agent.py          # WebSocket server
 ├── skill_bridge.py         # OpenClaw integration
 ├── web_intelligence.py     # Web scraping/search
 ├── skills.py              # Custom skill API framework
 ├── prediction_history.py   # SQLite tracking
 ├── debate_tracker.py       # Persuasion flow tracking
+├── resolve_predictions.py  # 🆕 Prediction resolution (v2.1)
+├── leaderboard.py          # 🆕 Paul accuracy rankings (v2.1)
+├── price_tracker.py        # 🆕 Historical prices (v2.1)
+├── auto_resolver.py        # 🆕 Auto-resolution daemon (v2.1)
+├── export_data.py          # 🆕 Data backup/export (v2.1)
+├── generate_demo_data.py   # 🆕 Demo predictions (v2.1)
 ├── simulation.py           # Core multi-agent engine
 ├── agent.py               # Individual Paul logic
 ├── persona_factory.py      # Generate 1000+ Pauls
 ├── knowledge_graph.py      # Entity relationships
 ├── history_viewer.py       # CLI for viewing history
+├── config.example.yaml     # 🆕 Example configuration (v2.1)
 ├── PAULS.md               # First 160 Paul directory
 ├── PAULS_EXTENDED.md      # Full 1000 Paul directory
 ├── ROADMAP.md             # Future plans
 ├── HANDOFF.md             # Session continuity
-└── pumpfun-landing/       # Landing page + demos
-    ├── index.html          # Tab-based landing page
-    ├── explorer.html       # Prediction results demo
-    ├── visualize.html      # Paul network visualization
-    ├── debate_network.html # Temporal debate flow
-    └── paul.jpg            # Logo
+└── ui/                    # Web interface
+    ├── index.html         # Main UI
+    ├── explorer.html      # Prediction results
+    ├── visualize.html     # Paul network
+    └── debate_network.html # 🆕 Interactive debate (v2.1)
 ```
 
 ---
 
 ## 📖 Documentation
 
+- **[RELEASE_NOTES_v2.1.md](RELEASE_NOTES_v2.1.md)** - What's new in v2.1
 - **[COMMANDS.md](COMMANDS.md)** - Complete CLI reference with all commands
 - **[PAPER_TRADING.md](PAPER_TRADING.md)** - Paper trading system guide
 - **[SOCIAL_MEDIA.md](SOCIAL_MEDIA.md)** - Social media system
@@ -242,18 +314,22 @@ swimming-pauls/
 
 ## 🚀 What's Next (V2 Roadmap)
 
-### ✅ Recently Shipped
-- **Temporal Memory** - Pauls update beliefs dynamically over time
-- **Dual Platform** - Parallel simulations for higher confidence consensus  
-- **ReportAgent** - Automated report generation with skill integration
-- **GraphRAG** - Structured knowledge extraction from documents
+### ✅ Recently Shipped (v2.1)
+- **Setup Wizard** - One-command first-time setup
+- **Unified Launcher** - `python start.py` starts everything
+- **Learning System** - Auto-resolution, accuracy tracking, leaderboards
+- **Telegram Integration** - Ask Pauls from chat
+- **Health Check** - System diagnostics and auto-fix
+- **Data Export** - Backup to JSON/CSV
+- **Demo Data** - Explore without running simulations
+- **Debate Network** - Interactive D3 visualization
 
-### 📅 Coming Soon
-- **Extended Locations** - Town Hall, Bar, Card Room, Social Media
-- **Solana Integration** - Verified on-chain data skills
-- **Mac Mini Infrastructure** - 24/7 cloud simulation
-- **$PAULS Token** - Stake for prediction credits
-- **Skill Marketplace** - Buy/sell custom Paul skills
+### 📅 Coming Soon (v2.2)
+- **Mac Mini Infrastructure** - 24/7 cloud simulation with $PAUL credits
+- **Social Media Integration** - Pauls post predictions to Twitter/Telegram
+- **Paul Marketplace** - Buy/sell high-accuracy Pauls
+- **Mobile App** - iOS/Android native apps
+- **API** - REST API for external integrations
 
 ---
 
@@ -264,7 +340,7 @@ No installation required:
 - **Landing Page:** https://swimmingpauls.vercel.app
 - **Explorer:** Full prediction results
 - **Visualization:** 1000+ Pauls real-time graph
-- **Debate Network:** Temporal persuasion flow
+- **Debate Network:** Interactive persuasion flow
 
 ---
 
@@ -277,6 +353,10 @@ No installation required:
 **Unlimited:** No rate limits. Your hardware is the only limit.
 
 ---
+
+## 🤝 Contributing
+
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 **Built by Howard | 100% Local | No Cloud**
 
