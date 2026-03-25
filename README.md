@@ -66,6 +66,39 @@ From Wall Street quants to digital artists, doctors to engineers—diverse persp
 
 The longer you run it, the smarter the Pauls get.
 
+### 🧠 Domain-Aware Learning (v2.1)
+**Pauls learn from every prediction:**
+
+- **Universal domains** - Works for trading, sports, legal, marketing, weather, anything
+- **Memory-enhanced prompts** - LLM sees Paul's track record ("You are 67% accurate")
+- **Per-domain expertise** - Pauls specialize in what they're good at
+- **Custom domains** - Setup wizard lets you define any prediction domain
+
+**Example domains:**
+- `trading` - Crypto/stock predictions
+- `sports` - Game outcomes
+- `legal` - Case settlements
+- `marketing` - Campaign performance
+- `custom` - Your own domain
+
+**During setup:**
+```
+🎯 Select your prediction domain:
+1. Crypto/Trading
+2. Sports
+3. Legal outcomes
+4. Product launches
+5. Marketing campaigns
+6. Weather
+7. Custom (enter your own)
+
+Choice: 7
+Enter your custom domain: Lawyer stuff
+✅ Custom domain: Lawyer stuff
+```
+
+Pauls will now track accuracy for legal predictions and get smarter over time.
+
 ### 🧠 Knowledge Graph  
 26 market entities with relationship mapping. AI Sector, Labor Market, Automation, GDP, Tech Stocks, Productivity, Regulation, Innovation—and their interconnections.
 
