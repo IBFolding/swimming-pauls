@@ -58,6 +58,48 @@ def create_directories():
     print("✅ Directories created")
     return True
 
+def select_domain():
+    """Select prediction domain."""
+    print("\n🎯 Select your prediction domain:")
+    print()
+    print("1. Crypto/Trading")
+    print("2. Sports")
+    print("3. Legal outcomes")
+    print("4. Product launches")
+    print("5. Marketing campaigns")
+    print("6. Weather")
+    print("7. Custom (enter your own)")
+    print()
+    print("Choice (1-7): ", end='')
+    
+    choice = input().strip()
+    
+    domains = {
+        '1': ('trading', 'Crypto/Trading'),
+        '2': ('sports', 'Sports'),
+        '3': ('legal', 'Legal outcomes'),
+        '4': ('products', 'Product launches'),
+        '5': ('marketing', 'Marketing campaigns'),
+        '6': ('weather', 'Weather'),
+    }
+    
+    if choice in domains:
+        domain_key, domain_name = domains[choice]
+        print(f"✅ Selected: {domain_name}")
+        return domain_key, domain_name
+    elif choice == '7':
+        print("\nEnter your custom domain: ", end='')
+        custom = input().strip()
+        if custom:
+            print(f"✅ Custom domain: {custom}")
+            return 'custom', custom
+        else:
+            print("⚠️  No custom domain entered, using universal")
+            return 'universal', 'Universal'
+    else:
+        print("⚠️  Invalid choice, using universal")
+        return 'universal', 'Universal'
+
 def copy_config():
     """Copy example config to config.yaml."""
     print("\n⚙️  Setting up configuration...")
@@ -128,10 +170,11 @@ def run_diagnostics():
     
     return True
 
-def print_next_steps():
+def print_next_steps(domain_name='Universal'):
     print("\n" + "=" * 60)
     print("🎉 SETUP COMPLETE!")
     print("=" * 60)
+    print(f"Domain: {domain_name}")
     print()
     print("Next steps:")
     print()
@@ -142,7 +185,7 @@ def print_next_steps():
     print("   http://localhost:3005")
     print()
     print("3. Run a test prediction:")
-    print("   python openclaw-skill/skill.py 'Will BTC go up?'")
+    print("   python openclaw-skill/skill.py 'Your question here'")
     print()
     print("4. View leaderboard:")
     print("   python leaderboard.py")
@@ -166,8 +209,23 @@ def main():
     # Create directories
     create_directories()
     
+    # Select domain
+    domain_key, domain_name = select_domain()
+    
     # Copy config
     copy_config()
+    
+    # Save domain to config
+    config_path = Path(__file__).parent / 'config.yaml'
+    if config_path.exists():
+        with open(config_path, 'r') as f:
+            config_content = f.read()
+        
+        # Add domain to config
+        if 'domain:' not in config_content:
+            with open(config_path, 'a') as f:
+                f.write(f"\n# Prediction domain\ndomain: {domain_key}\ndomain_name: {domain_name}\n")
+            print(f"✅ Domain saved to config: {domain_name}")
     
     # Test imports
     test_imports()
@@ -176,7 +234,7 @@ def main():
     run_diagnostics()
     
     # Print next steps
-    print_next_steps()
+    print_next_steps(domain_name)
 
 if __name__ == "__main__":
     main()

@@ -10,7 +10,6 @@ import uuid
 import argparse
 import os
 import sys
-import psutil
 from datetime import datetime
 from typing import Dict, Set, Optional
 from dataclasses import dataclass, asdict
@@ -25,6 +24,13 @@ try:
 except ImportError:
     print("❌ Missing websockets. Run: pip install websockets")
     sys.exit(1)
+
+# Optional psutil
+try:
+    import psutil
+    PSUTIL_AVAILABLE = True
+except ImportError:
+    PSUTIL_AVAILABLE = False
 
 # Import Swimming Pauls simulation
 try:
@@ -45,8 +51,14 @@ DEFAULT_PORT = 8765
 
 def get_system_limits():
     """Check system resources and return recommended max Pauls"""
-    memory = psutil.virtual_memory()
-    available_gb = memory.available / (1024**3)
+    if PSUTIL_AVAILABLE:
+        memory = psutil.virtual_memory()
+        available_gb = memory.available / (1024**3)
+        total_gb = memory.total / (1024**3)
+    else:
+        # Default values if psutil not available
+        available_gb = 8.0
+        total_gb = 16.0
     
     # Rough estimate: ~50MB per Paul with LLM context
     max_pauls = int(available_gb / 0.05)
@@ -61,7 +73,7 @@ def get_system_limits():
         "max_pauls": max_pauls,
         "recommended": min(100, max_pauls),
         "available_gb": round(available_gb, 1),
-        "total_gb": round(memory.total / (1024**3), 1)
+        "total_gb": round(total_gb, 1)
     }
 
 
@@ -135,7 +147,8 @@ class LocalAgentServer:
         print("\n⚡ Waiting for connections...")
         print("=" * 60 + "\n")
         
-    async def handle_client(self, websocket: WebSocketServerProtocol, path: str):
+    async def handle_client(self, websocket, path=None):
+        """Handle client connection."""
         self.clients.add(websocket)
         self.state.connected_clients = len(self.clients)
         
@@ -184,7 +197,8 @@ class LocalAgentServer:
     async def handle_auth(self, websocket, payload: dict):
         client_id = payload.get("connection_id")
         
-        if client_id == self.connection_id:
+        # Accept either the generated connection_id or "openclaw" for skill integration
+        if client_id == self.connection_id or client_id == "openclaw":
             self.authenticated_clients.add(websocket)
             self.state.status = "connected"
             

@@ -321,6 +321,11 @@ class PaperTradingManager:
         Returns:
             PaperTrade if executed, None if skipped
         """
+        # Validate price - must be > $0.01 to prevent data corruption
+        if not current_price or current_price < 0.01:
+            print(f"⚠️  Invalid price for {symbol}: ${current_price} - skipping trade")
+            return None
+        
         if paul_name not in self.portfolios:
             return None
         
@@ -400,6 +405,11 @@ class PaperTradingManager:
     def close_trade(self, trade_id: str, exit_price: float, reason: str = "manual"):
         """Close an open trade."""
         if trade_id not in self.trades:
+            return
+        
+        # Validate exit price
+        if not exit_price or exit_price < 0.01:
+            print(f"⚠️  Invalid exit price: ${exit_price} - not closing trade {trade_id}")
             return
         
         trade = self.trades[trade_id]
