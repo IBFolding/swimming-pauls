@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swimming Pauls 🐟</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sp: {
+                            bg: '#0a0a0f',
+                            card: '#13131a',
+                            hover: '#1a1a24',
+                            border: '#2a2a35',
+                            muted: '#8a8a9a',
+                            cyan: '#00d4ff',
+                            teal: '#00d4aa',
+                            pink: '#ff6b9d',
+                            gold: '#ffd700',
+                            purple: '#a855f7',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            overflow: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
+
+        /* Glass morphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(135deg, #00d4ff, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-text-gold {
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 220px;
+            min-width: 220px;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 50;
+        }
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            font-size: 14px;
+            color: rgba(255,255,255,0.5);
+            user-select: none;
+        }
+        .sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255,255,255,0.8);
+        }
+        .sidebar-item.active {
+            background: rgba(0, 212, 255, 0.08);
+            border-left-color: #00d4ff;
+            color: #00d4ff;
+        }
+        .sidebar-item .item-emoji {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        /* Main content */
+        .main-content {
+            margin-left: 220px;
+            height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* Tab panels */
+        .tab-panel {
+            display: none;
+            padding: 28px 32px;
+            animation: fadeIn 0.25s ease;
+        }
+        .tab-panel.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cast button */
+        .cast-btn {
+            background: linear-gradient(135deg, #ec4899, #a855f7, #00d4ff);
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease infinite;
+            transition: all 0.3s ease;
+        }
+        .cast-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
+        }
+        .cast-btn:active { transform: scale(0.98); }
+        .cast-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Sliders */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255,255,255,0.1);
+            outline: none;
+            cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d4ff, #a855f7);
+            cursor: pointer;
+            border: 2px solid rgba(255,255,255,0.3);
+            box-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d4ff, #a855f7);
+            cursor: pointer;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        /* Progress bar */
+        .progress-bar-track {
+            background: rgba(255,255,255,0.08);
+            border-radius: 8px;
+            height: 12px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #00d4ff, #a855f7, #ec4899);
+            background-size: 200% 100%;
+            animation: progressShimmer 2s linear infinite;
+            transition: width 0.4s ease;
+        }
+        @keyframes progressShimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Inputs */
+        .sp-input {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: white;
+            font-size: 14px;
+            width: 100%;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .sp-input:focus {
+            border-color: rgba(0, 212, 255, 0.5);
+            box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.1);
+        }
+        .sp-input::placeholder { color: rgba(255,255,255,0.25); }
+        textarea.sp-input { resize: vertical; min-height: 80px; }
+        select.sp-input {
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+
+        /* Toggle switch */
+        .toggle-wrap { display: flex; align-items: center; gap: 10px; }
+        .toggle {
+            width: 44px; height: 24px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.25s;
+            flex-shrink: 0;
+        }
+        .toggle.on { background: rgba(0, 212, 170, 0.5); }
+        .toggle::after {
+            content: '';
+            width: 18px; height: 18px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px; left: 3px;
+            transition: transform 0.25s;
+        }
+        .toggle.on::after { transform: translateX(20px); }
+
+        /* Collapsible sections */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            padding: 14px 18px;
+            border-radius: 12px;
+            transition: background 0.2s;
+            user-select: none;
+        }
+        .section-header:hover { background: rgba(255,255,255,0.04); }
+        .section-header .chevron {
+            transition: transform 0.25s;
+            font-size: 12px;
+            color: rgba(255,255,255,0.4);
+        }
+        .section-header.open .chevron { transform: rotate(180deg); }
+        .section-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, padding 0.25s;
+            padding: 0 18px;
+        }
+        .section-body.open {
+            max-height: 1200px;
+            padding: 8px 18px 18px;
+        }
+
+        /* Paul cards */
+        .paul-card {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .paul-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+        .paul-card .reasoning-full {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .paul-card.expanded .reasoning-full { max-height: 500px; }
+
+        /* Sentiment bar */
+        .sentiment-bar {
+            height: 28px;
+            border-radius: 6px;
+            transition: width 0.6s ease;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 40px;
+        }
+
+        /* History item */
+        .history-item {
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.15s;
+            border-left: 3px solid transparent;
+        }
+        .history-item:hover { background: rgba(255,255,255,0.05); }
+        .history-item.active {
+            background: rgba(0, 212, 255, 0.08);
+            border-left-color: #00d4ff;
+        }
+
+        /* Connection dot */
+        .conn-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        .conn-dot.connected { background: #22c55e; box-shadow: 0 0 6px rgba(34,197,94,0.5); }
+        .conn-dot.disconnected { background: #ef4444; box-shadow: 0 0 6px rgba(239,68,68,0.4); }
+
+        /* Pulse animation for live elements */
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .pulse { animation: pulse 2s ease-in-out infinite; }
+
+        /* Badge */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge-bullish { background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+        .badge-bearish { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+        .badge-neutral { background: rgba(234,179,8,0.15); color: #eab308; border: 1px solid rgba(234,179,8,0.3); }
+
+        /* Coming soon */
+        .coming-soon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ==================== SIDEBAR ==================== -->
+<nav class="sidebar" id="sidebar">
+    <div class="px-5 py-5 border-b border-white/5">
+        <div class="flex items-center gap-2">
+            <span class="text-2xl">🐟</span>
+            <div>
+                <div class="font-bold text-sm gradient-text">Swimming Pauls</div>
+                <div class="text-[10px] text-white/30">v2.0 • Local</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex-1 py-3 overflow-y-auto">
+        <div class="sidebar-item active" data-tab="home" onclick="switchTab('home')">
+            <span class="item-emoji">🏠</span>
+            <span>Home</span>
+        </div>
+        <div class="sidebar-item" data-tab="results" onclick="switchTab('results')">
+            <span class="item-emoji">📊</span>
+            <span>Results</span>
+        </div>
+        <div class="sidebar-item" data-tab="settings" onclick="switchTab('settings')">
+            <span class="item-emoji">⚙️</span>
+            <span>Settings</span>
+        </div>
+
+        <div class="px-5 pt-5 pb-2">
+            <div class="text-[10px] uppercase tracking-widest text-white/20 font-semibold">Coming Soon</div>
+        </div>
+        <div class="sidebar-item" data-tab="debate" onclick="switchTab('debate')">
+            <span class="item-emoji">🕸️</span>
+            <span>Debate</span>
+        </div>
+        <div class="sidebar-item" data-tab="visualize" onclick="switchTab('visualize')">
+            <span class="item-emoji">📈</span>
+            <span>Visualize</span>
+        </div>
+        <div class="sidebar-item" data-tab="world" onclick="switchTab('world')">
+            <span class="item-emoji">🌍</span>
+            <span>Paul's World</span>
+        </div>
+        <div class="sidebar-item" data-tab="social" onclick="switchTab('social')">
+            <span class="item-emoji">📱</span>
+            <span>Social</span>
+        </div>
+        <div class="sidebar-item" data-tab="leaderboard" onclick="switchTab('leaderboard')">
+            <span class="item-emoji">🏆</span>
+            <span>Leaderboard</span>
+        </div>
+        <div class="sidebar-item" data-tab="trading" onclick="switchTab('trading')">
+            <span class="item-emoji">💰</span>
+            <span>Trading</span>
+        </div>
+        <div class="sidebar-item" data-tab="creative" onclick="switchTab('creative')">
+            <span class="item-emoji">🎬</span>
+            <span>Creative</span>
+        </div>
+    </div>
+
+    <!-- Sidebar footer: connection status -->
+    <div class="px-5 py-3 border-t border-white/5">
+        <div class="flex items-center gap-2 text-xs" id="ws-status">
+            <span class="conn-dot disconnected" id="ws-dot"></span>
+            <span class="text-white/40" id="ws-label">Disconnected</span>
+        </div>
+    </div>
+</nav>
+
+<!-- ==================== MAIN CONTENT ==================== -->
+<div class="main-content" id="main-content">
+
+    <!-- ============ TAB: HOME ============ -->
+    <div class="tab-panel active" id="tab-home">
+        <!-- Header -->
+        <div class="glass-strong rounded-2xl p-8 text-center mb-6">
+            <h1 class="text-4xl md:text-5xl font-bold gradient-text mb-3">🐟 Swimming Pauls</h1>
+            <p class="text-white/50 text-base">"When MiroFish is too hard, ask Paul. And his multiples."</p>
+        </div>
+
+        <!-- Cast Form -->
+        <div class="glass rounded-2xl p-6 mb-6">
+            <h2 class="text-xl font-bold text-sp-cyan mb-5">🎣 Cast the Pool</h2>
+
+            <!-- Question -->
+            <div class="mb-5">
+                <label class="block text-white/60 text-sm mb-2 font-medium">Your Question</label>
+                <textarea id="inp-question" class="sp-input" rows="3" placeholder="e.g., Will Bitcoin reach $150k by year end?"></textarea>
+            </div>
+
+            <!-- Sliders row -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                <div>
+                    <label class="block text-white/60 text-sm mb-2 font-medium">
+                        Pauls: <span class="text-sp-cyan font-bold" id="lbl-pauls">50</span>
+                        <span class="text-white/30 text-xs ml-1">(recommended: 50)</span>
+                    </label>
+                    <input type="range" id="inp-pauls" min="10" max="1000" value="50" step="10">
+                    <div class="flex justify-between text-[10px] text-white/25 mt-1">
+                        <span>10</span><span>250</span><span>500</span><span>750</span><span>1000</span>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-white/60 text-sm mb-2 font-medium">
+                        Rounds: <span class="text-sp-cyan font-bold" id="lbl-rounds">25</span>
+                    </label>
+                    <input type="range" id="inp-rounds" min="5" max="100" value="25" step="5">
+                    <div class="flex justify-between text-[10px] text-white/25 mt-1">
+                        <span>5</span><span>25</span><span>50</span><span>75</span><span>100</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Domain -->
+            <div class="mb-6">
+                <label class="block text-white/60 text-sm mb-2 font-medium">Domain</label>
+                <select id="inp-domain" class="sp-input">
+                    <option value="trading">📈 Trading</option>
+                    <option value="sports">⚽ Sports</option>
+                    <option value="legal">⚖️ Legal</option>
+                    <option value="marketing">📢 Marketing</option>
+                    <option value="weather">🌦️ Weather</option>
+                    <option value="custom">🔧 Custom</option>
+                </select>
+            </div>
+
+            <!-- Cast Button -->
+            <button id="btn-cast" onclick="castPool()" class="cast-btn w-full py-4 text-lg font-bold uppercase rounded-xl text-white tracking-wider">
+                🐟 Cast the Pool 🐟
+            </button>
+        </div>
+
+        <!-- Progress Section (hidden by default) -->
+        <div id="cast-progress" class="glass rounded-2xl p-6 mb-6" style="display:none;">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-base font-semibold text-white/80">⏳ Pool in Progress</h3>
+                <button onclick="cancelCast()" class="px-4 py-1.5 text-xs font-medium rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors border border-red-500/20">
+                    Cancel
+                </button>
+            </div>
+            <div class="progress-bar-track mb-2">
+                <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-white/40">
+                <span id="progress-text">Starting...</span>
+                <span id="progress-pct">0%</span>
+            </div>
+        </div>
+
+        <!-- Results Preview (hidden by default) -->
+        <div id="cast-result-preview" class="glass-strong rounded-2xl p-6" style="display:none;">
+            <h3 class="text-base font-semibold text-white/70 mb-4">🏁 Results</h3>
+            <div class="text-center py-4">
+                <div id="preview-badge" class="text-4xl font-black mb-2">—</div>
+                <div id="preview-confidence" class="text-lg text-white/60 mb-3">—</div>
+                <div id="preview-summary" class="text-sm text-white/50 max-w-md mx-auto mb-5">—</div>
+                <button onclick="switchTab('results')" class="px-6 py-2.5 rounded-xl glass text-sp-cyan hover:bg-white/5 transition-colors text-sm font-medium">
+                    View Full Results →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ TAB: RESULTS ============ -->
+    <div class="tab-panel" id="tab-results">
+        <div class="flex gap-6 min-h-[calc(100vh-56px)]">
+
+            <!-- History Sidebar -->
+            <div class="w-64 flex-shrink-0">
+                <div class="glass rounded-2xl p-4 sticky top-0">
+                    <h3 class="text-sm font-semibold text-white/50 uppercase tracking-wider mb-3">History</h3>
+                    <div id="results-history" class="space-y-1 max-h-[calc(100vh-180px)] overflow-y-auto">
+                        <div class="text-xs text-white/25 py-6 text-center">No history yet</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Main -->
+            <div class="flex-1 min-w-0">
+                <!-- Empty State -->
+                <div id="results-empty" class="coming-soon">
+                    <div class="text-6xl mb-4">🎣</div>
+                    <h2 class="text-2xl font-bold text-white/40 mb-2">No Results Yet</h2>
+                    <p class="text-white/25 mb-6">Cast a pool first to see predictions here.</p>
+                    <button onclick="switchTab('home')" class="px-6 py-2.5 rounded-xl glass text-sp-cyan hover:bg-white/5 transition-colors text-sm font-medium">
+                        ← Go to Home
+                    </button>
+                </div>
+
+                <!-- Result Content (hidden until results) -->
+                <div id="results-content" style="display:none;">
+                    <!-- Consensus Header -->
+                    <div class="glass-strong rounded-2xl p-6 mb-6">
+                        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                            <div>
+                                <div class="text-xs text-white/30 uppercase tracking-wider mb-1">Question</div>
+                                <h2 id="res-question" class="text-lg font-bold text-white/90">—</h2>
+                            </div>
+                            <div class="text-center md:text-right">
+                                <div id="res-direction-badge" class="text-3xl font-black mb-1">—</div>
+                                <div id="res-confidence" class="text-sm text-white/50">—</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sentiment Breakdown -->
+                    <div class="glass rounded-2xl p-6 mb-6">
+                        <h3 class="text-sm font-semibold text-white/50 uppercase tracking-wider mb-4">Sentiment Breakdown</h3>
+                        <div class="space-y-3" id="res-sentiment-bars">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Paul Cards Grid -->
+                    <div class="mb-4 flex items-center justify-between">
+                        <h3 class="text-sm font-semibold text-white/50 uppercase tracking-wider">Individual Pauls</h3>
+                        <span id="res-paul-count" class="text-xs text-white/25">0 pauls</span>
+                    </div>
+                    <div id="res-paul-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                        <!-- Paul cards populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ TAB: SETTINGS ============ -->
+    <div class="tab-panel" id="tab-settings">
+        <div class="max-w-3xl mx-auto">
+            <h1 class="text-2xl font-bold gradient-text mb-6">⚙️ Settings</h1>
+
+            <!-- LLM Configuration -->
+            <div class="glass rounded-2xl mb-4 overflow-hidden">
+                <div class="section-header open" onclick="toggleSection(this)">
+                    <span class="font-semibold text-sm">🤖 LLM Configuration</span>
+                    <span class="chevron">▼</span>
+                </div>
+                <div class="section-body open">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-white/50 text-xs mb-1">Ollama URL</label>
+                            <input type="text" id="set-ollama-url" class="sp-input" value="http://localhost:11434" placeholder="http://localhost:11434">
+                        </div>
+                        <div>
+                            <label class="block text-white/50 text-xs mb-1">Model</label>
+                            <div class="flex gap-2">
+                                <select id="set-model" class="sp-input flex-1">
+                                    <option value="">— Select model —</option>
+                                </select>
+                                <button onclick="refreshModels()" class="px-3 py-2 rounded-lg glass text-xs text-sp-cyan hover:bg-white/5 transition-colors whitespace-nowrap" title="Refresh models">
+                                    🔄 Refresh
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <button onclick="testConnection()" class="px-4 py-2 rounded-lg glass text-xs text-sp-cyan hover:bg-white/5 transition-colors">
+                                ⚡ Test Connection
+                            </button>
+                            <span id="set-conn-status" class="text-xs ml-3 text-white/40"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Simulation Defaults -->
+            <div class="glass rounded-2xl mb-4 overflow-hidden">
+                <div class="section-header open" onclick="toggleSection(this)">
+                    <span class="font-semibold text-sm">🎯 Simulation Defaults</span>
+                    <span class="chevron">▼</span>
+                </div>
+                <div class="section-body open">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-white/50 text-xs mb-1">Default Pauls</label>
+                            <input type="number" id="set-pauls" class="sp-input" value="50" min="10" max="1000">
+                        </div>
+                        <div>
+                            <label class="block text-white/50 text-xs mb-1">Default Rounds</label>
+                            <input type="number" id="set-rounds" class="sp-input" value="20" min="5" max="100">
+                        </div>
+                        <div>
+                            <label class="block text-white/50 text-xs mb-1">Timeout (seconds)</label>
+                            <input type="number" id="set-timeout" class="sp-input" value="120" min="30" max="600">
+                        </div>
+                        <div>
+                            <label class="block text-white/50 text-xs mb-1">Default Domain</label>
+                            <select id="set-domain" class="sp-input">
+                                <option value="trading">Trading</option>
+                                <option value="sports">Sports</option>
+                                <option value="legal">Legal</option>
+                                <option value="marketing">Marketing</option>
+                                <option value="weather">Weather</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Server -->
+            <div class="glass rounded-2xl mb-4 overflow-hidden">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span class="font-semibold text-sm">🔌 Server</span>
+                    <span class="chevron">▼</span>
+                </div>
+                <div class="section-body">
+                    <div class="grid grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-white/50 text-xs mb-1">WebSocket Port</label>
+                            <input type="number" id="set-ws-port" class="sp-input" value="8765">
+                        </div>
+                        <div>
+                            <label class="block text-white/50 text-xs mb-1">UI Port</label>
+                            <input type="number" id="set-ui-port" class="sp-input" value="3005">
+                        </div>
+                        <div>
+                            <label class="block text-white/50 text-xs mb-1">Host</label>
+                            <input type="text" id="set-host" class="sp-input" value="localhost">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learning System -->
+            <div class="glass rounded-2xl mb-4 overflow-hidden">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span class="font-semibold text-sm">📊 Learning System</span>
+                    <span class="chevron">▼</span>
+                </div>
+                <div class="section-body">
+                    <div class="space-y-4">
+                        <div class="toggle-wrap">
+                            <div class="toggle on" id="set-track-accuracy" onclick="toggleSwitch(this)"></div>
+                            <span class="text-sm text-white/70">Track accuracy</span>
+                        </div>
+                        <div>
+                            <label class="block text-white/50 text-xs mb-1">Min predictions for leaderboard</label>
+                            <input type="number" id="set-min-predictions" class="sp-input" value="1" min="1">
+                        </div>
+                        <div class="toggle-wrap">
+                            <div class="toggle on" id="set-weight-recent" onclick="toggleSwitch(this)"></div>
+                            <span class="text-sm text-white/70">Weight recent predictions</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Paper Trading -->
+            <div class="glass rounded-2xl mb-4 overflow-hidden">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span class="font-semibold text-sm">💰 Paper Trading</span>
+                    <span class="chevron">▼</span>
+                </div>
+                <div class="section-body">
+                    <div class="space-y-4">
+                        <div class="toggle-wrap">
+                            <div class="toggle on" id="set-paper-enabled" onclick="toggleSwitch(this)"></div>
+                            <span class="text-sm text-white/70">Enabled</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-white/50 text-xs mb-1">Update interval (seconds)</label>
+                                <input type="number" id="set-paper-interval" class="sp-input" value="30" min="5">
+                            </div>
+                            <div>
+                                <label class="block text-white/50 text-xs mb-1">Max positions</label>
+                                <input type="number" id="set-paper-max" class="sp-input" value="10000" min="1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Auto-Resolver -->
+            <div class="glass rounded-2xl mb-4 overflow-hidden">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span class="font-semibold text-sm">🔄 Auto-Resolver</span>
+                    <span class="chevron">▼</span>
+                </div>
+                <div class="section-body">
+                    <div class="space-y-4">
+                        <div class="toggle-wrap">
+                            <div class="toggle on" id="set-resolver-enabled" onclick="toggleSwitch(this)"></div>
+                            <span class="text-sm text-white/70">Enabled</span>
+                        </div>
+                        <div>
+                            <label class="block text-white/50 text-xs mb-1">Interval (minutes)</label>
+                            <input type="number" id="set-resolver-interval" class="sp-input" value="60" min="5">
+                        </div>
+                        <div>
+                            <label class="block text-white/50 text-xs mb-1">Symbols (comma-separated)</label>
+                            <input type="text" id="set-resolver-symbols" class="sp-input" value="BTC, ETH, SOL, DOGE, LINK" placeholder="BTC, ETH, SOL">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="glass rounded-2xl mb-4 overflow-hidden p-5">
+                <div class="flex items-center gap-3 mb-4">
+                    <button onclick="saveSettings()" class="px-6 py-2.5 rounded-xl bg-emerald-600/80 hover:bg-emerald-600 text-white text-sm font-semibold transition-colors">
+                        💾 Save Settings
+                    </button>
+                    <button onclick="resetSettings()" class="px-6 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white/60 text-sm font-medium transition-colors border border-white/10">
+                        Reset to Defaults
+                    </button>
+                </div>
+                <div id="settings-status" class="text-xs text-white/40 min-h-[20px]"></div>
+            </div>
+
+            <!-- System Info -->
+            <div class="glass rounded-2xl mb-8 overflow-hidden">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span class="font-semibold text-sm">ℹ️ System Info</span>
+                    <span class="chevron">▼</span>
+                </div>
+                <div class="section-body">
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-white/40">Ollama Status</span>
+                            <span id="info-ollama" class="text-white/60">—</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-white/40">Database Sizes</span>
+                            <span id="info-db" class="text-white/60">—</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-white/40">Active Processes</span>
+                            <span id="info-processes" class="text-white/60">—</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-white/40">WebSocket</span>
+                            <span id="info-ws" class="text-white/60">—</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ PLACEHOLDER TABS ============ -->
+    <div class="tab-panel" id="tab-debate">
+        <div class="coming-soon">
+            <div class="text-7xl mb-5">🕸️</div>
+            <h2 class="text-3xl font-bold gradient-text mb-3">Debate Network</h2>
+            <p class="text-white/30 max-w-md">Interactive D3.js debate visualization — watch Pauls persuade each other in real time.</p>
+            <div class="mt-6 badge" style="background:rgba(168,85,247,0.1);color:#a855f7;border:1px solid rgba(168,85,247,0.2)">Phase 2</div>
+        </div>
+    </div>
+    <div class="tab-panel" id="tab-visualize">
+        <div class="coming-soon">
+            <div class="text-7xl mb-5">📈</div>
+            <h2 class="text-3xl font-bold gradient-text mb-3">Visualize</h2>
+            <p class="text-white/30 max-w-md">Belief distributions, consensus convergence, and specialty cluster views across rounds.</p>
+            <div class="mt-6 badge" style="background:rgba(168,85,247,0.1);color:#a855f7;border:1px solid rgba(168,85,247,0.2)">Phase 2</div>
+        </div>
+    </div>
+    <div class="tab-panel" id="tab-world">
+        <div class="coming-soon">
+            <div class="text-7xl mb-5">🌍</div>
+            <h2 class="text-3xl font-bold gradient-text mb-3">Paul's World</h2>
+            <p class="text-white/30 max-w-md">A living simulation — Pauls have locations, moods, relationships, and daily routines.</p>
+            <div class="mt-6 badge" style="background:rgba(236,72,153,0.1);color:#ec4899;border:1px solid rgba(236,72,153,0.2)">Phase 3</div>
+        </div>
+    </div>
+    <div class="tab-panel" id="tab-social">
+        <div class="coming-soon">
+            <div class="text-7xl mb-5">📱</div>
+            <h2 class="text-3xl font-bold gradient-text mb-3">Social</h2>
+            <p class="text-white/30 max-w-md">Pauls post about their predictions on social media. Track trending topics and engagement.</p>
+            <div class="mt-6 badge" style="background:rgba(236,72,153,0.1);color:#ec4899;border:1px solid rgba(236,72,153,0.2)">Phase 3</div>
+        </div>
+    </div>
+    <div class="tab-panel" id="tab-leaderboard">
+        <div class="coming-soon">
+            <div class="text-7xl mb-5">🏆</div>
+            <h2 class="text-3xl font-bold gradient-text mb-3">Leaderboard</h2>
+            <p class="text-white/30 max-w-md">Rankings by accuracy, domain expertise, streaks, and prediction history.</p>
+            <div class="mt-6 badge" style="background:rgba(168,85,247,0.1);color:#a855f7;border:1px solid rgba(168,85,247,0.2)">Phase 2</div>
+        </div>
+    </div>
+    <div class="tab-panel" id="tab-trading">
+        <div class="coming-soon">
+            <div class="text-7xl mb-5">💰</div>
+            <h2 class="text-3xl font-bold gradient-text mb-3">Trading</h2>
+            <p class="text-white/30 max-w-md">Paper trading dashboard — PnL, positions, equity curves, and auto-trader controls.</p>
+            <div class="mt-6 badge" style="background:rgba(255,215,0,0.1);color:#ffd700;border:1px solid rgba(255,215,0,0.2)">Phase 4</div>
+        </div>
+    </div>
+    <div class="tab-panel" id="tab-creative">
+        <div class="coming-soon">
+            <div class="text-7xl mb-5">🎬</div>
+            <h2 class="text-3xl font-bold gradient-text mb-3">Creative</h2>
+            <p class="text-white/30 max-w-md">Script Doctor, collaborative writing, and formatted screenplay output with Paul ensembles.</p>
+            <div class="mt-6 badge" style="background:rgba(255,215,0,0.1);color:#ffd700;border:1px solid rgba(255,215,0,0.2)">Phase 4</div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== JAVASCRIPT ==================== -->
+<script>
+(function() {
+    'use strict';
+
+    // ===========================
+    // STATE
+    // ===========================
+    const state = {
+        ws: null,
+        wsRetryDelay: 1000,
+        wsRetryTimer: null,
+        wsConnected: false,
+        casting: false,
+        castId: null,
+        currentTab: 'home',
+        currentResult: null,
+        history: [],
+        selectedHistoryId: null,
+        config: null,
+        models: [],
+    };
+
+    const TABS = ['home','results','settings','debate','visualize','world','social','leaderboard','trading','creative'];
+
+    // ===========================
+    // TAB ROUTING
+    // ===========================
+    window.switchTab = function(tab) {
+        if (!TABS.includes(tab)) tab = 'home';
+        state.currentTab = tab;
+        location.hash = '#' + tab;
+
+        // Update sidebar
+        document.querySelectorAll('.sidebar-item').forEach(el => {
+            el.classList.toggle('active', el.dataset.tab === tab);
+        });
+
+        // Update panels
+        document.querySelectorAll('.tab-panel').forEach(el => {
+            el.classList.toggle('active', el.id === 'tab-' + tab);
+        });
+
+        // Tab-specific init
+        if (tab === 'results') renderResultsTab();
+        if (tab === 'settings') initSettingsTab();
+    };
+
+    function initRouter() {
+        const hash = location.hash.replace('#', '') || 'home';
+        switchTab(hash);
+        window.addEventListener('hashchange', () => {
+            const h = location.hash.replace('#', '') || 'home';
+            switchTab(h);
+        });
+    }
+
+    // ===========================
+    // WEBSOCKET
+    // ===========================
+    function wsConnect() {
+        if (state.ws && (state.ws.readyState === WebSocket.CONNECTING || state.ws.readyState === WebSocket.OPEN)) return;
+
+        const url = 'ws://localhost:8765';
+        try {
+            state.ws = new WebSocket(url);
+        } catch(e) {
+            scheduleReconnect();
+            return;
+        }
+
+        state.ws.onopen = () => {
+            state.wsConnected = true;
+            state.wsRetryDelay = 1000;
+            updateWsIndicator();
+            // Auth handshake
+            wsSend('auth', { connection_id: 'app' });
+            // Request config + history
+            wsSend('config.get', {});
+            wsSend('history.list', {});
+            wsSend('ollama.models', {});
+        };
+
+        state.ws.onmessage = (ev) => {
+            try {
+                const msg = JSON.parse(ev.data);
+                handleWsMessage(msg);
+            } catch(e) {
+                console.warn('WS parse error', e);
+            }
+        };
+
+        state.ws.onclose = () => {
+            state.wsConnected = false;
+            updateWsIndicator();
+            scheduleReconnect();
+        };
+
+        state.ws.onerror = () => {
+            state.wsConnected = false;
+            updateWsIndicator();
+        };
+    }
+
+    function scheduleReconnect() {
+        if (state.wsRetryTimer) return;
+        state.wsRetryTimer = setTimeout(() => {
+            state.wsRetryTimer = null;
+            state.wsRetryDelay = Math.min(state.wsRetryDelay * 2, 10000);
+            wsConnect();
+        }, state.wsRetryDelay);
+    }
+
+    function wsSend(type, payload) {
+        if (state.ws && state.ws.readyState === WebSocket.OPEN) {
+            state.ws.send(JSON.stringify({ type, payload: payload || {} }));
+        }
+    }
+
+    function updateWsIndicator() {
+        const dot = document.getElementById('ws-dot');
+        const label = document.getElementById('ws-label');
+        const infoWs = document.getElementById('info-ws');
+        if (state.wsConnected) {
+            dot.className = 'conn-dot connected';
+            label.textContent = 'Connected';
+            label.style.color = 'rgba(34,197,94,0.7)';
+            if (infoWs) infoWs.textContent = '🟢 Connected';
+        } else {
+            dot.className = 'conn-dot disconnected';
+            label.textContent = 'Disconnected';
+            label.style.color = 'rgba(239,68,68,0.6)';
+            if (infoWs) infoWs.textContent = '🔴 Disconnected';
+        }
+    }
+
+    // ===========================
+    // MESSAGE HANDLER
+    // ===========================
+    function handleWsMessage(msg) {
+        const { type, payload } = msg;
+        switch(type) {
+            case 'auth_ok':
+            case 'auth':
+                console.log('Auth OK');
+                break;
+
+            case 'config':
+                state.config = payload;
+                populateSettings(payload);
+                break;
+
+            case 'models':
+                state.models = payload.models || payload || [];
+                populateModels();
+                break;
+
+            case 'ollama_status':
+            case 'ollama.test':
+                handleOllamaTest(payload);
+                break;
+
+            case 'stream':
+            case 'progress':
+                handleCastProgress(payload);
+                break;
+
+            case 'info':
+                handleCastInfo(payload);
+                break;
+
+            case 'results':
+            case 'result':
+                handleCastResult(payload);
+                break;
+
+            case 'error':
+                handleCastError(payload);
+                break;
+
+            case 'status':
+                handleSystemStatus(payload);
+                break;
+
+            case 'history':
+            case 'history.list':
+                state.history = payload.predictions || payload || [];
+                renderHistorySidebar();
+                break;
+
+            case 'history.get':
+            case 'history_result':
+                handleHistoryResult(payload);
+                break;
+
+            case 'config.saved':
+            case 'config_saved':
+                showSettingsStatus('✅ Settings saved successfully', 'success');
+                break;
+
+            default:
+                console.log('WS msg:', type, payload);
+        }
+    }
+
+    // ===========================
+    // CAST THE POOL
+    // ===========================
+    window.castPool = function() {
+        const question = document.getElementById('inp-question').value.trim();
+        if (!question) {
+            shakeElement(document.getElementById('inp-question'));
+            return;
+        }
+
+        const pauls = parseInt(document.getElementById('inp-pauls').value);
+        const rounds = parseInt(document.getElementById('inp-rounds').value);
+        const domain = document.getElementById('inp-domain').value;
+
+        state.casting = true;
+        state.castId = Date.now().toString(36);
+
+        // UI
+        document.getElementById('btn-cast').disabled = true;
+        document.getElementById('cast-progress').style.display = 'block';
+        document.getElementById('cast-result-preview').style.display = 'none';
+        setProgress(0, 'Assembling the pool...');
+
+        wsSend('cast', { question, pauls, rounds, domain });
+    };
+
+    window.cancelCast = function() {
+        wsSend('cancel', {});
+        state.casting = false;
+        document.getElementById('btn-cast').disabled = false;
+        document.getElementById('cast-progress').style.display = 'none';
+        setProgress(0, 'Cancelled');
+    };
+
+    function setProgress(pct, text) {
+        const fill = document.getElementById('progress-fill');
+        const pctEl = document.getElementById('progress-pct');
+        const textEl = document.getElementById('progress-text');
+        fill.style.width = Math.min(pct, 100) + '%';
+        pctEl.textContent = Math.round(pct) + '%';
+        if (text) textEl.textContent = text;
+    }
+
+    function handleCastProgress(payload) {
+        if (!state.casting) return;
+        const round = payload.round || payload.current_round || 0;
+        const total = payload.total_rounds || payload.total || 25;
+        const pct = total > 0 ? (round / total) * 100 : 0;
+        const status = payload.status || payload.message || `Round ${round}/${total}`;
+        setProgress(pct, status);
+    }
+
+    function handleCastInfo(payload) {
+        if (!state.casting) return;
+        const msg = payload.message || payload.text || JSON.stringify(payload);
+        document.getElementById('progress-text').textContent = msg;
+    }
+
+    function handleCastResult(payload) {
+        state.casting = false;
+        document.getElementById('btn-cast').disabled = false;
+        document.getElementById('cast-progress').style.display = 'none';
+
+        // Store result
+        state.currentResult = payload;
+
+        // Add to history
+        const histEntry = {
+            id: payload.id || Date.now().toString(36),
+            question: payload.question || document.getElementById('inp-question').value,
+            timestamp: payload.timestamp || new Date().toISOString(),
+            direction: extractDirection(payload),
+            confidence: extractConfidence(payload),
+        };
+        state.history.unshift(histEntry);
+        state.selectedHistoryId = histEntry.id;
+        renderHistorySidebar();
+
+        // Show preview
+        showResultPreview(payload);
+
+        // Request fresh history
+        wsSend('history.list', {});
+    }
+
+    function handleCastError(payload) {
+        state.casting = false;
+        document.getElementById('btn-cast').disabled = false;
+        document.getElementById('cast-progress').style.display = 'none';
+
+        const errMsg = payload.message || payload.error || 'Unknown error';
+        document.getElementById('cast-result-preview').style.display = 'block';
+        document.getElementById('preview-badge').innerHTML = '<span class="text-red-400">❌ Error</span>';
+        document.getElementById('preview-confidence').textContent = '';
+        document.getElementById('preview-summary').textContent = errMsg;
+    }
+
+    function showResultPreview(result) {
+        const dir = extractDirection(result);
+        const conf = extractConfidence(result);
+        const summary = extractSummary(result);
+
+        const preview = document.getElementById('cast-result-preview');
+        preview.style.display = 'block';
+
+        const badge = document.getElementById('preview-badge');
+        const color = dir === 'BULLISH' ? 'text-green-400' : dir === 'BEARISH' ? 'text-red-400' : 'text-yellow-400';
+        badge.className = 'text-4xl font-black mb-2 ' + color;
+        badge.textContent = dir;
+
+        document.getElementById('preview-confidence').textContent = conf + '% confidence';
+        document.getElementById('preview-summary').textContent = summary;
+    }
+
+    // ===========================
+    // RESULTS TAB
+    // ===========================
+    function renderResultsTab() {
+        const empty = document.getElementById('results-empty');
+        const content = document.getElementById('results-content');
+
+        if (!state.currentResult) {
+            empty.style.display = 'flex';
+            content.style.display = 'none';
+            return;
+        }
+
+        empty.style.display = 'none';
+        content.style.display = 'block';
+        renderFullResult(state.currentResult);
+    }
+
+    function renderFullResult(result) {
+        // Question
+        const question = result.question || '—';
+        document.getElementById('res-question').textContent = question;
+
+        // Direction badge
+        const dir = extractDirection(result);
+        const conf = extractConfidence(result);
+        const dirBadge = document.getElementById('res-direction-badge');
+        const dirColor = dir === 'BULLISH' ? 'text-green-400' : dir === 'BEARISH' ? 'text-red-400' : 'text-yellow-400';
+        dirBadge.className = 'text-3xl font-black mb-1 ' + dirColor;
+        dirBadge.textContent = dir;
+        document.getElementById('res-confidence').textContent = conf + '% confidence';
+
+        // Sentiment bars
+        const sentBars = document.getElementById('res-sentiment-bars');
+        const sentiments = extractSentiments(result);
+        const total = sentiments.bullish + sentiments.bearish + sentiments.neutral || 1;
+        sentBars.innerHTML = `
+            <div class="flex items-center gap-3">
+                <span class="text-xs text-white/40 w-16 text-right">Bullish</span>
+                <div class="flex-1 bg-white/5 rounded-md overflow-hidden h-7">
+                    <div class="sentiment-bar bg-green-500/60 text-green-200" style="width:${(sentiments.bullish/total*100).toFixed(1)}%">${sentiments.bullish}</div>
+                </div>
+                <span class="text-xs text-white/30 w-10">${(sentiments.bullish/total*100).toFixed(0)}%</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="text-xs text-white/40 w-16 text-right">Bearish</span>
+                <div class="flex-1 bg-white/5 rounded-md overflow-hidden h-7">
+                    <div class="sentiment-bar bg-red-500/60 text-red-200" style="width:${(sentiments.bearish/total*100).toFixed(1)}%">${sentiments.bearish}</div>
+                </div>
+                <span class="text-xs text-white/30 w-10">${(sentiments.bearish/total*100).toFixed(0)}%</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="text-xs text-white/40 w-16 text-right">Neutral</span>
+                <div class="flex-1 bg-white/5 rounded-md overflow-hidden h-7">
+                    <div class="sentiment-bar bg-yellow-500/60 text-yellow-200" style="width:${(sentiments.neutral/total*100).toFixed(1)}%">${sentiments.neutral}</div>
+                </div>
+                <span class="text-xs text-white/30 w-10">${(sentiments.neutral/total*100).toFixed(0)}%</span>
+            </div>
+        `;
+
+        // Paul cards
+        const pauls = extractPauls(result);
+        document.getElementById('res-paul-count').textContent = pauls.length + ' pauls';
+        const grid = document.getElementById('res-paul-grid');
+        if (pauls.length === 0) {
+            grid.innerHTML = '<div class="col-span-full text-center text-white/25 py-8">No individual Paul data available</div>';
+        } else {
+            grid.innerHTML = pauls.map((p, i) => {
+                const pColor = (p.direction||'').toUpperCase() === 'BULLISH' ? 'border-green-500/30' :
+                               (p.direction||'').toUpperCase() === 'BEARISH' ? 'border-red-500/30' : 'border-yellow-500/30';
+                const pBadge = (p.direction||'').toUpperCase() === 'BULLISH' ? 'badge-bullish' :
+                               (p.direction||'').toUpperCase() === 'BEARISH' ? 'badge-bearish' : 'badge-neutral';
+                const emoji = p.emoji || p.specialty_emoji || '🐟';
+                const name = p.name || `Paul #${i+1}`;
+                const snippet = (p.reasoning || p.analysis || '').slice(0, 120);
+                const full = p.reasoning || p.analysis || '';
+                return `
+                    <div class="paul-card glass rounded-xl p-4 border ${pColor}" onclick="this.classList.toggle('expanded')">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="text-lg">${escHtml(emoji)}</span>
+                                <span class="text-sm font-semibold text-white/80">${escHtml(name)}</span>
+                            </div>
+                            <span class="badge ${pBadge} text-[10px]">${escHtml((p.direction||'NEUTRAL').toUpperCase())}</span>
+                        </div>
+                        <div class="text-xs text-white/40 mb-1">${p.confidence ? p.confidence + '% confidence' : ''}</div>
+                        <div class="text-xs text-white/50 leading-relaxed">${escHtml(snippet)}${full.length > 120 ? '...' : ''}</div>
+                        <div class="reasoning-full mt-2 text-xs text-white/50 leading-relaxed border-t border-white/5 pt-2">${escHtml(full)}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+    }
+
+    // History sidebar in results tab
+    function renderHistorySidebar() {
+        const container = document.getElementById('results-history');
+        if (!state.history || state.history.length === 0) {
+            container.innerHTML = '<div class="text-xs text-white/25 py-6 text-center">No history yet</div>';
+            return;
+        }
+        container.innerHTML = state.history.map(h => {
+            const q = (h.question || '').slice(0, 40);
+            const dir = (h.direction || 'NEUTRAL').toUpperCase();
+            const badgeCls = dir === 'BULLISH' ? 'badge-bullish' : dir === 'BEARISH' ? 'badge-bearish' : 'badge-neutral';
+            const date = h.timestamp ? new Date(h.timestamp).toLocaleDateString('en-US', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }) : '';
+            const active = h.id === state.selectedHistoryId ? 'active' : '';
+            return `
+                <div class="history-item ${active}" onclick="loadHistoryResult('${escHtml(h.id)}')">
+                    <div class="text-xs text-white/70 mb-1 truncate">${escHtml(q)}${q.length >= 40 ? '…' : ''}</div>
+                    <div class="flex items-center justify-between">
+                        <span class="badge ${badgeCls}" style="font-size:9px;padding:2px 6px;">${dir}</span>
+                        <span class="text-[10px] text-white/25">${date}</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    window.loadHistoryResult = function(id) {
+        state.selectedHistoryId = id;
+        renderHistorySidebar();
+        wsSend('history.get', { id });
+    };
+
+    function handleHistoryResult(payload) {
+        state.currentResult = payload;
+        if (state.currentTab === 'results') {
+            renderResultsTab();
+        }
+    }
+
+    // ===========================
+    // SETTINGS TAB
+    // ===========================
+    function initSettingsTab() {
+        if (state.wsConnected) {
+            wsSend('config.get', {});
+            wsSend('ollama.models', {});
+        }
+    }
+
+    function populateSettings(cfg) {
+        if (!cfg) return;
+
+        // Simulation defaults
+        const def = cfg.defaults || {};
+        setVal('set-pauls', def.pauls || 50);
+        setVal('set-rounds', def.rounds || 20);
+        setVal('set-timeout', def.timeout_seconds || 120);
+        if (def.domain) setVal('set-domain', def.domain);
+
+        // Also update home tab sliders
+        setVal('inp-pauls', def.pauls || 50);
+        document.getElementById('lbl-pauls').textContent = def.pauls || 50;
+        setVal('inp-rounds', def.rounds || 20);
+        document.getElementById('lbl-rounds').textContent = def.rounds || 20;
+
+        // Server
+        const srv = cfg.server || {};
+        setVal('set-ws-port', srv.websocket_port || 8765);
+        setVal('set-ui-port', srv.ui_port || 3005);
+        setVal('set-host', srv.host || 'localhost');
+
+        // Ollama
+        const ollama = cfg.ollama || {};
+        if (ollama.url) setVal('set-ollama-url', ollama.url);
+        if (ollama.model) setVal('set-model', ollama.model);
+
+        // Learning
+        const learn = cfg.learning || {};
+        setToggle('set-track-accuracy', learn.track_accuracy !== false);
+        setVal('set-min-predictions', learn.min_predictions_for_leaderboard || 1);
+        setToggle('set-weight-recent', learn.weight_recent_predictions !== false);
+
+        // Paper trading
+        const paper = cfg.paper_trading || {};
+        setToggle('set-paper-enabled', paper.enabled !== false);
+        setVal('set-paper-interval', paper.update_interval_seconds || 30);
+        setVal('set-paper-max', paper.max_positions || 10000);
+
+        // Auto-resolver
+        const resolver = cfg.auto_resolver || {};
+        setToggle('set-resolver-enabled', resolver.enabled !== false);
+        setVal('set-resolver-interval', resolver.interval_minutes || 60);
+        const symbols = (resolver.symbols || ['BTC','ETH','SOL','DOGE','LINK']).join(', ');
+        setVal('set-resolver-symbols', symbols);
+
+        // System info
+        if (cfg.system) {
+            const sys = cfg.system;
+            if (sys.ollama_status) document.getElementById('info-ollama').textContent = sys.ollama_status;
+            if (sys.db_sizes) document.getElementById('info-db').textContent = sys.db_sizes;
+            if (sys.active_processes !== undefined) document.getElementById('info-processes').textContent = sys.active_processes;
+        }
+    }
+
+    function populateModels() {
+        const sel = document.getElementById('set-model');
+        const current = sel.value;
+        sel.innerHTML = '<option value="">— Select model —</option>';
+        (state.models || []).forEach(m => {
+            const name = typeof m === 'string' ? m : (m.name || m.model || '');
+            if (!name) return;
+            const opt = document.createElement('option');
+            opt.value = name;
+            opt.textContent = name;
+            sel.appendChild(opt);
+        });
+        if (current) sel.value = current;
+    }
+
+    window.refreshModels = function() {
+        wsSend('ollama.models', {});
+    };
+
+    window.testConnection = function() {
+        const statusEl = document.getElementById('set-conn-status');
+        statusEl.textContent = '⏳ Testing...';
+        statusEl.className = 'text-xs ml-3 text-yellow-400';
+        const start = Date.now();
+        wsSend('ollama.test', {});
+
+        // Timeout fallback
+        setTimeout(() => {
+            if (statusEl.textContent === '⏳ Testing...') {
+                statusEl.textContent = '❌ No response (timeout)';
+                statusEl.className = 'text-xs ml-3 text-red-400';
+            }
+        }, 8000);
+    };
+
+    function handleOllamaTest(payload) {
+        const statusEl = document.getElementById('set-conn-status');
+        const infoEl = document.getElementById('info-ollama');
+        if (payload.success || payload.connected || payload.status === 'ok') {
+            const latency = payload.latency_ms || payload.latency || '?';
+            statusEl.textContent = `✅ Connected (${latency}ms)`;
+            statusEl.className = 'text-xs ml-3 text-green-400';
+            if (infoEl) infoEl.textContent = `🟢 Online (${latency}ms)`;
+        } else {
+            const err = payload.error || payload.message || 'Connection failed';
+            statusEl.textContent = `❌ ${err}`;
+            statusEl.className = 'text-xs ml-3 text-red-400';
+            if (infoEl) infoEl.textContent = '🔴 Offline';
+        }
+    }
+
+    window.saveSettings = function() {
+        const cfg = {
+            defaults: {
+                pauls: intVal('set-pauls'),
+                rounds: intVal('set-rounds'),
+                timeout_seconds: intVal('set-timeout'),
+                domain: getVal('set-domain'),
+            },
+            server: {
+                websocket_port: intVal('set-ws-port'),
+                ui_port: intVal('set-ui-port'),
+                host: getVal('set-host'),
+            },
+            ollama: {
+                url: getVal('set-ollama-url'),
+                model: getVal('set-model'),
+            },
+            learning: {
+                track_accuracy: getToggle('set-track-accuracy'),
+                min_predictions_for_leaderboard: intVal('set-min-predictions'),
+                weight_recent_predictions: getToggle('set-weight-recent'),
+            },
+            paper_trading: {
+                enabled: getToggle('set-paper-enabled'),
+                update_interval_seconds: intVal('set-paper-interval'),
+                max_positions: intVal('set-paper-max'),
+            },
+            auto_resolver: {
+                enabled: getToggle('set-resolver-enabled'),
+                interval_minutes: intVal('set-resolver-interval'),
+                symbols: getVal('set-resolver-symbols').split(',').map(s => s.trim()).filter(Boolean),
+            },
+        };
+        wsSend('config.save', cfg);
+        showSettingsStatus('⏳ Saving...', 'pending');
+        // Timeout fallback
+        setTimeout(() => {
+            const el = document.getElementById('settings-status');
+            if (el.textContent === '⏳ Saving...') {
+                showSettingsStatus('⚠️ No confirmation received', 'warn');
+            }
+        }, 5000);
+    };
+
+    window.resetSettings = function() {
+        const defaults = {
+            defaults: { pauls: 50, rounds: 20, timeout_seconds: 120 },
+            server: { websocket_port: 8765, ui_port: 3005, host: 'localhost' },
+            ollama: { url: 'http://localhost:11434', model: '' },
+            learning: { track_accuracy: true, min_predictions_for_leaderboard: 1, weight_recent_predictions: true },
+            paper_trading: { enabled: true, update_interval_seconds: 30, max_positions: 10000 },
+            auto_resolver: { enabled: true, interval_minutes: 60, symbols: ['BTC','ETH','SOL','DOGE','LINK'] },
+        };
+        populateSettings(defaults);
+        showSettingsStatus('↩️ Reset to defaults (not saved yet)', 'info');
+    };
+
+    function showSettingsStatus(msg, type) {
+        const el = document.getElementById('settings-status');
+        el.textContent = msg;
+        const colors = { success: 'text-green-400', error: 'text-red-400', pending: 'text-yellow-400', warn: 'text-yellow-400', info: 'text-sp-cyan' };
+        el.className = 'text-xs min-h-[20px] ' + (colors[type] || 'text-white/40');
+        if (type === 'success') {
+            setTimeout(() => { if (el.textContent === msg) el.textContent = ''; }, 4000);
+        }
+    }
+
+    // ===========================
+    // SECTION TOGGLE
+    // ===========================
+    window.toggleSection = function(header) {
+        header.classList.toggle('open');
+        const body = header.nextElementSibling;
+        body.classList.toggle('open');
+    };
+
+    window.toggleSwitch = function(el) {
+        el.classList.toggle('on');
+    };
+
+    // ===========================
+    // SLIDER LIVE UPDATE
+    // ===========================
+    function initSliders() {
+        const paulsSlider = document.getElementById('inp-pauls');
+        const roundsSlider = document.getElementById('inp-rounds');
+        paulsSlider.addEventListener('input', () => {
+            document.getElementById('lbl-pauls').textContent = paulsSlider.value;
+        });
+        roundsSlider.addEventListener('input', () => {
+            document.getElementById('lbl-rounds').textContent = roundsSlider.value;
+        });
+    }
+
+    // ===========================
+    // HELPERS
+    // ===========================
+    function extractDirection(r) {
+        if (!r) return 'NEUTRAL';
+        const d = r.consensus_direction || r.direction || r.consensus || '';
+        const up = d.toUpperCase();
+        if (up.includes('BULLISH') || up.includes('BUY') || up.includes('YES') || up.includes('POSITIVE')) return 'BULLISH';
+        if (up.includes('BEARISH') || up.includes('SELL') || up.includes('NO') || up.includes('NEGATIVE')) return 'BEARISH';
+        return 'NEUTRAL';
+    }
+
+    function extractConfidence(r) {
+        if (!r) return 0;
+        const c = r.consensus_confidence || r.confidence || r.overall_confidence || 0;
+        return typeof c === 'number' ? Math.round(c) : parseInt(c) || 0;
+    }
+
+    function extractSummary(r) {
+        if (!r) return '';
+        return r.summary || r.consensus_summary || r.analysis_summary || r.reasoning || '';
+    }
+
+    function extractSentiments(r) {
+        if (!r) return { bullish: 0, bearish: 0, neutral: 0 };
+        if (r.sentiment_breakdown) return r.sentiment_breakdown;
+        if (r.sentiments) return r.sentiments;
+
+        // Compute from pauls
+        const pauls = extractPauls(r);
+        const counts = { bullish: 0, bearish: 0, neutral: 0 };
+        pauls.forEach(p => {
+            const d = extractDirection(p);
+            if (d === 'BULLISH') counts.bullish++;
+            else if (d === 'BEARISH') counts.bearish++;
+            else counts.neutral++;
+        });
+        return counts;
+    }
+
+    function extractPauls(r) {
+        if (!r) return [];
+        return r.pauls || r.paul_results || r.individual_results || r.paul_responses || [];
+    }
+
+    function escHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function setVal(id, val) {
+        const el = document.getElementById(id);
+        if (el) el.value = val;
+    }
+
+    function getVal(id) {
+        const el = document.getElementById(id);
+        return el ? el.value : '';
+    }
+
+    function intVal(id) {
+        return parseInt(getVal(id)) || 0;
+    }
+
+    function setToggle(id, on) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (on) el.classList.add('on');
+        else el.classList.remove('on');
+    }
+
+    function getToggle(id) {
+        const el = document.getElementById(id);
+        return el ? el.classList.contains('on') : false;
+    }
+
+    function shakeElement(el) {
+        el.style.transition = 'transform 0.1s';
+        el.style.transform = 'translateX(-6px)';
+        setTimeout(() => { el.style.transform = 'translateX(6px)'; }, 100);
+        setTimeout(() => { el.style.transform = 'translateX(-3px)'; }, 200);
+        setTimeout(() => { el.style.transform = 'translateX(3px)'; }, 300);
+        setTimeout(() => { el.style.transform = ''; }, 400);
+        el.focus();
+    }
+
+    function handleSystemStatus(payload) {
+        if (payload.ollama) document.getElementById('info-ollama').textContent = payload.ollama;
+        if (payload.db_sizes) document.getElementById('info-db').textContent = payload.db_sizes;
+        if (payload.processes !== undefined) document.getElementById('info-processes').textContent = payload.processes;
+    }
+
+    // ===========================
+    // INIT
+    // ===========================
+    function init() {
+        initRouter();
+        initSliders();
+        wsConnect();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+
+})();
+</script>
+</body>
+</html>

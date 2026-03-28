@@ -76,17 +76,14 @@ def start_websocket_server(ws_port, pauls, rounds):
 
 def start_ui_server(ui_port, ws_port):
     """Start the web UI server."""
-    ui_dir = Path(__file__).parent / "ui"
-    
-    if not ui_dir.exists():
-        print(f"❌ UI directory not found: {ui_dir}")
-        return None
+    # Serve from project root so app.html and ui/ are both accessible
+    project_dir = Path(__file__).parent
     
     print(f"🌐 Starting UI server on http://localhost:{ui_port}")
     
     process = subprocess.Popen(
         [sys.executable, "-m", "http.server", str(ui_port)],
-        cwd=ui_dir,
+        cwd=project_dir,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True
@@ -109,13 +106,14 @@ def print_instructions(ws_port, ui_port):
     print("=" * 60)
     print()
     print("📱 Access Points:")
-    print(f"   Web UI:     http://localhost:{ui_port}")
+    print(f"   App:        http://localhost:{ui_port}/app.html")
+    print(f"   Landing:    http://localhost:{ui_port}/ui/index.html")
     print(f"   WebSocket:  ws://localhost:{ws_port}")
     print()
     print("📝 Quick Start:")
-    print(f"   1. Open http://localhost:{ui_port} in your browser")
-    print("   2. Click 'Connect Local' button")
-    print("   3. Start running predictions!")
+    print(f"   1. App should open in your browser automatically")
+    print("   2. Type a question and Cast the Pool!")
+    print("   3. View results in the Explorer tab")
     print()
     print("🛑 To Stop:")
     print("   Press Ctrl+C to stop both servers")
@@ -222,6 +220,13 @@ def main():
     
     # Print instructions
     print_instructions(args.port, args.ui_port)
+    
+    # Auto-open browser
+    if not args.no_ui:
+        import webbrowser
+        url = f"http://localhost:{args.ui_port}/app.html"
+        print(f"🌐 Opening {url} ...")
+        webbrowser.open(url)
     
     # Monitor processes
     monitor_processes(ws_process, ui_process)
