@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Swimming Pauls 🐟</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -371,6 +372,67 @@
             min-height: 60vh;
             text-align: center;
         }
+
+        /* Social filter buttons */
+        .social-filter-btn { color: rgba(255,255,255,0.4); }
+        .social-filter-btn.active { color: #00d4ff; background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.2); }
+        .social-filter-btn:hover { color: rgba(255,255,255,0.7); }
+
+        /* Platform badges */
+        .platform-badge {
+            display: inline-flex; align-items: center; gap: 3px;
+            padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600;
+        }
+        .platform-discord { background: rgba(88,101,242,0.2); color: #7289da; }
+        .platform-twitter { background: rgba(29,161,242,0.2); color: #1da1f2; }
+        .platform-telegram { background: rgba(0,136,204,0.2); color: #0088cc; }
+        .platform-reddit { background: rgba(255,69,0,0.2); color: #ff4500; }
+
+        /* Leaderboard rank badges */
+        .rank-gold { color: #ffd700; text-shadow: 0 0 8px rgba(255,215,0,0.4); }
+        .rank-silver { color: #c0c0c0; text-shadow: 0 0 8px rgba(192,192,192,0.3); }
+        .rank-bronze { color: #cd7f32; text-shadow: 0 0 8px rgba(205,127,50,0.3); }
+
+        /* Trading direction badges */
+        .dir-buy { background: rgba(34,197,94,0.15); color: #22c55e; padding: 2px 8px; border-radius: 8px; font-size: 11px; font-weight: 600; }
+        .dir-sell { background: rgba(239,68,68,0.15); color: #ef4444; padding: 2px 8px; border-radius: 8px; font-size: 11px; font-weight: 600; }
+
+        /* Pipeline stages */
+        .pipeline-stage {
+            display: flex; flex-direction: column; align-items: center; gap: 6px;
+            padding: 12px 16px; border-radius: 12px; flex: 1; min-width: 100px; text-align: center;
+        }
+        .pipeline-arrow { color: rgba(255,255,255,0.15); font-size: 20px; align-self: center; }
+
+        /* Creative tab literary aesthetic */
+        .creative-score {
+            width: 80px; height: 80px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; font-weight: 800;
+            border: 3px solid;
+        }
+        .severity-high { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+        .severity-medium { background: rgba(234,179,8,0.15); color: #eab308; border: 1px solid rgba(234,179,8,0.3); }
+        .severity-low { background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+
+        /* World location cards */
+        .location-card { transition: all 0.2s; cursor: pointer; }
+        .location-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+        .location-card .location-pauls { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .location-card.expanded .location-pauls { max-height: 500px; }
+
+        /* Paul inspector slide-in */
+        .inspector-open { transform: translateX(0) !important; }
+
+        /* Expandable leaderboard rows */
+        .lb-row { cursor: pointer; transition: background 0.15s; }
+        .lb-row:hover { background: rgba(255,255,255,0.03); }
+        .lb-expanded { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .lb-row.expanded + .lb-expanded { max-height: 200px; }
+
+        /* Energy bar */
+        .energy-bar-track { background: rgba(255,255,255,0.08); border-radius: 4px; height: 8px; overflow: hidden; }
+        .energy-bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #ef4444, #eab308, #22c55e); transition: width 0.4s; }
     </style>
 </head>
 <body>
@@ -402,7 +464,7 @@
         </div>
 
         <div class="px-5 pt-5 pb-2">
-            <div class="text-[10px] uppercase tracking-widest text-white/20 font-semibold">Coming Soon</div>
+            <div class="text-[10px] uppercase tracking-widest text-white/20 font-semibold">Explore</div>
         </div>
         <div class="sidebar-item" data-tab="debate" onclick="switchTab('debate')">
             <span class="item-emoji">🕸️</span>
@@ -814,61 +876,291 @@
         </div>
     </div>
 
-    <!-- ============ PLACEHOLDER TABS ============ -->
+    <!-- ============ TAB: DEBATE NETWORK ============ -->
     <div class="tab-panel" id="tab-debate">
-        <div class="coming-soon">
-            <div class="text-7xl mb-5">🕸️</div>
-            <h2 class="text-3xl font-bold gradient-text mb-3">Debate Network</h2>
-            <p class="text-white/30 max-w-md">Interactive D3.js debate visualization — watch Pauls persuade each other in real time.</p>
-            <div class="mt-6 badge" style="background:rgba(168,85,247,0.1);color:#a855f7;border:1px solid rgba(168,85,247,0.2)">Phase 2</div>
+        <div id="debate-empty" class="coming-soon">
+            <div class="text-6xl mb-4">🕸️</div>
+            <h2 class="text-2xl font-bold text-white/40 mb-2">Run a Prediction First</h2>
+            <p class="text-white/25 mb-6">Cast the pool to see the debate network visualization.</p>
+            <button onclick="switchTab('home')" class="px-6 py-2.5 rounded-xl glass text-sp-cyan hover:bg-white/5 transition-colors text-sm font-medium">← Go to Home</button>
         </div>
+        <div id="debate-content" style="display:none;">
+            <div class="flex gap-4 min-h-[calc(100vh-56px)]">
+                <div class="flex-1 min-w-0">
+                    <div class="glass rounded-2xl p-4 mb-4">
+                        <h2 class="text-xl font-bold gradient-text">🕸️ Debate Network</h2>
+                        <p class="text-xs text-white/40 mt-1">Nodes = Pauls • Edges = Agreement/Disagreement • Drag to rearrange</p>
+                    </div>
+                    <div id="debate-graph" class="glass rounded-2xl" style="height:calc(100vh - 200px);position:relative;overflow:hidden;"></div>
+                </div>
+                <div class="w-64 flex-shrink-0">
+                    <div class="glass rounded-2xl p-4 sticky top-0">
+                        <h3 class="text-sm font-semibold text-white/50 uppercase tracking-wider mb-3">Top Influencers</h3>
+                        <div id="debate-influencers" class="space-y-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="debate-tooltip" style="display:none;position:fixed;z-index:100;pointer-events:none;" class="glass-strong rounded-lg p-3 text-xs max-w-xs"></div>
     </div>
+    <!-- ============ TAB: VISUALIZE ============ -->
     <div class="tab-panel" id="tab-visualize">
-        <div class="coming-soon">
-            <div class="text-7xl mb-5">📈</div>
-            <h2 class="text-3xl font-bold gradient-text mb-3">Visualize</h2>
-            <p class="text-white/30 max-w-md">Belief distributions, consensus convergence, and specialty cluster views across rounds.</p>
-            <div class="mt-6 badge" style="background:rgba(168,85,247,0.1);color:#a855f7;border:1px solid rgba(168,85,247,0.2)">Phase 2</div>
+        <div id="viz-empty" class="coming-soon">
+            <div class="text-6xl mb-4">📈</div>
+            <h2 class="text-2xl font-bold text-white/40 mb-2">No Data Yet</h2>
+            <p class="text-white/25 mb-6">Cast a pool first to visualize results.</p>
+            <button onclick="switchTab('home')" class="px-6 py-2.5 rounded-xl glass text-sp-cyan hover:bg-white/5 transition-colors text-sm font-medium">← Go to Home</button>
+        </div>
+        <div id="viz-content" style="display:none;">
+            <h1 class="text-2xl font-bold gradient-text mb-6">📈 Visualize</h1>
+            <div class="glass rounded-2xl p-6 mb-6">
+                <h3 class="text-sm font-semibold text-white/50 uppercase tracking-wider mb-4">Consensus Convergence</h3>
+                <div id="viz-convergence" style="height:220px;position:relative;"></div>
+            </div>
+            <div class="glass rounded-2xl p-6 mb-6">
+                <h3 class="text-sm font-semibold text-white/50 uppercase tracking-wider mb-4">Belief Distribution</h3>
+                <div id="viz-beliefs"></div>
+            </div>
+            <div class="glass rounded-2xl p-6 mb-6">
+                <h3 class="text-sm font-semibold text-white/50 uppercase tracking-wider mb-4">Specialty Breakdown</h3>
+                <div id="viz-specialties" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
         </div>
     </div>
+    <!-- ============ TAB: PAUL'S WORLD ============ -->
     <div class="tab-panel" id="tab-world">
-        <div class="coming-soon">
-            <div class="text-7xl mb-5">🌍</div>
-            <h2 class="text-3xl font-bold gradient-text mb-3">Paul's World</h2>
-            <p class="text-white/30 max-w-md">A living simulation — Pauls have locations, moods, relationships, and daily routines.</p>
-            <div class="mt-6 badge" style="background:rgba(236,72,153,0.1);color:#ec4899;border:1px solid rgba(236,72,153,0.2)">Phase 3</div>
+        <div id="world-empty" class="coming-soon">
+            <div class="text-6xl mb-4">🌍</div>
+            <h2 class="text-2xl font-bold text-white/40 mb-2">Paul's World</h2>
+            <p class="text-white/25 mb-6">A living simulation — Pauls have locations, moods, relationships, and daily routines.</p>
+            <button onclick="startWorld()" class="cast-btn px-8 py-3 text-lg font-bold rounded-xl text-white">🌍 Start Paul's World</button>
+        </div>
+        <div id="world-content" style="display:none;">
+            <!-- Stats header -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                <div class="glass rounded-xl p-4 text-center">
+                    <div class="text-2xl font-bold text-sp-cyan" id="world-stat-pauls">0</div>
+                    <div class="text-xs text-white/40">Total Pauls</div>
+                </div>
+                <div class="glass rounded-xl p-4 text-center">
+                    <div class="text-2xl font-bold text-sp-gold" id="world-stat-tick">0</div>
+                    <div class="text-xs text-white/40">Tick Count</div>
+                </div>
+                <div class="glass rounded-xl p-4 text-center">
+                    <div class="text-2xl font-bold text-sp-teal" id="world-stat-mood">😐</div>
+                    <div class="text-xs text-white/40">Avg Mood</div>
+                </div>
+                <div class="glass rounded-xl p-4 text-center">
+                    <div class="text-2xl font-bold text-sp-pink" id="world-stat-popular">—</div>
+                    <div class="text-xs text-white/40">Popular Location</div>
+                </div>
+            </div>
+            <!-- Controls bar -->
+            <div class="glass rounded-xl p-4 mb-4 flex items-center gap-4 flex-wrap">
+                <button onclick="startWorld()" id="world-btn-start" class="px-4 py-2 rounded-lg bg-emerald-600/80 hover:bg-emerald-600 text-white text-sm font-semibold transition-colors">▶ Start</button>
+                <button onclick="stopWorld()" id="world-btn-stop" class="px-4 py-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 text-sm font-medium transition-colors border border-red-500/20">⏹ Stop</button>
+                <button onclick="refreshWorldStatus()" class="px-4 py-2 rounded-lg glass text-sp-cyan hover:bg-white/5 text-sm transition-colors">🔄 Refresh</button>
+                <div class="flex items-center gap-2 ml-auto">
+                    <span class="conn-dot" id="world-status-dot"></span>
+                    <span class="text-xs text-white/40" id="world-status-label">Stopped</span>
+                </div>
+            </div>
+            <!-- Main layout: locations + events -->
+            <div class="flex gap-4" style="min-height:calc(100vh - 280px);">
+                <div class="flex-1 min-w-0">
+                    <h3 class="text-sm font-semibold text-white/50 uppercase tracking-wider mb-3">Locations</h3>
+                    <div id="world-locations" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                </div>
+                <div class="w-72 flex-shrink-0">
+                    <h3 class="text-sm font-semibold text-white/50 uppercase tracking-wider mb-3">World Events</h3>
+                    <div id="world-events" class="glass rounded-xl p-3 space-y-2 max-h-[calc(100vh-320px)] overflow-y-auto">
+                        <div class="text-xs text-white/25 text-center py-4">No events yet</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Paul inspector slide-in panel -->
+        <div id="world-paul-inspector" class="fixed top-0 right-0 h-full w-96 glass-strong z-50 overflow-y-auto transition-transform duration-300" style="transform:translateX(100%);">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-bold text-white/90">Paul Inspector</h3>
+                    <button onclick="closePaulInspector()" class="text-white/40 hover:text-white/70 text-xl cursor-pointer">✕</button>
+                </div>
+                <div id="world-paul-detail"></div>
+            </div>
         </div>
     </div>
+    <!-- ============ TAB: SOCIAL ============ -->
     <div class="tab-panel" id="tab-social">
-        <div class="coming-soon">
-            <div class="text-7xl mb-5">📱</div>
-            <h2 class="text-3xl font-bold gradient-text mb-3">Social</h2>
-            <p class="text-white/30 max-w-md">Pauls post about their predictions on social media. Track trending topics and engagement.</p>
-            <div class="mt-6 badge" style="background:rgba(236,72,153,0.1);color:#ec4899;border:1px solid rgba(236,72,153,0.2)">Phase 3</div>
+        <div class="flex gap-6 min-h-[calc(100vh-56px)]">
+            <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between mb-4">
+                    <h1 class="text-2xl font-bold gradient-text">📱 Social Feed</h1>
+                    <button onclick="refreshSocialFeed()" class="px-4 py-2 rounded-lg glass text-sp-cyan hover:bg-white/5 text-sm transition-colors">🔄 Refresh</button>
+                </div>
+                <div class="flex gap-2 mb-4 flex-wrap">
+                    <button onclick="filterSocialPlatform(null)" class="social-filter-btn active px-3 py-1.5 rounded-lg glass text-xs font-medium transition-colors" data-platform="all">All</button>
+                    <button onclick="filterSocialPlatform('Discord')" class="social-filter-btn px-3 py-1.5 rounded-lg glass text-xs font-medium transition-colors" data-platform="Discord">💬 Discord</button>
+                    <button onclick="filterSocialPlatform('Twitter')" class="social-filter-btn px-3 py-1.5 rounded-lg glass text-xs font-medium transition-colors" data-platform="Twitter">🐦 Twitter</button>
+                    <button onclick="filterSocialPlatform('Telegram')" class="social-filter-btn px-3 py-1.5 rounded-lg glass text-xs font-medium transition-colors" data-platform="Telegram">✈️ Telegram</button>
+                    <button onclick="filterSocialPlatform('Reddit')" class="social-filter-btn px-3 py-1.5 rounded-lg glass text-xs font-medium transition-colors" data-platform="Reddit">🤖 Reddit</button>
+                </div>
+                <div id="social-feed" class="space-y-4">
+                    <div class="coming-soon" style="min-height:40vh;">
+                        <div class="text-5xl mb-3">📱</div>
+                        <h3 class="text-lg font-bold text-white/40 mb-1">No Posts Yet</h3>
+                        <p class="text-white/25 text-sm">Pauls haven't posted anything yet. Start a prediction or Paul's World first.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="w-64 flex-shrink-0">
+                <div class="glass rounded-2xl p-4 sticky top-0">
+                    <h3 class="text-sm font-semibold text-white/50 uppercase tracking-wider mb-3">🔥 Trending</h3>
+                    <div id="social-trending" class="space-y-2">
+                        <div class="text-xs text-white/25 text-center py-4">No trending topics</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <!-- ============ TAB: LEADERBOARD ============ -->
     <div class="tab-panel" id="tab-leaderboard">
-        <div class="coming-soon">
-            <div class="text-7xl mb-5">🏆</div>
-            <h2 class="text-3xl font-bold gradient-text mb-3">Leaderboard</h2>
-            <p class="text-white/30 max-w-md">Rankings by accuracy, domain expertise, streaks, and prediction history.</p>
-            <div class="mt-6 badge" style="background:rgba(168,85,247,0.1);color:#a855f7;border:1px solid rgba(168,85,247,0.2)">Phase 2</div>
+        <h1 class="text-2xl font-bold gradient-text mb-6">🏆 Leaderboard</h1>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="glass rounded-xl p-4 text-center">
+                <div class="text-2xl font-bold text-sp-cyan" id="lb-stat-total">0</div>
+                <div class="text-xs text-white/40">Total Predictions</div>
+            </div>
+            <div class="glass rounded-xl p-4 text-center">
+                <div class="text-2xl font-bold text-sp-teal" id="lb-stat-accuracy">0%</div>
+                <div class="text-xs text-white/40">Avg Accuracy</div>
+            </div>
+            <div class="glass rounded-xl p-4 text-center">
+                <div class="text-2xl font-bold text-sp-gold" id="lb-stat-active">—</div>
+                <div class="text-xs text-white/40">Most Active</div>
+            </div>
+            <div class="glass rounded-xl p-4 text-center">
+                <div class="text-2xl font-bold text-sp-pink" id="lb-stat-domain">—</div>
+                <div class="text-xs text-white/40">Top Domain</div>
+            </div>
+        </div>
+        <div class="flex items-center gap-4 mb-4">
+            <label class="text-sm text-white/50">Domain:</label>
+            <select id="lb-domain-filter" onchange="loadLeaderboard()" class="sp-input" style="width:200px;">
+                <option value="">All Domains</option>
+                <option value="trading">📈 Trading</option>
+                <option value="sports">⚽ Sports</option>
+                <option value="legal">⚖️ Legal</option>
+                <option value="marketing">📢 Marketing</option>
+                <option value="weather">🌦️ Weather</option>
+                <option value="custom">🔧 Custom</option>
+            </select>
+        </div>
+        <div class="glass rounded-2xl overflow-hidden">
+            <div id="lb-table-container">
+                <div class="coming-soon" style="min-height:40vh;">
+                    <div class="text-5xl mb-3">🏆</div>
+                    <h3 class="text-lg font-bold text-white/40 mb-1">No Predictions Tracked Yet</h3>
+                    <p class="text-white/25 text-sm">Run the auto-trader or make predictions to build the leaderboard.</p>
+                </div>
+            </div>
         </div>
     </div>
+    <!-- ============ TAB: TRADING ============ -->
     <div class="tab-panel" id="tab-trading">
-        <div class="coming-soon">
-            <div class="text-7xl mb-5">💰</div>
-            <h2 class="text-3xl font-bold gradient-text mb-3">Trading</h2>
-            <p class="text-white/30 max-w-md">Paper trading dashboard — PnL, positions, equity curves, and auto-trader controls.</p>
-            <div class="mt-6 badge" style="background:rgba(255,215,0,0.1);color:#ffd700;border:1px solid rgba(255,215,0,0.2)">Phase 4</div>
+        <h1 class="text-2xl font-bold gradient-text mb-6">💰 Trading</h1>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="glass rounded-xl p-4 text-center">
+                <div class="text-2xl font-bold" id="trading-stat-pnl">$0.00</div>
+                <div class="text-xs text-white/40">Total PnL</div>
+            </div>
+            <div class="glass rounded-xl p-4 text-center">
+                <div class="text-2xl font-bold text-sp-teal" id="trading-stat-winrate">0%</div>
+                <div class="text-xs text-white/40">Win Rate</div>
+            </div>
+            <div class="glass rounded-xl p-4 text-center">
+                <div class="text-2xl font-bold text-sp-cyan" id="trading-stat-trades">0</div>
+                <div class="text-xs text-white/40">Total Trades</div>
+            </div>
+            <div class="glass rounded-xl p-4 text-center">
+                <div class="text-2xl font-bold text-sp-gold" id="trading-stat-positions">0</div>
+                <div class="text-xs text-white/40">Open Positions</div>
+            </div>
+        </div>
+        <div class="glass rounded-xl p-4 mb-6 flex items-center gap-4 flex-wrap">
+            <span class="text-sm font-semibold text-white/70">Auto-Trader:</span>
+            <button onclick="startTrading()" id="trading-btn-start" class="px-4 py-2 rounded-lg bg-emerald-600/80 hover:bg-emerald-600 text-white text-sm font-semibold transition-colors">▶ Start</button>
+            <button onclick="stopTrading()" id="trading-btn-stop" class="px-4 py-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 text-sm font-medium transition-colors border border-red-500/20">⏹ Stop</button>
+            <button onclick="refreshTradingStatus()" class="px-4 py-2 rounded-lg glass text-sp-cyan hover:bg-white/5 text-sm transition-colors">🔄 Refresh</button>
+            <div class="flex items-center gap-2 ml-auto">
+                <span class="conn-dot" id="trading-status-dot"></span>
+                <span class="text-xs text-white/40" id="trading-status-label">Stopped</span>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 space-y-6">
+                <div class="glass rounded-2xl p-5">
+                    <h3 class="text-sm font-semibold text-white/50 uppercase tracking-wider mb-4">Active Positions</h3>
+                    <div id="trading-positions">
+                        <div class="text-xs text-white/25 text-center py-6">No open positions</div>
+                    </div>
+                </div>
+                <div class="glass rounded-2xl p-5">
+                    <h3 class="text-sm font-semibold text-white/50 uppercase tracking-wider mb-4">Recent Trades</h3>
+                    <div id="trading-recent">
+                        <div class="text-xs text-white/25 text-center py-6">No trades yet</div>
+                    </div>
+                </div>
+                <div class="glass rounded-2xl p-5">
+                    <h3 class="text-sm font-semibold text-white/50 uppercase tracking-wider mb-4">Progression Pipeline</h3>
+                    <div id="trading-pipeline" class="flex items-center gap-2 justify-between flex-wrap"></div>
+                </div>
+            </div>
+            <div>
+                <div class="glass rounded-2xl p-5 sticky top-0">
+                    <h3 class="text-sm font-semibold text-white/50 uppercase tracking-wider mb-4">Top Traders</h3>
+                    <div id="trading-top" class="space-y-3">
+                        <div class="text-xs text-white/25 text-center py-6">Start paper trading to see rankings</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <!-- ============ TAB: CREATIVE ============ -->
     <div class="tab-panel" id="tab-creative">
-        <div class="coming-soon">
-            <div class="text-7xl mb-5">🎬</div>
-            <h2 class="text-3xl font-bold gradient-text mb-3">Creative</h2>
-            <p class="text-white/30 max-w-md">Script Doctor, collaborative writing, and formatted screenplay output with Paul ensembles.</p>
-            <div class="mt-6 badge" style="background:rgba(255,215,0,0.1);color:#ffd700;border:1px solid rgba(255,215,0,0.2)">Phase 4</div>
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-2xl font-bold gradient-text mb-2">🎬 Script Doctor</h1>
+            <p class="text-white/40 text-sm mb-6">Paste a script or write a prompt — the Pauls will analyze it for dialogue, pacing, character, and plot issues.</p>
+            <div class="glass rounded-2xl p-6 mb-6">
+                <textarea id="creative-input" class="sp-input font-mono" rows="12" placeholder="Paste your script here...&#10;&#10;INT. COFFEE SHOP - DAY&#10;&#10;SARAH sits alone at a corner table. She stirs her coffee without drinking it.&#10;&#10;SARAH&#10;(muttering)&#10;This can't be happening..."></textarea>
+                <div class="flex items-center justify-between mt-4">
+                    <span class="text-xs text-white/30" id="creative-charcount">0 characters</span>
+                    <button onclick="analyzeScript()" id="creative-btn-analyze" class="cast-btn px-6 py-2.5 rounded-xl text-white text-sm font-semibold">🎬 Analyze Script</button>
+                </div>
+            </div>
+            <div id="creative-results" style="display:none;"></div>
+            <div id="creative-empty" class="glass rounded-2xl p-8 text-center">
+                <div class="text-5xl mb-4">📝</div>
+                <h3 class="text-lg font-semibold text-white/60 mb-3">What Script Doctor Does</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left max-w-2xl mx-auto">
+                    <div class="glass rounded-xl p-4">
+                        <div class="text-sm font-semibold text-sp-cyan mb-1">💬 Dialogue</div>
+                        <div class="text-xs text-white/40">Checks for naturalistic speech, character voice consistency, and subtext.</div>
+                    </div>
+                    <div class="glass rounded-xl p-4">
+                        <div class="text-sm font-semibold text-sp-pink mb-1">⏱️ Pacing</div>
+                        <div class="text-xs text-white/40">Analyzes scene length, tension arcs, and narrative momentum.</div>
+                    </div>
+                    <div class="glass rounded-xl p-4">
+                        <div class="text-sm font-semibold text-sp-gold mb-1">👤 Character</div>
+                        <div class="text-xs text-white/40">Evaluates character development, motivation, and arc progression.</div>
+                    </div>
+                    <div class="glass rounded-xl p-4">
+                        <div class="text-sm font-semibold text-sp-teal mb-1">📖 Plot</div>
+                        <div class="text-xs text-white/40">Reviews structure, conflict, stakes, and resolution quality.</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -894,6 +1186,18 @@
         selectedHistoryId: null,
         config: null,
         models: [],
+        // Phase 2+ tab state
+        worldStatus: null,
+        worldLocations: [],
+        worldEvents: [],
+        worldActive: false,
+        socialFeed: [],
+        socialTrending: [],
+        socialPlatformFilter: null,
+        leaderboardData: [],
+        tradingData: null,
+        creativeAnalysis: null,
+        creativeAnalyzing: false,
     };
 
     const TABS = ['home','results','settings','debate','visualize','world','social','leaderboard','trading','creative'];
@@ -919,6 +1223,13 @@
         // Tab-specific init
         if (tab === 'results') renderResultsTab();
         if (tab === 'settings') initSettingsTab();
+        if (tab === 'debate') initDebateTab();
+        if (tab === 'visualize') initVisualizeTab();
+        if (tab === 'world') initWorldTab();
+        if (tab === 'social') initSocialTab();
+        if (tab === 'leaderboard') initLeaderboardTab();
+        if (tab === 'trading') initTradingTab();
+        if (tab === 'creative') initCreativeTab();
     };
 
     function initRouter() {
@@ -1071,6 +1382,112 @@
             case 'config.saved':
             case 'config_saved':
                 showSettingsStatus('✅ Settings saved successfully', 'success');
+                break;
+
+            // Config get response
+            case 'config.get':
+                if (payload && payload.config) {
+                    state.config = payload.config;
+                    populateSettings(payload.config);
+                } else if (payload) {
+                    state.config = payload;
+                    populateSettings(payload);
+                }
+                break;
+
+            // Config save response
+            case 'config.save':
+                if (payload && payload.success) {
+                    showSettingsStatus('✅ Settings saved successfully', 'success');
+                } else if (msg.error) {
+                    showSettingsStatus('❌ ' + msg.error, 'error');
+                }
+                break;
+
+            // Ollama models response
+            case 'ollama.models':
+                if (payload && payload.models) {
+                    state.models = payload.models;
+                } else if (Array.isArray(payload)) {
+                    state.models = payload;
+                }
+                populateModels();
+                break;
+
+            // World messages
+            case 'world.start':
+                if (payload && payload.success) {
+                    state.worldActive = true;
+                    updateWorldIndicator(true);
+                }
+                refreshWorldStatus();
+                break;
+            case 'world.stop':
+                state.worldActive = false;
+                updateWorldIndicator(false);
+                break;
+            case 'world.status':
+                state.worldStatus = payload;
+                if (payload) state.worldActive = !!payload.active;
+                renderWorldStatus(payload);
+                break;
+            case 'world.tick':
+                state.worldStatus = payload;
+                if (payload) state.worldActive = !!payload.active;
+                if (payload && payload.sample_pauls) {
+                    addWorldEvent(payload);
+                }
+                renderWorldStatus(payload);
+                break;
+            case 'world.locations':
+                state.worldLocations = (payload && payload.locations) || [];
+                renderWorldLocations(state.worldLocations);
+                break;
+            case 'world.paul':
+                renderPaulInspector(payload);
+                break;
+
+            // Social messages
+            case 'social.feed':
+                state.socialFeed = (payload && payload.posts) || [];
+                renderSocialFeed(state.socialFeed);
+                break;
+            case 'social.trending':
+                state.socialTrending = (payload && payload.trending) || [];
+                renderSocialTrending(state.socialTrending);
+                break;
+
+            // Leaderboard messages
+            case 'leaderboard.get':
+                state.leaderboardData = (payload && payload.leaderboard) || [];
+                renderLeaderboard(state.leaderboardData);
+                break;
+
+            // Trading messages
+            case 'trading.status':
+                state.tradingData = payload;
+                renderTradingStatus(payload);
+                break;
+            case 'trading.start':
+                if (payload && payload.success) {
+                    updateTradingIndicator(true);
+                    refreshTradingStatus();
+                }
+                break;
+            case 'trading.stop':
+                updateTradingIndicator(false);
+                refreshTradingStatus();
+                break;
+
+            // Creative messages
+            case 'creative.analyze':
+                state.creativeAnalyzing = false;
+                if (msg.error) {
+                    renderCreativeError(msg.error);
+                } else {
+                    state.creativeAnalysis = payload;
+                    renderCreativeResults(payload);
+                }
                 break;
 
             default:
@@ -1576,7 +1993,7 @@
 
     function extractPauls(r) {
         if (!r) return [];
-        return r.pauls || r.paul_results || r.individual_results || r.paul_responses || [];
+        return r.pauls || r.paul_results || r.individual_results || r.paul_responses || r.agents || [];
     }
 
     function escHtml(str) {
@@ -1624,6 +2041,894 @@
         if (payload.ollama) document.getElementById('info-ollama').textContent = payload.ollama;
         if (payload.db_sizes) document.getElementById('info-db').textContent = payload.db_sizes;
         if (payload.processes !== undefined) document.getElementById('info-processes').textContent = payload.processes;
+    }
+
+    // ===========================
+    // TAB: DEBATE NETWORK
+    // ===========================
+    function initDebateTab() {
+        const result = state.currentResult;
+        const pauls = extractPauls(result);
+        if (!result || pauls.length === 0) {
+            document.getElementById('debate-empty').style.display = 'flex';
+            document.getElementById('debate-content').style.display = 'none';
+            return;
+        }
+        document.getElementById('debate-empty').style.display = 'none';
+        document.getElementById('debate-content').style.display = 'block';
+        setTimeout(renderDebateNetwork, 50);
+    }
+
+    function renderDebateNetwork() {
+        if (typeof d3 === 'undefined') {
+            document.getElementById('debate-graph').innerHTML = '<div class="text-center text-white/30 py-12">D3.js not loaded</div>';
+            return;
+        }
+        const result = state.currentResult;
+        const pauls = extractPauls(result);
+        if (pauls.length === 0) return;
+
+        const container = document.getElementById('debate-graph');
+        container.innerHTML = '';
+        const width = container.clientWidth || 700;
+        const height = container.clientHeight || 500;
+        const tooltip = document.getElementById('debate-tooltip');
+
+        const nodes = pauls.slice(0, 50).map((p, i) => {
+            const dir = extractDirection(p);
+            return {
+                id: i, name: p.name || 'Paul #' + (i + 1),
+                specialty: p.specialty || 'General', direction: dir,
+                confidence: p.confidence || (Math.random() * 40 + 30),
+                reasoning: p.reasoning || p.analysis || 'No reasoning recorded',
+                emoji: p.emoji || '🐟',
+                radius: Math.max(14, (p.confidence || 50) / 3.5 + 8),
+            };
+        });
+
+        const links = [];
+        const maxLinks = Math.min(nodes.length * 2, 120);
+        let lc = 0;
+        for (let i = 0; i < nodes.length && lc < maxLinks; i++) {
+            for (let j = i + 1; j < nodes.length && lc < maxLinks; j++) {
+                if (nodes.length > 8 && Math.random() > 0.5) continue;
+                links.push({
+                    source: i, target: j,
+                    agree: nodes[i].direction === nodes[j].direction,
+                    strength: Math.random() * 0.5 + 0.5,
+                });
+                lc++;
+            }
+        }
+
+        const svg = d3.select('#debate-graph').append('svg')
+            .attr('width', width).attr('height', height);
+
+        const simulation = d3.forceSimulation(nodes)
+            .force('link', d3.forceLink(links).id(d => d.id).distance(70))
+            .force('charge', d3.forceManyBody().strength(-180))
+            .force('center', d3.forceCenter(width / 2, height / 2))
+            .force('collision', d3.forceCollide().radius(d => d.radius + 5));
+
+        const link = svg.append('g').selectAll('line').data(links).join('line')
+            .attr('stroke', d => d.agree ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.18)')
+            .attr('stroke-width', d => d.strength * 2.5);
+
+        const nodeG = svg.append('g').selectAll('g').data(nodes).join('g')
+            .style('cursor', 'grab')
+            .call(d3.drag()
+                .on('start', (ev, d) => { if (!ev.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+                .on('drag', (ev, d) => { d.fx = ev.x; d.fy = ev.y; })
+                .on('end', (ev, d) => { if (!ev.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; })
+            );
+
+        nodeG.append('circle')
+            .attr('r', d => d.radius)
+            .attr('fill', d => d.direction === 'BULLISH' ? 'rgba(34,197,94,0.6)' : d.direction === 'BEARISH' ? 'rgba(239,68,68,0.6)' : 'rgba(234,179,8,0.6)')
+            .attr('stroke', d => d.direction === 'BULLISH' ? '#22c55e' : d.direction === 'BEARISH' ? '#ef4444' : '#eab308')
+            .attr('stroke-width', 2);
+
+        nodeG.append('text')
+            .text(d => d.emoji).attr('text-anchor', 'middle').attr('dy', '0.35em')
+            .style('font-size', d => Math.max(10, d.radius * 0.8) + 'px').style('pointer-events', 'none');
+
+        nodeG.on('mouseover', (ev, d) => {
+            tooltip.style.display = 'block';
+            const dirCol = d.direction === 'BULLISH' ? '#22c55e' : d.direction === 'BEARISH' ? '#ef4444' : '#eab308';
+            tooltip.innerHTML = '<div style="font-weight:600;color:rgba(255,255,255,0.9);margin-bottom:4px;">' + escHtml(d.emoji) + ' ' + escHtml(d.name) + '</div>'
+                + '<div style="color:rgba(255,255,255,0.5);margin-bottom:4px;">' + escHtml(d.specialty) + ' · <span style="color:' + dirCol + '">' + d.direction + '</span> · ' + Math.round(d.confidence) + '%</div>'
+                + '<div style="color:rgba(255,255,255,0.4)">' + escHtml(d.reasoning.slice(0, 180)) + (d.reasoning.length > 180 ? '…' : '') + '</div>';
+        }).on('mousemove', ev => {
+            tooltip.style.left = (ev.clientX + 14) + 'px';
+            tooltip.style.top = (ev.clientY - 8) + 'px';
+        }).on('mouseout', () => { tooltip.style.display = 'none'; });
+
+        simulation.on('tick', () => {
+            link.attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+                .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+            nodeG.attr('transform', d => 'translate(' + d.x + ',' + d.y + ')');
+        });
+
+        // Influencers sidebar
+        const sorted = [...nodes].sort((a, b) => b.confidence - a.confidence);
+        document.getElementById('debate-influencers').innerHTML = sorted.slice(0, 10).map((p, i) => {
+            const col = p.direction === 'BULLISH' ? 'text-green-400' : p.direction === 'BEARISH' ? 'text-red-400' : 'text-yellow-400';
+            return '<div class="flex items-center gap-2 p-2 rounded-lg hover:bg-white/5"><span class="text-xs text-white/30 w-4">' + (i + 1) + '</span>'
+                + '<span>' + escHtml(p.emoji) + '</span><div class="flex-1 min-w-0"><div class="text-xs font-medium text-white/70 truncate">' + escHtml(p.name)
+                + '</div><div class="text-[10px] text-white/30">' + escHtml(p.specialty) + '</div></div>'
+                + '<span class="text-xs font-bold ' + col + '">' + Math.round(p.confidence) + '%</span></div>';
+        }).join('');
+    }
+
+    // ===========================
+    // TAB: VISUALIZE
+    // ===========================
+    function initVisualizeTab() {
+        const result = state.currentResult;
+        const pauls = extractPauls(result);
+        if (!result || pauls.length === 0) {
+            document.getElementById('viz-empty').style.display = 'flex';
+            document.getElementById('viz-content').style.display = 'none';
+            return;
+        }
+        document.getElementById('viz-empty').style.display = 'none';
+        document.getElementById('viz-content').style.display = 'block';
+        renderConvergenceChart(result, pauls);
+        renderBeliefDistribution(result, pauls);
+        renderSpecialtyBreakdown(result, pauls);
+    }
+
+    function renderConvergenceChart(result, pauls) {
+        const container = document.getElementById('viz-convergence');
+        container.innerHTML = '';
+        const w = container.clientWidth || 600;
+        const h = 200;
+        const totalRounds = result.rounds || result.rounds_completed || 10;
+        const finalConf = extractConfidence(result);
+
+        // Generate simulated convergence data points
+        const points = [];
+        for (let i = 0; i <= totalRounds; i++) {
+            const noise = (totalRounds - i) / totalRounds * 30 * (Math.random() - 0.5);
+            const val = Math.min(100, Math.max(0, (finalConf * i / totalRounds) + noise + 20));
+            points.push({ round: i, confidence: val });
+        }
+        points[points.length - 1].confidence = finalConf;
+
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('width', w);
+        svg.setAttribute('height', h);
+        svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+
+        const pad = { top: 15, right: 20, bottom: 30, left: 45 };
+        const cw = w - pad.left - pad.right;
+        const ch = h - pad.top - pad.bottom;
+
+        // Grid lines
+        for (let pct = 0; pct <= 100; pct += 25) {
+            const y = pad.top + ch - (pct / 100) * ch;
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', pad.left); line.setAttribute('y1', y);
+            line.setAttribute('x2', w - pad.right); line.setAttribute('y2', y);
+            line.setAttribute('stroke', 'rgba(255,255,255,0.06)');
+            svg.appendChild(line);
+            const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            txt.setAttribute('x', pad.left - 8); txt.setAttribute('y', y + 4);
+            txt.setAttribute('text-anchor', 'end'); txt.setAttribute('fill', 'rgba(255,255,255,0.25)');
+            txt.setAttribute('font-size', '10'); txt.textContent = pct + '%';
+            svg.appendChild(txt);
+        }
+
+        // X axis labels
+        const stepLabel = Math.ceil(totalRounds / 8);
+        for (let i = 0; i <= totalRounds; i += stepLabel) {
+            const x = pad.left + (i / totalRounds) * cw;
+            const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            txt.setAttribute('x', x); txt.setAttribute('y', h - 8);
+            txt.setAttribute('text-anchor', 'middle'); txt.setAttribute('fill', 'rgba(255,255,255,0.25)');
+            txt.setAttribute('font-size', '10'); txt.textContent = 'R' + i;
+            svg.appendChild(txt);
+        }
+
+        // Line path
+        let pathD = '';
+        points.forEach((p, i) => {
+            const x = pad.left + (p.round / totalRounds) * cw;
+            const y = pad.top + ch - (p.confidence / 100) * ch;
+            pathD += (i === 0 ? 'M' : 'L') + x.toFixed(1) + ',' + y.toFixed(1);
+        });
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', pathD);
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', '#00d4ff');
+        path.setAttribute('stroke-width', '2.5');
+        path.setAttribute('stroke-linecap', 'round');
+        path.setAttribute('stroke-linejoin', 'round');
+        svg.appendChild(path);
+
+        // Area fill
+        const areaPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const areaD = pathD + 'L' + (pad.left + cw).toFixed(1) + ',' + (pad.top + ch) + 'L' + pad.left + ',' + (pad.top + ch) + 'Z';
+        areaPath.setAttribute('d', areaD);
+        areaPath.setAttribute('fill', 'url(#conv-grad)');
+        const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+        const grad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+        grad.setAttribute('id', 'conv-grad'); grad.setAttribute('x1', '0'); grad.setAttribute('y1', '0');
+        grad.setAttribute('x2', '0'); grad.setAttribute('y2', '1');
+        const s1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+        s1.setAttribute('offset', '0%'); s1.setAttribute('stop-color', 'rgba(0,212,255,0.15)');
+        const s2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+        s2.setAttribute('offset', '100%'); s2.setAttribute('stop-color', 'rgba(0,212,255,0)');
+        grad.appendChild(s1); grad.appendChild(s2); defs.appendChild(grad); svg.appendChild(defs);
+        svg.insertBefore(areaPath, path);
+
+        // End dot
+        const lastPt = points[points.length - 1];
+        const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        dot.setAttribute('cx', pad.left + cw); dot.setAttribute('cy', pad.top + ch - (lastPt.confidence / 100) * ch);
+        dot.setAttribute('r', '5'); dot.setAttribute('fill', '#00d4ff');
+        svg.appendChild(dot);
+
+        container.appendChild(svg);
+    }
+
+    function renderBeliefDistribution(result, pauls) {
+        const container = document.getElementById('viz-beliefs');
+        const sentiments = extractSentiments(result);
+        const total = sentiments.bullish + sentiments.bearish + sentiments.neutral || 1;
+
+        const items = [
+            { label: 'Bullish', count: sentiments.bullish, color: '#22c55e', bg: 'rgba(34,197,94,0.2)' },
+            { label: 'Bearish', count: sentiments.bearish, color: '#ef4444', bg: 'rgba(239,68,68,0.2)' },
+            { label: 'Neutral', count: sentiments.neutral, color: '#eab308', bg: 'rgba(234,179,8,0.2)' },
+        ];
+
+        container.innerHTML = '<div class="space-y-4">' + items.map(it => {
+            const pct = (it.count / total * 100).toFixed(1);
+            return '<div class="flex items-center gap-4">'
+                + '<span class="text-xs text-white/50 w-14 text-right">' + it.label + '</span>'
+                + '<div class="flex-1 bg-white/5 rounded-md overflow-hidden h-8 relative">'
+                + '<div style="width:' + pct + '%;background:' + it.bg + ';height:100%;border-radius:6px;display:flex;align-items:center;padding:0 10px;transition:width 0.6s">'
+                + '<span style="color:' + it.color + ';font-size:12px;font-weight:600">' + it.count + '</span></div></div>'
+                + '<span class="text-xs text-white/30 w-12">' + pct + '%</span></div>';
+        }).join('') + '</div>';
+    }
+
+    function renderSpecialtyBreakdown(result, pauls) {
+        const container = document.getElementById('viz-specialties');
+        const groups = {};
+        pauls.forEach(p => {
+            const spec = p.specialty || 'General';
+            if (!groups[spec]) groups[spec] = { bullish: 0, bearish: 0, neutral: 0, total: 0 };
+            const dir = extractDirection(p);
+            if (dir === 'BULLISH') groups[spec].bullish++;
+            else if (dir === 'BEARISH') groups[spec].bearish++;
+            else groups[spec].neutral++;
+            groups[spec].total++;
+        });
+
+        if (Object.keys(groups).length === 0) {
+            container.innerHTML = '<div class="col-span-full text-center text-white/25 py-8">No specialty data available</div>';
+            return;
+        }
+
+        container.innerHTML = Object.entries(groups).map(([name, g]) => {
+            const t = g.total || 1;
+            return '<div class="glass rounded-xl p-4">'
+                + '<div class="text-sm font-semibold text-white/70 mb-3">' + escHtml(name) + ' <span class="text-white/30 text-xs">(' + g.total + ')</span></div>'
+                + '<div class="flex gap-1 h-5 rounded overflow-hidden">'
+                + (g.bullish > 0 ? '<div style="width:' + (g.bullish / t * 100) + '%;background:rgba(34,197,94,0.5)" title="Bullish: ' + g.bullish + '"></div>' : '')
+                + (g.bearish > 0 ? '<div style="width:' + (g.bearish / t * 100) + '%;background:rgba(239,68,68,0.5)" title="Bearish: ' + g.bearish + '"></div>' : '')
+                + (g.neutral > 0 ? '<div style="width:' + (g.neutral / t * 100) + '%;background:rgba(234,179,8,0.5)" title="Neutral: ' + g.neutral + '"></div>' : '')
+                + '</div>'
+                + '<div class="flex justify-between mt-2 text-[10px] text-white/30">'
+                + '<span>🟢 ' + g.bullish + '</span><span>🔴 ' + g.bearish + '</span><span>🟡 ' + g.neutral + '</span>'
+                + '</div></div>';
+        }).join('');
+    }
+
+    // ===========================
+    // TAB: PAUL'S WORLD
+    // ===========================
+    function initWorldTab() {
+        if (state.worldActive || (state.worldStatus && state.worldStatus.active)) {
+            document.getElementById('world-empty').style.display = 'none';
+            document.getElementById('world-content').style.display = 'block';
+            refreshWorldStatus();
+        } else {
+            // Ask for status to determine if world is active
+            wsSend('world.status', {});
+        }
+    }
+
+    window.startWorld = function() {
+        wsSend('world.start', {});
+        document.getElementById('world-empty').style.display = 'none';
+        document.getElementById('world-content').style.display = 'block';
+    };
+
+    window.stopWorld = function() {
+        wsSend('world.stop', {});
+    };
+
+    window.refreshWorldStatus = function() {
+        wsSend('world.status', {});
+        wsSend('world.locations', {});
+    };
+
+    function updateWorldIndicator(active) {
+        const dot = document.getElementById('world-status-dot');
+        const label = document.getElementById('world-status-label');
+        if (active) {
+            dot.className = 'conn-dot connected';
+            label.textContent = 'Running';
+            label.style.color = 'rgba(34,197,94,0.7)';
+        } else {
+            dot.className = 'conn-dot disconnected';
+            label.textContent = 'Stopped';
+            label.style.color = 'rgba(239,68,68,0.6)';
+        }
+    }
+
+    function renderWorldStatus(data) {
+        if (!data) return;
+        // If world is active, make sure UI is visible
+        if (data.active) {
+            document.getElementById('world-empty').style.display = 'none';
+            document.getElementById('world-content').style.display = 'block';
+        }
+        updateWorldIndicator(!!data.active);
+
+        document.getElementById('world-stat-pauls').textContent = data.pauls_count || 0;
+        document.getElementById('world-stat-tick').textContent = data.tick_count || 0;
+
+        const avgMood = data.avg_mood || 0;
+        const moodEmoji = avgMood > 0.5 ? '😊' : avgMood > 0 ? '🙂' : avgMood > -0.5 ? '😐' : '😟';
+        document.getElementById('world-stat-mood').textContent = moodEmoji;
+
+        // Popular location
+        if (data.locations && typeof data.locations === 'object') {
+            const locs = Object.entries(data.locations);
+            locs.sort((a, b) => b[1] - a[1]);
+            document.getElementById('world-stat-popular').textContent = locs.length > 0 ? locs[0][0] : '—';
+        }
+    }
+
+    function renderWorldLocations(locations) {
+        const container = document.getElementById('world-locations');
+        if (!locations || locations.length === 0) {
+            container.innerHTML = '<div class="col-span-full text-center text-white/25 py-8">No locations found. Start the world first.</div>';
+            return;
+        }
+        container.innerHTML = locations.map(loc => {
+            const paulsList = (loc.pauls || []).slice(0, 12).map(p => {
+                const moodEmoji = (p.mood || 0) > 0.5 ? '😊' : (p.mood || 0) > 0 ? '🙂' : (p.mood || 0) > -0.5 ? '😐' : '😟';
+                return '<div class="flex items-center gap-2 py-1 px-2 rounded hover:bg-white/5 cursor-pointer" onclick="inspectPaul(\'' + escHtml(p.name).replace(/'/g, "\\'") + '\')">'
+                    + '<span class="text-sm">' + (p.emoji || '🐟') + '</span>'
+                    + '<span class="text-xs text-white/60 flex-1 truncate">' + escHtml(p.name) + '</span>'
+                    + '<span class="text-xs text-white/30">' + escHtml(p.activity || '') + '</span>'
+                    + '<span>' + moodEmoji + '</span></div>';
+            }).join('');
+
+            return '<div class="location-card glass rounded-xl p-4" onclick="this.classList.toggle(\'expanded\')">'
+                + '<div class="flex items-center justify-between mb-1">'
+                + '<span class="text-sm font-semibold text-white/80">📍 ' + escHtml(loc.location) + '</span>'
+                + '<span class="badge" style="background:rgba(0,212,255,0.1);color:#00d4ff;border:1px solid rgba(0,212,255,0.2);font-size:10px;padding:2px 8px;">' + loc.paul_count + ' Pauls</span>'
+                + '</div>'
+                + '<div class="location-pauls mt-2 space-y-0.5">' + paulsList + '</div>'
+                + '</div>';
+        }).join('');
+    }
+
+    function addWorldEvent(data) {
+        const container = document.getElementById('world-events');
+        const tick = data.tick_count || 0;
+        const paulsCount = data.pauls_count || 0;
+        const ev = document.createElement('div');
+        ev.className = 'text-xs text-white/40 py-1 border-b border-white/5';
+        ev.innerHTML = '<span class="text-white/20">[' + tick + ']</span> World tick — ' + paulsCount + ' Pauls active';
+        // Keep events limited
+        if (container.children.length > 50) container.removeChild(container.lastChild);
+        container.insertBefore(ev, container.firstChild);
+        // Remove empty placeholder
+        const empty = container.querySelector('.text-center');
+        if (empty) empty.remove();
+    }
+
+    window.inspectPaul = function(name) {
+        wsSend('world.paul', { name: name });
+        document.getElementById('world-paul-inspector').classList.add('inspector-open');
+    };
+
+    window.closePaulInspector = function() {
+        document.getElementById('world-paul-inspector').classList.remove('inspector-open');
+    };
+
+    function renderPaulInspector(data) {
+        if (!data) return;
+        document.getElementById('world-paul-inspector').classList.add('inspector-open');
+        const detail = document.getElementById('world-paul-detail');
+        const moodVal = data.mood || 0;
+        const moodEmoji = moodVal > 0.5 ? '😊' : moodVal > 0 ? '🙂' : moodVal > -0.5 ? '😐' : '😟';
+        const energy = data.energy || 0;
+
+        let html = '<div class="text-center mb-6">'
+            + '<div class="text-4xl mb-2">' + (data.emoji || '🐟') + '</div>'
+            + '<div class="text-lg font-bold text-white/90">' + escHtml(data.name || 'Unknown') + '</div>'
+            + '<div class="text-xs text-white/40">' + escHtml(data.specialty || '') + '</div></div>';
+
+        html += '<div class="grid grid-cols-2 gap-3 mb-5">'
+            + '<div class="glass rounded-lg p-3 text-center"><div class="text-sm font-bold text-white/70">📍 ' + escHtml(data.location || '—') + '</div><div class="text-[10px] text-white/30">Location</div></div>'
+            + '<div class="glass rounded-lg p-3 text-center"><div class="text-sm font-bold text-white/70">🎭 ' + escHtml(data.activity || '—') + '</div><div class="text-[10px] text-white/30">Activity</div></div>'
+            + '<div class="glass rounded-lg p-3 text-center"><div class="text-sm font-bold text-white/70">' + moodEmoji + ' ' + moodVal.toFixed(2) + '</div><div class="text-[10px] text-white/30">Mood</div></div>'
+            + '<div class="glass rounded-lg p-3 text-center"><div class="text-sm font-bold text-white/70">⭐ ' + (data.reputation || 0).toFixed(2) + '</div><div class="text-[10px] text-white/30">Reputation</div></div>'
+            + '</div>';
+
+        // Energy bar
+        html += '<div class="mb-5"><div class="text-xs text-white/40 mb-1">⚡ Energy</div>'
+            + '<div class="energy-bar-track"><div class="energy-bar-fill" style="width:' + Math.min(100, energy) + '%"></div></div>'
+            + '<div class="text-[10px] text-white/30 mt-1">' + energy.toFixed(1) + '%</div></div>';
+
+        // Memories
+        const memories = data.recent_memories || [];
+        if (memories.length > 0) {
+            html += '<div class="mb-5"><div class="text-xs font-semibold text-white/50 uppercase tracking-wider mb-2">Recent Memories</div>';
+            html += memories.slice(0, 8).map(m => {
+                const txt = typeof m === 'string' ? m : (m.content || m.text || m.description || JSON.stringify(m));
+                return '<div class="text-xs text-white/40 py-1.5 border-b border-white/5">💭 ' + escHtml(String(txt).slice(0, 100)) + '</div>';
+            }).join('') + '</div>';
+        }
+
+        // Knowledge
+        const knowledge = data.knowledge_topics || data.knowledge || [];
+        if (knowledge.length > 0) {
+            html += '<div class="mb-5"><div class="text-xs font-semibold text-white/50 uppercase tracking-wider mb-2">Knowledge</div>';
+            html += '<div class="flex flex-wrap gap-1">' + knowledge.slice(0, 15).map(k => {
+                const topic = typeof k === 'string' ? k : (k.topic || k.name || '');
+                return '<span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7;border:1px solid rgba(168,85,247,0.2);font-size:10px;padding:2px 8px;">' + escHtml(topic) + '</span>';
+            }).join('') + '</div></div>';
+        }
+
+        // Relationships
+        const relationships = data.relationships || [];
+        if (relationships.length > 0) {
+            html += '<div class="mb-5"><div class="text-xs font-semibold text-white/50 uppercase tracking-wider mb-2">Relationships</div>';
+            html += relationships.slice(0, 10).map(r => {
+                const trustColor = (r.trust || 0) > 0.5 ? 'text-green-400' : (r.trust || 0) > 0 ? 'text-yellow-400' : 'text-red-400';
+                return '<div class="flex items-center justify-between py-1.5 border-b border-white/5">'
+                    + '<span class="text-xs text-white/60">' + escHtml(r.paul || '') + '</span>'
+                    + '<span class="text-xs ' + trustColor + '">Trust: ' + (r.trust || 0).toFixed(2) + '</span></div>';
+            }).join('') + '</div>';
+        }
+
+        detail.innerHTML = html;
+    }
+
+    // ===========================
+    // TAB: SOCIAL
+    // ===========================
+    function initSocialTab() {
+        if (state.wsConnected) {
+            wsSend('social.feed', { limit: 30, platform: state.socialPlatformFilter });
+            wsSend('social.trending', {});
+        }
+    }
+
+    window.refreshSocialFeed = function() {
+        wsSend('social.feed', { limit: 30, platform: state.socialPlatformFilter });
+        wsSend('social.trending', {});
+    };
+
+    window.filterSocialPlatform = function(platform) {
+        state.socialPlatformFilter = platform;
+        document.querySelectorAll('.social-filter-btn').forEach(btn => {
+            const p = btn.dataset.platform;
+            btn.classList.toggle('active', platform === null ? p === 'all' : p === platform);
+        });
+        wsSend('social.feed', { limit: 30, platform: platform });
+    };
+
+    function renderSocialFeed(posts) {
+        const container = document.getElementById('social-feed');
+        if (!posts || posts.length === 0) {
+            container.innerHTML = '<div class="coming-soon" style="min-height:40vh;">'
+                + '<div class="text-5xl mb-3">📱</div>'
+                + '<h3 class="text-lg font-bold text-white/40 mb-1">No Posts Yet</h3>'
+                + '<p class="text-white/25 text-sm">Pauls haven\'t posted anything yet. Start a prediction or Paul\'s World first.</p></div>';
+            return;
+        }
+
+        container.innerHTML = posts.map(post => {
+            const platformCls = 'platform-' + (post.platform || 'discord').toLowerCase();
+            const platformEmoji = { Discord: '💬', Twitter: '🐦', Telegram: '✈️', Reddit: '🤖' }[post.platform] || '📱';
+            const time = post.timestamp ? new Date(post.timestamp).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+            const sentColor = (post.sentiment || 0) > 0.3 ? 'text-green-400' : (post.sentiment || 0) < -0.3 ? 'text-red-400' : 'text-white/40';
+
+            return '<div class="glass rounded-xl p-4">'
+                + '<div class="flex items-center gap-3 mb-3">'
+                + '<span class="text-2xl">🐟</span>'
+                + '<div class="flex-1"><div class="text-sm font-semibold text-white/80">' + escHtml(post.author || 'Paul') + '</div>'
+                + '<div class="flex items-center gap-2"><span class="platform-badge ' + platformCls + '">' + platformEmoji + ' ' + escHtml(post.platform || '') + '</span>'
+                + '<span class="text-[10px] text-white/25">' + time + '</span></div></div>'
+                + (post.is_viral ? '<span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.2);font-size:10px;">🔥 Viral</span>' : '')
+                + '</div>'
+                + '<div class="text-sm text-white/60 leading-relaxed mb-3">' + escHtml(post.content || '') + '</div>'
+                + '<div class="flex items-center gap-4 text-xs text-white/30">'
+                + '<span>❤️ ' + (post.likes || 0) + '</span>'
+                + '<span>💬 ' + (post.replies || 0) + '</span>'
+                + '<span>🔄 ' + (post.shares || 0) + '</span>'
+                + (post.topic ? '<span class="ml-auto ' + sentColor + '">#' + escHtml(post.topic) + '</span>' : '')
+                + '</div></div>';
+        }).join('');
+    }
+
+    function renderSocialTrending(trending) {
+        const container = document.getElementById('social-trending');
+        if (!trending || trending.length === 0) {
+            container.innerHTML = '<div class="text-xs text-white/25 text-center py-4">No trending topics</div>';
+            return;
+        }
+        container.innerHTML = trending.map((t, i) => {
+            const sentColor = (t.avg_sentiment || 0) > 0.3 ? 'text-green-400' : (t.avg_sentiment || 0) < -0.3 ? 'text-red-400' : 'text-white/40';
+            return '<div class="flex items-center gap-2 p-2 rounded-lg hover:bg-white/5">'
+                + '<span class="text-xs text-white/30 w-4">' + (i + 1) + '</span>'
+                + '<div class="flex-1 min-w-0"><div class="text-xs font-medium text-white/60 truncate">#' + escHtml(t.topic || '') + '</div>'
+                + '<div class="text-[10px] text-white/30">' + (t.post_count || 0) + ' posts</div></div>'
+                + '<span class="text-[10px] ' + sentColor + '">' + ((t.avg_sentiment || 0) > 0 ? '↑' : '↓') + '</span></div>';
+        }).join('');
+    }
+
+    // ===========================
+    // TAB: LEADERBOARD
+    // ===========================
+    function initLeaderboardTab() {
+        loadLeaderboard();
+    }
+
+    window.loadLeaderboard = function() {
+        const domain = document.getElementById('lb-domain-filter').value;
+        wsSend('leaderboard.get', { domain: domain || undefined, limit: 30 });
+    };
+
+    function renderLeaderboard(data) {
+        const container = document.getElementById('lb-table-container');
+        if (!data || data.length === 0) {
+            container.innerHTML = '<div class="coming-soon" style="min-height:40vh;">'
+                + '<div class="text-5xl mb-3">🏆</div>'
+                + '<h3 class="text-lg font-bold text-white/40 mb-1">No Predictions Tracked Yet</h3>'
+                + '<p class="text-white/25 text-sm">Run the auto-trader or make predictions to build the leaderboard.</p></div>';
+            // Clear stats
+            document.getElementById('lb-stat-total').textContent = '0';
+            document.getElementById('lb-stat-accuracy').textContent = '0%';
+            document.getElementById('lb-stat-active').textContent = '—';
+            document.getElementById('lb-stat-domain').textContent = '—';
+            return;
+        }
+
+        // Stats
+        const totalPreds = data.reduce((s, d) => s + (d.total_predictions || 0), 0);
+        const avgAcc = data.reduce((s, d) => s + (d.accuracy_rate || 0), 0) / data.length * 100;
+        const mostActive = data.reduce((best, d) => (d.total_predictions || 0) > (best.total_predictions || 0) ? d : best, data[0]);
+        const domains = {};
+        data.forEach(d => { domains[d.domain || 'all'] = (domains[d.domain || 'all'] || 0) + 1; });
+        const topDomain = Object.entries(domains).sort((a, b) => b[1] - a[1])[0];
+
+        document.getElementById('lb-stat-total').textContent = totalPreds;
+        document.getElementById('lb-stat-accuracy').textContent = avgAcc.toFixed(1) + '%';
+        document.getElementById('lb-stat-active').textContent = mostActive ? escHtml((mostActive.paul_name || '').slice(0, 15)) : '—';
+        document.getElementById('lb-stat-domain').textContent = topDomain ? topDomain[0] : '—';
+
+        // Table
+        let html = '<table class="w-full"><thead><tr class="text-xs text-white/30 border-b border-white/5">'
+            + '<th class="p-3 text-left w-12">#</th>'
+            + '<th class="p-3 text-left">Paul Name</th>'
+            + '<th class="p-3 text-right">Accuracy</th>'
+            + '<th class="p-3 text-right">Predictions</th>'
+            + '<th class="p-3 text-right">Avg Conf</th>'
+            + '<th class="p-3 text-left">Domain</th>'
+            + '</tr></thead><tbody>';
+
+        data.forEach((d, i) => {
+            const rank = d.rank || (i + 1);
+            const acc = ((d.accuracy_rate || 0) * 100).toFixed(1);
+            const accColor = acc > 70 ? 'text-green-400' : acc > 50 ? 'text-yellow-400' : 'text-red-400';
+            const rankBadge = rank === 1 ? '<span class="rank-gold">🥇</span>' : rank === 2 ? '<span class="rank-silver">🥈</span>' : rank === 3 ? '<span class="rank-bronze">🥉</span>' : '<span class="text-white/30">' + rank + '</span>';
+
+            html += '<tr class="lb-row border-b border-white/5" onclick="this.classList.toggle(\'expanded\');this.nextElementSibling.classList.toggle(\'open\')">'
+                + '<td class="p-3">' + rankBadge + '</td>'
+                + '<td class="p-3 text-sm font-medium text-white/80">' + escHtml(d.paul_name || '') + '</td>'
+                + '<td class="p-3 text-right text-sm font-bold ' + accColor + '">' + acc + '%</td>'
+                + '<td class="p-3 text-right text-sm text-white/50">' + (d.total_predictions || 0) + '</td>'
+                + '<td class="p-3 text-right text-sm text-white/50">' + ((d.avg_confidence || 0) * 100).toFixed(0) + '%</td>'
+                + '<td class="p-3 text-xs text-white/40">' + escHtml(d.domain || 'all') + '</td>'
+                + '</tr>';
+            html += '<tr class="lb-expanded"><td colspan="6" class="px-3"><div class="py-3 text-xs text-white/40">'
+                + 'Correct: ' + (d.correct_predictions || 0) + ' / ' + (d.total_predictions || 0)
+                + ' · Win rate: ' + acc + '%'
+                + '</div></td></tr>';
+        });
+
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    }
+
+    // ===========================
+    // TAB: TRADING
+    // ===========================
+    function initTradingTab() {
+        refreshTradingStatus();
+    }
+
+    window.startTrading = function() {
+        wsSend('trading.start', {});
+    };
+
+    window.stopTrading = function() {
+        wsSend('trading.stop', {});
+    };
+
+    window.refreshTradingStatus = function() {
+        wsSend('trading.status', {});
+    };
+
+    function updateTradingIndicator(running) {
+        const dot = document.getElementById('trading-status-dot');
+        const label = document.getElementById('trading-status-label');
+        if (running) {
+            dot.className = 'conn-dot connected';
+            label.textContent = 'Running';
+            label.style.color = 'rgba(34,197,94,0.7)';
+        } else {
+            dot.className = 'conn-dot disconnected';
+            label.textContent = 'Stopped';
+            label.style.color = 'rgba(239,68,68,0.6)';
+        }
+    }
+
+    function renderTradingStatus(data) {
+        if (!data) return;
+
+        // Auto-trader indicator
+        updateTradingIndicator(!!data.auto_trader_running);
+
+        // Stats cards
+        const pnl = data.aggregate_pnl || 0;
+        const pnlEl = document.getElementById('trading-stat-pnl');
+        pnlEl.textContent = '$' + pnl.toFixed(2);
+        pnlEl.className = 'text-2xl font-bold ' + (pnl >= 0 ? 'text-green-400' : 'text-red-400');
+
+        // Win rate from top pauls
+        const topPauls = data.top_pauls || [];
+        if (topPauls.length > 0) {
+            const avgWr = topPauls.reduce((s, p) => s + (p.win_rate || 0), 0) / topPauls.length * 100;
+            document.getElementById('trading-stat-winrate').textContent = avgWr.toFixed(1) + '%';
+        }
+        document.getElementById('trading-stat-trades').textContent = data.total_trades || 0;
+        document.getElementById('trading-stat-positions').textContent = data.total_positions || 0;
+
+        // Open positions
+        const posContainer = document.getElementById('trading-positions');
+        const positions = data.open_positions || [];
+        if (positions.length === 0) {
+            posContainer.innerHTML = '<div class="text-xs text-white/25 text-center py-6">No open positions</div>';
+        } else {
+            let posHtml = '<table class="w-full"><thead><tr class="text-xs text-white/30 border-b border-white/5">'
+                + '<th class="p-2 text-left">Symbol</th><th class="p-2 text-left">Direction</th>'
+                + '<th class="p-2 text-right">Entry</th><th class="p-2 text-right">Current</th>'
+                + '<th class="p-2 text-right">PnL</th><th class="p-2 text-left">Paul</th></tr></thead><tbody>';
+            positions.slice(0, 20).forEach(pos => {
+                const qty = pos.quantity || 0;
+                const entry = pos.entry_price || 0;
+                const current = pos.current_price || entry;
+                const unrealPnl = qty * (current - entry);
+                const pnlCls = unrealPnl >= 0 ? 'text-green-400' : 'text-red-400';
+                const dir = qty >= 0 ? 'buy' : 'sell';
+                posHtml += '<tr class="border-b border-white/5">'
+                    + '<td class="p-2 text-sm font-medium text-white/80">' + escHtml(pos.symbol || '') + '</td>'
+                    + '<td class="p-2"><span class="dir-' + dir + '">' + dir.toUpperCase() + '</span></td>'
+                    + '<td class="p-2 text-right text-sm text-white/50">$' + entry.toFixed(2) + '</td>'
+                    + '<td class="p-2 text-right text-sm text-white/50">$' + current.toFixed(2) + '</td>'
+                    + '<td class="p-2 text-right text-sm font-bold ' + pnlCls + '">$' + unrealPnl.toFixed(2) + '</td>'
+                    + '<td class="p-2 text-xs text-white/40">' + escHtml((pos.paul_name || '').slice(0, 15)) + '</td></tr>';
+            });
+            posHtml += '</tbody></table>';
+            posContainer.innerHTML = posHtml;
+        }
+
+        // Recent trades
+        const tradesContainer = document.getElementById('trading-recent');
+        const trades = data.recent_trades || [];
+        if (trades.length === 0) {
+            tradesContainer.innerHTML = '<div class="text-xs text-white/25 text-center py-6">No trades yet</div>';
+        } else {
+            let trHtml = '<table class="w-full"><thead><tr class="text-xs text-white/30 border-b border-white/5">'
+                + '<th class="p-2 text-left">Symbol</th><th class="p-2 text-left">Dir</th>'
+                + '<th class="p-2 text-right">Entry</th><th class="p-2 text-right">Exit</th>'
+                + '<th class="p-2 text-right">PnL</th><th class="p-2 text-left">Paul</th>'
+                + '<th class="p-2 text-left">Date</th></tr></thead><tbody>';
+            trades.slice(0, 15).forEach(t => {
+                const tPnl = t.pnl || t.realized_pnl || 0;
+                const pnlCls = tPnl >= 0 ? 'text-green-400' : 'text-red-400';
+                const dir = (t.direction || t.side || 'buy').toLowerCase();
+                const date = t._created_at ? new Date(t._created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+                trHtml += '<tr class="border-b border-white/5">'
+                    + '<td class="p-2 text-sm text-white/70">' + escHtml(t.symbol || '') + '</td>'
+                    + '<td class="p-2"><span class="dir-' + dir + '">' + dir.toUpperCase() + '</span></td>'
+                    + '<td class="p-2 text-right text-xs text-white/40">$' + (t.entry_price || 0).toFixed(2) + '</td>'
+                    + '<td class="p-2 text-right text-xs text-white/40">$' + (t.exit_price || 0).toFixed(2) + '</td>'
+                    + '<td class="p-2 text-right text-sm font-bold ' + pnlCls + '">$' + tPnl.toFixed(2) + '</td>'
+                    + '<td class="p-2 text-xs text-white/40">' + escHtml((t.paul_name || '').slice(0, 12)) + '</td>'
+                    + '<td class="p-2 text-xs text-white/30">' + date + '</td></tr>';
+            });
+            trHtml += '</tbody></table>';
+            tradesContainer.innerHTML = trHtml;
+        }
+
+        // Top traders sidebar
+        const topContainer = document.getElementById('trading-top');
+        if (topPauls.length === 0) {
+            topContainer.innerHTML = '<div class="text-xs text-white/25 text-center py-6">Start paper trading to see rankings</div>';
+        } else {
+            topContainer.innerHTML = topPauls.slice(0, 5).map((p, i) => {
+                const pColor = (p.pnl || 0) >= 0 ? 'text-green-400' : 'text-red-400';
+                const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1) + '.';
+                return '<div class="glass rounded-lg p-3">'
+                    + '<div class="flex items-center gap-2 mb-1"><span>' + medal + '</span>'
+                    + '<span class="text-sm font-semibold text-white/80 flex-1 truncate">' + escHtml(p.paul_name || '') + '</span></div>'
+                    + '<div class="flex items-center justify-between text-xs">'
+                    + '<span class="' + pColor + '">PnL: $' + (p.pnl || 0).toFixed(2) + '</span>'
+                    + '<span class="text-white/30">WR: ' + ((p.win_rate || 0) * 100).toFixed(0) + '%</span>'
+                    + '<span class="text-white/30">' + (p.total_trades || 0) + ' trades</span></div></div>';
+            }).join('');
+        }
+
+        // Progression pipeline
+        const pipeline = document.getElementById('trading-pipeline');
+        const stages = [
+            { name: 'Training', icon: '📚', count: data.total_portfolios || 0 },
+            { name: 'Proven', icon: '✅', count: topPauls.filter(p => (p.win_rate || 0) > 0.5).length },
+            { name: 'Bankr-Ready', icon: '🏦', count: topPauls.filter(p => (p.win_rate || 0) > 0.6 && (p.total_trades || 0) > 5).length },
+            { name: 'Live', icon: '🚀', count: 0 },
+        ];
+        pipeline.innerHTML = stages.map((s, i) => {
+            const bg = i === 0 ? 'rgba(0,212,255,0.1)' : i === 1 ? 'rgba(34,197,94,0.1)' : i === 2 ? 'rgba(255,215,0,0.1)' : 'rgba(168,85,247,0.1)';
+            const color = i === 0 ? '#00d4ff' : i === 1 ? '#22c55e' : i === 2 ? '#ffd700' : '#a855f7';
+            return (i > 0 ? '<span class="pipeline-arrow">→</span>' : '')
+                + '<div class="pipeline-stage" style="background:' + bg + '">'
+                + '<span class="text-2xl">' + s.icon + '</span>'
+                + '<span class="text-lg font-bold" style="color:' + color + '">' + s.count + '</span>'
+                + '<span class="text-[10px] text-white/40">' + s.name + '</span></div>';
+        }).join('');
+    }
+
+    // ===========================
+    // TAB: CREATIVE
+    // ===========================
+    function initCreativeTab() {
+        const input = document.getElementById('creative-input');
+        const counter = document.getElementById('creative-charcount');
+        // Remove old listener to avoid duplicates
+        input.oninput = function() {
+            counter.textContent = input.value.length + ' characters';
+        };
+    }
+
+    window.analyzeScript = function() {
+        const text = document.getElementById('creative-input').value.trim();
+        if (!text) {
+            shakeElement(document.getElementById('creative-input'));
+            return;
+        }
+        state.creativeAnalyzing = true;
+        const btn = document.getElementById('creative-btn-analyze');
+        btn.disabled = true;
+        btn.textContent = '⏳ Analyzing...';
+        document.getElementById('creative-empty').style.display = 'none';
+        document.getElementById('creative-results').style.display = 'block';
+        document.getElementById('creative-results').innerHTML = '<div class="text-center py-12"><div class="text-4xl mb-3 pulse">🎬</div><div class="text-white/40">Analyzing your script...</div></div>';
+        wsSend('creative.analyze', { text: text });
+    };
+
+    function renderCreativeError(error) {
+        const btn = document.getElementById('creative-btn-analyze');
+        btn.disabled = false;
+        btn.textContent = '🎬 Analyze Script';
+        document.getElementById('creative-results').innerHTML = '<div class="glass rounded-2xl p-6 text-center">'
+            + '<div class="text-3xl mb-3">❌</div>'
+            + '<div class="text-red-400 text-sm">' + escHtml(error) + '</div></div>';
+    }
+
+    function renderCreativeResults(data) {
+        const btn = document.getElementById('creative-btn-analyze');
+        btn.disabled = false;
+        btn.textContent = '🎬 Analyze Script';
+
+        const analysis = data.analysis || data;
+        const container = document.getElementById('creative-results');
+        document.getElementById('creative-empty').style.display = 'none';
+        container.style.display = 'block';
+
+        let html = '';
+
+        // Summary / Score
+        const summary = analysis.summary || {};
+        const notes = analysis.notes || [];
+        const issues = analysis.issues || [];
+
+        // Score card
+        const score = analysis.score || analysis.overall_score;
+        if (score !== undefined) {
+            const scoreColor = score >= 7 ? '#22c55e' : score >= 5 ? '#eab308' : '#ef4444';
+            html += '<div class="glass rounded-2xl p-6 mb-6 flex items-center gap-6">'
+                + '<div class="creative-score" style="border-color:' + scoreColor + ';color:' + scoreColor + '">' + (typeof score === 'number' ? score.toFixed(1) : score) + '</div>'
+                + '<div><div class="text-lg font-bold text-white/80">Overall Score</div>'
+                + '<div class="text-sm text-white/40">Based on dialogue, pacing, character, and plot analysis</div></div></div>';
+        }
+
+        // Summary stats
+        if (summary.words || summary.scenes_detected || summary.lines) {
+            html += '<div class="glass rounded-2xl p-6 mb-6">'
+                + '<h3 class="text-sm font-semibold text-white/50 uppercase tracking-wider mb-3">Script Stats</h3>'
+                + '<div class="grid grid-cols-2 md:grid-cols-4 gap-4">';
+            if (summary.words) html += '<div class="text-center"><div class="text-xl font-bold text-sp-cyan">' + summary.words + '</div><div class="text-[10px] text-white/30">Words</div></div>';
+            if (summary.lines) html += '<div class="text-center"><div class="text-xl font-bold text-sp-teal">' + summary.lines + '</div><div class="text-[10px] text-white/30">Lines</div></div>';
+            if (summary.scenes_detected !== undefined) html += '<div class="text-center"><div class="text-xl font-bold text-sp-gold">' + summary.scenes_detected + '</div><div class="text-[10px] text-white/30">Scenes</div></div>';
+            if (summary.dialogue_cues !== undefined) html += '<div class="text-center"><div class="text-xl font-bold text-sp-pink">' + summary.dialogue_cues + '</div><div class="text-[10px] text-white/30">Dialogue Cues</div></div>';
+            html += '</div></div>';
+        }
+
+        // Notes
+        if (notes.length > 0) {
+            html += '<div class="glass rounded-2xl p-6 mb-6">'
+                + '<h3 class="text-sm font-semibold text-white/50 uppercase tracking-wider mb-3">Analysis Notes</h3>'
+                + '<div class="space-y-2">';
+            notes.forEach(note => {
+                html += '<div class="flex items-start gap-2 text-sm text-white/60"><span class="text-sp-cyan mt-0.5">📝</span><span>' + escHtml(note) + '</span></div>';
+            });
+            html += '</div></div>';
+        }
+
+        // Issues grouped by category
+        if (issues.length > 0) {
+            const grouped = {};
+            issues.forEach(issue => {
+                const cat = issue.category || issue.type || 'general';
+                if (!grouped[cat]) grouped[cat] = [];
+                grouped[cat].push(issue);
+            });
+
+            const catIcons = { dialogue: '💬', pacing: '⏱️', character: '👤', plot: '📖', general: '📋', structure: '🏗️' };
+
+            html += '<div class="space-y-4">';
+            Object.entries(grouped).forEach(([cat, catIssues]) => {
+                html += '<div class="glass rounded-2xl p-6">'
+                    + '<h3 class="text-sm font-semibold text-white/50 uppercase tracking-wider mb-3">' + (catIcons[cat] || '📋') + ' ' + escHtml(cat) + '</h3>'
+                    + '<div class="space-y-3">';
+                catIssues.forEach(issue => {
+                    const sev = (issue.severity || 'medium').toLowerCase();
+                    const sevCls = sev === 'high' ? 'severity-high' : sev === 'low' ? 'severity-low' : 'severity-medium';
+                    html += '<div class="glass rounded-lg p-4">'
+                        + '<div class="flex items-center gap-2 mb-2">'
+                        + '<span class="badge ' + sevCls + '" style="font-size:10px;padding:2px 8px;">' + escHtml(sev) + '</span>'
+                        + (issue.paul ? '<span class="text-xs text-white/30">by ' + escHtml(issue.paul) + '</span>' : '')
+                        + '</div>'
+                        + '<div class="text-sm text-white/70 mb-1">' + escHtml(issue.description || issue.message || '') + '</div>'
+                        + (issue.suggestion ? '<div class="text-xs text-sp-teal">💡 ' + escHtml(issue.suggestion) + '</div>' : '')
+                        + '</div>';
+                });
+                html += '</div></div>';
+            });
+            html += '</div>';
+        }
+
+        // If no structured data, show raw
+        if (!score && notes.length === 0 && issues.length === 0 && (!summary.words)) {
+            html += '<div class="glass rounded-2xl p-6">'
+                + '<h3 class="text-sm font-semibold text-white/50 uppercase tracking-wider mb-3">Analysis Result</h3>'
+                + '<pre class="text-xs text-white/50 whitespace-pre-wrap overflow-auto max-h-96">' + escHtml(JSON.stringify(analysis, null, 2)) + '</pre></div>';
+        }
+
+        container.innerHTML = html;
     }
 
     // ===========================
