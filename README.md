@@ -341,10 +341,13 @@ swimming-pauls/
 
 ## 📖 Documentation
 
+- **[LEARNING_SYSTEM.md](LEARNING_SYSTEM.md)** - Domain-aware learning system deep dive
 - **[RELEASE_NOTES_v2.1.md](RELEASE_NOTES_v2.1.md)** - What's new in v2.1
 - **[COMMANDS.md](COMMANDS.md)** - Complete CLI reference with all commands
 - **[PAPER_TRADING.md](PAPER_TRADING.md)** - Paper trading system guide
+- **[INTEGRATION.md](INTEGRATION.md)** - Connect external apps to Swimming Pauls
 - **[SOCIAL_MEDIA.md](SOCIAL_MEDIA.md)** - Social media system
+- **[LIVE_TRADING_PLAN.md](LIVE_TRADING_PLAN.md)** - Live trading rollout plan
 - **[docs/](docs/)** - Detailed feature documentation
 - **[HANDOFF.md](HANDOFF.md)** - Project status and session continuity
 
@@ -352,7 +355,15 @@ swimming-pauls/
 
 ## 🚀 What's Next (V2 Roadmap)
 
-### ✅ Recently Shipped (v2.1)
+### ✅ Recently Shipped (v2.2)
+- **Domain-Aware Learning** - Pauls track accuracy per domain with memory-enhanced LLM prompts
+- **Trading Intelligence** - RSI, MACD, Bollinger Bands, ATR, volume analysis
+- **Paul Progression** - Training → Proven → Bankr-Ready → Live pipeline
+- **Creative Pauls** - 50 script-writing specialists, collaborative screenplay engine
+- **High-Scale Mode** - 1M Pauls at ~64MB RAM
+- **Critical bug fixes** - PnL data corruption cleaned, price validation added
+
+### ✅ Previously Shipped (v2.1)
 - **Setup Wizard** - One-command first-time setup
 - **Unified Launcher** - `python start.py` starts everything
 - **Learning System** - Auto-resolution, accuracy tracking, leaderboards
@@ -362,11 +373,11 @@ swimming-pauls/
 - **Demo Data** - Explore without running simulations
 - **Debate Network** - Interactive D3 visualization
 
-### 📅 Coming Soon (v2.2)
+### 📅 Coming Soon (v2.3+)
+- **Solana integration** - Bankr + solana-defi-agent in skill bridge
 - **Mac Mini Infrastructure** - 24/7 cloud simulation with $PAUL credits
-- **Social Media Integration** - Pauls post predictions to Twitter/Telegram
+- **🌍 World History** - Anonymous global prediction aggregation
 - **Paul Marketplace** - Buy/sell high-accuracy Pauls
-- **Mobile App** - iOS/Android native apps
 - **API** - REST API for external integrations
 
 ---

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualization Demo | Swimming Pauls</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+        #viz-container {
+            position: relative;
+            width: 100%;
+            height: 60vh;
+            min-height: 400px;
+        }
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+        .node {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .node:hover {
+            filter: brightness(1.3);
+        }
+        .link {
+            stroke-opacity: 0.4;
+            transition: all 0.3s ease;
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+        .glow-green {
+            filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.6));
+        }
+        .glow-yellow {
+            filter: drop-shadow(0 0 8px rgba(234, 179, 8, 0.6));
+        }
+        .glow-red {
+            filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.6));
+        }
+    </style>
+</head>
+<body class="p-6">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-6">
+            <div class="text-4xl mb-4">🦷</div>
+            <h1 class="text-3xl font-bold gradient-text mb-2">Visualization Demo</h1>
+            <p class="text-gray-400">Watch 500+ Pauls debate in real-time</p>
+            <a href="/" class="text-indigo-400 hover:underline text-sm">← Back to Home</a>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="grid grid-cols-4 gap-4 mb-6">
+            <div class="glass rounded-xl p-3 text-center border border-white/10">
+                <div class="text-2xl font-bold text-green-400">306</div>
+                <div class="text-xs text-gray-500">Bullish</div>
+            </div>
+            <div class="glass rounded-xl p-3 text-center border border-white/10">
+                <div class="text-2xl font-bold text-yellow-400">127</div>
+                <div class="text-xs text-gray-500">Neutral</div>
+            </div>
+            <div class="glass rounded-xl p-3 text-center border border-white/10">
+                <div class="text-2xl font-bold text-red-400">67</div>
+                <div class="text-xs text-gray-500">Bearish</div>
+            </div>
+            <div class="glass rounded-xl p-3 text-center border border-white/10">
+                <div class="text-2xl font-bold">42</div>
+                <div class="text-xs text-gray-500">Round</div>
+            </div>
+        </div>
+
+        <!-- Visualization -->
+        <div class="glass rounded-2xl p-4 mb-6 border border-white/10">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-4">
+                    <span class="flex items-center gap-2 text-sm">
+                        <span class="w-3 h-3 rounded-full bg-green-500"></span> Bullish
+                    </span>
+                    <span class="flex items-center gap-2 text-sm">
+                        <span class="w-3 h-3 rounded-full bg-yellow-500"></span> Neutral
+                    </span>
+                    <span class="flex items-center gap-2 text-sm">
+                        <span class="w-3 h-3 rounded-full bg-red-500"></span> Bearish
+                    </span>
+                </div>
+                <div class="flex gap-2">
+                    <button id="pauseBtn" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-sm transition-colors">⏸️ Pause</button>
+                    <button id="resetBtn" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-sm transition-colors">🔄 Reset</button>
+                </div>
+            </div>
+            <div id="viz-container"></div>
+        </div>
+
+        <!-- Activity Log -->
+        <div class="glass rounded-2xl p-6 mb-6 border border-white/10">
+            <h3 class="font-bold mb-4">Recent Activity</h3>
+            <div id="activity-log" class="space-y-2 text-sm max-h-48 overflow-y-auto">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <div class="glass rounded-2xl p-6 mb-6 border border-white/10">
+            <h3 class="font-bold mb-4">How the Visualization Works</h3>
+            <div class="grid md:grid-cols-3 gap-4 text-sm">
+                <div class="p-4 bg-white/5 rounded-lg">
+                    <div class="text-2xl mb-2">🕸️</div>
+                    <div class="font-bold mb-1">Force-Directed Graph</div>
+                    <p class="text-gray-400">Pauls attract to others with similar opinions and repel from opposing views</p>
+                </div>
+                <div class="p-4 bg-white/5 rounded-lg">
+                    <div class="text-2xl mb-2">⚡</div>
+                    <div class="font-bold mb-1">Live Connections</div>
+                    <p class="text-gray-400">Lines show active debates between Pauls. Thicker lines = stronger influence</p>
+                </div>
+                <div class="p-4 bg-white/5 rounded-lg">
+                    <div class="text-2xl mb-2">🎯</div>
+                    <div class="font-bold mb-1">Consensus Forming</div>
+                    <p class="text-gray-400">Watch clusters merge as Pauls convince each other and reach agreement</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="text-center py-8">
+            <p class="text-gray-400 mb-4">This is a simulation. Run real predictions with live web research on your machine.</p>
+            <a href="https://github.com/IBFolding/swimming-pauls" target="_blank" 
+               class="inline-block px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl font-bold hover:opacity-90 transition-opacity">
+                Get the Code →
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center text-gray-500 text-sm pb-8">
+            <p>Demo visualization for illustration purposes</p>
+            <a href="/" class="text-indigo-400 hover:underline">← Back to Home</a>
+        </footer>
+    </div>
+
+    <script>
+        // Demo data - 500 Pauls
+        const numNodes = 500;
+        const nodes = [];
+        const links = [];
+
+        // Create nodes with sentiments
+        for (let i = 0; i < numNodes; i++) {
+            let sentiment, type, group;
+            const rand = Math.random();
+            
+            if (rand < 0.61) {
+                sentiment = 'bullish';
+                type = 'bullish';
+                group = 1;
+            } else if (rand < 0.87) {
+                sentiment = 'neutral';
+                type = 'neutral';
+                group = 2;
+            } else {
+                sentiment = 'bearish';
+                type = 'bearish';
+                group = 3;
+            }
+
+            nodes.push({
+                id: i,
+                type: type,
+                group: group,
+                sentiment: sentiment,
+                radius: Math.random() * 4 + 3,
+                name: `Paul-${i + 1}`
+            });
+        }
+
+        // Create links (Pauls connect to nearby/similar Pauls)
+        for (let i = 0; i < numNodes; i++) {
+            const numConnections = Math.floor(Math.random() * 3) + 1;
+            for (let j = 0; j < numConnections; j++) {
+                const target = Math.floor(Math.random() * numNodes);
+                if (target !== i) {
+                    const sameGroup = nodes[i].group === nodes[target].group;
+                    links.push({
+                        source: i,
+                        target: target,
+                        strength: sameGroup ? 0.5 : 0.1
+                    });
+                }
+            }
+        }
+
+        // Setup D3
+        const container = document.getElementById('viz-container');
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+
+        const svg = d3.select('#viz-container')
+            .append('svg')
+            .attr('viewBox', [0, 0, width, height]);
+
+        // Color scale
+        const color = d3.scaleOrdinal()
+            .domain([1, 2, 3])
+            .range(['#22c55e', '#eab308', '#ef4444']);
+
+        // Simulation
+        let simulation = d3.forceSimulation(nodes)
+            .force('link', d3.forceLink(links).id(d => d.id).strength(d => d.strength))
+            .force('charge', d3.forceManyBody().strength(-20))
+            .force('center', d3.forceCenter(width / 2, height / 2))
+            .force('collision', d3.forceCollide().radius(d => d.radius + 2));
+
+        // Add cluster forces
+        const centerForce = d3.forceCenter(width / 2, height / 2);
+        
+        // Custom force to cluster by sentiment
+        function clusterForce() {
+            for (let i = 0; i < nodes.length; i++) {
+                const node = nodes[i];
+                let targetX = width / 2;
+                let targetY = height / 2;
+                
+                if (node.group === 1) { // Bullish - left
+                    targetX = width * 0.3;
+                    targetY = height * 0.3;
+                } else if (node.group === 2) { // Neutral - center
+                    targetX = width * 0.5;
+                    targetY = height * 0.7;
+                } else { // Bearish - right
+                    targetX = width * 0.7;
+                    targetY = height * 0.3;
+                }
+                
+                node.vx = (node.vx || 0) + (targetX - node.x) * 0.001;
+                node.vy = (node.vy || 0) + (targetY - node.y) * 0.001;
+            }
+        }
+
+        simulation.force('cluster', clusterForce);
+
+        // Draw links
+        const link = svg.append('g')
+            .attr('class', 'links')
+            .selectAll('line')
+            .data(links)
+            .join('line')
+            .attr('class', 'link')
+            .attr('stroke', '#6366f1')
+            .attr('stroke-width', d => Math.sqrt(d.strength) * 2);
+
+        // Draw nodes
+        const node = svg.append('g')
+            .attr('class', 'nodes')
+            .selectAll('circle')
+            .data(nodes)
+            .join('circle')
+            .attr('class', d => `node ${d.type === 'bullish' ? 'glow-green' : d.type === 'neutral' ? 'glow-yellow' : 'glow-red'}`)
+            .attr('r', d => d.radius)
+            .attr('fill', d => color(d.group))
+            .call(drag(simulation));
+
+        // Add pulse animation to random nodes
+        setInterval(() => {
+            const randomNode = nodes[Math.floor(Math.random() * nodes.length)];
+            const circle = node.filter(d => d.id === randomNode.id);
+            circle.classed('pulse', true);
+            setTimeout(() => circle.classed('pulse', false), 2000);
+        }, 500);
+
+        // Update positions
+        simulation.on('tick', () => {
+            link
+                .attr('x1', d => d.source.x)
+                .attr('y1', d => d.source.y)
+                .attr('x2', d => d.target.x)
+                .attr('y2', d => d.target.y);
+
+            node
+                .attr('cx', d => d.x)
+                .attr('cy', d => d.y);
+        });
+
+        // Drag behavior
+        function drag(simulation) {
+            function dragstarted(event) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                event.subject.fx = event.subject.x;
+                event.subject.fy = event.subject.y;
+            }
+
+            function dragged(event) {
+                event.subject.fx = event.x;
+                event.subject.fy = event.y;
+            }
+
+            function dragended(event) {
+                if (!event.active) simulation.alphaTarget(0);
+                event.subject.fx = null;
+                event.subject.fy = null;
+            }
+
+            return d3.drag()
+                .on('start', dragstarted)
+                .on('drag', dragged)
+                .on('end', dragended);
+        }
+
+        // Activity log
+        const activities = [
+            { emoji: '📈', name: 'Trader Paul', action: 'convinced', target: 'Degen Paul', sentiment: 'bullish' },
+            { emoji: '🤨', name: 'Skeptic Paul', action: 'questioned', target: 'Visionary Paul', sentiment: 'neutral' },
+            { emoji: '🔮', name: 'Visionary Paul', action: 'predicted', target: 'the market', sentiment: 'bullish' },
+            { emoji: '🐻', name: 'Contrarian Paul', action: 'argued with', target: 'Trader Paul', sentiment: 'bearish' },
+            { emoji: '📊', name: 'Analyst Paul', action: 'calculated', target: 'new metrics', sentiment: 'neutral' },
+            { emoji: '🐋', name: 'Whale Paul', action: 'observed', target: 'the pool', sentiment: 'bullish' },
+            { emoji: '🎰', name: 'Degen Paul', action: 'bet on', target: 'moon scenario', sentiment: 'bullish' },
+            { emoji: '👨‍🏫', name: 'Professor Paul', action: 'educated', target: 'Newbie Paul', sentiment: 'neutral' },
+        ];
+
+        const logContainer = document.getElementById('activity-log');
+        
+        function addLogEntry() {
+            const activity = activities[Math.floor(Math.random() * activities.length)];
+            const entry = document.createElement('div');
+            entry.className = 'flex items-center gap-2 p-2 bg-white/5 rounded animate-pulse';
+            entry.innerHTML = `
+                <span>${activity.emoji}</span>
+                <span class="font-bold">${activity.name}</span>
+                <span class="text-gray-400">${activity.action}</span>
+                <span>${activity.target}</span>
+            `;
+            
+            logContainer.insertBefore(entry, logContainer.firstChild);
+            
+            if (logContainer.children.length > 20) {
+                logContainer.removeChild(logContainer.lastChild);
+            }
+            
+            setTimeout(() => entry.classList.remove('animate-pulse'), 1000);
+        }
+
+        // Add initial logs
+        for (let i = 0; i < 5; i++) {
+            addLogEntry();
+        }
+
+        // Add new log every 2 seconds
+        let logInterval = setInterval(addLogEntry, 2000);
+
+        // Pause/Reset buttons
+        let isPaused = false;
+        document.getElementById('pauseBtn').addEventListener('click', function() {
+            isPaused = !isPaused;
+            if (isPaused) {
+                simulation.stop();
+                clearInterval(logInterval);
+                this.textContent = '▶️ Resume';
+            } else {
+                simulation.restart();
+                logInterval = setInterval(addLogEntry, 2000);
+                this.textContent = '⏸️ Pause';
+            }
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            // Reset node positions
+            nodes.forEach(node => {
+                node.x = width / 2 + (Math.random() - 0.5) * 100;
+                node.y = height / 2 + (Math.random() - 0.5) * 100;
+                node.vx = 0;
+                node.vy = 0;
+            });
+            simulation.alpha(1).restart();
+            
+            // Clear and refill log
+            logContainer.innerHTML = '';
+            for (let i = 0; i < 5; i++) {
+                addLogEntry();
+            }
+        });
+
+        // Responsive resize
+        window.addEventListener('resize', () => {
+            const newWidth = container.clientWidth;
+            const newHeight = container.clientHeight;
+            svg.attr('viewBox', [0, 0, newWidth, newHeight]);
+            simulation.force('center', d3.forceCenter(newWidth / 2, newHeight / 2));
+            simulation.alpha(0.3).restart();
+        });
+    </script>
+</body>
+</html>

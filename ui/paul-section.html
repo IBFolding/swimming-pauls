@@ -1,0 +1,26 @@
+                <!-- Agent Perspectives -->
+                <div class="space-y-3 text-sm" id="paulResponses">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="text-xs text-gray-500 uppercase tracking-wider">What The Pauls Said</div>
+                        <div class="text-xs text-gray-500" id="paulCountDisplay">Showing 6 of 6 Pauls</div>
+                    </div>
+                    
+                    <!-- Search/Filter -->
+                    <div class="mb-3">
+                        <input type="text" id="paulSearch" placeholder="Search Pauls... (e.g., 'bullish', 'professor', 'high confidence')"
+                               class="w-full p-2 bg-black/40 border border-white/20 rounded-lg text-white placeholder-gray-600 text-xs focus:border-cyan-400 focus:outline-none"
+                               oninput="filterPauls(this.value)"
+                        >
+                        <div class="flex gap-2 mt-2 text-xs flex-wrap">
+                            <button onclick="filterByType('all')" class="px-2 py-1 bg-white/10 hover:bg-white/20 rounded text-gray-400">All</button>
+                            <button onclick="filterByType('bullish')" class="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 rounded text-green-400">Bullish</button>
+                            <button onclick="filterByType('bearish')" class="px-2 py-1 bg-red-500/20 hover:bg-red-500/30 rounded text-red-400">Bearish</button>
+                            <button onclick="filterByType('high-confidence')" class="px-2 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 rounded text-cyan-400">High Conf (>80%)</button>
+                            <button onclick="filterByType('analytical')" class="px-2 py-1 bg-purple-500/20 hover:bg-purple-500/30 rounded text-purple-400">Analytical</button>
+                        </div>
+                    </div>
+                    
+                    <div id="paulList" class="space-y-3 max-h-[500px] overflow-y-auto">
+                        <!-- Pauls will be dynamically generated here -->
+                    </div>
+                </div>

@@ -1,5 +1,5 @@
 """
-SwimmingPauls v2.0 - 100% Local Multi-Agent Simulation Platform
+SwimmingPauls v2.2 - 100% Local Multi-Agent Simulation Platform
 
 A comprehensive platform for multi-agent prediction and analysis.
 
@@ -50,7 +50,7 @@ CLI Usage:
     python -m swimming_pauls --monte-carlo --mc-runs 5000
 """
 
-__version__ = "2.1.0"
+__version__ = "2.2.0"
 __author__ = "Howard (H.O.W.A.R.D)"
 
 # Import the unified system

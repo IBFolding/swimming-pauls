@@ -363,6 +363,15 @@
                     <span>Trading</span>
                 </button>
                 
+                <button class="tab-btn flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white" onclick="showTab('roadmap')">
+                    <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                    <span>Roadmap</span>
+                </button>
+                
                 <button class="tab-btn flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white" onclick="showTab('world')">
                     <svg class="icon-sm"><use href="#icon-globe"/></svg>
                     <span>Paul's World</span>
@@ -1549,6 +1558,184 @@ python paul_world.py paper leaderboard</code></pre>
                             <polyline points="12 5 19 12 12 19"/>
                         </svg>
                     </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Roadmap -->
+        <div id="roadmap" class="tab-content">
+            <div class="max-w-6xl mx-auto">
+                <!-- Hero -->
+                <div class="text-center mb-12">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-green-500/20 to-blue-500/20 border border-green-500/30 text-sm font-medium mb-6">
+                        <span>🗺️</span>
+                        <span>5-Phase Journey</span>
+                    </div>
+
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">
+                        From <span class="text-green-400">1,000</span> to <span class="text-blue-400">1,000,000</span> Pauls
+                    </h2>
+
+                    <p class="text-gray-400 mb-8 max-w-2xl mx-auto">
+                        The evolution of Swimming Pauls from local experiment to global swarm intelligence infrastructure.
+                    </p>
+                </div>
+
+                <!-- Phases -->
+                <div class="space-y-6">
+                    <!-- Phase 1: Complete -->
+                    <div class="p-6 bg-green-500/5 border border-green-500/30 rounded-2xl relative overflow-hidden">
+                        <div class="absolute left-0 top-0 bottom-0 w-1 bg-green-500"></div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-black font-bold text-xl flex-shrink-0">✓</div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <h3 class="text-xl font-bold text-green-400">Phase 1: Foundation</h3>
+                                    <span class="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-xs font-medium">COMPLETE</span>
+                                    <span class="text-gray-500 text-sm">Q1 2026</span>
+                                </div>
+                                <ul class="space-y-2 text-gray-400 text-sm">
+                                    <li>• 10,000 Pauls deployed with diverse trading strategies</li>
+                                    <li>• Paper trading competition system with leaderboards</li>
+                                    <li>• Real-time dashboard with live market data</li>
+                                    <li>• Technical analysis (RSI, MACD, ATR, Bollinger Bands)</li>
+                                    <li>• Progression system: Training → Proven → Bankr Ready</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 2: In Progress -->
+                    <div class="p-6 bg-pink-500/5 border border-pink-500/30 rounded-2xl relative overflow-hidden">
+                        <div class="absolute left-0 top-0 bottom-0 w-1 bg-pink-500"></div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-full bg-pink-500 flex items-center justify-center text-white font-bold text-xl flex-shrink-0">→</div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <h3 class="text-xl font-bold text-pink-400">Phase 2: Intelligence</h3>
+                                    <span class="px-3 py-1 rounded-full bg-pink-500/20 text-pink-400 text-xs font-medium">IN PROGRESS</span>
+                                    <span class="text-gray-500 text-sm">Q2 2026</span>
+                                </div>
+                                <ul class="space-y-2 text-gray-400 text-sm">
+                                    <li>• Advanced ML models for price prediction</li>
+                                    <li>• News sentiment analysis integration</li>
+                                    <li>• On-chain data analysis (wallet flows, exchange flows)</li>
+                                    <li>• Social media sentiment tracking (Twitter/X, Reddit)</li>
+                                    <li>• Multi-timeframe analysis (1H, 4H, 1D, 1W)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 3: Future -->
+                    <div class="p-6 bg-white/5 border border-white/10 rounded-2xl relative overflow-hidden">
+                        <div class="absolute left-0 top-0 bottom-0 w-1 bg-gray-600"></div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center text-gray-400 font-bold text-xl flex-shrink-0">○</div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <h3 class="text-xl font-bold text-gray-300">Phase 3: Live Trading</h3>
+                                    <span class="px-3 py-1 rounded-full bg-gray-700 text-gray-400 text-xs font-medium">PLANNED</span>
+                                    <span class="text-gray-500 text-sm">Q3 2026</span>
+                                </div>
+                                <ul class="space-y-2 text-gray-400 text-sm">
+                                    <li>• Bankr integration for real trading execution</li>
+                                    <li>• Proven Pauls graduate to live trading with real money</li>
+                                    <li>• Risk management with daily loss limits</li>
+                                    <li>• Automated position sizing based on volatility (ATR)</li>
+                                    <li>• Multi-chain support (Base, Solana, Ethereum)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 4: Future -->
+                    <div class="p-6 bg-white/5 border border-white/10 rounded-2xl relative overflow-hidden">
+                        <div class="absolute left-0 top-0 bottom-0 w-1 bg-gray-600"></div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center text-gray-400 font-bold text-xl flex-shrink-0">○</div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <h3 class="text-xl font-bold text-gray-300">Phase 4: Expansion</h3>
+                                    <span class="px-3 py-1 rounded-full bg-gray-700 text-gray-400 text-xs font-medium">PLANNED</span>
+                                    <span class="text-gray-500 text-sm">Q4 2026</span>
+                                </div>
+                                <ul class="space-y-2 text-gray-400 text-sm">
+                                    <li>• Pump.fun integration for memecoin launch tracking</li>
+                                    <li>• Cross-chain trading (Solana, Base, Ethereum, Arbitrum)</li>
+                                    <li>• AI-powered strategy evolution</li>
+                                    <li>• High-Scale Mode: 1,000,000+ lightweight Pauls</li>
+                                    <li>• Skill marketplace (create, share, monetize skills)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 5: Future -->
+                    <div class="p-6 bg-white/5 border border-white/10 rounded-2xl relative overflow-hidden">
+                        <div class="absolute left-0 top-0 bottom-0 w-1 bg-gray-600"></div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center text-gray-400 font-bold text-xl flex-shrink-0">○</div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <h3 class="text-xl font-bold text-gray-300">Phase 5: Paul's World</h3>
+                                    <span class="px-3 py-1 rounded-full bg-gray-700 text-gray-400 text-xs font-medium">PLANNED</span>
+                                    <span class="text-gray-500 text-sm">2027</span>
+                                </div>
+                                <ul class="space-y-2 text-gray-400 text-sm">
+                                    <li>• Full Paul's World simulation — <strong>Always On</strong> 24/7 persistent world</li>
+                                    <li>• Pauls live continuous lives: sleep, work, trade, socialize, form teams</li>
+                                    <li>• Virtual economy with $PAUL token for services and predictions</li>
+                                    <li>• Paul's World visualized — interactive 3D map of locations and activities</li>
+                                    <li>• DAO governance — Pauls vote on platform decisions</li>
+                                    <li>• Train them. Rule them. Unleash them.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mac Mini Infrastructure -->
+                <div class="mt-12 p-8 bg-gradient-to-r from-pink-500/10 to-blue-500/10 border border-pink-500/30 rounded-2xl">
+                    <h3 class="text-2xl font-bold mb-6 text-center">🖥️ Mac Mini M4 Cluster Infrastructure</h3>
+                    
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                        <div class="p-4 bg-black/30 rounded-xl border border-white/10">
+                            <div class="text-3xl font-bold text-green-400 mb-1">10K</div>
+                            <div class="text-sm text-gray-400">Pauls per Mac</div>
+                        </div>
+                        <div class="p-4 bg-black/30 rounded-xl border border-white/10">
+                            <div class="text-3xl font-bold text-blue-400 mb-1">0.21s</div>
+                            <div class="text-sm text-gray-400">Response Time</div>
+                        </div>
+                        <div class="p-4 bg-black/30 rounded-xl border border-white/10">
+                            <div class="text-3xl font-bold text-purple-400 mb-1">1M+</div>
+                            <div class="text-sm text-gray-400">Max Scale</div>
+                        </div>
+                        <div class="p-4 bg-black/30 rounded-xl border border-white/10">
+                            <div class="text-3xl font-bold text-pink-400 mb-1">$6</div>
+                            <div class="text-sm text-gray-400">per Mac/month</div>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4 text-sm">
+                        <div class="p-4 bg-black/20 rounded-lg">
+                            <h4 class="font-bold text-green-400 mb-2">🧠 Inference Engine</h4>
+                            <p class="text-gray-400">Each Mac runs local LLM inference for 10,000 Pauls. No cloud APIs. 100% private.</p>
+                        </div>
+                        <div class="p-4 bg-black/20 rounded-lg">
+                            <h4 class="font-bold text-blue-400 mb-2">📊 Prediction Cloud</h4>
+                            <p class="text-gray-400">Users submit questions via API. Mac cluster distributes work. Returns consensus in seconds.</p>
+                        </div>
+                        <div class="p-4 bg-black/20 rounded-lg">
+                            <h4 class="font-bold text-purple-400 mb-2">🌍 World History</h4>
+                            <p class="text-gray-400">Anonymous global prediction aggregation. See what all Pauls worldwide are predicting.</p>
+                        </div>
+                        <div class="p-4 bg-black/20 rounded-lg">
+                            <h4 class="font-bold text-pink-400 mb-2">💰 24/7 Live Trading</h4>
+                            <p class="text-gray-400">Pauls trade markets round the clock. Real-time data from CoinGecko/Yahoo. Auto-execution.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

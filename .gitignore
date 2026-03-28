@@ -54,3 +54,7 @@ config/local.ini
 Thumbs.db
 node_modules/
 .vercel
+
+# Logs and exports
+logs/
+predictions_export_*.json
