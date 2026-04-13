@@ -53,6 +53,18 @@ CLI Usage:
 __version__ = "2.2.0"
 __author__ = "Howard (H.O.W.A.R.D)"
 
+# Pytest in this repo can import this file as top-level "__init__" (no package
+# context), which breaks relative imports below. Alias this module as a local
+# package so relative imports still resolve during collection.
+if __package__ in (None, ""):
+    import pathlib
+    import sys
+
+    _pkg_name = "swimming_pauls_local"
+    __package__ = _pkg_name
+    __path__ = [str(pathlib.Path(__file__).resolve().parent)]
+    sys.modules.setdefault(_pkg_name, sys.modules[__name__])
+
 # Import the unified system
 from .swimming_pauls import (
     SwimmingPauls,

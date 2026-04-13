@@ -43,7 +43,7 @@ except ImportError:
     exec(open("agent.py").read())
 
 
-class TestSkillIntegrator(unittest.TestCase):
+class TestSkillIntegrator(unittest.IsolatedAsyncioTestCase):
     """Test SkillIntegrator functionality."""
     
     def setUp(self):
@@ -375,7 +375,7 @@ class TestReportStorage(unittest.TestCase):
         self.assertFalse(Path(paths["markdown"]).exists())
 
 
-class TestReportAgent(unittest.TestCase):
+class TestReportAgent(unittest.IsolatedAsyncioTestCase):
     """Test ReportAgent main functionality."""
     
     def setUp(self):
@@ -440,14 +440,9 @@ class TestReportAgent(unittest.TestCase):
         self.assertTrue(len(report.agent_reasonings) > 0)
         self.assertIsNotNone(report.metadata.report_id)
     
-    def test_save_report(self):
+    async def test_save_report(self):
         """Test saving a generated report."""
-        # First generate the report
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        report = loop.run_until_complete(
-            self.agent.generate_report(self.mock_result, self.mock_agents)
-        )
+        report = await self.agent.generate_report(self.mock_result, self.mock_agents)
         
         # Save it
         paths = self.agent.save_report(report)
@@ -455,13 +450,9 @@ class TestReportAgent(unittest.TestCase):
         self.assertIn("report_id", paths)
         self.assertIn("html", paths)
     
-    def test_get_report(self):
+    async def test_get_report(self):
         """Test report retrieval."""
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        report = loop.run_until_complete(
-            self.agent.generate_report(self.mock_result, self.mock_agents)
-        )
+        report = await self.agent.generate_report(self.mock_result, self.mock_agents)
         paths = self.agent.save_report(report)
         report_id = paths["report_id"]
         
@@ -469,25 +460,17 @@ class TestReportAgent(unittest.TestCase):
         content = self.agent.get_report(report_id, "markdown")
         self.assertIsNotNone(content)
     
-    def test_list_reports(self):
+    async def test_list_reports(self):
         """Test listing generated reports."""
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        report = loop.run_until_complete(
-            self.agent.generate_report(self.mock_result, self.mock_agents)
-        )
+        report = await self.agent.generate_report(self.mock_result, self.mock_agents)
         self.agent.save_report(report)
         
         reports = self.agent.list_reports()
         self.assertTrue(len(reports) >= 1)
     
-    def test_export_report(self):
+    async def test_export_report(self):
         """Test report export."""
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        report = loop.run_until_complete(
-            self.agent.generate_report(self.mock_result, self.mock_agents)
-        )
+        report = await self.agent.generate_report(self.mock_result, self.mock_agents)
         
         # Export as Markdown
         md = self.agent.export_report(report, ReportFormat.MARKDOWN)

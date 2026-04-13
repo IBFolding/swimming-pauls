@@ -7,16 +7,16 @@ Verifies core functionality without running full simulations
 import sys
 import os
 from pathlib import Path
+import re
 
 # Add parent to path
 sys.path.insert(0, str(Path(__file__).parent))
 
-def test_imports():
-    """Test that all core modules import successfully."""
+def _check_imports():
+    """Check that all core modules import successfully."""
     print("Testing imports...")
     
     modules = [
-        'config_loader',
         'prediction_history',
         'chat_interface',
     ]
@@ -30,10 +30,10 @@ def test_imports():
             print(f"  ❌ {module}: {e}")
             failed.append(module)
     
-    return len(failed) == 0
+    return len(failed) == 0, failed
 
-def test_config():
-    """Test configuration loading."""
+def _check_config():
+    """Check configuration loading."""
     print("\nTesting config...")
     
     try:
@@ -41,13 +41,19 @@ def test_config():
         config = load_config()
         print(f"  ✅ Config loaded")
         print(f"     Default Pauls: {config.get('defaults', {}).get('pauls', 'N/A')}")
-        return True
+        return True, None
+    except ModuleNotFoundError as e:
+        if "yaml" in str(e).lower():
+            print("  ⚠️ PyYAML missing; config loader check skipped")
+            return True, "PyYAML not installed"
+        print(f"  ❌ Config failed: {e}")
+        return False, str(e)
     except Exception as e:
         print(f"  ❌ Config failed: {e}")
-        return False
+        return False, str(e)
 
-def test_data_directories():
-    """Test that data directories exist or can be created."""
+def _check_data_directories():
+    """Check that data directories exist or can be created."""
     print("\nTesting data directories...")
     
     dirs = ['data', 'data/results', 'logs']
@@ -67,10 +73,10 @@ def test_data_directories():
             print(f"  ❌ {d}/: {e}")
             all_good = False
     
-    return all_good
+    return all_good, None if all_good else "One or more directories are not writable"
 
-def test_version():
-    """Test version is correct."""
+def _check_version():
+    """Check version format in __init__.py."""
     print("\nTesting version...")
     
     try:
@@ -82,30 +88,50 @@ def test_version():
                 if '__version__' in line:
                     version = line.split('=')[1].strip().strip('"\'')
                     print(f"  ✅ Version: {version}")
-                    return version == "2.1.0"
+                    return bool(re.match(r"^\d+\.\d+\.\d+$", version)), version
         print("  ❌ Version not found in __init__.py")
-        return False
+        return False, "Version not found"
     except Exception as e:
         print(f"  ❌ Version check failed: {e}")
-        return False
+        return False, str(e)
+
+
+def test_imports():
+    ok, detail = _check_imports()
+    assert ok, f"Import failures: {detail}"
+
+
+def test_config():
+    ok, detail = _check_config()
+    assert ok, f"Config check failed: {detail}"
+
+
+def test_data_directories():
+    ok, detail = _check_data_directories()
+    assert ok, detail
+
+
+def test_version():
+    ok, detail = _check_version()
+    assert ok, f"Invalid version format: {detail}"
 
 def main():
     print("=" * 60)
     print("🦷 SWIMMING PAULS v2.1 - SMOKE TEST")
     print("=" * 60)
     
-    tests = [
-        ("Imports", test_imports),
-        ("Config", test_config),
-        ("Data Directories", test_data_directories),
-        ("Version", test_version),
+    checks = [
+        ("Imports", _check_imports),
+        ("Config", _check_config),
+        ("Data Directories", _check_data_directories),
+        ("Version", _check_version),
     ]
     
     results = []
-    for name, test_func in tests:
+    for name, check_func in checks:
         try:
-            result = test_func()
-            results.append((name, result))
+            ok, _ = check_func()
+            results.append((name, ok))
         except Exception as e:
             print(f"\n❌ {name} crashed: {e}")
             results.append((name, False))

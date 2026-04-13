@@ -18,9 +18,6 @@ from pathlib import Path
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Tuple
 
-sys.path.insert(0, '/Users/brain/.openclaw/workspace/swimming_pauls')
-sys.path.insert(0, '/Users/brain/.openclaw/workspace/skills/crypto-price')
-
 from price_tracker import PriceTracker
 
 class PredictionResolver:
@@ -111,17 +108,10 @@ class PredictionResolver:
     def fetch_current_price(self, symbol: str) -> Optional[float]:
         """Fetch current price for a symbol."""
         try:
-            import subprocess
-            result = subprocess.run(
-                ['python3', '/Users/brain/.openclaw/workspace/skills/crypto-price/scripts/get_price_chart.py', symbol.upper(), '1h'],
-                capture_output=True, text=True, timeout=15
-            )
-            if result.returncode == 0:
-                data = json.loads(result.stdout)
-                return data.get('price')
+            return self.price_tracker.fetch_price(symbol.upper())
         except Exception as e:
             print(f"   ⚠️  Could not fetch price for {symbol}: {e}")
-        return None
+            return None
     
     def resolve_prediction(self, prediction: Dict, auto: bool = False) -> Dict:
         """Resolve a single prediction."""

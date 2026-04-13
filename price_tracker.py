@@ -12,14 +12,27 @@ Usage:
 import json
 import argparse
 import sys
+import os
 from pathlib import Path
 from datetime import datetime
 import subprocess
 
-sys.path.insert(0, '/Users/brain/.openclaw/workspace/skills/crypto-price')
-
 # Default symbols to track
 DEFAULT_SYMBOLS = ['BTC', 'ETH', 'SOL', 'DOGE', 'LINK', 'AVAX', 'BNB', 'ADA', 'DOT']
+
+
+def _resolve_crypto_price_script() -> Path | None:
+    """Resolve crypto-price script path from env/common locations."""
+    env_path = os.environ.get("CRYPTO_PRICE_SCRIPT")
+    candidates = [
+        Path(env_path).expanduser() if env_path else None,
+        Path.home() / ".openclaw/workspace/skills/crypto-price/scripts/get_price_chart.py",
+        Path("/opt/openclaw/skills/crypto-price/scripts/get_price_chart.py"),
+    ]
+    for candidate in candidates:
+        if candidate and candidate.exists():
+            return candidate
+    return None
 
 class PriceTracker:
     """Track historical prices for prediction resolution."""
@@ -44,9 +57,14 @@ class PriceTracker:
     
     def fetch_price(self, symbol: str) -> float:
         """Fetch current price for symbol."""
+        script_path = _resolve_crypto_price_script()
+        if not script_path:
+            print("   ⚠️  crypto-price script not found. Set CRYPTO_PRICE_SCRIPT.")
+            return None
+
         try:
             result = subprocess.run(
-                ['python3', '/Users/brain/.openclaw/workspace/skills/crypto-price/scripts/get_price_chart.py', symbol, '1h'],
+                ['python3', str(script_path), symbol, '1h'],
                 capture_output=True, text=True, timeout=15
             )
             if result.returncode == 0:
