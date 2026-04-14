@@ -548,34 +548,101 @@ TOOLS = {
 
 
 async def execute_tool(tool_name: str, **kwargs) -> ToolResult:
-    """Execute a tool by name."""
+    """Execute a tool by name with appropriate kwargs."""
     tool = TOOLS.get(tool_name)
     if not tool:
         return ToolResult(success=False, data=None, error=f"Tool '{tool_name}' not found")
     
-    method = getattr(tool, 'search', None) or getattr(tool, 'get_price', None) or \
-             getattr(tool, 'get_news', None) or getattr(tool, 'get_sentiment', None) or \
-             getattr(tool, 'get_chain_data', None) or getattr(tool, 'get_volume', None) or \
-             getattr(tool, 'get_whale_activity', None) or getattr(tool, 'get_gas_prices', None) or \
-             getattr(tool, 'get_unlocks', None) or getattr(tool, 'get_options_flow', None) or \
-             getattr(tool, 'get_futures', None) or getattr(tool, 'get_forex', None) or \
-             getattr(tool, 'get_trends', None) or getattr(tool, 'get_filings', None) or \
-             getattr(tool, 'get_weather', None) or getattr(tool, 'get_polls', None) or \
-             getattr(tool, 'get_odds', None) or getattr(tool, 'get_events', None) or \
-             getattr(tool, 'get_ohlc', None)
+    # Map tool names to their methods and required params
+    tool_methods = {
+        "web_search": ("search", ["query", "limit"]),
+        "crypto_price": ("get_price", ["symbol"]),
+        "stock_price": ("get_price", ["symbol"]),
+        "news": ("get_news", ["query"]),
+        "social_sentiment": ("get_sentiment", ["keyword", "platform"]),
+        "onchain": ("get_chain_data", ["token", "chain"]),
+        "dex_volume": ("get_volume", ["token", "dex"]),
+        "whale_tracking": ("get_whale_activity", ["token"]),
+        "gas_price": ("get_gas_prices", ["chain"]),
+        "token_unlocks": ("get_unlocks", ["token"]),
+        "options_flow": ("get_options_flow", ["symbol"]),
+        "futures": ("get_futures", ["symbol"]),
+        "forex": ("get_forex", ["base", "quote"]),
+        "google_trends": ("get_trends", ["keyword"]),
+        "sec_filings": ("get_filings", ["ticker", "form_type"]),
+        "weather": ("get_weather", ["location"]),
+        "election_polls": ("get_polls", ["race"]),
+        "sports_odds": ("get_odds", ["sport"]),
+        "economic_calendar": ("get_events", ["country"]),
+    }
+    
+    if tool_name not in tool_methods:
+        return ToolResult(success=False, data=None, error=f"Unknown tool: {tool_name}")
+    
+    method_name, param_names = tool_methods[tool_name]
+    method = getattr(tool, method_name, None)
     
     if not method:
-        return ToolResult(success=False, data=None, error=f"Tool '{tool_name}' has no execution method")
+        return ToolResult(success=False, data=None, error=f"Method '{method_name}' not found on tool '{tool_name}'")
     
-    return await method(**kwargs)
+    # Filter kwargs to only include valid params
+    valid_kwargs = {k: v for k, v in kwargs.items() if k in param_names}
+    
+    return await method(**valid_kwargs)
 
 
 if __name__ == "__main__":
-    # Test all tools
+    # Test all tools with proper kwargs
     async def test():
         print("Testing all 18+ tools...")
-        for name in TOOLS.keys():
-            result = await execute_tool(name, symbol="BTC", query="bitcoin", keyword="crypto")
-            print(f"{name}: {'✅' if result.success else '❌'} {result.source}")
+        
+        test_cases = {
+            "web_search": {"query": "bitcoin", "limit": 5},
+            "crypto_price": {"symbol": "BTC"},
+            "stock_price": {"symbol": "AAPL"},
+            "news": {"query": "crypto"},
+            "social_sentiment": {"keyword": "bitcoin"},
+            "onchain": {"token": "ETH"},
+            "dex_volume": {"token": "ETH"},
+            "whale_tracking": {"token": "ETH"},
+            "gas_price": {"chain": "ethereum"},
+            "token_unlocks": {"token": "ARB"},
+            "options_flow": {"symbol": "AAPL"},
+            "futures": {"symbol": "BTC"},
+            "forex": {"base": "USD", "quote": "EUR"},
+            "google_trends": {"keyword": "bitcoin"},
+            "sec_filings": {"ticker": "AAPL"},
+            "weather": {"location": "New York"},
+            "election_polls": {"race": "president"},
+            "sports_odds": {"sport": "nfl"},
+            "economic_calendar": {"country": "US"},
+        }
+        
+        for name, kwargs in test_cases.items():
+            tool = TOOLS.get(name)
+            if not tool:
+                print(f"❌ {name}: Tool not found")
+                continue
+            
+            # Find the correct method
+            method = None
+            for attr in ['search', 'get_price', 'get_news', 'get_sentiment', 
+                        'get_chain_data', 'get_volume', 'get_whale_activity', 
+                        'get_gas_prices', 'get_unlocks', 'get_options_flow',
+                        'get_futures', 'get_forex', 'get_trends', 'get_filings',
+                        'get_weather', 'get_polls', 'get_odds', 'get_events']:
+                if hasattr(tool, attr):
+                    method = getattr(tool, attr)
+                    break
+            
+            if not method:
+                print(f"❌ {name}: No method found")
+                continue
+            
+            try:
+                result = await method(**kwargs)
+                print(f"{'✅' if result.success else '❌'} {name}: {result.source}")
+            except Exception as e:
+                print(f"❌ {name}: {e}")
     
     asyncio.run(test())
