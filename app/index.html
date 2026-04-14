@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swimming Pauls DApp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        body { background: #0a0a0a; color: #e2e8f0; }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+    <div class="text-center">
+        <h1 class="text-4xl font-bold mb-4">🦷 Swimming Pauls DApp</h1>
+        <p class="text-gray-400 mb-8">Choose your destination:</p>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto px-4">
+            <a href="trading.html" class="glass rounded-2xl p-6 hover:bg-white/5 transition-colors">
+                <div class="text-3xl mb-3">📊</div>
+                <h3 class="font-bold mb-1">Trading</h3>
+                <p class="text-xs text-gray-500">Paper trading & analytics</p>
+            </a>
+            
+            <a href="explorer.html" class="glass rounded-2xl p-6 hover:bg-white/5 transition-colors">
+                <div class="text-3xl mb-3">🔍</div>
+                <h3 class="font-bold mb-1">Explorer</h3>
+                <p class="text-xs text-gray-500">Browse all 1000 Pauls</p>
+            </a>
+            
+            <a href="world.html" class="glass rounded-2xl p-6 hover:bg-white/5 transition-colors">
+                <div class="text-3xl mb-3">🌍</div>
+                <h3 class="font-bold mb-1">World</h3>
+                <p class="text-xs text-gray-500">Global predictions</p>
+            </a>
+            
+            <a href="visualize.html" class="glass rounded-2xl p-6 hover:bg-white/5 transition-colors">
+                <div class="text-3xl mb-3">📈</div>
+                <h3 class="font-bold mb-1">Visualize</h3>
+                <p class="text-xs text-gray-500">Network graphs</p>
+            </a>
+        </div>
+        
+        <div class="mt-8">
+            <a href="/" class="text-gray-400 hover:text-white transition-colors">← Back to Landing Page</a>
+        </div>
+    </div>
+</body>
+</html>
