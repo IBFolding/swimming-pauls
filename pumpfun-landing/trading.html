@@ -49,8 +49,18 @@
         </div>
     </header>
 
+    <!-- Connect Bar -->
+    <div class="max-w-7xl mx-auto px-6 pt-4">
+        <div class="glass rounded-2xl p-4 flex flex-wrap items-center gap-4">
+            <span class="text-sm text-gray-400">Connect your local model to see live data</span>
+            <input type="text" id="ws-url" placeholder="ws://localhost:8765" class="flex-1 min-w-[200px] bg-black/30 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-purple-500">
+            <button onclick="connectLocal()" id="connect-btn" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 rounded-lg text-sm font-medium transition-colors">Connect</button>
+            <span id="connect-status" class="text-xs text-gray-500">Disconnected</span>
+        </div>
+    </div>
+
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-6 py-6">
+    <main class="max-w-7xl mx-auto px-6 py-4">
         
         <!-- Stats Row -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -801,5 +811,35 @@
             document.getElementById('total-value').textContent = '$' + (baseValue + variance).toLocaleString('en-US', {maximumFractionDigits: 0});
         }, 5000);
     </script>
+
+<script>
+function connectLocal() {
+    const url = document.getElementById('ws-url').value;
+    if (!url) return;
+    document.getElementById('connect-status').textContent = 'Connecting...';
+    try {
+        const ws = new WebSocket(url);
+        ws.onopen = () => {
+            document.getElementById('connect-status').textContent = 'Connected';
+            document.getElementById('connect-status').className = 'text-xs text-green-400';
+            document.getElementById('connect-btn').textContent = 'Disconnect';
+            document.getElementById('connect-btn').onclick = () => { ws.close(); };
+        };
+        ws.onerror = () => {
+            document.getElementById('connect-status').textContent = 'Failed';
+            document.getElementById('connect-status').className = 'text-xs text-red-400';
+        };
+        ws.onclose = () => {
+            document.getElementById('connect-status').textContent = 'Disconnected';
+            document.getElementById('connect-status').className = 'text-xs text-gray-500';
+            document.getElementById('connect-btn').textContent = 'Connect';
+            document.getElementById('connect-btn').onclick = connectLocal;
+        };
+    } catch (e) {
+        document.getElementById('connect-status').textContent = 'Invalid URL';
+        document.getElementById('connect-status').className = 'text-xs text-red-400';
+    }
+}
+</script>
 </body>
 </html>

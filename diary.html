@@ -3,935 +3,334 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paul's Diary Timeline | Swimming Pauls</title>
+    <title>Swimming Pauls - Paul's World Diary</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg-dark: #0a0a0f;
-            --bg-card: #12121a;
-            --bg-hover: #1a1a25;
-            --text-primary: #e0e0ff;
-            --text-secondary: #8888aa;
-            --accent-blue: #00d4ff;
-            --accent-purple: #7b2cbf;
-            --accent-green: #00ff88;
-            --accent-red: #ff4757;
-            --accent-yellow: #ffa502;
-            --border: #2a2a3a;
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-dark);
-            color: var(--text-primary);
+            background: #0a0a0a;
+            color: #e2e8f0;
             min-height: 100vh;
         }
-
-        .header {
-            background: linear-gradient(135deg, var(--bg-card) 0%, #1a1a2e 100%);
-            padding: 20px 30px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo-icon {
-            font-size: 32px;
-        }
-
-        .logo-text {
-            font-size: 24px;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .nav {
-            display: flex;
-            gap: 20px;
-        }
-
-        .nav a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
-
-        .nav a:hover, .nav a.active {
-            color: var(--text-primary);
-            background: var(--bg-hover);
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 30px;
-            display: grid;
-            grid-template-columns: 280px 1fr 320px;
-            gap: 24px;
-        }
-
-        /* Sidebar - Paul Selector */
-        .sidebar {
-            background: var(--bg-card);
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
-            padding: 20px;
-            border: 1px solid var(--border);
-            height: fit-content;
-            position: sticky;
-            top: 30px;
         }
-
-        .sidebar h3 {
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-        }
-
-        .paul-list {
-            max-height: 600px;
-            overflow-y: auto;
-        }
-
-        .paul-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-bottom: 4px;
-        }
-
-        .paul-item:hover {
-            background: var(--bg-hover);
-        }
-
-        .paul-item.active {
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(123, 44, 191, 0.1));
-            border: 1px solid var(--accent-blue);
-        }
-
-        .paul-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-
-        .paul-info {
-            flex: 1;
-        }
-
-        .paul-name {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .paul-specialty {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .paul-status {
+        .connection-dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: var(--accent-green);
+            display: inline-block;
+            margin-right: 6px;
         }
-
-        .paul-status.resting {
-            background: var(--accent-purple);
+        .connected { background: #22c55e; animation: pulse 2s infinite; }
+        .disconnected { background: #ef4444; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
-
-        /* Main Timeline */
-        .timeline-container {
-            background: var(--bg-card);
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            overflow: hidden;
+        .input-field {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: white;
+            width: 100%;
+            outline: none;
         }
-
-        .timeline-header {
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .timeline-title {
-            font-size: 20px;
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            color: white;
             font-weight: 600;
-        }
-
-        .timeline-filters {
-            display: flex;
-            gap: 8px;
-        }
-
-        .filter-btn {
-            padding: 6px 12px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 12px;
             cursor: pointer;
-            transition: all 0.2s;
         }
-
-        .filter-btn:hover, .filter-btn.active {
-            background: var(--accent-blue);
-            color: var(--bg-dark);
-            border-color: var(--accent-blue);
-        }
-
-        .timeline {
-            padding: 24px;
-            max-height: 700px;
-            overflow-y: auto;
-        }
-
-        .timeline-date {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .timeline-entry {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .timeline-entry::before {
-            content: '';
+        .timeline-line {
             position: absolute;
-            left: 23px;
-            top: 48px;
-            bottom: -20px;
+            left: 24px;
+            top: 0;
+            bottom: 0;
             width: 2px;
-            background: var(--border);
+            background: linear-gradient(to bottom, #3b82f6, #8b5cf6, #ec4899);
         }
-
-        .timeline-entry:last-child::before {
-            display: none;
+        .entry-type-activity { background: #3b82f6; }
+        .entry-type-thought { background: #8b5cf6; }
+        .entry-type-prediction { background: #22c55e; }
+        .entry-type-trade { background: #f59e0b; }
+        .entry-type-dream { background: #ec4899; }
+        .filter-chip {
+            transition: all 0.2s;
+            cursor: pointer;
         }
-
-        .entry-time {
-            width: 50px;
-            text-align: right;
-            font-size: 12px;
-            color: var(--text-secondary);
-            flex-shrink: 0;
-        }
-
-        .entry-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            flex-shrink: 0;
-            z-index: 1;
-        }
-
-        .entry-icon.activity {
-            background: rgba(0, 212, 255, 0.1);
-            border: 2px solid var(--accent-blue);
-        }
-
-        .entry-icon.thought {
-            background: rgba(123, 44, 191, 0.1);
-            border: 2px solid var(--accent-purple);
-        }
-
-        .entry-icon.prediction {
-            background: rgba(0, 255, 136, 0.1);
-            border: 2px solid var(--accent-green);
-        }
-
-        .entry-icon.trade {
-            background: rgba(255, 165, 2, 0.1);
-            border: 2px solid var(--accent-yellow);
-        }
-
-        .entry-icon.dream {
-            background: rgba(255, 71, 87, 0.1);
-            border: 2px solid var(--accent-red);
-        }
-
-        .entry-icon.interaction {
-            background: rgba(136, 136, 170, 0.1);
-            border: 2px solid var(--text-secondary);
-        }
-
-        .entry-content {
-            flex: 1;
-            background: var(--bg-hover);
-            border-radius: 12px;
-            padding: 16px;
-        }
-
-        .entry-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 8px;
-        }
-
-        .entry-type {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-
-        .entry-type.activity {
-            background: rgba(0, 212, 255, 0.1);
-            color: var(--accent-blue);
-        }
-
-        .entry-type.thought {
-            background: rgba(123, 44, 191, 0.1);
-            color: var(--accent-purple);
-        }
-
-        .entry-type.prediction {
-            background: rgba(0, 255, 136, 0.1);
-            color: var(--accent-green);
-        }
-
-        .entry-type.trade {
-            background: rgba(255, 165, 2, 0.1);
-            color: var(--accent-yellow);
-        }
-
-        .entry-type.dream {
-            background: rgba(255, 71, 87, 0.1);
-            color: var(--accent-red);
-        }
-
-        .entry-type.interaction {
-            background: rgba(136, 136, 170, 0.1);
-            color: var(--text-secondary);
-        }
-
-        .entry-mood {
-            font-size: 16px;
-        }
-
-        .entry-text {
-            font-size: 14px;
-            line-height: 1.6;
-            color: var(--text-primary);
-            margin-bottom: 12px;
-        }
-
-        .entry-meta {
-            display: flex;
-            gap: 16px;
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .entry-meta span {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        /* Right Panel - Stats & Insights */
-        .right-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .panel-card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 20px;
-            border: 1px solid var(--border);
-        }
-
-        .panel-card h3 {
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-        }
-
-        .stat-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .stat-item {
-            background: var(--bg-hover);
-            border-radius: 10px;
-            padding: 16px;
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--accent-blue);
-        }
-
-        .stat-label {
-            font-size: 11px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            margin-top: 4px;
-        }
-
-        .insight-item {
-            background: var(--bg-hover);
-            border-radius: 10px;
-            padding: 14px;
-            margin-bottom: 10px;
-            border-left: 3px solid var(--accent-purple);
-        }
-
-        .insight-type {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--accent-purple);
-            margin-bottom: 6px;
-        }
-
-        .insight-text {
-            font-size: 13px;
-            line-height: 1.5;
-        }
-
-        .sleep-quality {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: 12px;
-        }
-
-        .quality-bar {
-            flex: 1;
-            height: 8px;
-            background: var(--bg-hover);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .quality-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent-red), var(--accent-yellow), var(--accent-green));
-            border-radius: 4px;
-            transition: width 0.3s;
-        }
-
-        .quality-value {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--accent-green);
-        }
-
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .container {
-                grid-template-columns: 260px 1fr;
-            }
-            .right-panel {
-                display: none;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
-                padding: 16px;
-            }
-            .sidebar {
-                position: static;
-            }
-            .paul-list {
-                display: flex;
-                gap: 8px;
-                overflow-x: auto;
-                max-height: none;
-            }
-            .paul-item {
-                min-width: 200px;
-            }
-        }
-
-        /* Loading state */
-        .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 200px;
-            color: var(--text-secondary);
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--border);
-            border-top-color: var(--accent-blue);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 12px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Empty state */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-secondary);
-        }
-
-        .empty-state-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-            opacity: 0.5;
-        }
-
-        .empty-state h3 {
-            font-size: 18px;
-            margin-bottom: 8px;
-            color: var(--text-primary);
+        .filter-chip.active {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.5);
+            color: #60a5fa;
         }
     </style>
 </head>
-<body>
-    <header class="header">
-        <div class="logo">
-            <span class="logo-icon">🦷</span>
-            <span class="logo-text">Paul's Diary</span>
+<body class="p-6">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-3">
+                <img src="logo.jpg" alt="Swimming Pauls" class="w-10 h-10 rounded-xl object-cover">
+                <span class="font-bold tracking-wider text-sm">SWIMMING_PAULS</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2 text-sm text-gray-400">
+                    <span id="connectionDot" class="connection-dot disconnected"></span>
+                    <span id="connectionStatus">Disconnected</span>
+                </div>
+                <a href="./" class="text-gray-400 hover:text-white text-sm transition-colors">← Back to Home</a>
+            </div>
         </div>
-        <nav class="nav">
-            <a href="index.html">Home</a>
-            <a href="explorer.html">Explorer</a>
-            <a href="visualize.html">Visualize</a>
-            <a href="diary.html" class="active">Diary</a>
-            <a href="leaderboard.html">Leaderboard</a>
-        </nav>
-    </header>
 
-    <div class="container">
-        <!-- Left Sidebar - Paul Selector -->
-        <aside class="sidebar">
-            <h3>Select Paul</h3>
-            <div class="paul-list" id="paulList">
-                <div class="loading">
-                    <div class="spinner"></div>
-                    Loading Pauls...
+        <!-- Connection Panel -->
+        <div class="glass p-6 mb-6">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div>
+                    <h3 class="font-semibold mb-1">Connect to Local Server</h3>
+                    <p class="text-sm text-gray-500">Enter your connection ID</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <input type="text" id="connectionId" placeholder="Connection ID" class="input-field w-48">
+                    <button onclick="toggleConnection()" class="btn-primary">Connect</button>
                 </div>
             </div>
-        </aside>
+        </div>
 
-        <!-- Main Timeline -->
-        <main class="timeline-container">
-            <div class="timeline-header">
-                <h2 class="timeline-title" id="timelineTitle">Select a Paul</h2>
-                <div class="timeline-filters">
-                    <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="activity">Activity</button>
-                    <button class="filter-btn" data-filter="thought">Thoughts</button>
-                    <button class="filter-btn" data-filter="prediction">Predictions</button>
-                    <button class="filter-btn" data-filter="trade">Trades</button>
-                    <button class="filter-btn" data-filter="dream">Dreams</button>
-                </div>
+        <!-- Filters -->
+        <div id="filterPanel" class="glass p-6 mb-6" style="display: none;">
+            <div class="flex flex-wrap items-center gap-3">
+                <span class="text-sm text-gray-400 mr-2">Filter:</span>
+                <button class="filter-chip active px-4 py-2 rounded-full border border-white/10 text-sm" data-type="all">All</button>
+                <button class="filter-chip px-4 py-2 rounded-full border border-white/10 text-sm" data-type="activity">Activity</button>
+                <button class="filter-chip px-4 py-2 rounded-full border border-white/10 text-sm" data-type="thought">Thoughts</button>
+                <button class="filter-chip px-4 py-2 rounded-full border border-white/10 text-sm" data-type="prediction">Predictions</button>
+                <button class="filter-chip px-4 py-2 rounded-full border border-white/10 text-sm" data-type="trade">Trades</button>
+                <button class="filter-chip px-4 py-2 rounded-full border border-white/10 text-sm" data-type="dream">Dreams</button>
             </div>
-            <div class="timeline" id="timeline">
-                <div class="empty-state">
-                    <div class="empty-state-icon">📖</div>
-                    <h3>No Diary Selected</h3>
-                    <p>Select a Paul from the sidebar to view their diary timeline.</p>
-                </div>
-            </div>
-        </main>
+        </div>
 
-        <!-- Right Panel - Stats & Insights -->
-        <aside class="right-panel" id="rightPanel">
-            <div class="panel-card">
-                <h3>📊 Activity Stats</h3>
-                <div class="stat-grid">
-                    <div class="stat-item">
-                        <div class="stat-value" id="statEntries">-</div>
-                        <div class="stat-label">Entries</div>
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <!-- Paul Selector -->
+            <div class="lg:col-span-1">
+                <div class="glass p-4 sticky top-6">
+                    <h3 class="font-semibold mb-4">Pauls</h3>
+                    <div id="paulList" class="space-y-2 max-h-96 overflow-y-auto">
+                        <p class="text-sm text-gray-500">Connect to see Pauls</p>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="statPredictions">-</div>
-                        <div class="stat-label">Predictions</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="statTrades">-</div>
-                        <div class="stat-label">Trades</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="statDreams">-</div>
-                        <div class="stat-label">Dreams</div>
+                    
+                    <div class="mt-6 pt-4 border-t border-white/10">
+                        <h4 class="text-sm font-medium text-gray-400 mb-3">Backfill</h4>
+                        <button onclick="backfillDreams()" class="w-full py-2 rounded-lg bg-white/5 hover:bg-white/10 text-sm text-gray-300 transition-colors mb-2">
+                            🌙 Generate Dreams
+                        </button>
+                        <button onclick="backfillPredictions()" class="w-full py-2 rounded-lg bg-white/5 hover:bg-white/10 text-sm text-gray-300 transition-colors">
+                            📊 Import Predictions
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <div class="panel-card">
-                <h3>💡 Recent Insights</h3>
-                <div id="insightsList">
-                    <div class="empty-state" style="padding: 20px;">
-                        <p style="font-size: 13px;">Select a Paul to see their REM insights</p>
+            <!-- Timeline -->
+            <div class="lg:col-span-3">
+                <div id="timelinePanel" class="glass p-6 min-h-96" style="display: none;">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="font-semibold">Timeline</h3>
+                        <span id="entryCount" class="text-sm text-gray-400">0 entries</span>
+                    </div>
+                    
+                    <div class="relative pl-8">
+                        <div class="timeline-line"></div>
+                        <div id="timelineContent" class="space-y-6">
+                            <!-- Filled dynamically -->
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="panel-card">
-                <h3>😴 Sleep Quality</h3>
-                <div class="sleep-quality">
-                    <div class="quality-bar">
-                        <div class="quality-fill" id="sleepQualityBar" style="width: 0%"></div>
-                    </div>
-                    <span class="quality-value" id="sleepQualityValue">-</span>
-                </div>
-                <p style="font-size: 12px; color: var(--text-secondary); margin-top: 12px;">
-                    Based on REM cycles and insight generation
-                </p>
-            </div>
-        </aside>
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-gray-500 text-sm pb-8">
+            <p>Built by Howard | 100% Local | No Cloud</p>
+        </footer>
     </div>
 
     <script>
-        // State
-        let currentPaul = null;
+        let ws = null;
+        let isConnected = false;
+        let selectedPaul = null;
         let currentFilter = 'all';
-        let pauls = [];
-        let diaryEntries = [];
 
-        // Entry type icons
-        const typeIcons = {
-            activity: '⚡',
-            thought: '💭',
-            prediction: '🔮',
-            trade: '💰',
-            dream: '🌙',
-            interaction: '👥'
-        };
-
-        // Mood emojis
-        const moodEmojis = {
-            positive: '😊',
-            neutral: '😐',
-            negative: '😔'
-        };
-
-        // Initialize
-        async function init() {
-            await loadPauls();
-            setupEventListeners();
-        }
-
-        // Load Pauls from API
-        async function loadPauls() {
-            try {
-                // This would be replaced with actual API call
-                // For now, using sample data
-                pauls = [
-                    { name: 'Visionary Paul', emoji: '🔮', specialty: 'Disruptive Innovation', status: 'active' },
-                    { name: 'Professor Paul', emoji: '👨‍🏫', specialty: 'Macro Research', status: 'resting' },
-                    { name: 'Trader Paul', emoji: '📈', specialty: 'Market Timing', status: 'active' },
-                    { name: 'Skeptic Paul', emoji: '🤨', specialty: 'Risk Assessment', status: 'active' },
-                    { name: 'Whale Paul', emoji: '🐋', specialty: 'Institutional Flow', status: 'resting' },
-                    { name: 'Degen Paul', emoji: '🎰', specialty: 'High Risk', status: 'active' },
-                    { name: 'Quant Paul', emoji: '📊', specialty: 'Quantitative Analysis', status: 'active' },
-                    { name: 'Contrarian Paul', emoji: '🐻', specialty: 'Contrarian Views', status: 'resting' },
-                ];
-                renderPaulList();
-            } catch (error) {
-                console.error('Failed to load Pauls:', error);
+        function toggleConnection() {
+            if (isConnected) {
+                disconnect();
+            } else {
+                connect();
             }
         }
 
-        // Render Paul list
-        function renderPaulList() {
-            const list = document.getElementById('paulList');
-            list.innerHTML = pauls.map(paul => `
-                <div class="paul-item ${paul.name === currentPaul ? 'active' : ''}" data-name="${paul.name}">
-                    <div class="paul-avatar">${paul.emoji}</div>
-                    <div class="paul-info">
-                        <div class="paul-name">${paul.name}</div>
-                        <div class="paul-specialty">${paul.specialty}</div>
-                    </div>
-                    <div class="paul-status ${paul.status}"></div>
-                </div>
-            `).join('');
-
-            // Add click handlers
-            list.querySelectorAll('.paul-item').forEach(item => {
-                item.addEventListener('click', () => selectPaul(item.dataset.name));
-            });
-        }
-
-        // Select a Paul
-        async function selectPaul(name) {
-            currentPaul = name;
-            renderPaulList();
-            document.getElementById('timelineTitle').textContent = `${name}'s Diary`;
-            
-            // Load diary entries
-            await loadDiaryEntries(name);
-            renderTimeline();
-            updateStats();
-            loadInsights();
-        }
-
-        // Load diary entries (mock data for now)
-        async function loadDiaryEntries(paulName) {
-            // This would be replaced with actual API call
-            const now = new Date();
-            diaryEntries = [
-                {
-                    id: '1',
-                    type: 'activity',
-                    content: 'Spent the day researching at the lab. Found some interesting patterns in BTC on-chain data.',
-                    timestamp: new Date(now - 1000 * 60 * 30),
-                    location: 'Research Lab',
-                    mood: 0.6,
-                    energy: 75
-                },
-                {
-                    id: '2',
-                    type: 'prediction',
-                    content: 'Predicted BULLISH on ETH with 85% confidence based on technical breakout patterns.',
-                    timestamp: new Date(now - 1000 * 60 * 60 * 2),
-                    location: 'Market Floor',
-                    mood: 0.8,
-                    energy: 60,
-                    metadata: { confidence: 0.85, direction: 'BULLISH' }
-                },
-                {
-                    id: '3',
-                    type: 'dream',
-                    content: 'Dreamed that BTC suddenly mooned 50% overnight. Woke up checking prices!',
-                    timestamp: new Date(now - 1000 * 60 * 60 * 8),
-                    location: 'dreamscape',
-                    mood: 0.3,
-                    energy: 90
-                },
-                {
-                    id: '4',
-                    type: 'thought',
-                    content: 'The market feels uncertain. Too much noise, not enough signal. Need to focus on fundamentals.',
-                    timestamp: new Date(now - 1000 * 60 * 60 * 12),
-                    location: 'Cafe',
-                    mood: -0.4,
-                    energy: 45
-                },
-                {
-                    id: '5',
-                    type: 'trade',
-                    content: 'Executed BUY order for 0.5 ETH at $3,450. High confidence trade based on momentum.',
-                    timestamp: new Date(now - 1000 * 60 * 60 * 14),
-                    location: 'Market Floor',
-                    mood: 0.5,
-                    energy: 40,
-                    metadata: { symbol: 'ETH', direction: 'BUY', price: 3450 }
-                },
-                {
-                    id: '6',
-                    type: 'interaction',
-                    content: 'Had a great discussion with Professor Paul about macro trends. Learned a lot about yield curves.',
-                    timestamp: new Date(now - 1000 * 60 * 60 * 16),
-                    location: 'Cafe',
-                    mood: 0.7,
-                    energy: 50,
-                    metadata: { with: 'Professor Paul' }
-                }
-            ];
-        }
-
-        // Render timeline
-        function renderTimeline() {
-            const timeline = document.getElementById('timeline');
-            
-            if (!currentPaul) {
-                timeline.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">📖</div>
-                        <h3>No Diary Selected</h3>
-                        <p>Select a Paul from the sidebar to view their diary timeline.</p>
-                    </div>
-                `;
+        function connect() {
+            const id = document.getElementById('connectionId').value.trim();
+            if (!id) {
+                alert('Please enter a connection ID');
                 return;
             }
 
-            const filtered = currentFilter === 'all' 
-                ? diaryEntries 
-                : diaryEntries.filter(e => e.type === currentFilter);
+            updateConnectionStatus('connecting');
 
-            if (filtered.length === 0) {
-                timeline.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">🔍</div>
-                        <h3>No Entries Found</h3>
-                        <p>No ${currentFilter} entries for this Paul yet.</p>
-                    </div>
-                `;
-                return;
-            }
+            ws = new WebSocket('ws://localhost:8765');
 
-            // Group by date
-            const grouped = groupByDate(filtered);
-            
-            timeline.innerHTML = Object.entries(grouped).map(([date, entries]) => `
-                <div class="timeline-date">${date}</div>
-                ${entries.map(entry => renderEntry(entry)).join('')}
-            `).join('');
-        }
-
-        // Group entries by date
-        function groupByDate(entries) {
-            const groups = {};
-            entries.forEach(entry => {
-                const date = entry.timestamp.toLocaleDateString('en-US', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                });
-                if (!groups[date]) groups[date] = [];
-                groups[date].push(entry);
-            });
-            return groups;
-        }
-
-        // Render a single entry
-        function renderEntry(entry) {
-            const time = entry.timestamp.toLocaleTimeString('en-US', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            });
-            
-            const moodEmoji = entry.mood > 0.2 ? moodEmojis.positive : 
-                             entry.mood < -0.2 ? moodEmojis.negative : moodEmojis.neutral;
-
-            return `
-                <div class="timeline-entry" data-type="${entry.type}">
-                    <div class="entry-time">${time}</div>
-                    <div class="entry-icon ${entry.type}">${typeIcons[entry.type]}</div>
-                    <div class="entry-content">
-                        <div class="entry-header">
-                            <span class="entry-type ${entry.type}">${entry.type}</span>
-                            <span class="entry-mood">${moodEmoji}</span>
-                        </div>
-                        <div class="entry-text">${entry.content}</div>
-                        <div class="entry-meta">
-                            ${entry.location ? `<span>📍 ${entry.location}</span>` : ''}
-                            <span>⚡ ${entry.energy.toFixed(0)}% energy</span>
-                            ${entry.metadata?.confidence ? `<span>🎯 ${(entry.metadata.confidence * 100).toFixed(0)}% confidence</span>` : ''}
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Update stats panel
-        function updateStats() {
-            if (!currentPaul) return;
-
-            const counts = {
-                entries: diaryEntries.length,
-                predictions: diaryEntries.filter(e => e.type === 'prediction').length,
-                trades: diaryEntries.filter(e => e.type === 'trade').length,
-                dreams: diaryEntries.filter(e => e.type === 'dream').length
+            ws.onopen = () => {
+                ws.send(JSON.stringify({
+                    type: 'auth',
+                    payload: { connection_id: id }
+                }));
             };
 
-            document.getElementById('statEntries').textContent = counts.entries;
-            document.getElementById('statPredictions').textContent = counts.predictions;
-            document.getElementById('statTrades').textContent = counts.trades;
-            document.getElementById('statDreams').textContent = counts.dreams;
+            ws.onmessage = (event) => {
+                const msg = JSON.parse(event.data);
+                handleMessage(msg);
+            };
 
-            // Mock sleep quality
-            const sleepQuality = 0.75;
-            document.getElementById('sleepQualityBar').style.width = `${sleepQuality * 100}%`;
-            document.getElementById('sleepQualityValue').textContent = `${(sleepQuality * 100).toFixed(0)}%`;
+            ws.onerror = () => {
+                alert('Connection failed');
+                updateConnectionStatus('disconnected');
+            };
+
+            ws.onclose = () => {
+                isConnected = false;
+                updateConnectionStatus('disconnected');
+                updateUIState();
+            };
         }
 
-        // Load insights (mock data)
-        function loadInsights() {
-            const insights = [
-                {
-                    type: 'pattern',
-                    content: "I've been accurate 68% of the time recently. My Disruptive Innovation approach is working."
-                },
-                {
-                    type: 'lesson',
-                    content: "The community is focused on DeFi. I should pay attention to this trend."
-                }
-            ];
-
-            const list = document.getElementById('insightsList');
-            list.innerHTML = insights.map(insight => `
-                <div class="insight-item">
-                    <div class="insight-type">${insight.type}</div>
-                    <div class="insight-text">${insight.content}</div>
-                </div>
-            `).join('');
+        function disconnect() {
+            if (ws) {
+                ws.close();
+                ws = null;
+            }
+            isConnected = false;
+            updateConnectionStatus('disconnected');
+            updateUIState();
         }
 
-        // Setup event listeners
-        function setupEventListeners() {
-            // Filter buttons
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    currentFilter = btn.dataset.filter;
-                    renderTimeline();
-                });
+        function handleMessage(msg) {
+            switch (msg.type) {
+                case 'auth_success':
+                    isConnected = true;
+                    updateConnectionStatus('connected');
+                    updateUIState();
+                    loadDiaryData();
+                    break;
+                case 'diary.pauls':
+                    if (msg.payload && !msg.error) {
+                        renderPaulList(msg.payload.pauls || []);
+                    }
+                    break;
+                case 'diary.world':
+                    if (msg.payload && !msg.error) {
+                        renderTimeline(msg.payload.entries || []);
+                    }
+                    break;
+            }
+        }
+
+        function loadDiaryData() {
+            if (!ws || !isConnected) return;
+            ws.send(JSON.stringify({ type: 'diary.pauls', payload: {} }));
+            ws.send(JSON.stringify({ type: 'diary.world', payload: { days: 30 } }));
+        }
+
+        function renderPaulList(pauls) {
+            const container = document.getElementById('paulList');
+            container.innerHTML = pauls.length === 0 
+                ? '<p class="text-sm text-gray-500">No Pauls with entries</p>'
+                : pauls.map(p => `
+                    <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer ${selectedPaul === p.paul_id ? 'bg-white/10' : ''}" onclick="selectPaul('${p.paul_id}')">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-sm font-bold">${p.paul_name.charAt(0)}</div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium truncate">${p.paul_name}</p>
+                            <p class="text-xs text-gray-500">${p.entry_count} entries</p>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        function selectPaul(paulId) {
+            selectedPaul = paulId;
+            renderPaulList([]);
+            if (ws && isConnected) {
+                ws.send(JSON.stringify({ type: 'diary.get', payload: { paul_id: paulId, limit: 50 } }));
+            }
+        }
+
+        function renderTimeline(entries) {
+            const filtered = currentFilter === 'all' ? entries : entries.filter(e => e.entry_type === currentFilter);
+            document.getElementById('entryCount').textContent = `${filtered.length} entries`;
+            
+            const container = document.getElementById('timelineContent');
+            container.innerHTML = filtered.length === 0 
+                ? '<p class="text-gray-500 text-center py-12">No entries</p>'
+                : filtered.map(entry => `
+                    <div class="relative">
+                        <div class="w-3 h-3 rounded-full absolute left-[-21px] top-1 entry-type-${entry.entry_type}"></div>
+                        <div class="glass p-4">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="text-xs px-2 py-1 rounded-full bg-white/10 text-gray-300 uppercase">${entry.entry_type}</span>
+                                <span class="text-sm text-gray-400">${new Date(entry.timestamp).toLocaleString()}</span>
+                            </div>
+                            <p class="text-white">${entry.content}</p>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        function backfillDreams() {
+            if (!ws || !isConnected) return;
+            ws.send(JSON.stringify({ type: 'diary.backfill', payload: { operation: 'dreams', days: 30 } }));
+        }
+
+        function backfillPredictions() {
+            if (!ws || !isConnected) return;
+            ws.send(JSON.stringify({ type: 'diary.backfill', payload: { operation: 'predictions' } }));
+        }
+
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                currentFilter = chip.dataset.type;
+                loadDiaryData();
             });
+        });
+
+        function updateConnectionStatus(status) {
+            const dot = document.getElementById('connectionDot');
+            const text = document.getElementById('connectionStatus');
+            dot.className = 'connection-dot ' + status;
+            text.textContent = status === 'connected' ? 'Connected' : status === 'connecting' ? 'Connecting...' : 'Disconnected';
         }
 
-        // Start
-        init();
+        function updateUIState() {
+            const filterPanel = document.getElementById('filterPanel');
+            const timelinePanel = document.getElementById('timelinePanel');
+            if (isConnected) {
+                filterPanel.style.display = 'block';
+                timelinePanel.style.display = 'block';
+            } else {
+                filterPanel.style.display = 'none';
+                timelinePanel.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUIState();
+        });
     </script>
 </body>
 </html>

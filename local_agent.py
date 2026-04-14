@@ -27,7 +27,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 try:
     import websockets
-    from websockets.server import WebSocketServerProtocol
+    from websockets import WebSocketServerProtocol
 except ImportError:
     print("❌ Missing websockets. Run: pip install websockets")
     sys.exit(1)
@@ -167,6 +167,7 @@ class MessageType(Enum):
     DIARY_WORLD = "diary.world"
     DIARY_PAULS = "diary.pauls"
     DIARY_BACKFILL = "diary.backfill"
+    CREATIVE_ANALYZE = "creative.analyze"
 
 
 @dataclass

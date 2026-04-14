@@ -54,6 +54,14 @@
             <a href="./" class="text-gray-400 hover:text-white text-sm transition-colors">← Back to Home</a>
         </div>
 
+        <!-- Connect Bar -->
+        <div class="glass p-4 mb-6 flex flex-wrap items-center gap-4">
+            <span class="text-sm text-gray-400">Connect your local model to see live data</span>
+            <input type="text" id="ws-url" placeholder="ws://localhost:8765" class="flex-1 min-w-[200px] bg-black/30 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-purple-500">
+            <button onclick="connectLocal()" id="connect-btn" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 rounded-lg text-sm font-medium transition-colors">Connect</button>
+            <span id="connect-status" class="text-xs text-gray-500">Disconnected</span>
+        </div>
+
         <!-- Question -->
         <div class="glass p-6 mb-6">
             <div class="text-sm text-gray-500 mb-2">Question</div>
