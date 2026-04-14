@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "public": true,
+  "github": {
+    "enabled": false
+  },
+  "routes": [
+    {
+      "src": "/app/(.*)",
+      "dest": "/app/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
+}
