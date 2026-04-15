@@ -45,7 +45,152 @@
         .scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
         .filter-chip { transition: all 0.2s; }
         .filter-chip.active { background: rgba(59, 130, 246, 0.2); border-color: rgba(59, 130, 246, 0.5); color: #3b82f6; }
-        /* World styles */
+        /* World overlay system - completely rewritten */
+        .world-overlays-container { position: fixed; inset: 0; pointer-events: none; z-index: 100; }
+        .world-overlays-container > * { pointer-events: auto; }
+        
+        /* Floating toggle buttons - always visible, higher z-index */
+        .overlay-toggles {
+            position: fixed;
+            top: 100px;
+            left: 20px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .overlay-toggle-btn {
+            width: 44px;
+            height: 44px;
+            background: rgba(0,0,0,0.95);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        
+        .overlay-toggle-btn:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.5);
+            transform: scale(1.05);
+        }
+        
+        .overlay-toggle-btn.hidden-panel {
+            opacity: 0.4;
+            border-color: rgba(255,255,255,0.1);
+        }
+        
+        /* Overlay panels */
+        .overlay-panel {
+            position: fixed;
+            background: rgba(0,0,0,0.9);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 16px;
+            padding: 16px;
+            z-index: 1500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .overlay-panel.hidden-panel {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        /* Time panel - appears to the right of toggle */
+        .time-overlay {
+            top: 100px;
+            left: 75px;
+            min-width: 140px;
+            text-align: center;
+        }
+        
+        .time-overlay.hidden-panel {
+            transform: translateX(-20px) scale(0.95);
+        }
+        
+        /* Needs panel - appears below time */
+        .needs-overlay {
+            top: 190px;
+            left: 75px;
+            width: 200px;
+        }
+        
+        .needs-overlay.hidden-panel {
+            transform: translateX(-20px) scale(0.95);
+        }
+        
+        /* Selected Paul panel - middle left */
+        .selected-overlay {
+            top: 320px;
+            left: 75px;
+            width: 220px;
+            border: 2px solid rgba(34, 211, 238, 0.5);
+            display: none;
+        }
+        
+        .selected-overlay.active {
+            display: block;
+        }
+        
+        .selected-overlay.hidden-panel {
+            transform: translateX(-20px) scale(0.95);
+        }
+        
+        /* Activity log - bottom */
+        .activity-overlay {
+            bottom: 20px;
+            left: 75px;
+            right: 20px;
+            max-width: 600px;
+            max-height: 140px;
+            overflow-y: auto;
+        }
+        
+        .activity-overlay.hidden-panel {
+            transform: translateY(20px) scale(0.95);
+        }
+        
+        /* Time display content */
+        .time-clock { font-size: 1.5rem; font-weight: bold; color: #22d3ee; }
+        .time-day { font-size: 0.75rem; color: rgba(255,255,255,0.6); }
+        
+        /* Need bars */
+        .need-bar { margin-bottom: 12px; }
+        .need-label { font-size: 11px; color: rgba(255,255,255,0.6); margin-bottom: 4px; display: flex; justify-content: space-between; }
+        .need-track { height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
+        .need-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+        .need-energy { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+        .need-knowledge { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+        .need-social { background: linear-gradient(90deg, #ec4899, #db2777); }
+        .need-money { background: linear-gradient(90deg, #22c55e, #16a34a); }
+        
+        /* Activity items */
+        .activity-item { padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; }
+        .activity-item:last-child { border-bottom: none; }
+        
+        /* Mobile responsive */
+        @media (max-width: 1024px) {
+            .overlay-toggles { display: none; }
+            .overlay-panel, .time-overlay, .needs-overlay, .selected-overlay, .activity-overlay {
+                position: static;
+                margin-bottom: 1rem;
+                width: auto;
+                transform: none !important;
+                opacity: 1 !important;
+                pointer-events: auto !important;
+                display: block !important;
+            }
+            .selected-overlay:not(.active) { display: none !important; }
+        }
+        
+        /* Original world styles */
         .lot { position: relative; overflow: hidden; transition: all 0.3s ease; cursor: pointer; border-radius: 12px; }
         .lot:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
         .lot-header { padding: 12px 16px; background: linear-gradient(135deg, rgba(0,0,0,0.6), rgba(0,0,0,0.4)); border-bottom: 1px solid rgba(255,255,255,0.1); }
@@ -55,23 +200,6 @@
         .thought-bubble { position: absolute; background: white; border-radius: 20px; padding: 8px 12px; font-size: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); animation: float 2s ease-in-out infinite; pointer-events: none; z-index: 50; }
         .thought-bubble::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 8px solid white; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-        .needs-panel { position: fixed; right: 20px; top: 100px; width: 200px; background: rgba(0,0,0,0.9); border: 1px solid rgba(255,255,255,0.1); padding: 16px; z-index: 1000; border-radius: 12px; }
-        .need-bar { margin-bottom: 12px; }
-        .need-label { font-size: 11px; color: rgba(255,255,255,0.6); margin-bottom: 4px; display: flex; justify-content: space-between; }
-        .need-track { height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
-        .need-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
-        .need-energy { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
-        .need-knowledge { background: linear-gradient(90deg, #3b82f6, #2563eb); }
-        .need-social { background: linear-gradient(90deg, #ec4899, #db2777); }
-        .need-money { background: linear-gradient(90deg, #22c55e, #16a34a); }
-        .time-display { position: fixed; top: 100px; left: 20px; background: rgba(0,0,0,0.9); border: 1px solid rgba(255,255,255,0.1); padding: 16px 24px; text-align: center; z-index: 1000; border-radius: 12px; }
-        .time-clock { font-size: 2rem; font-weight: bold; color: #22d3ee; }
-        .time-day { font-size: 0.875rem; color: rgba(255,255,255,0.6); }
-        .activity-log { position: fixed; bottom: 20px; left: 20px; right: 240px; background: rgba(0,0,0,0.9); border: 1px solid rgba(255,255,255,0.1); padding: 16px; max-height: 150px; overflow-y: auto; z-index: 1000; border-radius: 12px; }
-        .activity-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 0.875rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .activity-item:last-child { border-bottom: none; }
-        .selected-paul { position: fixed; left: 20px; top: 200px; width: 220px; background: rgba(0,0,0,0.95); border: 2px solid rgba(34, 211, 238, 0.5); border-radius: 20px; padding: 20px; z-index: 1000; display: none; }
-        .selected-paul.active { display: block; }
         @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 20px rgba(34, 211, 238, 0.3); } 50% { box-shadow: 0 0 40px rgba(34, 211, 238, 0.6); } }
         .lot.active { animation: pulse-glow 2s infinite; border-color: rgba(34, 211, 238, 0.5); }
         /* Mobile menu */
@@ -122,9 +250,9 @@
         <div id="mobile-menu" class="hidden md:hidden border-t border-white/10 bg-black/95 px-6 py-4">
             <div class="flex flex-col gap-3">
                 <a href="../index.html" class="text-sm px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg text-gray-300 hover:text-white transition-colors">Terminal</a>
-                <a href="trading.html" class="text-sm px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg text-gray-300 hover:px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg text-white transition-colors">Trading</a>
+                <a href="trading.html" class="text-sm px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg text-gray-300 hover:text-white transition-colors">Trading</a>
                 <a href="world.html" class="text-sm px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg text-white font-medium transition-colors">World</a>
-                <a href="account.html" class="text-sm px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg text-gray-300 hover:px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg text-white transition-colors">Account</a>
+                <a href="account.html" class="text-sm px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg text-gray-300 hover:text-white transition-colors">Account</a>
                 <div id="mobile-credits-display" class="hidden flex items-center gap-2 px-4 py-3 rounded-lg bg-white/5 border border-white/10">
                     <svg class="w-5 h-5 text-yellow-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                     <span id="mobile-credit-balance" class="font-bold text-yellow-400">5</span>
@@ -150,8 +278,69 @@
 
         <!-- Tab: World -->
         <div id="world" class="tab-content active">
-        <!-- World Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Floating Toggle Buttons -->
+            <div class="overlay-toggles">
+                <button class="overlay-toggle-btn" id="toggle-time" onclick="toggleOverlay('time')" title="Toggle Time">⏰</button>
+                <button class="overlay-toggle-btn" id="toggle-needs" onclick="toggleOverlay('needs')" title="Toggle Status">📊</button>
+                <button class="overlay-toggle-btn" id="toggle-selected" onclick="toggleOverlay('selected')" title="Toggle Paul Info">👤</button>
+                <button class="overlay-toggle-btn" id="toggle-activity" onclick="toggleOverlay('activity')" title="Toggle Activity Log">📋</button>
+            </div>
+            
+            <!-- Time Overlay -->
+            <div class="overlay-panel time-overlay" id="time-overlay">
+                <div class="time-clock" id="gameTime">10:42 AM</div>
+                <div class="time-day">Day 47 • Paul Standard Time</div>
+            </div>
+
+            <!-- Needs Overlay -->
+            <div class="overlay-panel needs-overlay" id="needs-overlay">
+                <h3 class="font-bold mb-4 text-sm">🌍 World Status</h3>
+                <div class="need-bar">
+                    <div class="need-label"><span>⚡ Energy</span><span id="energy-val">78%</span></div>
+                    <div class="need-track"><div class="need-fill need-energy" id="energy-bar" style="width: 78%"></div></div>
+                </div>
+                <div class="need-bar">
+                    <div class="need-label"><span>📚 Knowledge</span><span id="knowledge-val">65%</span></div>
+                    <div class="need-track"><div class="need-fill need-knowledge" id="knowledge-bar" style="width: 65%"></div></div>
+                </div>
+                <div class="need-bar">
+                    <div class="need-label"><span>💕 Social</span><span id="social-val">82%</span></div>
+                    <div class="need-track"><div class="need-fill need-social" id="social-bar" style="width: 82%"></div></div>
+                </div>
+                <div class="need-bar">
+                    <div class="need-label"><span>💰 Profit</span><span id="money-val">+12.4%</span></div>
+                    <div class="need-track"><div class="need-fill need-money" id="money-bar" style="width: 62%"></div></div>
+                </div>
+            </div>
+
+            <!-- Selected Paul Overlay -->
+            <div class="overlay-panel selected-overlay" id="selected-overlay">
+                <div class="flex items-center gap-3 mb-4">
+                    <div id="selected-avatar" class="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center text-xl font-bold">VP</div>
+                    <div>
+                        <div id="selected-name" class="font-bold">Visionary Paul</div>
+                        <div id="selected-role" class="text-xs text-cyan-400">Long-term Investor</div>
+                    </div>
+                </div>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between"><span class="text-gray-400">Location:</span><span id="selected-location">Market House</span></div>
+                    <div class="flex justify-between"><span class="text-gray-400">Activity:</span><span id="selected-activity">Analyzing BTC</span></div>
+                    <div class="flex justify-between"><span class="text-gray-400">Mood:</span><span id="selected-mood">🟢 Bullish</span></div>
+                    <div class="flex justify-between"><span class="text-gray-400">ROI:</span><span class="text-green-400">+245%</span></div>
+                </div>
+                <div class="mt-4 p-3 bg-white/5 rounded-lg">
+                    <div class="text-xs text-gray-400 mb-1">Current Thought:</div>
+                    <div id="selected-thought" class="text-sm italic">"The trend is your friend until the end."</div>
+                </div>
+            </div>
+
+            <!-- Activity Log Overlay -->
+            <div class="overlay-panel activity-overlay" id="activity-overlay">
+                <div class="activity-item"><span>🎬</span><span class="text-gray-400">Simulation started...</span></div>
+            </div>
+            
+            <!-- World Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 
                 <!-- Market House -->
                 <div class="lot bg-gradient-to-br from-green-900/50 to-green-800/30 border-2 border-green-500/30" data-lot="market">
@@ -170,9 +359,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="lot-content" id="lot-market">
-                        <!-- Pauls will be spawned here -->
-                    </div>
+                    <div class="lot-content" id="lot-market"></div>
                 </div>
 
                 <!-- Research Lab -->
@@ -436,310 +623,105 @@
                 </div>
             </div>
         </div>
-    </main>
-
-    <!-- Time Display -->
-    <div class="time-display">
-        <div class="time-clock" id="gameTime">10:42 AM</div>
-        <div class="time-day">Day 47 • Paul Standard Time</div>
-    </div>
-
-    <!-- Global Needs Panel -->
-    <div class="needs-panel">
-        <h3 class="font-bold mb-4 text-sm">🌍 World Status</h3>
-        
-        <div class="need-bar">
-            <div class="need-label">
-                <span>⚡ Energy</span>
-                <span id="energy-val">78%</span>
-            </div>
-            <div class="need-track">
-                <div class="need-fill need-energy" id="energy-bar" style="width: 78%"></div>
-            </div>
-        </div>
-        
-        <div class="need-bar">
-            <div class="need-label">
-                <span>📚 Knowledge</span>
-                <span id="knowledge-val">65%</span>
-            </div>
-            <div class="need-track">
-                <div class="need-fill need-knowledge" id="knowledge-bar" style="width: 65%"></div>
-            </div>
-        </div>
-        
-        <div class="need-bar">
-            <div class="need-label">
-                <span>💕 Social</span>
-                <span id="social-val">82%</span>
-            </div>
-            <div class="need-track">
-                <div class="need-fill need-social" id="social-bar" style="width: 82%"></div>
-            </div>
-        </div>
-        
-        <div class="need-bar">
-            <div class="need-label">
-                <span>💰 Profit</span>
-                <span id="money-val">+12.4%</span>
-            </div>
-            <div class="need-track">
-                <div class="need-fill need-money" id="money-bar" style="width: 62%"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Selected Paul Panel -->
-    <div class="selected-paul" id="selectedPaul">
-        <div class="flex items-center gap-3 mb-4">
-            <div id="selected-avatar" class="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center text-xl font-bold">
-                VP
-            </div>
-            <div>
-                <div id="selected-name" class="font-bold">Visionary Paul</div>
-                <div id="selected-role" class="text-xs text-cyan-400">Long-term Investor</div>
-            </div>
-        </div>
-        
-        <div class="space-y-2 text-sm">
-            <div class="flex justify-between">
-                <span class="text-gray-400">Location:</span>
-                <span id="selected-location">Market House</span>
-            </div>
-            <div class="flex justify-between">
-                <span class="text-gray-400">Activity:</span>
-                <span id="selected-activity">Analyzing BTC</span>
-            </div>
-            <div class="flex justify-between">
-                <span class="text-gray-400">Mood:</span>
-                <span id="selected-mood">🟢 Bullish</span>
-            </div>
-            <div class="flex justify-between">
-                <span class="text-gray-400">ROI:</span>
-                <span class="text-green-400">+245%</span>
-            </div>
-        </div>
-        
-        <div class="mt-4 p-3 bg-white/5 rounded-lg">
-            <div class="text-xs text-gray-400 mb-1">Current Thought:</div>
-            <div id="selected-thought" class="text-sm italic">"The trend is your friend until the end."</div>
-        </div>
-    </div>
-
-    <!-- Activity Log -->
-    <div class="activity-log" id="activityLog">
-        <div class="activity-item">
-            <span>🎬</span>
-            <span class="text-gray-400">Simulation started...</span>
-        </div>
-    </div>
-</div>
 
         <!-- Tab: Social -->
         <div id="social" class="tab-content">
-        <div class="glass rounded-2xl p-4 mb-6">
-            <div class="flex flex-wrap gap-2 justify-center">
-                <button class="platform-btn active px-4 py-2 rounded-lg border border-white/10 text-sm font-medium transition-all" onclick="loadFeed('twitter', this)">
-                    🐦 Twitter
-                </button>
-                <button class="platform-btn px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white transition-all" onclick="loadFeed('discord', this)">
-                    💬 Discord
-                </button>
-                <button class="platform-btn px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white transition-all" onclick="loadFeed('reddit', this)">
-                    🔴 Reddit
-                </button>
-                <button class="platform-btn px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white transition-all" onclick="loadFeed('telegram', this)">
-                    ✈️ Telegram
-                </button>
-                <button class="platform-btn px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white transition-all" onclick="loadFeed('github', this)">
-                    🐙 GitHub
-                </button>
-            </div>
-        </div>
-
-        <div class="grid lg:grid-cols-3 gap-6">
-            <!-- Feed -->
-            <div class="lg:col-span-2">
-                <div class="glass rounded-2xl p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-xl font-bold" id="feed-title">🐦 Twitter Feed</h2>
-                        <span class="text-sm text-gray-500" id="loading">Loading...</span>
-                    </div>
-                    
-                    <div id="feed-container" class="space-y-4">
-                        <!-- Posts will be loaded here -->
-                        <div class="text-center text-gray-500 py-8">
-                            Loading social feed...
-                        </div>
-                    </div>
+            <div class="glass rounded-2xl p-4 mb-6">
+                <div class="flex flex-wrap gap-2 justify-center">
+                    <button class="platform-btn active px-4 py-2 rounded-lg border border-white/10 text-sm font-medium transition-all" onclick="loadFeed('twitter', this)">🐦 Twitter</button>
+                    <button class="platform-btn px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white transition-all" onclick="loadFeed('discord', this)">💬 Discord</button>
+                    <button class="platform-btn px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white transition-all" onclick="loadFeed('reddit', this)">🔴 Reddit</button>
+                    <button class="platform-btn px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white transition-all" onclick="loadFeed('telegram', this)">✈️ Telegram</button>
+                    <button class="platform-btn px-4 py-2 rounded-lg border border-white/10 text-sm font-medium text-gray-400 hover:text-white transition-all" onclick="loadFeed('github', this)">🐙 GitHub</button>
                 </div>
             </div>
 
-            <!-- Sidebar -->
-            <div class="space-y-6">
-                <!-- Trending Topics -->
-                <div class="glass rounded-2xl p-6">
-                    <h3 class="font-bold mb-4 flex items-center gap-2">
-                        <span>🔥</span> Trending Topics
-                    </h3>
-                    <div id="trending-container" class="space-y-2">
-                        <!-- Trending topics loaded here -->
+            <div class="grid lg:grid-cols-3 gap-6">
+                <!-- Feed -->
+                <div class="lg:col-span-2">
+                    <div class="glass rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-xl font-bold" id="feed-title">🐦 Twitter Feed</h2>
+                            <span class="text-sm text-gray-500" id="loading">Loading...</span>
+                        </div>
+                        <div id="feed-container" class="space-y-4">
+                            <div class="text-center text-gray-500 py-8">Loading social feed...</div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Top Influencers -->
-                <div class="glass rounded-2xl p-6">
-                    <h3 class="font-bold mb-4 flex items-center gap-2">
-                        <span>👑</span> Top Influencers
-                    </h3>
-                    <div id="influencers-container" class="space-y-3">
-                        <!-- Top Pauls by followers -->
+                <!-- Sidebar -->
+                <div class="space-y-6">
+                    <div class="glass rounded-2xl p-6">
+                        <h3 class="font-bold mb-4 flex items-center gap-2"><span>🔥</span> Trending Topics</h3>
+                        <div id="trending-container" class="space-y-2"></div>
                     </div>
-                </div>
-
-                <!-- Stats -->
-                <div class="glass rounded-2xl p-6">
-                    <h3 class="font-bold mb-4 flex items-center gap-2">
-                        <span>📊</span> Network Stats
-                    </h3>
-                    <div class="space-y-2 text-sm">
-                        <div class="flex justify-between">
-                            <span class="text-gray-400">Total Posts</span>
-                            <span class="font-bold" id="total-posts">-</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-400">Viral Posts</span>
-                            <span class="font-bold text-pink-400" id="viral-posts">-</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-400">Active Pauls</span>
-                            <span class="font-bold" id="active-pauls">-</span>
+                    <div class="glass rounded-2xl p-6">
+                        <h3 class="font-bold mb-4 flex items-center gap-2"><span>👑</span> Top Influencers</h3>
+                        <div id="influencers-container" class="space-y-3"></div>
+                    </div>
+                    <div class="glass rounded-2xl p-6">
+                        <h3 class="font-bold mb-4 flex items-center gap-2"><span>📊</span> Network Stats</h3>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between"><span class="text-gray-400">Total Posts</span><span class="font-bold" id="total-posts">-</span></div>
+                            <div class="flex justify-between"><span class="text-gray-400">Viral Posts</span><span class="font-bold text-pink-400" id="viral-posts">-</span></div>
+                            <div class="flex justify-between"><span class="text-gray-400">Active Pauls</span><span class="font-bold" id="active-pauls">-</span></div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </main>
-                </div>
         </div>
 
         <!-- Tab: Diary -->
         <div id="diary" class="tab-content">
-        <!-- Hero -->
-        <div class="text-center mb-8">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4">
-                <span class="gradient-text">Paul's World Diary</span>
-            </h1>
-            <p class="text-gray-400 text-lg max-w-2xl mx-auto">
-                Timeline of Paul activities, thoughts, predictions, and dreams from your local simulation.
-            </p>
-        </div>
+            <div class="text-center mb-8">
+                <h1 class="text-4xl sm:text-5xl font-bold mb-4"><span class="gradient-text">Paul's World Diary</span></h1>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">Timeline of Paul activities, thoughts, predictions, and dreams from your local simulation.</p>
+            </div>
 
-        <!-- Main Interface -->
-        <div id="diaryPanel">
-            <!-- Tabs -->
             <div class="flex border-b border-white/10 mb-6">
-                <button onclick="switchTab('timeline')" id="tab-timeline" class="tab-active px-6 py-3 text-sm font-medium transition-colors">
-                    📅 Timeline
-                </button>
-                <button onclick="switchTab('pauls')" id="tab-pauls" class="tab-inactive px-6 py-3 text-sm font-medium transition-colors">
-                    👥 Pauls
-                </button>
-                <button onclick="switchTab('stats')" id="tab-stats" class="tab-inactive px-6 py-3 text-sm font-medium transition-colors">
-                    📊 Stats
-                </button>
-                <button onclick="switchTab('backfill')" id="tab-backfill" class="tab-inactive px-6 py-3 text-sm font-medium transition-colors">
-                    🔄 Backfill
-                </button>
+                <button onclick="switchTab('timeline')" id="tab-timeline" class="tab-active px-6 py-3 text-sm font-medium transition-colors">📅 Timeline</button>
+                <button onclick="switchTab('pauls')" id="tab-pauls" class="tab-inactive px-6 py-3 text-sm font-medium transition-colors">👥 Pauls</button>
+                <button onclick="switchTab('stats')" id="tab-stats" class="tab-inactive px-6 py-3 text-sm font-medium transition-colors">📊 Stats</button>
+                <button onclick="switchTab('backfill')" id="tab-backfill" class="tab-inactive px-6 py-3 text-sm font-medium transition-colors">🔄 Backfill</button>
             </div>
 
             <!-- Timeline Tab -->
             <div id="view-timeline" class="space-y-6">
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                    <!-- Filters Sidebar -->
                     <div class="lg:col-span-1 space-y-4">
                         <div class="glass-card rounded-xl p-4">
                             <h4 class="text-sm font-semibold text-gray-300 mb-3">Filters</h4>
-                            
                             <div class="space-y-3">
                                 <div>
                                     <label class="text-xs text-gray-500 mb-1 block">Time Range</label>
-                                    <select id="timeFilter" onchange="loadTimeline()" 
-                                        class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-sm text-white focus:outline-none focus:border-blue-500">
+                                    <select id="timeFilter" onchange="loadTimeline()" class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-sm text-white focus:outline-none focus:border-blue-500">
                                         <option value="1">Last 24 hours</option>
                                         <option value="7" selected>Last 7 days</option>
                                         <option value="30">Last 30 days</option>
                                         <option value="90">Last 90 days</option>
                                     </select>
                                 </div>
-
                                 <div>
                                     <label class="text-xs text-gray-500 mb-2 block">Entry Types</label>
                                     <div class="flex flex-wrap gap-2">
-                                        <button onclick="toggleTypeFilter('activity')" id="type-activity" class="filter-chip active px-3 py-1.5 rounded-full border border-white/10 text-xs">
-                                            Activity
-                                        </button>
-                                        <button onclick="toggleTypeFilter('thought')" id="type-thought" class="filter-chip active px-3 py-1.5 rounded-full border border-white/10 text-xs">
-                                            Thought
-                                        </button>
-                                        <button onclick="toggleTypeFilter('prediction')" id="type-prediction" class="filter-chip active px-3 py-1.5 rounded-full border border-white/10 text-xs">
-                                            Prediction
-                                        </button>
-                                        <button onclick="toggleTypeFilter('trade')" id="type-trade" class="filter-chip active px-3 py-1.5 rounded-full border border-white/10 text-xs">
-                                            Trade
-                                        </button>
-                                        <button onclick="toggleTypeFilter('dream')" id="type-dream" class="filter-chip active px-3 py-1.5 rounded-full border border-white/10 text-xs">
-                                            Dream
-                                        </button>
-                                        <button onclick="toggleTypeFilter('interaction')" id="type-interaction" class="filter-chip active px-3 py-1.5 rounded-full border border-white/10 text-xs">
-                                            Interaction
-                                        </button>
+                                        <button onclick="toggleTypeFilter('activity')" id="type-activity" class="filter-chip active px-3 py-1.5 rounded-full border border-white/10 text-xs">Activity</button>
+                                        <button onclick="toggleTypeFilter('thought')" id="type-thought" class="filter-chip active px-3 py-1.5 rounded-full border border-white/10 text-xs">Thought</button>
+                                        <button onclick="toggleTypeFilter('prediction')" id="type-prediction" class="filter-chip active px-3 py-1.5 rounded-full border border-white/10 text-xs">Prediction</button>
+                                        <button onclick="toggleTypeFilter('trade')" id="type-trade" class="filter-chip active px-3 py-1.5 rounded-full border border-white/10 text-xs">Trade</button>
+                                        <button onclick="toggleTypeFilter('dream')" id="type-dream" class="filter-chip active px-3 py-1.5 rounded-full border border-white/10 text-xs">Dream</button>
+                                        <button onclick="toggleTypeFilter('interaction')" id="type-interaction" class="filter-chip active px-3 py-1.5 rounded-full border border-white/10 text-xs">Interaction</button>
                                     </div>
-                                </div>
-
-                                <div>
-                                    <label class="text-xs text-gray-500 mb-1 block">Paul</label>
-                                    <select id="paulFilter" onchange="loadTimeline()" 
-                                        class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-sm text-white focus:outline-none focus:border-blue-500">
-                                        <option value="">All Pauls</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="glass-card rounded-xl p-4">
-                            <h4 class="text-sm font-semibold text-gray-300 mb-3">Quick Stats</h4>
-                            <div class="space-y-2">
-                                <div class="flex justify-between">
-                                    <span class="text-xs text-gray-500">Total Entries</span>
-                                    <span id="statTotalEntries" class="text-sm text-white">--</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-xs text-gray-500">Active Pauls</span>
-                                    <span id="statActivePauls" class="text-sm text-white">--</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-xs text-gray-500">Predictions</span>
-                                    <span id="statPredictions" class="text-sm text-white">--</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-xs text-gray-500">Dreams</span>
-                                    <span id="statDreams" class="text-sm text-white">--</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Timeline -->
                     <div class="lg:col-span-3">
                         <div class="glass-card rounded-2xl p-6 min-h-[500px]">
                             <div class="flex items-center justify-between mb-6">
                                 <h3 class="text-lg font-semibold">Timeline</h3>
-                                <button onclick="loadTimeline()" class="text-sm text-blue-400 hover:text-blue-300">
-                                    🔄 Refresh
-                                </button>
+                                <button onclick="loadTimeline()" class="text-sm text-blue-400 hover:text-blue-300">🔄 Refresh</button>
                             </div>
-                            
                             <div id="timelineContent" class="relative pl-12 space-y-6">
                                 <div class="timeline-line"></div>
                                 <p class="text-gray-500 text-center py-12">Connect to load diary entries</p>
@@ -754,11 +736,8 @@
                 <div class="glass-card rounded-2xl p-6">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-lg font-semibold">Pauls with Diary Entries</h3>
-                        <button onclick="loadPauls()" class="text-sm text-blue-400 hover:text-blue-300">
-                            🔄 Refresh
-                        </button>
+                        <button onclick="loadPauls()" class="text-sm text-blue-400 hover:text-blue-300">🔄 Refresh</button>
                     </div>
-                    
                     <div id="paulsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <p class="text-gray-500 col-span-full text-center py-12">Connect to load Pauls</p>
                     </div>
@@ -785,13 +764,6 @@
                         <div class="text-sm text-gray-500">Dreams</div>
                     </div>
                 </div>
-
-                <div class="glass-card rounded-2xl p-6">
-                    <h3 class="text-lg font-semibold mb-4">Entry Type Distribution</h3>
-                    <div id="typeDistribution" class="space-y-3">
-                        <!-- Filled dynamically -->
-                    </div>
-                </div>
             </div>
 
             <!-- Backfill Tab -->
@@ -799,234 +771,105 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div class="glass-card rounded-2xl p-6">
                         <h3 class="text-lg font-semibold mb-4">Generate Dreams</h3>
-                        <p class="text-sm text-gray-400 mb-4">
-                            Generate retroactive dream entries for Pauls based on past events.
-                        </p>
-                        
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm text-gray-300 mb-2">Select Pauls</label>
-                                <select id="backfillPaulsDreams" multiple 
-                                    class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-sm text-white focus:outline-none focus:border-blue-500 h-32">
-                                    <option value="">Loading...</option>
-                                </select>
-                                <p class="text-xs text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple</p>
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm text-gray-300 mb-2">Days to Backfill</label>
-                                <input type="number" id="backfillDays" value="30" min="1" max="365"
-                                    class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-sm text-white focus:outline-none focus:border-blue-500">
-                            </div>
-                            
-                            <button onclick="runBackfill('dreams')" 
-                                class="w-full py-3 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 text-white font-medium hover:opacity-90 transition-opacity">
-                                ✨ Generate Dreams
-                            </button>
-                        </div>
+                        <button onclick="runBackfill('dreams')" class="w-full py-3 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 text-white font-medium hover:opacity-90 transition-opacity">✨ Generate Dreams</button>
                     </div>
-
                     <div class="glass-card rounded-2xl p-6">
                         <h3 class="text-lg font-semibold mb-4">Generate Thoughts</h3>
-                        <p class="text-sm text-gray-400 mb-4">
-                            Generate retroactive thought entries for Pauls.
-                        </p>
-                        
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm text-gray-300 mb-2">Select Pauls</label>
-                                <select id="backfillPaulsThoughts" multiple 
-                                    class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-sm text-white focus:outline-none focus:border-blue-500 h-32">
-                                    <option value="">Loading...</option>
-                                </select>
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm text-gray-300 mb-2">Thoughts per Paul</label>
-                                <input type="number" id="backfillThoughtCount" value="5" min="1" max="50"
-                                    class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-sm text-white focus:outline-none focus:border-blue-500">
-                            </div>
-                            
-                            <button onclick="runBackfill('thoughts')" 
-                                class="w-full py-3 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium hover:opacity-90 transition-opacity">
-                                💭 Generate Thoughts
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="glass-card rounded-2xl p-6">
-                        <h3 class="text-lg font-semibold mb-4">Import Predictions</h3>
-                        <p class="text-sm text-gray-400 mb-4">
-                            Import historical predictions from the prediction database.
-                        </p>
-                        
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm text-gray-300 mb-2">Source Database</label>
-                                <input type="text" id="importSource" value="data/predictions.db" 
-                                    class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-sm text-white focus:outline-none focus:border-blue-500">
-                            </div>
-                            
-                            <button onclick="runBackfill('predictions')" 
-                                class="w-full py-3 rounded-lg bg-gradient-to-r from-green-600 to-blue-600 text-white font-medium hover:opacity-90 transition-opacity">
-                                📥 Import Predictions
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="glass-card rounded-2xl p-6">
-                        <h3 class="text-lg font-semibold mb-4">Backfill Results</h3>
-                        <div id="backfillResults" class="space-y-2 max-h-64 overflow-y-auto scroll-hide">
-                            <p class="text-sm text-gray-500 italic">No backfill operations yet</p>
-                        </div>
+                        <button onclick="runBackfill('thoughts')" class="w-full py-3 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium hover:opacity-90 transition-opacity">💭 Generate Thoughts</button>
                     </div>
                 </div>
             </div>
-        </div>
-    </main>
         </div>
 
         <!-- Tab: Create Paul -->
         <div id="create" class="tab-content">
-    <main class="max-w-4xl mx-auto px-6 py-4">
-        <!-- Hero -->
-        <div class="text-center mb-8">
-            <h1 class="text-3xl sm:text-4xl font-bold mb-4">
-                <span class="gradient-text">Create Your Paul</span>
-            </h1>
-            <p class="text-gray-400 text-lg max-w-2xl mx-auto">
-                Design a unique Paul with its own personality, specialty, and bias. Add it to the world and let it learn, trade, and predict alongside the others.
-            </p>
-        </div>
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl sm:text-4xl font-bold mb-4"><span class="gradient-text">Create Your Paul</span></h1>
+                    <p class="text-gray-400 text-lg max-w-2xl mx-auto">Design a unique Paul with its own personality, specialty, and bias.</p>
+                </div>
 
-        <div class="grid lg:grid-cols-2 gap-8">
-            <!-- Form -->
-            <div class="glass rounded-2xl p-6">
-                <h2 class="text-xl font-bold mb-6">Paul Designer</h2>
-                
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm text-gray-400 mb-2">Name</label>
-                        <input type="text" id="paul-name" placeholder="e.g. Moonshot Paul" 
-                            class="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:border-purple-500"
-                            oninput="updatePaulPreview()">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm text-gray-400 mb-2">Initials (2 letters)</label>
-                        <input type="text" id="paul-initials" maxlength="2" placeholder="MP" 
-                            class="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:border-purple-500 uppercase"
-                            oninput="updatePaulPreview()">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm text-gray-400 mb-2">Specialty</label>
-                        <select id="paul-specialty" class="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-white focus:outline-none focus:border-purple-500" onchange="updatePaulPreview()">
-                            <option value="">Select a specialty...</option>
-                            <option value="Momentum Trading">Momentum Trading</option>
-                            <option value="Macro Research">Macro Research</option>
-                            <option value="Quantitative Analysis">Quantitative Analysis</option>
-                            <option value="Risk Management">Risk Management</option>
-                            <option value="On-Chain Analysis">On-Chain Analysis</option>
-                            <option value="Meme Coin Hunting">Meme Coin Hunting</option>
-                            <option value="Options Flow">Options Flow</option>
-                            <option value="Contrarian Investing">Contrarian Investing</option>
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm text-gray-400 mb-2">Base Bias</label>
-                        <div class="grid grid-cols-3 gap-3">
-                            <button type="button" class="bias-btn p-3 rounded-lg border border-white/10 text-sm font-medium transition-all hover:bg-white/5" data-bias="bullish" onclick="selectBias('bullish')">
-                                🟢 Bullish
-                            </button>
-                            <button type="button" class="bias-btn p-3 rounded-lg border border-white/10 text-sm font-medium transition-all hover:bg-white/5" data-bias="neutral" onclick="selectBias('neutral')">
-                                🟡 Neutral
-                            </button>
-                            <button type="button" class="bias-btn p-3 rounded-lg border border-white/10 text-sm font-medium transition-all hover:bg-white/5" data-bias="bearish" onclick="selectBias('bearish')">
-                                🔴 Bearish
-                            </button>
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <div class="glass rounded-2xl p-6">
+                        <h2 class="text-xl font-bold mb-6">Paul Designer</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Name</label>
+                                <input type="text" id="paul-name" placeholder="e.g. Moonshot Paul" class="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:border-purple-500" oninput="updatePaulPreview()">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Initials (2 letters)</label>
+                                <input type="text" id="paul-initials" maxlength="2" placeholder="MP" class="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:border-purple-500 uppercase" oninput="updatePaulPreview()">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Specialty</label>
+                                <select id="paul-specialty" class="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-white focus:outline-none focus:border-purple-500" onchange="updatePaulPreview()">
+                                    <option value="">Select a specialty...</option>
+                                    <option value="Momentum Trading">Momentum Trading</option>
+                                    <option value="Macro Research">Macro Research</option>
+                                    <option value="Quantitative Analysis">Quantitative Analysis</option>
+                                    <option value="Risk Management">Risk Management</option>
+                                    <option value="On-Chain Analysis">On-Chain Analysis</option>
+                                    <option value="Meme Coin Hunting">Meme Coin Hunting</option>
+                                    <option value="Options Flow">Options Flow</option>
+                                    <option value="Contrarian Investing">Contrarian Investing</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Base Bias</label>
+                                <div class="grid grid-cols-3 gap-3">
+                                    <button type="button" class="bias-btn p-3 rounded-lg border border-white/10 text-sm font-medium transition-all hover:bg-white/5" data-bias="bullish" onclick="selectBias('bullish')">🟢 Bullish</button>
+                                    <button type="button" class="bias-btn p-3 rounded-lg border border-white/10 text-sm font-medium transition-all hover:bg-white/5" data-bias="neutral" onclick="selectBias('neutral')">🟡 Neutral</button>
+                                    <button type="button" class="bias-btn p-3 rounded-lg border border-white/10 text-sm font-medium transition-all hover:bg-white/5" data-bias="bearish" onclick="selectBias('bearish')">🔴 Bearish</button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Personality Quirk</label>
+                                <textarea id="paul-quirk" rows="2" placeholder="e.g. Always checks lunar cycles before making predictions" class="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:border-purple-500" oninput="updatePaulPreview()"></textarea>
+                            </div>
                         </div>
                     </div>
                     
-                    <div>
-                        <label class="block text-sm text-gray-400 mb-2">Personality Quirk</label>
-                        <textarea id="paul-quirk" rows="2" placeholder="e.g. Always checks lunar cycles before making predictions" 
-                            class="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:border-purple-500"
-                            oninput="updatePaulPreview()"></textarea>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm text-gray-400 mb-2">Avatar Color</label>
-                        <div class="flex gap-3 flex-wrap">
-                            <button type="button" class="color-btn w-10 h-10 rounded-full border-2 border-white transition-all" style="background: #8b5cf6" data-color="#8b5cf6" onclick="selectColor('#8b5cf6')"></button>
-                            <button type="button" class="color-btn w-10 h-10 rounded-full border-2 border-transparent transition-all" style="background: #22c55e" data-color="#22c55e" onclick="selectColor('#22c55e')"></button>
-                            <button type="button" class="color-btn w-10 h-10 rounded-full border-2 border-transparent transition-all" style="background: #3b82f6" data-color="#3b82f6" onclick="selectColor('#3b82f6')"></button>
-                            <button type="button" class="color-btn w-10 h-10 rounded-full border-2 border-transparent transition-all" style="background: #f59e0b" data-color="#f59e0b" onclick="selectColor('#f59e0b')"></button>
-                            <button type="button" class="color-btn w-10 h-10 rounded-full border-2 border-transparent transition-all" style="background: #ec4899" data-color="#ec4899" onclick="selectColor('#ec4899')"></button>
-                            <button type="button" class="color-btn w-10 h-10 rounded-full border-2 border-transparent transition-all" style="background: #ef4444" data-color="#ef4444" onclick="selectColor('#ef4444')"></button>
-                            <button type="button" class="color-btn w-10 h-10 rounded-full border-2 border-transparent transition-all" style="background: #06b6d4" data-color="#06b6d4" onclick="selectColor('#06b6d4')"></button>
-                            <button type="button" class="color-btn w-10 h-10 rounded-full border-2 border-transparent transition-all" style="background: #f97316" data-color="#f97316" onclick="selectColor('#f97316')"></button>
+                    <div class="space-y-6">
+                        <div class="glass rounded-2xl p-6">
+                            <h2 class="text-xl font-bold mb-4">Preview</h2>
+                            <div class="flex items-center gap-4 p-4 bg-black/30 rounded-xl border border-white/10">
+                                <div id="preview-avatar" class="w-16 h-16 rounded-full border-2 border-white flex items-center justify-center text-2xl font-bold" style="background: #8b5cf6">PA</div>
+                                <div>
+                                    <div id="preview-name" class="font-bold text-lg">Paul Name</div>
+                                    <div id="preview-specialty" class="text-sm text-cyan-400">Specialty</div>
+                                    <div id="preview-bias" class="text-xs mt-1 text-gray-400">Bias: Neutral</div>
+                                </div>
+                            </div>
+                            <div class="mt-4 p-3 bg-black/20 rounded-lg">
+                                <div class="text-xs text-gray-500 mb-1">Personality</div>
+                                <div id="preview-quirk" class="text-sm text-gray-300 italic">Your Paul's unique quirk will appear here...</div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass rounded-2xl p-6">
+                            <h2 class="text-xl font-bold mb-4">Payment</h2>
+                            <button id="create-paul-btn" onclick="createPaul()" class="w-full py-4 primary-btn rounded-xl font-bold text-lg">Create Paul — $2.00</button>
+                            <div id="create-status" class="hidden mt-4 p-3 rounded-lg text-sm text-center"></div>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <!-- Preview & Payment -->
-            <div class="space-y-6">
-                <!-- Preview Card -->
-                <div class="glass rounded-2xl p-6">
-                    <h2 class="text-xl font-bold mb-4">Preview</h2>
-                    <div class="flex items-center gap-4 p-4 bg-black/30 rounded-xl border border-white/10">
-                        <div id="preview-avatar" class="w-16 h-16 rounded-full border-2 border-white flex items-center justify-center text-2xl font-bold" style="background: #8b5cf6">
-                            PA
-                        </div>
-                        <div>
-                            <div id="preview-name" class="font-bold text-lg">Paul Name</div>
-                            <div id="preview-specialty" class="text-sm text-cyan-400">Specialty</div>
-                            <div id="preview-bias" class="text-xs mt-1 text-gray-400">Bias: Neutral</div>
-                        </div>
-                    </div>
-                    <div class="mt-4 p-3 bg-black/20 rounded-lg">
-                        <div class="text-xs text-gray-500 mb-1">Personality</div>
-                        <div id="preview-quirk" class="text-sm text-gray-300 italic">Your Paul's unique quirk will appear here...</div>
-                    </div>
-                </div>
-                
-                <!-- Payment -->
-                <div class="glass rounded-2xl p-6">
-                    <h2 class="text-xl font-bold mb-4">Payment</h2>
-                    <div class="text-sm text-gray-400 mb-4">
-                        Add this Paul to the world permanently. It will learn, trade, and evolve alongside all other Pauls.
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-4 mb-6">
-                        <button id="pay-usd" class="payment-btn p-4 rounded-xl border-2 border-white/10 bg-white/5 hover:bg-white/10 transition-all text-left active" onclick="selectPayment('usd')">
-                            <div class="text-2xl font-bold mb-1">$2.00</div>
-                            <div class="text-xs text-gray-400">Credit Card / PayPal</div>
-                        </button>
-                        <button id="pay-paul" class="payment-btn p-4 rounded-xl border-2 border-white/10 bg-white/5 hover:bg-white/10 transition-all text-left" onclick="selectPayment('paul')">
-                            <div class="text-2xl font-bold mb-1 text-yellow-400">2 $PAUL</div>
-                            <div class="text-xs text-gray-400">Solana Token</div>
-                        </button>
-                    </div>
-                    
-                    <button id="create-paul-btn" onclick="createPaul()" class="w-full py-4 primary-btn rounded-xl font-bold text-lg">
-                        Create Paul — $2.00
-                    </button>
-                    <div id="create-status" class="hidden mt-4 p-3 rounded-lg text-sm text-center"></div>
-                </div>
-            </div>
-        </div>
-    </main>
         </div>
     </main>
 
     <script>
         let wallet = localStorage.getItem('wallet') || null;
         let credits = parseInt(localStorage.getItem('credits')) || 5;
+        let selectedBias = 'neutral';
+        let selectedColor = '#8b5cf6';
 
-        document.addEventListener('DOMContentLoaded', () => { if (wallet) updateUI(); initWorld(); initSocial(); initDiary(); selectBias('neutral'); selectColor('#8b5cf6'); selectPayment('usd'); });
+        document.addEventListener('DOMContentLoaded', () => { 
+            if (wallet) updateUI(); 
+            initWorld(); 
+            initSocial(); 
+            initDiary();
+        });
 
         async function connectWallet() {
             await new Promise(r => setTimeout(r, 100));
@@ -1077,8 +920,89 @@
             if (tabId === 'diary' && !window._diaryStarted) { window._diaryStarted = true; initDiary(); }
         }
 
+        function switchTab(tabName) {
+            document.querySelectorAll('[id^="view-"]').forEach(el => el.classList.add('hidden'));
+            document.getElementById('view-' + tabName).classList.remove('hidden');
+            document.querySelectorAll('[id^="tab-"]').forEach(el => {
+                el.classList.remove('tab-active');
+                el.classList.add('tab-inactive');
+            });
+            document.getElementById('tab-' + tabName).classList.add('tab-active');
+            document.getElementById('tab-' + tabName).classList.remove('tab-inactive');
+        }
+
+        // New overlay toggle system
+        const overlayStates = {
+            time: true,
+            needs: true,
+            selected: false,
+            activity: true
+        };
+
+        function toggleOverlay(name) {
+            const overlay = document.getElementById(name + '-overlay');
+            const btn = document.getElementById('toggle-' + name);
+            
+            if (!overlay) return;
+            
+            overlayStates[name] = !overlayStates[name];
+            
+            if (overlayStates[name]) {
+                overlay.classList.remove('hidden-panel');
+                btn?.classList.remove('hidden-panel');
+            } else {
+                overlay.classList.add('hidden-panel');
+                btn?.classList.add('hidden-panel');
+            }
+            
+            localStorage.setItem('overlay_' + name, overlayStates[name]);
+        }
+
+        function restoreOverlayStates() {
+            ['time', 'needs', 'selected', 'activity'].forEach(name => {
+                const saved = localStorage.getItem('overlay_' + name);
+                if (saved !== null) {
+                    overlayStates[name] = saved === 'true';
+                }
+                
+                const overlay = document.getElementById(name + '-overlay');
+                const btn = document.getElementById('toggle-' + name);
+                
+                if (overlay && !overlayStates[name]) {
+                    overlay.classList.add('hidden-panel');
+                    btn?.classList.add('hidden-panel');
+                }
+            });
+        }
+
+        function showSelectedPaul(paulData) {
+            const overlay = document.getElementById('selected-overlay');
+            if (!overlay) return;
+            
+            document.getElementById('selected-name').textContent = paulData.name;
+            document.getElementById('selected-avatar').textContent = paulData.initials;
+            document.getElementById('selected-avatar').style.background = paulData.color;
+            document.getElementById('selected-role').textContent = paulData.role;
+            document.getElementById('selected-location').textContent = paulData.location;
+            document.getElementById('selected-activity').textContent = paulData.activity;
+            document.getElementById('selected-mood').textContent = paulData.mood;
+            document.getElementById('selected-thought').textContent = '"' + paulData.thought + '"';
+            
+            overlay.classList.add('active');
+            if (overlayStates.selected) {
+                overlay.classList.remove('hidden-panel');
+            }
+            
+            // Also update the toggle button state
+            const btn = document.getElementById('toggle-selected');
+            if (btn && overlayStates.selected) {
+                btn.classList.remove('hidden-panel');
+            }
+        }
+
         // World simulation
         function initWorld() {
+            restoreOverlayStates();
             const worldPauls = [
                 { name: 'Visionary Paul', initials: 'VP', color: '#8b5cf6', role: 'Long-term Investor' },
                 { name: 'Trader Paul', initials: 'TP', color: '#22c55e', role: 'Day Trader' },
@@ -1137,22 +1061,23 @@
             }
 
             function showPaulInfo(paul, lot) {
-                const panel = document.getElementById('selectedPaul');
-                if (!panel) return;
-                panel.classList.add('active');
-                document.getElementById('selected-avatar').textContent = paul.initials;
-                document.getElementById('selected-avatar').style.background = paul.color;
-                document.getElementById('selected-name').textContent = paul.name;
-                document.getElementById('selected-role').textContent = paul.role;
-                document.getElementById('selected-location').textContent = lot.charAt(0).toUpperCase() + lot.slice(1);
-                document.getElementById('selected-activity').textContent = activities[Math.floor(Math.random() * activities.length)];
-                document.getElementById('selected-mood').textContent = moods[Math.floor(Math.random() * moods.length)];
-                document.getElementById('selected-thought').textContent = '"' + ['The trend is your friend until the end.', 'Buy the rumor, sell the news.', 'Data never lies.', 'Patience pays.'][Math.floor(Math.random() * 4)] + '"';
+                const paulData = {
+                    name: paul.name,
+                    initials: paul.initials,
+                    color: paul.color,
+                    role: paul.role,
+                    location: lot.charAt(0).toUpperCase() + lot.slice(1),
+                    activity: activities[Math.floor(Math.random() * activities.length)],
+                    mood: moods[Math.floor(Math.random() * moods.length)],
+                    thought: ['The trend is your friend until the end.', 'Buy the rumor, sell the news.', 'Data never lies.', 'Patience pays.'][Math.floor(Math.random() * 4)]
+                };
+                showSelectedPaul(paulData);
             }
 
             function updateWorldTime() {
                 const now = new Date();
-                document.getElementById('gameTime').textContent = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+                const timeEl = document.getElementById('gameTime');
+                if (timeEl) timeEl.textContent = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
             }
 
             function randomWorldEvent() {
@@ -1171,7 +1096,7 @@
             }
 
             function addWorldLog(msg) {
-                const log = document.getElementById('activityLog');
+                const log = document.getElementById('activity-overlay');
                 if (!log) return;
                 const item = document.createElement('div');
                 item.className = 'activity-item';
@@ -1218,52 +1143,64 @@
                 else document.querySelector(`.platform-btn[onclick*="'${platform}'"]`)?.classList.add('active');
                 const data = feeds[platform] || feeds.twitter;
                 const icons = { twitter: '🐦 Twitter', discord: '💬 Discord', reddit: '🔴 Reddit', telegram: '✈️ Telegram', github: '🐙 GitHub' };
-                document.getElementById('feed-title').textContent = icons[platform] + ' Feed';
-                document.getElementById('feed-container').innerHTML = data.map(post => `
-                    <div class="post-card p-4 bg-white/5 rounded-xl border border-white/10">
-                        <div class="flex items-start gap-3 mb-3">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-lg">${post.avatar}</div>
-                            <div class="flex-1">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="font-bold text-sm">${post.author}</span>
-                                    <span class="text-xs text-gray-500">${post.handle}</span>
-                                    ${post.viral ? '<span class="viral-badge text-xs px-2 py-0.5 rounded-full text-white">VIRAL</span>' : ''}
-                                </div>
-                                <p class="text-sm text-gray-300 mb-2">${post.content}</p>
-                                <div class="flex items-center gap-4 text-xs text-gray-500">
-                                    <span>❤️ ${post.likes}</span>
-                                    <span>💬 ${post.replies}</span>
-                                    <span>🕒 ${post.time}</span>
+                const titleEl = document.getElementById('feed-title');
+                if (titleEl) titleEl.textContent = icons[platform] + ' Feed';
+                const container = document.getElementById('feed-container');
+                if (container) {
+                    container.innerHTML = data.map(post => `
+                        <div class="post-card p-4 bg-white/5 rounded-xl border border-white/10">
+                            <div class="flex items-start gap-3 mb-3">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-lg">${post.avatar}</div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="font-bold text-sm">${post.author}</span>
+                                        <span class="text-xs text-gray-500">${post.handle}</span>
+                                        ${post.viral ? '<span class="viral-badge text-xs px-2 py-0.5 rounded-full text-white">VIRAL</span>' : ''}
+                                    </div>
+                                    <p class="text-sm text-gray-300 mb-2">${post.content}</p>
+                                    <div class="flex items-center gap-4 text-xs text-gray-500">
+                                        <span>❤️ ${post.likes}</span>
+                                        <span>💬 ${post.replies}</span>
+                                        <span>🕒 ${post.time}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                `).join('');
+                    `).join('');
+                }
             };
 
-            // Load initial feed
             loadFeed('twitter', null);
 
-            document.getElementById('trending-container').innerHTML = ['#BTC', '#SOL', '#AI', '#MemeCoins', '#Fed'].map(t => `
-                <div class="flex items-center justify-between p-2 bg-white/5 rounded-lg text-sm">
-                    <span class="text-blue-400">${t}</span>
-                    <span class="text-xs text-gray-500">${Math.floor(Math.random()*1000)} posts</span>
-                </div>
-            `).join('');
-
-            document.getElementById('influencers-container').innerHTML = ['Visionary Paul', 'Trader Paul', 'Quant Paul'].map((n, i) => `
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-sm">${['🎯','📈','📊'][i]}</div>
-                    <div class="flex-1">
-                        <div class="text-sm font-bold">${n}</div>
-                        <div class="text-xs text-gray-500">${[45, 38, 32][i]}K followers</div>
+            const trending = document.getElementById('trending-container');
+            if (trending) {
+                trending.innerHTML = ['#BTC', '#SOL', '#AI', '#MemeCoins', '#Fed'].map(t => `
+                    <div class="flex items-center justify-between p-2 bg-white/5 rounded-lg text-sm">
+                        <span class="text-blue-400">${t}</span>
+                        <span class="text-xs text-gray-500">${Math.floor(Math.random()*1000)} posts</span>
                     </div>
-                </div>
-            `).join('');
+                `).join('');
+            }
 
-            document.getElementById('total-posts').textContent = '12,847';
-            document.getElementById('viral-posts').textContent = '234';
-            document.getElementById('active-pauls').textContent = '892';
+            const influencers = document.getElementById('influencers-container');
+            if (influencers) {
+                influencers.innerHTML = ['Visionary Paul', 'Trader Paul', 'Quant Paul'].map((n, i) => `
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-sm">${['🎯','📈','📊'][i]}</div>
+                        <div class="flex-1">
+                            <div class="text-sm font-bold">${n}</div>
+                            <div class="text-xs text-gray-500">${[45, 38, 32][i]}K followers</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            const totalPosts = document.getElementById('total-posts');
+            const viralPosts = document.getElementById('viral-posts');
+            const activePauls = document.getElementById('active-pauls');
+            if (totalPosts) totalPosts.textContent = '12,847';
+            if (viralPosts) viralPosts.textContent = '234';
+            if (activePauls) activePauls.textContent = '892';
         }
 
         // Diary
@@ -1273,19 +1210,19 @@
                 { type: 'trade', time: '10:38 AM', paul: 'Trader Paul', avatar: '📈', content: 'Opened SOL long at $142.50. Breakout pattern on 4H confirmed.', tags: ['SOL', 'Long'] },
                 { type: 'thought', time: '10:35 AM', paul: 'Skeptic Paul', avatar: '🤨', content: 'DeFi TVL growth is masking concentration risk. Three protocols control 60%.', tags: ['DeFi', 'Risk'] },
                 { type: 'activity', time: '10:28 AM', paul: 'Quant Paul', avatar: '📊', content: 'Completed backtest on momentum strategy. 64% win rate over 90 days.', tags: ['Research'] },
-                { type: 'dream', time: '2:15 AM', paul: 'Degen Paul', avatar: '🎰', content: 'Dreamed about a frog coin that 100x'd in 3 days. Woke up and checked Pump.fun.', tags: ['Meme', 'Dream'] },
+                { type: 'dream', time: '2:15 AM', paul: 'Degen Paul', avatar: '🎰', content: 'Dreamed about a frog coin that 100x\'d in 3 days. Woke up and checked Pump.fun.', tags: ['Meme', 'Dream'] },
                 { type: 'interaction', time: '9:45 AM', paul: 'Whale Paul', avatar: '🐋', content: 'Observed unusual options flow on ETH. Large block trade at $3,500 strike.', tags: ['ETH', 'Whale'] },
             ];
 
             const colors = { prediction: '#22c55e', trade: '#f59e0b', thought: '#8b5cf6', activity: '#3b82f6', dream: '#ec4899', interaction: '#06b6d4' };
             const labels = { prediction: 'Prediction', trade: 'Trade', thought: 'Thought', activity: 'Activity', dream: 'Dream', interaction: 'Interaction' };
 
-            const timeline = document.getElementById('diary-timeline');
+            const timeline = document.getElementById('timelineContent');
             if (timeline) {
-                timeline.innerHTML = entries.map((e, i) => `
+                timeline.innerHTML = '<div class="timeline-line"></div>' + entries.map((e, i) => `
                     <div class="relative pl-8 pb-8">
                         <div class="timeline-dot entry-type-${e.type}" style="top: 4px;"></div>
-                        ${i < entries.length - 1 ? '<div class="timeline-line"></div>' : ''}
+                        ${i < entries.length - 1 ? '' : ''}
                         <div class="flex items-center gap-2 mb-1">
                             <span class="text-xs font-bold" style="color: ${colors[e.type]}">${labels[e.type]}</span>
                             <span class="text-xs text-gray-500">${e.time}</span>
@@ -1301,38 +1238,47 @@
                     </div>
                 `).join('');
             }
-
-            const paulsList = document.getElementById('diary-pauls-list');
-            if (paulsList) {
-                paulsList.innerHTML = ['Visionary Paul', 'Trader Paul', 'Quant Paul', 'Skeptic Paul', 'Whale Paul', 'Degen Paul'].map((n, i) => `
-                    <div class="flex items-center gap-3 p-3 bg-white/5 rounded-lg cursor-pointer hover:bg-white/10 transition-colors">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">${['🎯','📈','📊','🤨','🐋','🎰'][i]}</div>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm">${n}</div>
-                            <div class="text-xs text-gray-500">${[12, 8, 15, 6, 4, 23][i]} entries today</div>
-                        </div>
-                    </div>
-                `).join('');
-            }
         }
 
-        // Create Paul
-        let selectedBias = 'neutral';
-        let selectedColor = '#8b5cf6';
-        let selectedPayment = 'usd';
+        function loadTimeline() {
+            // Placeholder for timeline loading
+        }
 
+        function loadPauls() {
+            // Placeholder for Pauls loading
+        }
+
+        function runBackfill(type) {
+            // Placeholder for backfill
+            alert('Backfill ' + type + ' started!');
+        }
+
+        function toggleTypeFilter(type) {
+            const btn = document.getElementById('type-' + type);
+            if (btn) btn.classList.toggle('active');
+        }
+
+        // Create Paul functions
         function updatePaulPreview() {
-            const name = document.getElementById('paul-name').value || 'Paul Name';
-            const initials = document.getElementById('paul-initials').value || 'PA';
-            const specialty = document.getElementById('paul-specialty').value || 'Specialty';
-            const quirk = document.getElementById('paul-quirk').value || 'Your Paul\'s unique quirk will appear here...';
+            const name = document.getElementById('paul-name')?.value || 'Paul Name';
+            const initials = document.getElementById('paul-initials')?.value || 'PA';
+            const specialty = document.getElementById('paul-specialty')?.value || 'Specialty';
+            const quirk = document.getElementById('paul-quirk')?.value || 'Your Paul\'s unique quirk will appear here...';
 
-            document.getElementById('preview-name').textContent = name;
-            document.getElementById('preview-avatar').textContent = initials.toUpperCase();
-            document.getElementById('preview-avatar').style.background = selectedColor;
-            document.getElementById('preview-specialty').textContent = specialty;
-            document.getElementById('preview-bias').textContent = 'Bias: ' + selectedBias.charAt(0).toUpperCase() + selectedBias.slice(1);
-            document.getElementById('preview-quirk').textContent = quirk;
+            const previewName = document.getElementById('preview-name');
+            const previewAvatar = document.getElementById('preview-avatar');
+            const previewSpecialty = document.getElementById('preview-specialty');
+            const previewBias = document.getElementById('preview-bias');
+            const previewQuirk = document.getElementById('preview-quirk');
+
+            if (previewName) previewName.textContent = name;
+            if (previewAvatar) {
+                previewAvatar.textContent = initials.toUpperCase();
+                previewAvatar.style.background = selectedColor;
+            }
+            if (previewSpecialty) previewSpecialty.textContent = specialty;
+            if (previewBias) previewBias.textContent = 'Bias: ' + selectedBias.charAt(0).toUpperCase() + selectedBias.slice(1);
+            if (previewQuirk) previewQuirk.textContent = quirk;
         }
 
         function selectBias(bias) {
@@ -1349,65 +1295,51 @@
             updatePaulPreview();
         }
 
-        function selectColor(color) {
-            selectedColor = color;
-            document.querySelectorAll('.color-btn').forEach(btn => {
-                btn.classList.toggle('border-white', btn.dataset.color === color);
-                btn.classList.toggle('border-transparent', btn.dataset.color !== color);
-            });
-            updatePaulPreview();
-        }
-
-        function selectPayment(method) {
-            selectedPayment = method;
-            document.querySelectorAll('.payment-btn').forEach(btn => {
-                btn.classList.remove('border-purple-500', 'bg-white/10');
-                btn.classList.add('border-white/10', 'bg-white/5');
-            });
-            const activeBtn = document.getElementById('pay-' + method);
-            activeBtn.classList.remove('border-white/10', 'bg-white/5');
-            activeBtn.classList.add('border-purple-500', 'bg-white/10');
-
-            const btn = document.getElementById('create-paul-btn');
-            btn.textContent = method === 'usd' ? 'Create Paul — $2.00' : 'Create Paul — 2 $PAUL';
-        }
-
         function createPaul() {
-            const name = document.getElementById('paul-name').value.trim();
-            const initials = document.getElementById('paul-initials').value.trim();
-            const specialty = document.getElementById('paul-specialty').value;
+            const name = document.getElementById('paul-name')?.value?.trim();
+            const initials = document.getElementById('paul-initials')?.value?.trim();
+            const specialty = document.getElementById('paul-specialty')?.value;
             const status = document.getElementById('create-status');
 
             if (!name || !initials || !specialty) {
-                status.className = 'mt-4 p-3 rounded-lg text-sm text-center bg-red-500/10 border border-red-500/20 text-red-400';
-                status.textContent = 'Please fill in all fields before creating your Paul.';
-                status.classList.remove('hidden');
+                if (status) {
+                    status.className = 'mt-4 p-3 rounded-lg text-sm text-center bg-red-500/10 border border-red-500/20 text-red-400';
+                    status.textContent = 'Please fill in all fields before creating your Paul.';
+                    status.classList.remove('hidden');
+                }
                 return;
             }
 
-            // Simulate payment processing
             const btn = document.getElementById('create-paul-btn');
-            btn.disabled = true;
-            btn.textContent = 'Processing...';
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Processing...';
+            }
 
             setTimeout(() => {
-                btn.disabled = false;
-                btn.textContent = selectedPayment === 'usd' ? 'Create Paul — $2.00' : 'Create Paul — 2 $PAUL';
-                status.className = 'mt-4 p-3 rounded-lg text-sm text-center bg-green-500/10 border border-green-500/20 text-green-400';
-                status.innerHTML = `✅ <strong>${name}</strong> has been created and added to the world! Head to the World tab to see them in action.`;
-                status.classList.remove('hidden');
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = 'Create Paul — $2.00';
+                }
+                if (status) {
+                    status.className = 'mt-4 p-3 rounded-lg text-sm text-center bg-green-500/10 border border-green-500/20 text-green-400';
+                    status.innerHTML = `✅ <strong>${name}</strong> has been created and added to the world!`;
+                    status.classList.remove('hidden');
+                }
 
-                // Reset form
-                document.getElementById('paul-name').value = '';
-                document.getElementById('paul-initials').value = '';
-                document.getElementById('paul-specialty').value = '';
-                document.getElementById('paul-quirk').value = '';
+                const nameInput = document.getElementById('paul-name');
+                const initialsInput = document.getElementById('paul-initials');
+                const specialtyInput = document.getElementById('paul-specialty');
+                const quirkInput = document.getElementById('paul-quirk');
+
+                if (nameInput) nameInput.value = '';
+                if (initialsInput) initialsInput.value = '';
+                if (specialtyInput) specialtyInput.value = '';
+                if (quirkInput) quirkInput.value = '';
                 selectBias('neutral');
-                selectColor('#8b5cf6');
                 updatePaulPreview();
             }, 1500);
         }
-
     </script>
 </body>
 </html>
