@@ -89,7 +89,7 @@
  <main class="max-w-7xl mx-auto px-6 py-6">
  
  <!-- Stats Row -->
- <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+ <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
  <div class="glass rounded-xl p-4">
  <div class="text-xs text-gray-500 mb-1">Active Traders</div>
  <div class="text-2xl font-bold">847</div>
@@ -109,6 +109,11 @@
  <div class="text-xs text-gray-500 mb-1">Avg Win Rate</div>
  <div class="text-2xl font-bold text-green-400">58.3%</div>
  <div class="text-xs text-gray-400">Top 10%: 71.2%</div>
+ </div>
+ <div class="glass rounded-xl p-4 border border-cyan-500/30 bg-cyan-500/5">
+ <div class="text-xs text-cyan-400 mb-1">🎮 Free Trades Today</div>
+ <div class="text-2xl font-bold text-cyan-400"><span id="free-trades-remaining">10</span><span class="text-sm text-gray-500">/10</span></div>
+ <div class="text-xs text-gray-400">Resets in 14h 32m</div>
  </div>
  </div>
 
@@ -1356,7 +1361,40 @@
  // Initialize wallet UI on page load
  document.addEventListener('DOMContentLoaded', () => {
  if (wallet) updateUI();
+ updateFreeTradesCounter();
  });
+
+ // Free trades counter
+ let freeTradesRemaining = parseInt(localStorage.getItem('freeTradesRemaining')) || 10;
+ let lastResetDate = localStorage.getItem('lastResetDate') || new Date().toDateString();
+
+ function updateFreeTradesCounter() {
+ const today = new Date().toDateString();
+ 
+ // Reset if it's a new day
+ if (lastResetDate !== today) {
+ freeTradesRemaining = 10;
+ lastResetDate = today;
+ localStorage.setItem('freeTradesRemaining', freeTradesRemaining);
+ localStorage.setItem('lastResetDate', lastResetDate);
+ }
+ 
+ const counterEl = document.getElementById('free-trades-remaining');
+ if (counterEl) {
+ counterEl.textContent = freeTradesRemaining;
+ counterEl.className = freeTradesRemaining === 0 ? 'text-red-400' : 'text-cyan-400';
+ }
+ }
+
+ function useFreeTrade() {
+ if (freeTradesRemaining > 0) {
+ freeTradesRemaining--;
+ localStorage.setItem('freeTradesRemaining', freeTradesRemaining);
+ updateFreeTradesCounter();
+ return true;
+ }
+ return false;
+ }
 
  // Tab navigation
  function showTab(tabId) {
