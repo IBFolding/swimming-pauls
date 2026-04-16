@@ -35,4 +35,47 @@ ollama:
   url: http://localhost:11434
   model: qwen2.5:14b
 
+# LLM Provider Settings
+# Priority: Cloud APIs (faster) > Ollama (free, local)
+llm:
+  # Default provider: "auto" will pick the best available
+  # Options: "auto", "ollama", "openai", "anthropic", "lmstudio"
+  provider: auto
+  
+  # Provider-specific settings
+  providers:
+    ollama:
+      model: qwen2.5:14b
+      url: http://localhost:11434
+      # Free, local, no API key needed
+    
+    kimi:
+      model: kimi-k2-0714-preview
+      # api_key: set via KIMI_API_KEY or MOONSHOT_API_KEY env var
+      # Moonshot AI (Kimi) - fast, capable, good for predictions
+      # Get API key at: https://platform.moonshot.cn/
+    
+    openai:
+      model: gpt-4o-mini
+      # api_key: set via OPENAI_API_KEY env var or OpenClaw config
+      # Fast, accurate, costs ~$0.002 per prediction
+    
+    anthropic:
+      model: claude-3-haiku-20240307
+      # api_key: set via ANTHROPIC_API_KEY env var or OpenClaw config
+      # Fast, good reasoning, costs ~$0.001 per prediction
+    
+    lmstudio:
+      model: local-model
+      url: http://localhost:1234
+      # Free, local alternative to Ollama
+  
+  # Auto-selection priority (when provider: auto)
+  auto_priority:
+    - kimi        # Fast, capable (what OpenClaw uses)
+    - openai      # Fastest, most accurate
+    - anthropic   # Good reasoning, cheaper
+    - ollama      # Free but slower
+    - lmstudio    # Fallback local option
+
 domain: trading

@@ -1,8 +1,11 @@
-// Paul's World V2 - Canvas Renderer
-// Isometric 2D view with 1000 Pauls
+// Paul's World V3 - 8-Bit Pixel Art Renderer
+// SimCity-style retro aesthetic
 
 const canvas = document.getElementById('worldCanvas');
 const ctx = canvas.getContext('2d');
+
+// Disable anti-aliasing for pixel art look
+ctx.imageSmoothingEnabled = false;
 
 // World state
 let worldState = {
@@ -44,33 +47,98 @@ let diaryTypes = ['activity', 'thought', 'prediction', 'trade', 'dream', 'intera
 let selectedColor = '#8b5cf6';
 let selectedBias = 'neutral';
 
-// Buildings configuration (isometric positions)
-const BUILDING_CONFIG = {
-  market: { name: 'Market House', x: 200, y: 150, w: 120, h: 80, color: '#22c55e', emoji: '📈' },
-  research: { name: 'Research Lab', x: 500, y: 150, w: 120, h: 80, color: '#3b82f6', emoji: '🔬' },
-  social: { name: 'Social Plaza', x: 800, y: 150, w: 140, h: 90, color: '#ec4899', emoji: '💬' },
-  cafe: { name: 'The Cafe', x: 200, y: 400, w: 100, h: 70, color: '#eab308', emoji: '☕' },
-  dex: { name: 'DEX Terminal', x: 500, y: 400, w: 120, h: 80, color: '#8b5cf6', emoji: '💱' },
-  home: { name: 'Paul Estates', x: 800, y: 400, w: 130, h: 85, color: '#6b7280', emoji: '🏠' },
-  townhall: { name: 'Town Hall', x: 200, y: 650, w: 130, h: 90, color: '#f59e0b', emoji: '🏛️' },
-  arcade: { name: 'Arcade', x: 500, y: 650, w: 140, h: 90, color: '#d946ef', emoji: '🎮' },
-  garden: { name: 'Garden', x: 800, y: 650, w: 110, h: 75, color: '#10b981', emoji: '🌱' },
-  oracle: { name: 'Oracle Tower', x: 350, y: 275, w: 100, h: 140, color: '#6366f1', emoji: '🔮' },
-  power: { name: 'Power Plant', x: 650, y: 275, w: 110, h: 100, color: '#f97316', emoji: '⚡' },
-  newsroom: { name: 'Newsroom', x: 350, y: 525, w: 120, h: 80, color: '#06b6d4', emoji: '📰' },
-  theater: { name: 'Theater', x: 650, y: 525, w: 110, h: 85, color: '#e11d48', emoji: '🎭' },
-  gym: { name: 'Gym', x: 500, y: 800, w: 120, h: 80, color: '#84cc16', emoji: '🏋️' },
-  daycare: { name: 'Paul Daycare', x: 950, y: 400, w: 140, h: 90, color: '#f472b6', emoji: '👶' }
+// 8-bit color palette
+const PALETTE = {
+  grass: '#2d4a3e',
+  grassDark: '#1e3328',
+  water: '#1e3a5f',
+  road: '#3d3d3d',
+  roadLine: '#f0f0f0',
+  building: {
+    market: '#22c55e',
+    research: '#3b82f6',
+    social: '#ec4899',
+    cafe: '#eab308',
+    dex: '#8b5cf6',
+    home: '#6b7280',
+    townhall: '#f59e0b',
+    arcade: '#d946ef',
+    garden: '#10b981',
+    oracle: '#6366f1',
+    power: '#f97316',
+    newsroom: '#06b6d4',
+    theater: '#e11d48',
+    gym: '#84cc16',
+    daycare: '#f472b6'
+  }
 };
+
+// 8-bit Paul sprites (8x8 pixels represented as arrays)
+const PAUL_SPRITES = {
+  standing: [
+    [0,1,1,1,1,1,1,0],
+    [0,1,1,1,1,1,1,0],
+    [0,0,1,1,1,1,0,0],
+    [0,1,1,1,1,1,1,0],
+    [1,1,0,1,1,0,1,1],
+    [1,0,0,1,1,0,0,1],
+    [1,0,0,0,0,0,0,1],
+    [0,1,0,0,0,0,1,0]
+  ],
+  walking1: [
+    [0,1,1,1,1,1,1,0],
+    [0,1,1,1,1,1,1,0],
+    [0,0,1,1,1,1,0,0],
+    [0,1,1,1,1,1,1,0],
+    [1,1,0,1,1,0,1,1],
+    [1,0,0,1,1,0,0,0],
+    [1,0,0,0,0,0,1,0],
+    [0,1,0,0,0,1,0,0]
+  ],
+  walking2: [
+    [0,1,1,1,1,1,1,0],
+    [0,1,1,1,1,1,1,0],
+    [0,0,1,1,1,1,0,0],
+    [0,1,1,1,1,1,1,0],
+    [1,1,0,1,1,0,1,1],
+    [0,0,0,1,1,0,0,1],
+    [0,1,0,0,0,0,0,1],
+    [0,0,1,0,0,0,1,0]
+  ]
+};
+
+// Building configurations (grid-based positions for 8-bit look)
+const BUILDING_CONFIG = {
+  market: { name: 'MARKET', x: 5, y: 3, w: 4, h: 3, color: PALETTE.building.market, emoji: '📈' },
+  research: { name: 'LAB', x: 12, y: 3, w: 4, h: 3, color: PALETTE.building.research, emoji: '🔬' },
+  social: { name: 'PLAZA', x: 19, y: 3, w: 4, h: 3, color: PALETTE.building.social, emoji: '💬' },
+  cafe: { name: 'CAFE', x: 5, y: 8, w: 3, h: 2, color: PALETTE.building.cafe, emoji: '☕' },
+  dex: { name: 'DEX', x: 12, y: 8, w: 4, h: 3, color: PALETTE.building.dex, emoji: '💱' },
+  home: { name: 'HOMES', x: 19, y: 8, w: 4, h: 3, color: PALETTE.building.home, emoji: '🏠' },
+  townhall: { name: 'HALL', x: 5, y: 13, w: 4, h: 3, color: PALETTE.building.townhall, emoji: '🏛️' },
+  arcade: { name: 'ARCADE', x: 12, y: 13, w: 4, h: 3, color: PALETTE.building.arcade, emoji: '🎮' },
+  garden: { name: 'GARDEN', x: 19, y: 13, w: 3, h: 2, color: PALETTE.building.garden, emoji: '🌱' },
+  oracle: { name: 'ORACLE', x: 9, y: 5, w: 3, h: 4, color: PALETTE.building.oracle, emoji: '🔮' },
+  power: { name: 'POWER', x: 16, y: 5, w: 3, h: 3, color: PALETTE.building.power, emoji: '⚡' },
+  newsroom: { name: 'NEWS', x: 9, y: 10, w: 4, h: 3, color: PALETTE.building.newsroom, emoji: '📰' },
+  theater: { name: 'THEATER', x: 16, y: 10, w: 3, h: 3, color: PALETTE.building.theater, emoji: '🎭' },
+  gym: { name: 'GYM', x: 12, y: 16, w: 4, h: 3, color: PALETTE.building.gym, emoji: '🏋️' },
+  daycare: { name: 'DAYCARE', x: 23, y: 8, w: 4, h: 3, color: PALETTE.building.daycare, emoji: '👶' }
+};
+
+// Grid settings
+const TILE_SIZE = 32; // Size of each grid tile in pixels
+const GRID_WIDTH = 32;
+const GRID_HEIGHT = 24;
 
 // Initialize
 function init() {
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
   
-  // Center camera on world center (buildings are roughly 0-1100 x, 0-900 y)
-  const worldCenterX = 550;
-  const worldCenterY = 450;
+  // Center camera on world center
+  const worldCenterX = (GRID_WIDTH * TILE_SIZE) / 2;
+  const worldCenterY = (GRID_HEIGHT * TILE_SIZE) / 2;
   camera.x = worldCenterX - canvas.width / 2;
   camera.y = worldCenterY - canvas.height / 2;
   
@@ -105,11 +173,20 @@ function init() {
   
   // Generate initial social posts
   generateSocialPosts();
+  
+  // Start animation loop for Pauls
+  setInterval(animatePauls, 200);
+}
+
+let paulAnimationFrame = 0;
+
+function animatePauls() {
+  paulAnimationFrame = (paulAnimationFrame + 1) % 2;
 }
 
 function resizeCanvas() {
   canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight - 60; // Subtract header
+  canvas.height = window.innerHeight - 50; // Subtract header
 }
 
 // WebSocket
@@ -153,7 +230,7 @@ function attemptReconnect() {
 function handleWebSocketMessage(data) {
   switch (data.type) {
     case 'connected':
-      addActivity('🎬 Connected to Paul\'s World');
+      addActivity('🎬 CONNECTED TO PAUL\'S WORLD');
       break;
       
     case 'worldUpdate':
@@ -164,10 +241,6 @@ function handleWebSocketMessage(data) {
     case 'event':
       handleEvent(data.eventType, data.data);
       break;
-      
-    case 'paulUpdate':
-      // Individual Paul update
-      break;
   }
 }
 
@@ -176,43 +249,43 @@ function updateConnectionStatus(status) {
   const text = document.getElementById('connection-text');
   
   dot.className = `status-dot ${status}`;
-  text.textContent = status === 'connected' ? 'Live' : status === 'connecting' ? 'Connecting...' : 'Disconnected';
+  text.textContent = status === 'connected' ? 'ONLINE' : status === 'connecting' ? 'CONNECTING...' : 'OFFLINE';
 }
 
 function handleEvent(eventType, data) {
   switch (eventType) {
     case 'market_crash':
-      addActivity('📉 MARKET CRASH! Pauls panicking...');
-      addDiaryEntry('trade', 'Market crash detected! Pauls rushing to safety.', 'System');
+      addActivity('📉 MARKET CRASH! PAULS PANICKING...');
+      addDiaryEntry('trade', 'MARKET CRASH DETECTED! PAULS RUSHING TO SAFETY.', 'SYSTEM');
       break;
     case 'bull_run':
-      addActivity('📈 BULL RUN! Pauls rushing to DEX...');
-      addDiaryEntry('trade', 'Bull run in progress! Pauls celebrating gains.', 'System');
+      addActivity('📈 BULL RUN! PAULS TO DEX...');
+      addDiaryEntry('trade', 'BULL RUN IN PROGRESS! PAULS CELEBRATING.', 'SYSTEM');
       break;
     case 'news_break':
-      addActivity('📰 BREAKING NEWS! Pauls to Newsroom...');
-      addDiaryEntry('activity', 'Breaking news! Pauls gathering information.', 'System');
+      addActivity('📰 BREAKING NEWS! PAULS TO NEWSROOM...');
+      addDiaryEntry('activity', 'BREAKING NEWS! PAULS GATHERING INFO.', 'SYSTEM');
       break;
     case 'whale_alert':
-      addActivity('🐋 WHALE ALERT! Pauls watching...');
-      addDiaryEntry('prediction', 'Whale movement detected! Pauls analyzing impact.', 'System');
+      addActivity('🐋 WHALE ALERT! PAULS WATCHING...');
+      addDiaryEntry('prediction', 'WHALE MOVEMENT! PAULS ANALYZING IMPACT.', 'SYSTEM');
       break;
   }
 }
 
-// Rendering
+// 8-bit Pixel Art Rendering
 function render() {
-  // Clear canvas
-  ctx.fillStyle = '#0a0a0a';
+  // Clear canvas with grass color
+  ctx.fillStyle = PALETTE.grass;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  
-  // Draw grid
-  drawGrid();
   
   // Apply camera transform
   ctx.save();
   ctx.translate(-camera.x, -camera.y);
   ctx.scale(camera.zoom, camera.zoom);
+  
+  // Draw grid (roads/paths)
+  drawGrid();
   
   // Draw buildings
   drawBuildings();
@@ -220,7 +293,7 @@ function render() {
   // Draw Pauls
   drawPauls();
   
-  // Draw hovered building highlight
+  // Draw hover highlight
   if (hoveredBuilding) {
     drawBuildingHighlight(hoveredBuilding);
   }
@@ -234,78 +307,96 @@ function render() {
 }
 
 function drawGrid() {
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
-  ctx.lineWidth = 1;
+  // Draw roads between buildings
+  ctx.fillStyle = PALETTE.road;
   
-  const gridSize = 50 * camera.zoom;
-  const offsetX = -camera.x % gridSize;
-  const offsetY = -camera.y % gridSize;
-  
-  for (let x = offsetX; x < canvas.width; x += gridSize) {
-    ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x, canvas.height);
-    ctx.stroke();
+  // Horizontal roads
+  for (let y = 0; y < GRID_HEIGHT; y += 5) {
+    ctx.fillRect(0, y * TILE_SIZE, GRID_WIDTH * TILE_SIZE, TILE_SIZE);
   }
   
-  for (let y = offsetY; y < canvas.height; y += gridSize) {
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(canvas.width, y);
-    ctx.stroke();
+  // Vertical roads
+  for (let x = 0; x < GRID_WIDTH; x += 5) {
+    ctx.fillRect(x * TILE_SIZE, 0, TILE_SIZE, GRID_HEIGHT * TILE_SIZE);
+  }
+  
+  // Draw road lines (dashed)
+  ctx.fillStyle = PALETTE.roadLine;
+  for (let x = 0; x < GRID_WIDTH; x += 5) {
+    for (let y = 2; y < GRID_HEIGHT; y += 2) {
+      ctx.fillRect(x * TILE_SIZE + TILE_SIZE/2 - 2, y * TILE_SIZE + TILE_SIZE/2 - 1, 4, 2);
+    }
+  }
+  
+  // Draw grass details (random pixels)
+  ctx.fillStyle = PALETTE.grassDark;
+  for (let x = 0; x < GRID_WIDTH; x++) {
+    for (let y = 0; y < GRID_HEIGHT; y++) {
+      if (Math.random() < 0.05) {
+        ctx.fillRect(x * TILE_SIZE + 8, y * TILE_SIZE + 8, 4, 4);
+      }
+    }
   }
 }
 
 function drawBuildings() {
   Object.entries(BUILDING_CONFIG).forEach(([id, building]) => {
     const isHovered = hoveredBuilding === id;
-    const isActive = worldState.buildings[id]?.active;
+    const pixelX = building.x * TILE_SIZE;
+    const pixelY = building.y * TILE_SIZE;
+    const pixelW = building.w * TILE_SIZE;
+    const pixelH = building.h * TILE_SIZE;
     
-    // Building shadow
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-    ctx.fillRect(building.x + 5, building.y + 5, building.w, building.h);
+    // Building shadow (offset)
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.fillRect(pixelX + 4, pixelY + 4, pixelW, pixelH);
     
-    // Building body
-    const gradient = ctx.createLinearGradient(building.x, building.y, building.x, building.y + building.h);
-    gradient.addColorStop(0, building.color + '40');
-    gradient.addColorStop(1, building.color + '20');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(building.x, building.y, building.w, building.h);
+    // Building body (pixelated block)
+    ctx.fillStyle = building.color;
+    ctx.fillRect(pixelX, pixelY, pixelW, pixelH);
     
-    // Building border
-    ctx.strokeStyle = isHovered ? '#fff' : building.color;
-    ctx.lineWidth = isHovered ? 3 : 2;
-    ctx.strokeRect(building.x, building.y, building.w, building.h);
+    // Building highlight (top-left)
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.fillRect(pixelX, pixelY, pixelW, 4);
+    ctx.fillRect(pixelX, pixelY, 4, pixelH);
     
-    // Glow effect for active buildings
-    if (isActive || isHovered) {
-      ctx.shadowColor = building.color;
-      ctx.shadowBlur = 20;
-      ctx.strokeRect(building.x, building.y, building.w, building.h);
-      ctx.shadowBlur = 0;
+    // Building shadow (bottom-right)
+    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+    ctx.fillRect(pixelX, pixelY + pixelH - 4, pixelW, 4);
+    ctx.fillRect(pixelX + pixelW - 4, pixelY, 4, pixelH);
+    
+    // Border
+    ctx.strokeStyle = isHovered ? '#fff' : 'rgba(0,0,0,0.3)';
+    ctx.lineWidth = isHovered ? 4 : 2;
+    ctx.strokeRect(pixelX, pixelY, pixelW, pixelH);
+    
+    // Building details (windows/door)
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    // Windows
+    for (let wx = 1; wx < building.w - 1; wx += 2) {
+      for (let wy = 1; wy < building.h - 1; wy++) {
+        ctx.fillRect(pixelX + wx * TILE_SIZE + 4, pixelY + wy * TILE_SIZE + 4, TILE_SIZE - 8, TILE_SIZE - 8);
+      }
     }
     
-    // Emoji
-    ctx.font = '24px Arial';
-    ctx.textAlign = 'center';
+    // Door
+    ctx.fillStyle = 'rgba(0,0,0,0.4)';
+    ctx.fillRect(pixelX + pixelW/2 - TILE_SIZE/2, pixelY + pixelH - TILE_SIZE, TILE_SIZE, TILE_SIZE);
+    
+    // Label (8-bit text)
     ctx.fillStyle = '#fff';
-    ctx.fillText(building.emoji, building.x + building.w / 2, building.y + building.h / 2 + 8);
+    ctx.font = '8px "Press Start 2P"';
+    ctx.textAlign = 'center';
+    ctx.fillText(building.name, pixelX + pixelW/2, pixelY - 8);
     
-    // Label
-    ctx.font = '12px Inter, sans-serif';
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-    ctx.fillText(building.name, building.x + building.w / 2, building.y + building.h + 20);
-    
-    // Paul count
+    // Paul count badge
     const paulCount = worldState.pauls?.filter(p => p.building === id).length || 0;
     if (paulCount > 0) {
-      ctx.fillStyle = building.color;
-      ctx.beginPath();
-      ctx.arc(building.x + building.w - 15, building.y + 15, 12, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = '#000';
-      ctx.font = 'bold 10px Inter';
-      ctx.fillText(paulCount.toString(), building.x + building.w - 15, building.y + 19);
+      ctx.fillStyle = '#e94560';
+      ctx.fillRect(pixelX + pixelW - 20, pixelY - 10, 20, 14);
+      ctx.fillStyle = '#fff';
+      ctx.font = '8px "Press Start 2P"';
+      ctx.fillText(paulCount.toString(), pixelX + pixelW - 10, pixelY);
     }
   });
 }
@@ -314,10 +405,17 @@ function drawBuildingHighlight(buildingId) {
   const building = BUILDING_CONFIG[buildingId];
   if (!building) return;
   
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
-  ctx.lineWidth = 2;
-  ctx.setLineDash([5, 5]);
-  ctx.strokeRect(building.x - 5, building.y - 5, building.w + 10, building.h + 10);
+  const pixelX = building.x * TILE_SIZE;
+  const pixelY = building.y * TILE_SIZE;
+  const pixelW = building.w * TILE_SIZE;
+  const pixelH = building.h * TILE_SIZE;
+  
+  // Pulsing highlight effect
+  const pulse = Math.sin(Date.now() / 200) * 0.3 + 0.7;
+  ctx.strokeStyle = `rgba(233, 69, 96, ${pulse})`;
+  ctx.lineWidth = 4;
+  ctx.setLineDash([8, 4]);
+  ctx.strokeRect(pixelX - 4, pixelY - 4, pixelW + 8, pixelH + 8);
   ctx.setLineDash([]);
 }
 
@@ -328,100 +426,69 @@ function drawPauls() {
   const sortedPauls = [...worldState.pauls].sort((a, b) => a.y - b.y);
   
   sortedPauls.forEach(paul => {
-    const x = paul.x || 0;
-    const y = paul.y || 0;
+    // Convert grid position to pixel position
+    const pixelX = Math.floor(paul.x / TILE_SIZE) * TILE_SIZE;
+    const pixelY = Math.floor(paul.y / TILE_SIZE) * TILE_SIZE;
+    
     const isReal = paul.isReal;
     const isSelected = selectedPaul === paul.id;
     const isHovered = hoveredPaul === paul.id;
     
-    // Skip if outside visible area (optimization)
-    if (x < camera.x - 100 || x > camera.x + canvas.width + 100 ||
-        y < camera.y - 100 || y > camera.y + canvas.height + 100) {
+    // Skip if outside visible area
+    if (pixelX < camera.x - 100 || pixelX > camera.x + canvas.width + 100 ||
+        pixelY < camera.y - 100 || pixelY > camera.y + canvas.height + 100) {
       return;
     }
     
     if (isReal) {
-      // Real Paul - full avatar
-      const size = isSelected ? 28 : isHovered ? 24 : 20;
+      // Draw 8-bit Paul sprite
+      const sprite = paulAnimationFrame === 0 ? PAUL_SPRITES.standing : 
+                    (Math.floor(Date.now() / 500) % 2 === 0 ? PAUL_SPRITES.walking1 : PAUL_SPRITES.walking2);
+      
       const color = paul.type?.color || '#8b5cf6';
+      const scale = isSelected ? 2 : (isHovered ? 1.5 : 1);
+      const size = 8 * scale;
       
-      // Shadow
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-      ctx.beginPath();
-      ctx.ellipse(x + 2, y + size/2 + 2, size/2, size/4, 0, 0, Math.PI * 2);
-      ctx.fill();
+      // Draw sprite pixels
+      for (let row = 0; row < 8; row++) {
+        for (let col = 0; col < 8; col++) {
+          if (sprite[row][col] === 1) {
+            ctx.fillStyle = color;
+            ctx.fillRect(
+              pixelX + col * size/8 + (TILE_SIZE - size)/2,
+              pixelY + row * size/8 + (TILE_SIZE - size)/2,
+              size/8 + 1,
+              size/8 + 1
+            );
+          }
+        }
+      }
       
-      // Avatar circle
-      ctx.fillStyle = color + '30';
-      ctx.strokeStyle = isSelected ? '#fff' : color;
-      ctx.lineWidth = isSelected ? 3 : 2;
-      ctx.beginPath();
-      ctx.arc(x, y, size/2, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-      
-      // Initials
-      ctx.fillStyle = '#fff';
-      ctx.font = `bold ${size/2}px Inter, sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(paul.initials || 'P', x, y + 1);
-      
-      // Thought bubble
-      if (paul.thought && (isSelected || isHovered)) {
-        drawThoughtBubble(x, y - size, paul.thought);
+      // Draw initials above Paul
+      if (isSelected || isHovered) {
+        ctx.fillStyle = '#fff';
+        ctx.font = '8px "Press Start 2P"';
+        ctx.textAlign = 'center';
+        ctx.fillText(
+          paul.initials || 'P',
+          pixelX + TILE_SIZE/2,
+          pixelY - 4
+        );
       }
       
       // Selection ring
       if (isSelected) {
-        ctx.strokeStyle = '#22d3ee';
+        ctx.strokeStyle = '#0f0';
         ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.arc(x, y, size/2 + 5, 0, Math.PI * 2);
-        ctx.stroke();
+        ctx.strokeRect(pixelX + 2, pixelY + 2, TILE_SIZE - 4, TILE_SIZE - 4);
       }
     } else {
-      // Visual Paul - simple dot
+      // Visual Paul - simple pixel dot
       const color = paul.type?.color || '#6b7280';
       ctx.fillStyle = color;
-      ctx.beginPath();
-      ctx.arc(x, y, 4, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.fillRect(pixelX + TILE_SIZE/2 - 2, pixelY + TILE_SIZE/2 - 2, 4, 4);
     }
   });
-}
-
-function drawThoughtBubble(x, y, text) {
-  const padding = 10;
-  ctx.font = '12px Inter, sans-serif';
-  const textWidth = ctx.measureText(text).width;
-  const width = textWidth + padding * 2;
-  const height = 30;
-  
-  // Bubble
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-  ctx.lineWidth = 1;
-  
-  ctx.beginPath();
-  ctx.roundRect(x - width/2, y - height - 10, width, height, 8);
-  ctx.fill();
-  ctx.stroke();
-  
-  // Triangle pointer
-  ctx.beginPath();
-  ctx.moveTo(x - 6, y - 10);
-  ctx.lineTo(x, y - 4);
-  ctx.lineTo(x + 6, y - 10);
-  ctx.closePath();
-  ctx.fill();
-  ctx.stroke();
-  
-  // Text
-  ctx.fillStyle = '#fff';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(text, x, y - height/2 - 10);
 }
 
 // Mouse/Touch handling
@@ -430,18 +497,19 @@ function onMouseDown(e) {
   mouse.lastX = e.clientX;
   mouse.lastY = e.clientY;
   
-  // Check for clicks on Pauls or buildings
+  // Convert screen to world coordinates
   const worldX = (e.clientX + camera.x) / camera.zoom;
-  const worldY = (e.clientY + camera.y - 60) / camera.zoom;
+  const worldY = (e.clientY + camera.y - 50) / camera.zoom;
   
-  // Check Pauls first
+  // Check for clicks on Pauls
   let clickedPaul = null;
   if (worldState.pauls) {
     for (const paul of worldState.pauls) {
       if (!paul.isReal) continue;
-      const dx = worldX - paul.x;
-      const dy = worldY - paul.y;
-      if (Math.sqrt(dx * dx + dy * dy) < 15) {
+      const pixelX = Math.floor(paul.x / TILE_SIZE) * TILE_SIZE;
+      const pixelY = Math.floor(paul.y / TILE_SIZE) * TILE_SIZE;
+      if (worldX >= pixelX && worldX <= pixelX + TILE_SIZE &&
+          worldY >= pixelY && worldY <= pixelY + TILE_SIZE) {
         clickedPaul = paul;
         break;
       }
@@ -454,8 +522,13 @@ function onMouseDown(e) {
     // Check buildings
     let clickedBuilding = null;
     Object.entries(BUILDING_CONFIG).forEach(([id, building]) => {
-      if (worldX >= building.x && worldX <= building.x + building.w &&
-          worldY >= building.y && worldY <= building.y + building.h) {
+      const pixelX = building.x * TILE_SIZE;
+      const pixelY = building.y * TILE_SIZE;
+      const pixelW = building.w * TILE_SIZE;
+      const pixelH = building.h * TILE_SIZE;
+      
+      if (worldX >= pixelX && worldX <= pixelX + pixelW &&
+          worldY >= pixelY && worldY <= pixelY + pixelH) {
         clickedBuilding = id;
       }
     });
@@ -492,9 +565,10 @@ function onMouseMove(e) {
     if (worldState.pauls) {
       for (const paul of worldState.pauls) {
         if (!paul.isReal) continue;
-        const dx = worldX - paul.x;
-        const dy = worldY - paul.y;
-        if (Math.sqrt(dx * dx + dy * dy) < 15) {
+        const pixelX = Math.floor(paul.x / TILE_SIZE) * TILE_SIZE;
+        const pixelY = Math.floor(paul.y / TILE_SIZE) * TILE_SIZE;
+        if (worldX >= pixelX && worldX <= pixelX + TILE_SIZE &&
+            worldY >= pixelY && worldY <= pixelY + TILE_SIZE) {
           hoveredPaul = paul.id;
           canvas.style.cursor = 'pointer';
           break;
@@ -505,8 +579,13 @@ function onMouseMove(e) {
     // Check buildings
     if (!hoveredPaul) {
       Object.entries(BUILDING_CONFIG).forEach(([id, building]) => {
-        if (worldX >= building.x && worldX <= building.x + building.w &&
-            worldY >= building.y && worldY <= building.y + building.h) {
+        const pixelX = building.x * TILE_SIZE;
+        const pixelY = building.y * TILE_SIZE;
+        const pixelW = building.w * TILE_SIZE;
+        const pixelH = building.h * TILE_SIZE;
+        
+        if (worldX >= pixelX && worldX <= pixelX + pixelW &&
+            worldY >= pixelY && worldY <= pixelY + pixelH) {
           hoveredBuilding = id;
           canvas.style.cursor = 'pointer';
         }
@@ -514,7 +593,7 @@ function onMouseMove(e) {
     }
     
     if (!hoveredPaul && !hoveredBuilding) {
-      canvas.style.cursor = mouse.isDown ? 'grabbing' : 'grab';
+      canvas.style.cursor = mouse.isDown ? 'grabbing' : 'crosshair';
     }
   }
 }
@@ -525,7 +604,7 @@ function onMouseUp() {
 
 function onWheel(e) {
   e.preventDefault();
-  const zoomSpeed = 0.1;
+  const zoomSpeed = 0.2;
   const newZoom = camera.targetZoom + (e.deltaY > 0 ? -zoomSpeed : zoomSpeed);
   camera.targetZoom = Math.max(0.5, Math.min(3, newZoom));
 }
@@ -559,7 +638,6 @@ function selectPaul(paul) {
   selectedPaul = paul.id;
   updateSelectedPanel(paul);
   
-  // Send to server
   if (ws && ws.readyState === WebSocket.OPEN) {
     ws.send(JSON.stringify({ type: 'selectPaul', paulId: paul.id }));
   }
@@ -570,21 +648,18 @@ function selectBuilding(buildingId) {
   const paulsInside = worldState.pauls?.filter(p => p.building === buildingId) || [];
   const realPaulsInside = paulsInside.filter(p => p.isReal);
   
-  // Show building popup
   showBuildingPopup(building, paulsInside.length, realPaulsInside);
   
   if (ws && ws.readyState === WebSocket.OPEN) {
     ws.send(JSON.stringify({ type: 'selectBuilding', buildingId }));
   }
-  addActivity(`🏢 Viewing ${building.name} (${paulsInside.length} Pauls inside)`);
+  addActivity(`🏢 VIEWING ${building.name} (${paulsInside.length} PAULS INSIDE)`);
 }
 
 function showBuildingPopup(building, totalCount, realPauls) {
-  // Remove existing popup
   const existing = document.getElementById('building-popup');
   if (existing) existing.remove();
   
-  // Create popup
   const popup = document.createElement('div');
   popup.id = 'building-popup';
   popup.className = 'overlay-panel';
@@ -593,14 +668,14 @@ function showBuildingPopup(building, totalCount, realPauls) {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 400px;
-    max-height: 500px;
-    background: rgba(10, 10, 10, 0.95);
-    border: 1px solid ${building.color};
-    border-radius: 16px;
-    padding: 20px;
+    width: 320px;
+    max-height: 400px;
+    background: #16213e;
+    border: 4px solid ${building.color};
+    padding: 16px;
     z-index: 2000;
     overflow-y: auto;
+    font-family: 'Press Start 2P', cursive;
   `;
   
   const realCount = realPauls.length;
@@ -608,42 +683,34 @@ function showBuildingPopup(building, totalCount, realPauls) {
   
   let paulsList = '';
   if (realPauls.length > 0) {
-    paulsList = realPauls.slice(0, 10).map(p => `
-      <div style="display: flex; align-items: center; gap: 10px; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 6px;">
-        <div style="width: 32px; height: 32px; border-radius: 50%; background: ${p.type?.color || '#8b5cf6'}30; border: 2px solid ${p.type?.color || '#8b5cf6'}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold;">${p.initials || 'P'}</div>
+    paulsList = realPauls.slice(0, 8).map(p => `
+      <div style="display: flex; align-items: center; gap: 8px; padding: 8px; background: #0f3460; border: 2px solid #533483; margin-bottom: 8px; font-size: 8px;">
+        <div style="width: 24px; height: 24px; background: ${p.type?.color || '#8b5cf6'}; display: flex; align-items: center; justify-content: center; font-size: 10px;">${p.initials || 'P'}</div>
         <div style="flex: 1;">
-          <div style="font-weight: 600;">${p.name}</div>
-          <div style="font-size: 11px; color: rgba(255,255,255,0.5);">${p.type?.name || 'Trader'} • ${p.activity || 'Idle'}</div>
+          <div style="color: #e94560;">${p.name}</div>
+          <div style="color: #888; font-size: 6px; margin-top: 4px;">${p.type?.name || 'TRADER'} • ${p.activity || 'IDLE'}</div>
         </div>
-        <div style="font-size: 11px; color: ${p.stats?.roi > 0 ? '#22c55e' : '#ef4444'};">${p.stats?.roi > 0 ? '+' : ''}${p.stats?.roi || 0}%</div>
+        <div style="color: ${p.stats?.roi > 0 ? '#0f0' : '#f00'}; font-size: 8px;">${p.stats?.roi > 0 ? '+' : ''}${p.stats?.roi || 0}%</div>
       </div>
     `).join('');
     
-    if (realPauls.length > 10) {
-      paulsList += `<div style="text-align: center; color: rgba(255,255,255,0.4); font-size: 12px; padding: 8px;">+ ${realPauls.length - 10} more Pauls...</div>`;
+    if (realPauls.length > 8) {
+      paulsList += `<div style="text-align: center; color: #888; font-size: 8px; padding: 8px;">+ ${realPauls.length - 8} MORE...</div>`;
     }
   } else {
-    paulsList = '<div style="text-align: center; color: rgba(255,255,255,0.4); padding: 20px;">No Pauls inside</div>';
+    paulsList = '<div style="text-align: center; color: #888; padding: 20px; font-size: 8px;">NO PAULS INSIDE</div>';
   }
   
   popup.innerHTML = `
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-      <div style="display: flex; align-items: center; gap: 12px;">
-        <div style="font-size: 32px;">${building.emoji}</div>
-        <div>
-          <h3 style="margin: 0; font-size: 18px;">${building.name}</h3>
-          <div style="font-size: 12px; color: rgba(255,255,255,0.5);">${totalCount} Pauls inside (${realCount} real, ${fillerCount} visual)</div>
-        </div>
-      </div>
-      <button onclick="document.getElementById('building-popup').remove()" style="background: none; border: none; color: rgba(255,255,255,0.5); font-size: 20px; cursor: pointer;">×</button>
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 2px solid ${building.color}; padding-bottom: 12px;">
+      <div style="font-size: 12px; color: ${building.color};">${building.emoji} ${building.name}</div>
+      <button onclick="document.getElementById('building-popup').remove()" style="background: #e94560; border: 2px solid #fff; color: #fff; font-family: 'Press Start 2P', cursive; font-size: 10px; cursor: pointer; padding: 4px 8px;">X</button>
     </div>
-    <div style="margin-bottom: 12px;">
-      <div style="font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 8px;">Activities: ${building.activities?.join(', ') || 'Various'}</div>
+    <div style="font-size: 8px; color: #888; margin-bottom: 16px;">
+      ${totalCount} PAULS INSIDE (${realCount} REAL, ${fillerCount} VISUAL)
     </div>
-    <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px;">
-      <div style="font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Pauls Inside</div>
-      ${paulsList}
-    </div>
+    <div style="font-size: 8px; color: #e94560; margin-bottom: 12px;">PAULS INSIDE:</div>
+    ${paulsList}
   `;
   
   document.body.appendChild(popup);
@@ -661,15 +728,14 @@ function updateSelectedPanel(paul) {
   panel.classList.remove('hidden');
   document.getElementById('toggle-selected').classList.add('active');
   
-  document.getElementById('selected-name').textContent = paul.name;
-  document.getElementById('selected-role').textContent = paul.profession || 'Trader';
+  document.getElementById('selected-name').textContent = paul.name.toUpperCase();
+  document.getElementById('selected-role').textContent = (paul.profession || 'TRADER').toUpperCase();
   document.getElementById('selected-avatar').textContent = paul.initials || 'P';
-  document.getElementById('selected-avatar').style.borderColor = paul.type?.color || '#8b5cf6';
-  document.getElementById('selected-avatar').style.background = (paul.type?.color || '#8b5cf6') + '30';
+  document.getElementById('selected-avatar').style.background = paul.type?.color || '#8b5cf6';
   
   const building = BUILDING_CONFIG[paul.building];
-  document.getElementById('selected-building').textContent = building ? `📍 ${building.name}` : '📍 Wandering';
-  document.getElementById('selected-activity').textContent = paul.activity || 'Idle';
+  document.getElementById('selected-building').textContent = building ? `📍 ${building.name}` : '📍 WANDERING';
+  document.getElementById('selected-activity').textContent = (paul.activity || 'IDLE').toUpperCase();
   
   if (paul.stats) {
     document.getElementById('selected-roi').textContent = (paul.stats.roi > 0 ? '+' : '') + paul.stats.roi + '%';
@@ -677,52 +743,30 @@ function updateSelectedPanel(paul) {
     document.getElementById('selected-level').textContent = paul.stats.level;
   }
   
-  document.getElementById('selected-thought').textContent = paul.thought ? `"${paul.thought}"` : '...';
+  document.getElementById('selected-thought').textContent = paul.thought ? `"${paul.thought.toUpperCase()}"` : '...';
 }
 
 function updateUI() {
-  // Update stats
   document.getElementById('paulCount').textContent = worldState.paulCount || 0;
   
-  // Update time - no decimals
   const hour = Math.floor(worldState.time?.hour || 9);
   const minute = Math.floor(worldState.time?.minute || 0);
-  const hourStr = hour.toString().padStart(2, '0');
-  const minuteStr = minute.toString().padStart(2, '0');
-  document.getElementById('gameTime').textContent = `${hourStr}:${minuteStr}`;
+  document.getElementById('gameTime').textContent = `${hour.toString().padStart(2,'0')}:${minute.toString().padStart(2,'0')}`;
   document.getElementById('gameDay').textContent = worldState.time?.day || 1;
   
-  // Update day/night indicator
-  const dayNightEl = document.getElementById('day-night-indicator');
-  const weatherIcon = document.getElementById('weather-icon');
-  const weatherText = document.getElementById('weather-text');
-  
-  if (dayNightEl) {
-    if (hour >= 6 && hour < 18) {
-      dayNightEl.textContent = '🌅 Day';
-      dayNightEl.style.background = 'rgba(251, 191, 36, 0.2)';
-    } else if (hour >= 18 && hour < 21) {
-      dayNightEl.textContent = '🌇 Evening';
-      dayNightEl.style.background = 'rgba(245, 158, 11, 0.2)';
-    } else {
-      dayNightEl.textContent = '🌙 Night';
-      dayNightEl.style.background = 'rgba(99, 102, 241, 0.2)';
-    }
-  }
-  
-  // Simple weather based on day
+  // Weather
   const weatherTypes = [
-    { icon: '☀️', text: 'Sunny' },
-    { icon: '⛅', text: 'Cloudy' },
-    { icon: '🌧️', text: 'Rainy' },
-    { icon: '⛈️', text: 'Stormy' },
-    { icon: '🌨️', text: 'Snowy' }
+    { icon: '☀️', text: 'SUNNY' },
+    { icon: '⛅', text: 'CLOUDY' },
+    { icon: '🌧️', text: 'RAINY' },
+    { icon: '⛈️', text: 'STORMY' },
+    { icon: '🌨️', text: 'SNOWY' }
   ];
   const weather = weatherTypes[(worldState.time?.day || 1) % weatherTypes.length];
-  if (weatherIcon) weatherIcon.textContent = weather.icon;
-  if (weatherText) weatherText.textContent = weather.text;
+  document.getElementById('weather-icon').textContent = weather.icon;
+  document.getElementById('weather-text').textContent = weather.text;
   
-  // Update needs bars (using average of real Pauls)
+  // Needs bars
   if (worldState.pauls) {
     const realPauls = worldState.pauls.filter(p => p.isReal);
     if (realPauls.length > 0) {
@@ -745,7 +789,6 @@ function updateUI() {
     }
   }
   
-  // Update selected panel if Paul data changed
   if (selectedPaul) {
     const paul = worldState.pauls?.find(p => p.id === selectedPaul);
     if (paul) {
@@ -755,7 +798,6 @@ function updateUI() {
 }
 
 function setupToggles() {
-  // Top overlay toggles
   const toggles = {
     'toggle-time': 'time-panel',
     'toggle-needs': 'needs-panel',
@@ -775,7 +817,6 @@ function setupToggles() {
     });
   });
   
-  // Side panel toggles
   const sideToggles = {
     'toggle-diary': 'diary-panel',
     'toggle-social': 'social-panel',
@@ -788,7 +829,6 @@ function setupToggles() {
     if (!btn || !panel) return;
     
     btn.addEventListener('click', () => {
-      // If clicking already active panel, hide it
       if (activeSidePanel === btnId.replace('toggle-', '')) {
         panel.classList.add('hidden');
         btn.classList.remove('active');
@@ -796,26 +836,22 @@ function setupToggles() {
         return;
       }
       
-      // Hide all side panels
       Object.values(sideToggles).forEach(pid => {
         const p = document.getElementById(pid);
         if (p) p.classList.add('hidden');
       });
       
-      // Deactivate all side toggle buttons
       Object.keys(sideToggles).forEach(bid => {
         const b = document.getElementById(bid);
         if (b) b.classList.remove('active');
       });
       
-      // Show selected panel
       panel.classList.remove('hidden');
       btn.classList.add('active');
       activeSidePanel = btnId.replace('toggle-', '');
     });
   });
   
-  // Setup chat
   setupChat();
 }
 
@@ -849,62 +885,43 @@ function toggleDiaryType(type) {
 function setSocialDays(days) {
   socialDays = days;
   
-  // Update button styles
   document.querySelectorAll('.days-btn').forEach(btn => {
     const btnDays = parseInt(btn.dataset.days);
     if (btnDays === days) {
       btn.classList.add('active');
-      btn.style.background = 'rgba(139, 92, 246, 0.3)';
-      btn.style.borderColor = '#8b5cf6';
-      btn.style.color = '#fff';
     } else {
       btn.classList.remove('active');
-      btn.style.background = 'rgba(255, 255, 255, 0.05)';
-      btn.style.borderColor = 'rgba(255,255,255,0.2)';
-      btn.style.color = 'rgba(255,255,255,0.6)';
     }
   });
   
   generateSocialPosts();
 }
 
-// Create Paul Form Setup
+// Create Paul Form
 function setupCreateForm() {
-  // Color picker
-  const colorOptions = document.querySelectorAll('.color-option');
-  colorOptions.forEach(option => {
-    option.addEventListener('click', () => {
-      colorOptions.forEach(o => o.classList.remove('selected'));
-      option.classList.add('selected');
-      selectedColor = option.dataset.color;
-      updateCreatePreview();
-    });
+  updateCreatePreview();
+}
+
+function selectColor(color) {
+  selectedColor = color;
+  document.querySelectorAll('.color-option').forEach(o => {
+    o.classList.toggle('selected', o.dataset.color === color);
   });
-  
-  // Bias selector
-  const biasBtns = document.querySelectorAll('.bias-btn');
-  biasBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      biasBtns.forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-      selectedBias = btn.dataset.bias;
-      updateCreatePreview();
-    });
+  updateCreatePreview();
+}
+
+function selectBias(bias) {
+  selectedBias = bias;
+  document.querySelectorAll('.bias-btn').forEach(b => {
+    b.classList.toggle('selected', b.dataset.bias === bias);
   });
-  
-  // Input listeners for preview
-  ['new-paul-name', 'new-paul-initials', 'new-paul-specialty', 'new-paul-quirk'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('input', updateCreatePreview);
-  });
-  
   updateCreatePreview();
 }
 
 function updateCreatePreview() {
-  const name = document.getElementById('new-paul-name')?.value || 'Paul Name';
+  const name = document.getElementById('new-paul-name')?.value || 'PAUL NAME';
   const initials = document.getElementById('new-paul-initials')?.value || 'PA';
-  const specialty = document.getElementById('new-paul-specialty')?.value || 'Select a specialty';
+  const specialty = document.getElementById('new-paul-specialty')?.value || 'SELECT SPECIALTY';
   
   const previewAvatar = document.getElementById('preview-avatar');
   const previewName = document.getElementById('preview-name');
@@ -914,23 +931,22 @@ function updateCreatePreview() {
     previewAvatar.textContent = initials.toUpperCase();
     previewAvatar.style.background = selectedColor;
   }
-  if (previewName) previewName.textContent = name;
-  if (previewDetails) previewDetails.textContent = `${specialty} • ${selectedBias.charAt(0).toUpperCase() + selectedBias.slice(1)}`;
+  if (previewName) previewName.textContent = name.toUpperCase();
+  if (previewDetails) previewDetails.textContent = `${specialty.toUpperCase()} • ${selectedBias.toUpperCase()}`;
 }
 
 function createNewPaul() {
   const name = document.getElementById('new-paul-name')?.value?.trim();
   const initials = document.getElementById('new-paul-initials')?.value?.trim()?.toUpperCase();
   const specialty = document.getElementById('new-paul-specialty')?.value;
-  const quirk = document.getElementById('new-paul-quirk')?.value?.trim();
   
   if (!name || !initials || !specialty) {
-    addChatMessage('system', 'Please fill in all required fields (Name, Initials, Specialty)!');
+    addChatMessage('system', 'PLEASE FILL IN ALL REQUIRED FIELDS!');
     return;
   }
   
   if (userCredits < 2) {
-    addChatMessage('system', 'Not enough credits! Need 2 💎 to create a Paul.');
+    addChatMessage('system', 'NOT ENOUGH CREDITS! NEED 2 💎');
     return;
   }
   
@@ -938,16 +954,15 @@ function createNewPaul() {
   localStorage.setItem('paulWorldCredits', userCredits);
   updateCredits();
   
-  // Clear form
   document.getElementById('new-paul-name').value = '';
   document.getElementById('new-paul-initials').value = '';
   document.getElementById('new-paul-specialty').value = '';
   document.getElementById('new-paul-quirk').value = '';
   updateCreatePreview();
   
-  addChatMessage('system', `🍼 Created ${name}! Welcome to Paul's World!`);
-  addActivity(`✨ New Paul created: ${name} (${specialty}, ${selectedBias})`);
-  addDiaryEntry('activity', `${name} has joined Paul's World!`, name);
+  addChatMessage('system', `🍼 CREATED ${name.toUpperCase()}! WELCOME!`);
+  addActivity(`✨ NEW PAUL: ${name.toUpperCase()}`);
+  addDiaryEntry('activity', `${name.toUpperCase()} HAS JOINED!`, name.toUpperCase());
 }
 
 // Social Platform Setup
@@ -963,20 +978,16 @@ function setupSocialPlatforms() {
   });
 }
 
-// Generate Diary Entries with filtering
+// Generate Diary Entries
 function generateDiaryEntries() {
-  // Generate more entries based on time range
   const entries = [];
-  const now = new Date();
   
-  // Add world start entry
-  entries.push({ type: 'activity', text: 'The world awakens. 1000 Pauls begin their trading journey.', paul: 'World', time: 'Day 1, 09:00', day: 1 });
+  entries.push({ type: 'activity', text: 'THE WORLD AWAKENS. 1000 PAULS BEGIN THEIR TRADING JOURNEY.', paul: 'WORLD', time: 'DAY 1, 09:00', day: 1 });
   
-  // Generate entries based on time range
   const entryCount = diaryTimeRange === 1 ? 5 : diaryTimeRange === 7 ? 15 : diaryTimeRange === 30 ? 30 : 50;
   
   const entryTypes = ['activity', 'thought', 'prediction', 'trade', 'dream', 'interaction'];
-  const pauls = ['Visionary Paul', 'Degen Paul', 'Skeptic Paul', 'Whale Paul', 'Quant Paul', 'Contrarian Paul', 'Moonshot Paul'];
+  const pauls = ['VISIONARY PAUL', 'DEGEN PAUL', 'SKEPTIC PAUL', 'WHALE PAUL', 'QUANT PAUL', 'CONTRARIAN PAUL', 'MOONSHOT PAUL'];
   
   for (let i = 0; i < entryCount; i++) {
     const type = entryTypes[Math.floor(Math.random() * entryTypes.length)];
@@ -987,33 +998,19 @@ function generateDiaryEntries() {
     
     let text = '';
     switch (type) {
-      case 'activity':
-        text = ['Analyzing market trends', 'Reviewing portfolio', 'Meeting with other Pauls', 'Researching new opportunities'][Math.floor(Math.random() * 4)];
-        break;
-      case 'thought':
-        text = ['The market feels different today...', 'Been thinking about long-term strategy', 'Something is brewing', 'Patience is key'][Math.floor(Math.random() * 4)];
-        break;
-      case 'prediction':
-        text = ['BTC will move soon', 'Altcoin season incoming', 'Expect volatility', 'Major announcement coming'][Math.floor(Math.random() * 4)];
-        break;
-      case 'trade':
-        text = ['Closed position for +12%', 'Added to long-term hold', 'Took some profits', 'Bought the dip'][Math.floor(Math.random() * 4)];
-        break;
-      case 'dream':
-        text = ['Dreamt of green candles', 'Saw the future in a vision', 'Moon mission in my sleep', 'Woke up with a trading idea'][Math.floor(Math.random() * 4)];
-        break;
-      case 'interaction':
-        text = ['Had a great discussion with Whale Paul', 'Debated with Skeptic Paul', 'Learned from Quant Paul', 'Collaborated on analysis'][Math.floor(Math.random() * 4)];
-        break;
+      case 'activity': text = 'ANALYZING MARKET TRENDS'; break;
+      case 'thought': text = 'THE MARKET FEELS DIFFERENT TODAY...'; break;
+      case 'prediction': text = 'BTC WILL MOVE SOON'; break;
+      case 'trade': text = 'CLOSED POSITION FOR +12%'; break;
+      case 'dream': text = 'DREAMT OF GREEN CANDLES'; break;
+      case 'interaction': text = 'HAD A GREAT DISCUSSION WITH WHALE PAUL'; break;
     }
     
-    entries.push({ type, text, paul, time: `Day ${day}, ${hour.toString().padStart(2,'0')}:${minute.toString().padStart(2,'0')}`, day });
+    entries.push({ type, text, paul, time: `DAY ${day}, ${hour.toString().padStart(2,'0')}:${minute.toString().padStart(2,'0')}`, day });
   }
   
-  // Sort by day (newest first)
   entries.sort((a, b) => b.day - a.day);
   
-  // Filter by type
   const filteredEntries = entries.filter(e => diaryTypes.includes(e.type));
   
   const container = document.getElementById('diary-entries');
@@ -1035,51 +1032,44 @@ function addDiaryEntry(type, text, paul) {
   const entry = document.createElement('div');
   entry.className = `diary-entry ${type}`;
   entry.innerHTML = `
-    <div class="diary-time">Just now</div>
+    <div class="diary-time">JUST NOW</div>
     <div class="diary-text">${text}</div>
     <div class="diary-paul">— ${paul}</div>
   `;
   container.insertBefore(entry, container.firstChild);
   
-  // Keep only last 20 entries
   while (container.children.length > 20) {
     container.removeChild(container.lastChild);
   }
 }
 
-// Generate Social Posts with multi-day scanning
+// Generate Social Posts
 function generateSocialPosts() {
-  // Generate more posts based on days selected
   const postCount = socialDays === 1 ? 5 : socialDays === 7 ? 12 : 20;
   const posts = [];
   
   const pauls = [
-    { name: 'Visionary Paul', initials: 'VP', color: '#8b5cf6' },
-    { name: 'Degen Paul', initials: 'DP', color: '#ec4899' },
-    { name: 'Skeptic Paul', initials: 'SP', color: '#6b7280' },
-    { name: 'Whale Paul', initials: 'WP', color: '#f59e0b' },
-    { name: 'Quant Paul', initials: 'QP', color: '#10b981' },
-    { name: 'Contrarian Paul', initials: 'CP', color: '#e11d48' },
-    { name: 'Moonshot Paul', initials: 'MP', color: '#3b82f6' },
-    { name: 'Value Paul', initials: 'VaP', color: '#06b6d4' }
+    { name: 'VISIONARY PAUL', initials: 'VP', color: '#8b5cf6' },
+    { name: 'DEGEN PAUL', initials: 'DP', color: '#ec4899' },
+    { name: 'SKEPTIC PAUL', initials: 'SP', color: '#6b7280' },
+    { name: 'WHALE PAUL', initials: 'WP', color: '#f59e0b' },
+    { name: 'QUANT PAUL', initials: 'QP', color: '#10b981' },
+    { name: 'CONTRARIAN PAUL', initials: 'CP', color: '#e11d48' },
+    { name: 'MOONSHOT PAUL', initials: 'MP', color: '#3b82f6' },
+    { name: 'VALUE PAUL', initials: 'VaP', color: '#06b6d4' }
   ];
   
   const texts = [
-    'Feeling bullish today! The charts look primed for a breakout. 📈',
-    'Just aped into a new meme coin. Either retiring tomorrow or eating ramen for a year. 🎰',
-    'Everyone is too euphoric right now. Be careful out there. 🤨',
-    'Accumulating quietly. Patience pays. 🐋',
-    'My models show 73% probability of upward movement this week. 🧮',
-    'Markets are irrational longer than you can stay solvent. 📉',
-    'The trend is your friend until it ends. Watching closely. 👀',
-    'Bought the dip. Now we wait. 💎',
-    'Taking profits here. Better safe than sorry. 💰',
-    'This consolidation phase is setting up something big. 🔮',
-    'Remember: not your keys, not your coins. Stay safe. 🔐',
-    'Volume is telling a different story than price. Interesting... 📊',
-    'HODLing through the noise. Long term vision. 🚀',
-    'Just had an amazing insight during meditation. The answer was there all along. 🧘',
-    'Correlation breakdown between BTC and alts. Something is shifting. ⚡'
+    'FEELING BULLISH TODAY! THE CHARTS LOOK PRIMED FOR A BREAKOUT. 📈',
+    'JUST APED INTO A NEW MEME COIN. EITHER RETIRING TOMORROW OR EATING RAMEN. 🎰',
+    'EVERYONE IS TOO EUPHORIC RIGHT NOW. BE CAREFUL OUT THERE. 🤨',
+    'ACCUMULATING QUIETLY. PATIENCE PAYS. 🐋',
+    'MY MODELS SHOW 73% PROBABILITY OF UPWARD MOVEMENT. 🧮',
+    'MARKETS ARE IRRATIONAL LONGER THAN YOU CAN STAY SOLVENT. 📉',
+    'THE TREND IS YOUR FRIEND UNTIL IT ENDS. WATCHING CLOSELY. 👀',
+    'BOUGHT THE DIP. NOW WE WAIT. 💎',
+    'TAKING PROFITS HERE. BETTER SAFE THAN SORRY. 💰',
+    'THIS CONSOLIDATION IS SETTING UP SOMETHING BIG. 🔮'
   ];
   
   for (let i = 0; i < postCount; i++) {
@@ -1090,14 +1080,13 @@ function generateSocialPosts() {
     const shares = Math.floor(Math.random() * 15);
     const viral = likes > 50;
     
-    // Time based on socialDays
     let time;
     if (socialDays === 1) {
-      time = `${Math.floor(Math.random() * 24)}h ago`;
+      time = `${Math.floor(Math.random() * 24)}H AGO`;
     } else if (socialDays === 7) {
-      time = `${Math.floor(Math.random() * 7) + 1}d ago`;
+      time = `${Math.floor(Math.random() * 7) + 1}D AGO`;
     } else {
-      time = `${Math.floor(Math.random() * 30) + 1}d ago`;
+      time = `${Math.floor(Math.random() * 30) + 1}D AGO`;
     }
     
     posts.push({ ...paul, text, likes, replies, shares, viral, time });
@@ -1116,9 +1105,9 @@ function generateSocialPosts() {
       </div>
       <div class="post-text">${post.text}</div>
       <div class="post-actions">
-        <button class="post-like">❤️ ${post.likes}</button>
-        <button class="post-reply">💬 ${post.replies}</button>
-        <button class="post-share">🔄 ${post.shares}</button>
+        <button>❤️ ${post.likes}</button>
+        <button>💬 ${post.replies}</button>
+        <button>🔄 ${post.shares}</button>
       </div>
     </div>
   `).join('');
@@ -1130,11 +1119,9 @@ let userCredits = 100;
 function setupChat() {
   const input = document.getElementById('chat-input');
   const sendBtn = document.getElementById('chat-send');
-  const messages = document.getElementById('chat-messages');
   
-  if (!input || !sendBtn || !messages) return;
+  if (!input || !sendBtn) return;
   
-  // Load credits from localStorage
   const savedCredits = localStorage.getItem('paulWorldCredits');
   if (savedCredits) {
     userCredits = parseInt(savedCredits);
@@ -1145,24 +1132,20 @@ function setupChat() {
     const question = input.value.trim();
     if (!question) return;
     if (userCredits < 1) {
-      addChatMessage('system', 'Not enough credits! Ask more questions tomorrow.');
+      addChatMessage('system', 'NOT ENOUGH CREDITS!');
       return;
     }
     
-    // Deduct credit
     userCredits--;
     localStorage.setItem('paulWorldCredits', userCredits);
     updateCredits();
     
-    // Add user message
     addChatMessage('user', question);
     input.value = '';
     
-    // Show loading
     sendBtn.disabled = true;
-    sendBtn.textContent = 'Asking...';
+    sendBtn.textContent = 'ASKING...';
     
-    // Ask the Pauls
     fetch('/api/ask', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1172,12 +1155,12 @@ function setupChat() {
     .then(data => {
       displayPaulResponse(data);
       sendBtn.disabled = false;
-      sendBtn.textContent = 'Ask (1💎)';
+      sendBtn.textContent = 'ASK (1💎)';
     })
     .catch(err => {
-      addChatMessage('system', 'Error asking Pauls. Try again!');
+      addChatMessage('system', 'ERROR ASKING PAULS. TRY AGAIN!');
       sendBtn.disabled = false;
-      sendBtn.textContent = 'Ask (1💎)';
+      sendBtn.textContent = 'ASK (1💎)';
     });
   }
   
@@ -1198,12 +1181,7 @@ function addChatMessage(type, content) {
   
   const msg = document.createElement('div');
   msg.className = `chat-message ${type}`;
-  
-  const header = type === 'user' ? 'You' : type === 'system' ? 'System' : 'Pauls';
-  msg.innerHTML = `
-    <div class="chat-message-header">${header}</div>
-    <div class="chat-message-content">${content}</div>
-  `;
+  msg.innerHTML = `<strong>${type === 'user' ? 'YOU' : 'SYSTEM'}:</strong> ${content}`;
   
   messages.appendChild(msg);
   messages.scrollTop = messages.scrollHeight;
@@ -1213,25 +1191,12 @@ function displayPaulResponse(data) {
   const messages = document.getElementById('chat-messages');
   if (!messages) return;
   
-  // Consensus message
   const consensusMsg = document.createElement('div');
   consensusMsg.className = 'chat-message consensus';
   consensusMsg.innerHTML = `
-    <div class="chat-message-header">📊 Consensus (${data.consensus.agreement}% agreement)</div>
-    <div class="chat-message-content">
-      <strong>${data.consensus.majority}</strong><br>
-      <span style="color: rgba(255,255,255,0.6);">Confidence: ${Math.round(data.consensus.confidence * 100)}% • ${data.consensus.sentiment}</span>
-    </div>
-    <div class="chat-message-pauls">
-      ${data.predictions.slice(0, 5).map(p => `
-        <div class="chat-paul-response">
-          <div class="chat-paul-avatar" style="background: ${p.paulType === 'Visionary' ? '#8b5cf6' : p.paulType === 'Trader' ? '#22c55e' : '#3b82f6'}30; border: 1px solid ${p.paulType === 'Visionary' ? '#8b5cf6' : p.paulType === 'Trader' ? '#22c55e' : '#3b82f6'};">${p.paulName.split(' ').map(n => n[0]).join('').slice(0,2)}</div>
-          <span style="flex:1;"><strong>${p.paulName}</strong> (${p.paulType}): ${p.prediction}</span>
-          <span style="color: rgba(255,255,255,0.4);">${Math.round(p.confidence * 100)}%</span>
-        </div>
-      `).join('')}
-      ${data.predictions.length > 5 ? `<div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 8px;">+ ${data.predictions.length - 5} more Pauls answered...</div>` : ''}
-    </div>
+    <strong>📊 CONSENSUS (${data.consensus.agreement}% AGREEMENT)</strong><br>
+    ${data.consensus.majority.toUpperCase()}<br>
+    <span style="color: #888;">CONFIDENCE: ${Math.round(data.consensus.confidence * 100)}%</span>
   `;
   
   messages.appendChild(consensusMsg);
@@ -1247,13 +1212,12 @@ function addActivity(text) {
   item.textContent = text;
   log.insertBefore(item, log.firstChild);
   
-  // Keep only last 20 items
   while (log.children.length > 20) {
     log.removeChild(log.lastChild);
   }
 }
 
-// Control functions
+// Controls
 function zoomIn() {
   camera.targetZoom = Math.min(3, camera.targetZoom + 0.3);
 }
@@ -1263,21 +1227,12 @@ function zoomOut() {
 }
 
 function resetView() {
-  const worldCenterX = 550;
-  const worldCenterY = 450;
+  const worldCenterX = (GRID_WIDTH * TILE_SIZE) / 2;
+  const worldCenterY = (GRID_HEIGHT * TILE_SIZE) / 2;
   camera.x = worldCenterX - canvas.width / 2;
   camera.y = worldCenterY - canvas.height / 2;
   camera.targetZoom = 1;
 }
 
-function triggerEvent(eventType) {
-  fetch('/api/events', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ type: eventType, data: {} })
-  });
-  addActivity(`🎉 Event triggered: ${eventType}`);
-}
-
-// Initialize when DOM is ready
+// Initialize
 document.addEventListener('DOMContentLoaded', init);

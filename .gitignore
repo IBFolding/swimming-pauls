@@ -49,6 +49,7 @@ output/
 # Local config
 config/local.ini
 .env
+.env.*
 
 # OS
 .DS_Store
@@ -59,3 +60,8 @@ node_modules/
 # Logs and exports
 logs/
 predictions_export_*.json
+
+# API Keys and Secrets
+*.key
+secrets/
+credentials/

@@ -1,6 +1,7 @@
 """
 LLM Client for Swimming Pauls
 Supports local models via Ollama/LM Studio and cloud APIs
+Also integrates with OpenClaw's configured LLM providers
 """
 import os
 import json
@@ -17,13 +18,15 @@ class LLMClient:
         Initialize LLM client.
         
         Args:
-            provider: "ollama", "lmstudio", "openai", or "anthropic"
+            provider: "ollama", "lmstudio", "openai", "anthropic", or "openclaw"
             model: Model name (e.g., "llama3", "gpt-4", "claude-3-opus")
-            api_key: API key for cloud providers
+            api_key: API key for cloud providers (auto-detected from OpenClaw if not provided)
         """
         self.provider = provider.lower()
         self.model = model
-        self.api_key = api_key or os.getenv(f"{provider.upper()}_API_KEY")
+        
+        # Try to get API key from multiple sources
+        self.api_key = api_key or self._get_api_key()
         
         # Default endpoints
         self.endpoints = {
@@ -31,9 +34,173 @@ class LLMClient:
             "lmstudio": "http://localhost:1234/v1/chat/completions",
             "openai": "https://api.openai.com/v1/chat/completions",
             "anthropic": "https://api.anthropic.com/v1/messages",
+            "kimi": "https://api.moonshot.cn/v1/chat/completions",  # Kimi API
+            "openclaw": "http://localhost:8080/api/llm",  # OpenClaw local endpoint
         }
         
         self.endpoint = self.endpoints.get(self.provider, self.endpoints["ollama"])
+    
+    def _get_api_key(self) -> Optional[str]:
+        """
+        Get API key from environment or OpenClaw config.
+        Checks multiple sources in order of priority.
+        """
+        provider_upper = self.provider.upper()
+        
+        # 1. Check environment variable for specific provider
+        env_key = os.getenv(f"{provider_upper}_API_KEY")
+        if env_key:
+            return env_key
+        
+        # 2. Check OpenAI-style env vars
+        if self.provider in ["openai", "openclaw"]:
+            env_key = os.getenv("OPENAI_API_KEY")
+            if env_key:
+                return env_key
+        
+        # 3. Check Anthropic env vars
+        if self.provider == "anthropic":
+            env_key = os.getenv("ANTHROPIC_API_KEY") or os.getenv("CLAUDE_API_KEY")
+            if env_key:
+                return env_key
+        
+        # 4. Check for OpenClaw config file
+        openclaw_key = self._get_openclaw_api_key()
+        if openclaw_key:
+            return openclaw_key
+        
+        return None
+    
+    def _get_openclaw_api_key(self) -> Optional[str]:
+        """
+        Try to read API key from OpenClaw configuration.
+        Checks common OpenClaw config locations.
+        """
+        import yaml
+        
+        # Possible OpenClaw config locations
+        config_paths = [
+            os.path.expanduser("~/.openclaw/config.yaml"),
+            os.path.expanduser("~/.openclaw/config.yml"),
+            "/opt/homebrew/lib/node_modules/openclaw/config.yaml",
+            "/usr/local/lib/node_modules/openclaw/config.yaml",
+        ]
+        
+        for config_path in config_paths:
+            if os.path.exists(config_path):
+                try:
+                    with open(config_path, 'r') as f:
+                        config = yaml.safe_load(f)
+                        
+                        # Try to find API keys in config
+                        if 'llm' in config:
+                            llm_config = config['llm']
+                            
+                            # Check for provider-specific key
+                            if self.provider in llm_config and 'api_key' in llm_config[self.provider]:
+                                return llm_config[self.provider]['api_key']
+                            
+                            # Check for default key
+                            if 'api_key' in llm_config:
+                                return llm_config['api_key']
+                            
+                            # Check for keys nested under providers
+                            if 'providers' in llm_config:
+                                providers = llm_config['providers']
+                                if self.provider in providers and 'api_key' in providers[self.provider]:
+                                    return providers[self.provider]['api_key']
+                        
+                        # Check top-level keys
+                        for key in ['openai_api_key', 'anthropic_api_key', 'claude_api_key']:
+                            if key in config:
+                                provider_name = key.replace('_api_key', '')
+                                if self.provider in [provider_name, 'openclaw']:
+                                    return config[key]
+                except Exception:
+                    continue
+        
+        return None
+    
+    def auto_select_provider(self) -> tuple:
+        """
+        Automatically select the best available LLM provider.
+        Priority: Kimi (fast, good) > OpenAI > Anthropic > Ollama > LM Studio
+        
+        Returns:
+            Tuple of (provider_name, model_name)
+        """
+        available = self.list_available_providers()
+        
+        # Priority order - Kimi first since it's what the user uses
+        if available.get("kimi"):
+            return ("kimi", "kimi-k2-0714-preview")  # Fast & capable
+        
+        if available.get("openai"):
+            return ("openai", "gpt-4o-mini")  # Cost-effective default
+        
+        if available.get("anthropic"):
+            return ("anthropic", "claude-3-haiku-20240307")  # Fast & cheap
+        
+        if available.get("ollama"):
+            return ("ollama", "llama3")  # Free local option
+        
+        if available.get("lmstudio"):
+            return ("lmstudio", "local-model")  # Local alternative
+        
+        # Fallback - will likely fail but we try anyway
+        return ("ollama", "llama3")
+    
+    def is_ready(self) -> bool:
+        """Check if the LLM client is properly configured and ready to use."""
+        if self.provider in ["ollama", "lmstudio"]:
+            # Local providers - check if server is running
+            available = self.list_available_providers()
+            return available.get(self.provider, False)
+        else:
+            # Cloud providers - check if API key is set
+            return self.api_key is not None
+    
+    def list_available_providers(self) -> Dict[str, bool]:
+        """
+        Check which LLM providers are available.
+        Returns dict of provider names and their availability status.
+        """
+        available = {
+            "ollama": False,
+            "lmstudio": False,
+            "openai": False,
+            "anthropic": False,
+            "kimi": False,
+        }
+        
+        # Check Ollama
+        try:
+            import urllib.request
+            urllib.request.urlopen("http://localhost:11434", timeout=2)
+            available["ollama"] = True
+        except:
+            pass
+        
+        # Check LM Studio
+        try:
+            import urllib.request
+            urllib.request.urlopen("http://localhost:1234", timeout=2)
+            available["lmstudio"] = True
+        except:
+            pass
+        
+        # Check API keys
+        if os.getenv("OPENAI_API_KEY") or self._get_openclaw_api_key():
+            available["openai"] = True
+        
+        if os.getenv("ANTHROPIC_API_KEY") or os.getenv("CLAUDE_API_KEY"):
+            available["anthropic"] = True
+        
+        # Check Kimi API key
+        if os.getenv("KIMI_API_KEY") or os.getenv("MOONSHOT_API_KEY"):
+            available["kimi"] = True
+        
+        return available
     
     async def generate_response(
         self,
@@ -87,6 +254,8 @@ Provide your analysis:"""
                 return await self._call_openai(system_prompt, user_prompt)
             elif self.provider == "anthropic":
                 return await self._call_anthropic(system_prompt, user_prompt)
+            elif self.provider == "kimi":
+                return await self._call_kimi(system_prompt, user_prompt)
             else:
                 return f"[{persona_name}] Unable to generate response - unknown provider"
                 
@@ -185,6 +354,34 @@ Provide your analysis:"""
                     return data["content"][0]["text"]
                 else:
                     return f"Anthropic error: {resp.status}"
+    
+    async def _call_kimi(self, system: str, user: str) -> str:
+        """Call Kimi API (Moonshot AI)."""
+        if not self.api_key:
+            return "Kimi API key not configured. Get one at https://platform.moonshot.cn/"
+        
+        async with aiohttp.ClientSession() as session:
+            headers = {
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json"
+            }
+            payload = {
+                "model": self.model or "kimi-k2-0714-preview",
+                "messages": [
+                    {"role": "system", "content": system},
+                    {"role": "user", "content": user}
+                ],
+                "temperature": 0.7,
+                "max_tokens": 150
+            }
+            
+            async with session.post(self.endpoint, headers=headers, json=payload) as resp:
+                if resp.status == 200:
+                    data = await resp.json()
+                    return data["choices"][0]["message"]["content"]
+                else:
+                    error_text = await resp.text()
+                    return f"Kimi error: {resp.status} - {error_text[:100]}"
 
 
 # Persona definitions for LLM context
