@@ -2,22 +2,23 @@
 // Multi-agent prediction engine for ANY question
 
 const PAUL_TYPES = [
-  { name: 'Visionary', emoji: '🎯', color: '#8b5cf6', specialty: 'future', bias: 'optimistic' },
-  { name: 'Analyst', emoji: '📊', color: '#3b82f6', specialty: 'data', bias: 'neutral' },
-  { name: 'Scientist', emoji: '🔬', color: '#10b981', specialty: 'research', bias: 'skeptical' },
-  { name: 'Historian', emoji: '📜', color: '#f59e0b', specialty: 'patterns', bias: 'cautious' },
-  { name: 'Creative', emoji: '🎨', color: '#ec4899', specialty: 'innovation', bias: 'radical' },
-  { name: 'Skeptic', emoji: '🤨', color: '#6b7280', specialty: 'critique', bias: 'pessimistic' },
-  { name: 'Philosopher', emoji: '🤔', color: '#8b5cf6', specialty: 'ethics', bias: 'balanced' },
-  { name: 'Engineer', emoji: '⚙️', color: '#f97316', specialty: 'systems', bias: 'practical' },
-  { name: 'Detective', emoji: '🔍', color: '#6366f1', specialty: 'investigation', bias: 'thorough' },
-  { name: 'Strategist', emoji: '♟️', color: '#e11d48', specialty: 'planning', bias: 'calculated' }
+  { name: 'Visionary', emoji: '🎯', color: '#8b5cf6', specialty: 'trends', bias: 'bullish' },
+  { name: 'DayTrader', emoji: '📈', color: '#22c55e', specialty: 'intraday', bias: 'aggressive' },
+  { name: 'SwingTrader', emoji: '📊', color: '#3b82f6', specialty: 'swings', bias: 'neutral' },
+  { name: 'Quant', emoji: '🧮', color: '#10b981', specialty: 'algorithms', bias: 'systematic' },
+  { name: 'Whale', emoji: '🐋', color: '#f59e0b', specialty: 'institutional', bias: 'smart_money' },
+  { name: 'Degen', emoji: '🎰', color: '#ec4899', specialty: 'memes', bias: 'yolo' },
+  { name: 'Skeptic', emoji: '🤨', color: '#6b7280', specialty: 'risk', bias: 'bearish' },
+  { name: 'Value', emoji: '💎', color: '#06b6d4', specialty: 'fundamentals', bias: 'diamond_hands' },
+  { name: 'Momentum', emoji: '🚀', color: '#f97316', specialty: 'breakouts', bias: 'fomo' },
+  { name: 'Contrarian', emoji: '↔️', color: '#e11d48', specialty: 'reversals', bias: 'against_crowd' }
 ];
 
-const EXPERTISE_DOMAINS = [
-  'Technology', 'Finance', 'Politics', 'Science', 'Health', 'Environment',
-  'Sports', 'Entertainment', 'Education', 'Transportation', 'Space', 'AI',
-  'Crypto', 'Climate', 'Medicine', 'Economics', 'Psychology', 'Sociology'
+const TRADING_EXPERTISE = [
+  'Crypto', 'Stocks', 'Forex', 'Options', 'Futures', 'DeFi', 'NFTs', 'MemeCoins',
+  'Technical Analysis', 'Fundamental Analysis', 'Sentiment Analysis', 'On-Chain Analysis',
+  'Macro Economics', 'Market Microstructure', 'Risk Management', 'Portfolio Theory',
+  'Arbitrage', 'Market Making', 'High Frequency', 'Algorithmic Trading'
 ];
 
 const QUESTION_CATEGORIES = {
@@ -28,7 +29,10 @@ const QUESTION_CATEGORIES = {
   how: { building: 'power', activity: 'problem-solving', confidence: 0.75 },
   when: { building: 'oracle', activity: 'forecasting', confidence: 0.65 },
   who: { building: 'detective', activity: 'investigating', confidence: 0.8 },
-  which: { building: 'research', activity: 'comparing', confidence: 0.7 }
+  which: { building: 'research', activity: 'comparing', confidence: 0.7 },
+  price: { building: 'market', activity: 'charting', confidence: 0.85 },
+  buy: { building: 'dex', activity: 'executing', confidence: 0.9 },
+  sell: { building: 'dex', activity: 'exiting', confidence: 0.9 }
 };
 
 const BUILDINGS = {
@@ -92,11 +96,11 @@ class Paul {
       level: Math.floor(Math.random() * 20) + 1
     };
     
-    // Expertise - 2-3 random domains this Paul knows about
+    // Expertise - 2-3 trading domains this Paul specializes in
     this.expertise = [];
     if (isReal) {
       const numExpertise = 2 + Math.floor(Math.random() * 2);
-      const shuffled = [...EXPERTISE_DOMAINS].sort(() => 0.5 - Math.random());
+      const shuffled = [...TRADING_EXPERTISE].sort(() => 0.5 - Math.random());
       this.expertise = shuffled.slice(0, numExpertise);
     }
     
@@ -483,11 +487,14 @@ class Simulation {
     
     // Generate reasoning
     const reasonings = [
-      `Based on my ${paul.type.specialty} background, I see patterns suggesting...`,
-      `Historical data in ${paul.expertise?.[0] || 'this domain'} indicates...`,
-      `My ${paul.type.name} perspective leads me to believe...`,
-      `Analyzing from a ${paul.type.bias} viewpoint...`,
-      `Drawing from ${paul.profession} experience...`
+      `Based on my ${paul.type.specialty} analysis, the chart shows...`,
+      `My ${paul.expertise?.[0] || 'technical'} expertise indicates...`,
+      `From a ${paul.type.name} perspective, market structure suggests...`,
+      `Analyzing ${paul.expertise?.[1] || 'price action'} patterns...`,
+      `My ${paul.profession} experience tells me...`,
+      `Looking at ${paul.type.specialty} indicators...`,
+      `The ${paul.expertise?.[0] || 'market'} data reveals...`,
+      `As a ${paul.type.name}, I see ${paul.type.specialty} signals...`
     ];
     
     return {
@@ -500,34 +507,60 @@ class Simulation {
   getAnswerTemplates(category, bias) {
     const templates = {
       will: {
-        optimistic: ['Yes, definitely', 'Highly likely', 'Strong yes'],
-        pessimistic: ['No, unlikely', 'Probably not', 'Doubtful'],
-        neutral: ['Possibly', 'Maybe', 'Uncertain'],
-        balanced: ['50/50 chance', 'Could go either way', 'Unclear']
+        bullish: ['Yes, strong uptrend', 'Highly likely to pump', 'Bullish confirmation', 'Breakout incoming'],
+        bearish: ['No, rejection at resistance', 'Likely to dump', 'Bearish divergence', 'Correction coming'],
+        neutral: ['Uncertain, wait for confirmation', 'Sideways likely', 'Consolidation phase', 'Need more data'],
+        aggressive: ['Absolutely, YOLO', 'All in, send it', 'FOMO is real', 'Parabolic move'],
+        diamond_hands: ['Yes, hold long term', 'Accumulate on dips', 'Fundamentals strong', 'Ignore the noise']
       },
       should: {
-        optimistic: ['Absolutely yes', 'Go for it', 'Strong recommend'],
-        pessimistic: ['No, avoid it', 'Not recommended', 'Bad idea'],
-        neutral: ['Consider carefully', 'Weigh pros/cons', 'Depends on context'],
-        balanced: ['Moderate yes', 'Conditional recommend', 'Proceed with caution']
+        bullish: ['Buy the dip', 'Long position recommended', 'Add to position', 'Strong buy signal'],
+        bearish: ['Sell now', 'Take profits', 'Short opportunity', 'Reduce exposure'],
+        neutral: ['Hold current position', 'Wait for clarity', 'Small position only', 'Hedge your bets'],
+        aggressive: ['APE IN', 'Leverage up', 'YOLO trade', 'All or nothing'],
+        diamond_hands: ['HODL', 'Never sell', 'Diamond hands only', 'Generational wealth']
+      },
+      price: {
+        bullish: ['Target: +20%', 'New ATH incoming', 'Price discovery mode', 'Moon mission'],
+        bearish: ['Support at -15%', 'Expect pullback', 'Lower lows ahead', 'Bear market'],
+        neutral: ['Range bound', 'Consolidation', 'Wait for breakout', 'No clear direction'],
+        aggressive: ['10x potential', 'Parabolic pump', 'To the moon', 'WAGMI'],
+        diamond_hands: ['$100K BTC', 'Long term value', 'Price doesnt matter', 'Stack sats')
+      },
+      buy: {
+        bullish: ['Buy now', 'Perfect entry', 'Accumulate here', 'Strong support'],
+        bearish: ['Wait for lower', 'Dont catch knife', 'Better prices coming', 'Patience'],
+        neutral: ['Dollar cost average', 'Small position', 'Split orders', 'Limit order'],
+        aggressive: ['Market buy', 'All in', 'Send it', 'YOLO'],
+        diamond_hands: ['Buy and hold', 'Stack forever', 'Generational buy', 'Never sell')
+      },
+      sell: {
+        bullish: ['Take partial profits', 'Trim position', 'Sell high', 'Secure gains'],
+        bearish: ['Sell everything', 'Exit now', 'Cut losses', 'Get out'],
+        neutral: ['Sell half', 'Reduce size', 'Take some profit', 'Rebalance'],
+        aggressive: ['Dump it all', 'Panic sell', 'Rug pull', 'Exit liquidity'],
+        diamond_hands: ['Never sell', 'HODL through dip', 'Diamond hands', 'Buy more instead')
       },
       what: {
-        optimistic: ['Something positive', 'An opportunity', 'A breakthrough'],
-        pessimistic: ['A challenge', 'A risk', 'A problem'],
-        neutral: ['A mixed outcome', 'Neutral result', 'Unclear impact'],
-        balanced: ['A balanced situation', 'Multiple factors', 'Complex scenario']
+        bullish: ['Bullish setup', 'Accumulation zone', 'Institutional buying', 'Whale activity'],
+        bearish: ['Distribution phase', 'Smart money selling', 'Liquidity grab', 'Trap setup'],
+        neutral: ['Chop zone', 'No mans land', 'Wait and see', 'Sideways action'],
+        aggressive: ['Degenerate play', 'Casino mode', 'High risk/high reward', 'Apes together'],
+        diamond_hands: ['Quality asset', 'Long term hold', 'Fundamental value', 'Ignore volatility')
       },
       why: {
-        optimistic: ['Due to positive trends', 'Because of innovation', 'Thanks to growth'],
-        pessimistic: ['Due to risks', 'Because of instability', 'From market fear'],
-        neutral: ['Multiple factors', 'Complex reasons', 'Unclear causes'],
-        balanced: ['Balanced factors', 'Trade-offs involved', 'Context dependent']
+        bullish: ['Strong fundamentals', 'Institutional adoption', 'Network growth', 'Supply squeeze'],
+        bearish: ['Weak volume', 'Bearish structure', 'Macro headwinds', 'Regulation fears'],
+        neutral: ['Mixed signals', 'Conflicting data', 'Market indecision', 'Consolidation needed'],
+        aggressive: ['Hype cycle', 'Narrative trade', 'Meme momentum', 'FOMO driven'],
+        diamond_hands: ['Long term thesis', 'Technology adoption', 'Store of value', 'Scarcity model')
       },
       how: {
-        optimistic: ['Through innovation', 'By leveraging opportunities', 'With strategic moves'],
-        pessimistic: ['With difficulty', 'Through challenges', 'By managing risks'],
-        neutral: ['Step by step', 'Through analysis', 'With careful planning'],
-        balanced: ['Balanced approach', 'Multiple methods', 'Adaptive strategy']
+        bullish: ['Buy breakout', 'Add on dips', 'Scale in gradually', 'Set stop losses'],
+        bearish: ['Short the rally', 'Wait for lower high', 'Reduce size', 'Raise cash'],
+        neutral: ['Range trade', 'Wait for direction', 'Small size', 'Tight stops'],
+        aggressive: ['Leverage long', 'All in spot', 'Options YOLO', 'Cross margin'],
+        diamond_hands: ['DCA weekly', 'Cold storage', 'Forget price', 'Check back in 5 years')
       }
     };
     
