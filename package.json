@@ -1,0 +1,7 @@
+{
+  "name": "swimming-pauls",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "mkdir -p dist && cp -r pumpfun-landing/* dist/ && cp -r app dist/ && ls -la dist/"
+  }
+}
