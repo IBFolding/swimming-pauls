@@ -1,23 +1,35 @@
 // Paul AI Simulation Engine
-// Handles 1000 real Pauls + 3000 visual fillers
+// Multi-agent prediction engine for ANY question
 
 const PAUL_TYPES = [
-  { name: 'Visionary', emoji: '🎯', color: '#8b5cf6', bias: 'bullish' },
-  { name: 'Trader', emoji: '📊', color: '#3b82f6', bias: 'neutral' },
-  { name: 'Quant', emoji: '🧮', color: '#10b981', bias: 'neutral' },
-  { name: 'Whale', emoji: '🐋', color: '#f59e0b', bias: 'bullish' },
-  { name: 'Degen', emoji: '🎰', color: '#ec4899', bias: 'high_risk' },
-  { name: 'Skeptic', emoji: '🤨', color: '#6b7280', bias: 'bearish' },
-  { name: 'Professor', emoji: '🎓', color: '#ef4444', bias: 'research' },
-  { name: 'Contrarian', emoji: '↔️', color: '#f97316', bias: 'contrarian' }
+  { name: 'Visionary', emoji: '🎯', color: '#8b5cf6', specialty: 'future', bias: 'optimistic' },
+  { name: 'Analyst', emoji: '📊', color: '#3b82f6', specialty: 'data', bias: 'neutral' },
+  { name: 'Scientist', emoji: '🔬', color: '#10b981', specialty: 'research', bias: 'skeptical' },
+  { name: 'Historian', emoji: '📜', color: '#f59e0b', specialty: 'patterns', bias: 'cautious' },
+  { name: 'Creative', emoji: '🎨', color: '#ec4899', specialty: 'innovation', bias: 'radical' },
+  { name: 'Skeptic', emoji: '🤨', color: '#6b7280', specialty: 'critique', bias: 'pessimistic' },
+  { name: 'Philosopher', emoji: '🤔', color: '#8b5cf6', specialty: 'ethics', bias: 'balanced' },
+  { name: 'Engineer', emoji: '⚙️', color: '#f97316', specialty: 'systems', bias: 'practical' },
+  { name: 'Detective', emoji: '🔍', color: '#6366f1', specialty: 'investigation', bias: 'thorough' },
+  { name: 'Strategist', emoji: '♟️', color: '#e11d48', specialty: 'planning', bias: 'calculated' }
 ];
 
-const PROFESSIONS = [
-  'Day Trader', 'Swing Trader', 'Quant Analyst', 'Researcher', 'Portfolio Manager',
-  'Risk Analyst', 'Crypto Specialist', 'Meme Coin Expert', 'DeFi Researcher',
-  'NFT Flipper', 'Options Trader', 'Macro Analyst', 'Technical Analyst',
-  'Fundamental Analyst', 'Sentiment Analyst'
+const EXPERTISE_DOMAINS = [
+  'Technology', 'Finance', 'Politics', 'Science', 'Health', 'Environment',
+  'Sports', 'Entertainment', 'Education', 'Transportation', 'Space', 'AI',
+  'Crypto', 'Climate', 'Medicine', 'Economics', 'Psychology', 'Sociology'
 ];
+
+const QUESTION_CATEGORIES = {
+  will: { building: 'oracle', activity: 'predicting', confidence: 0.7 },
+  should: { building: 'townhall', activity: 'debating', confidence: 0.6 },
+  what: { building: 'research', activity: 'analyzing', confidence: 0.8 },
+  why: { building: 'philosophy', activity: 'reasoning', confidence: 0.5 },
+  how: { building: 'power', activity: 'problem-solving', confidence: 0.75 },
+  when: { building: 'oracle', activity: 'forecasting', confidence: 0.65 },
+  who: { building: 'detective', activity: 'investigating', confidence: 0.8 },
+  which: { building: 'research', activity: 'comparing', confidence: 0.7 }
+};
 
 const BUILDINGS = {
   market: { name: 'Market House', x: 100, y: 100, capacity: 300, activities: ['trading', 'analyzing'], color: '#22c55e' },
@@ -79,6 +91,14 @@ class Paul {
       roi: (Math.random() * 200 - 50).toFixed(1),
       level: Math.floor(Math.random() * 20) + 1
     };
+    
+    // Expertise - 2-3 random domains this Paul knows about
+    this.expertise = [];
+    if (isReal) {
+      const numExpertise = 2 + Math.floor(Math.random() * 2);
+      const shuffled = [...EXPERTISE_DOMAINS].sort(() => 0.5 - Math.random());
+      this.expertise = shuffled.slice(0, numExpertise);
+    }
     
     // Breeding system
     this.canBreed = isReal && Math.random() > 0.3; // 70% of real Pauls can breed
@@ -369,6 +389,194 @@ class Simulation {
     parent2.activity = 'celebrating';
     
     console.log(`🍼 NEW PAUL BORN: ${child.name} (${child.type.name}) - Parents: ${parent1.name} & ${parent2.name}`);
+  }
+  
+  // Ask the Pauls a question - any question!
+  askQuestion(question, numPauls = 100) {
+    // Parse question type
+    const questionLower = question.toLowerCase();
+    let category = 'what';
+    
+    for (const [type, config] of Object.entries(QUESTION_CATEGORIES)) {
+      if (questionLower.startsWith(type)) {
+        category = type;
+        break;
+      }
+    }
+    
+    // Select relevant Pauls based on question keywords
+    const keywords = this.extractKeywords(question);
+    const relevantPauls = this.selectRelevantPauls(keywords, numPauls);
+    
+    // Gather predictions from each Paul
+    const predictions = relevantPauls.map(paul => {
+      const prediction = this.generatePrediction(paul, question, category);
+      return {
+        paulId: paul.id,
+        paulName: paul.name,
+        paulType: paul.type.name,
+        prediction: prediction.answer,
+        confidence: prediction.confidence,
+        reasoning: prediction.reasoning,
+        bias: paul.type.bias,
+        specialty: paul.type.specialty
+      };
+    });
+    
+    // Calculate consensus
+    const consensus = this.calculateConsensus(predictions);
+    
+    return {
+      question,
+      category,
+      totalResponses: predictions.length,
+      consensus,
+      predictions: predictions.sort((a, b) => b.confidence - a.confidence),
+      timestamp: new Date().toISOString()
+    };
+  }
+  
+  extractKeywords(question) {
+    // Simple keyword extraction
+    const stopWords = ['the', 'a', 'an', 'is', 'are', 'will', 'should', 'what', 'why', 'how', 'when', 'who', 'which'];
+    return question.toLowerCase()
+      .replace(/[^\w\s]/g, '')
+      .split(' ')
+      .filter(word => !stopWords.includes(word) && word.length > 2);
+  }
+  
+  selectRelevantPauls(keywords, numPauls) {
+    // Score each Paul based on keyword relevance
+    const scoredPauls = this.realPauls.map(paul => {
+      let score = 0;
+      
+      // Check if Paul's expertise matches keywords
+      keywords.forEach(keyword => {
+        if (paul.expertise?.some(e => e.toLowerCase().includes(keyword))) score += 3;
+        if (paul.profession?.toLowerCase().includes(keyword)) score += 2;
+        if (paul.type.specialty.includes(keyword)) score += 2;
+      });
+      
+      // Random factor for diversity
+      score += Math.random() * 2;
+      
+      return { paul, score };
+    });
+    
+    // Sort by score and take top numPauls
+    return scoredPauls
+      .sort((a, b) => b.score - a.score)
+      .slice(0, numPauls)
+      .map(s => s.paul);
+  }
+  
+  generatePrediction(paul, question, category) {
+    const config = QUESTION_CATEGORIES[category] || QUESTION_CATEGORIES.what;
+    
+    // Base confidence on Paul's type and random factor
+    let confidence = config.confidence + (Math.random() * 0.3 - 0.15);
+    confidence = Math.max(0.1, Math.min(0.99, confidence));
+    
+    // Generate answer based on Paul's bias and specialty
+    const answers = this.getAnswerTemplates(category, paul.type.bias);
+    const answer = answers[Math.floor(Math.random() * answers.length)];
+    
+    // Generate reasoning
+    const reasonings = [
+      `Based on my ${paul.type.specialty} background, I see patterns suggesting...`,
+      `Historical data in ${paul.expertise?.[0] || 'this domain'} indicates...`,
+      `My ${paul.type.name} perspective leads me to believe...`,
+      `Analyzing from a ${paul.type.bias} viewpoint...`,
+      `Drawing from ${paul.profession} experience...`
+    ];
+    
+    return {
+      answer,
+      confidence: Math.round(confidence * 100) / 100,
+      reasoning: reasonings[Math.floor(Math.random() * reasonings.length)]
+    };
+  }
+  
+  getAnswerTemplates(category, bias) {
+    const templates = {
+      will: {
+        optimistic: ['Yes, definitely', 'Highly likely', 'Strong yes'],
+        pessimistic: ['No, unlikely', 'Probably not', 'Doubtful'],
+        neutral: ['Possibly', 'Maybe', 'Uncertain'],
+        balanced: ['50/50 chance', 'Could go either way', 'Unclear']
+      },
+      should: {
+        optimistic: ['Absolutely yes', 'Go for it', 'Strong recommend'],
+        pessimistic: ['No, avoid it', 'Not recommended', 'Bad idea'],
+        neutral: ['Consider carefully', 'Weigh pros/cons', 'Depends on context'],
+        balanced: ['Moderate yes', 'Conditional recommend', 'Proceed with caution']
+      },
+      what: {
+        optimistic: ['Something positive', 'An opportunity', 'A breakthrough'],
+        pessimistic: ['A challenge', 'A risk', 'A problem'],
+        neutral: ['A mixed outcome', 'Neutral result', 'Unclear impact'],
+        balanced: ['A balanced situation', 'Multiple factors', 'Complex scenario']
+      },
+      why: {
+        optimistic: ['Due to positive trends', 'Because of innovation', 'Thanks to growth'],
+        pessimistic: ['Due to risks', 'Because of instability', 'From market fear'],
+        neutral: ['Multiple factors', 'Complex reasons', 'Unclear causes'],
+        balanced: ['Balanced factors', 'Trade-offs involved', 'Context dependent']
+      },
+      how: {
+        optimistic: ['Through innovation', 'By leveraging opportunities', 'With strategic moves'],
+        pessimistic: ['With difficulty', 'Through challenges', 'By managing risks'],
+        neutral: ['Step by step', 'Through analysis', 'With careful planning'],
+        balanced: ['Balanced approach', 'Multiple methods', 'Adaptive strategy']
+      }
+    };
+    
+    return templates[category]?.[bias] || templates.what.neutral;
+  }
+  
+  calculateConsensus(predictions) {
+    // Group by answer similarity
+    const groups = {};
+    predictions.forEach(p => {
+      const key = p.prediction.toLowerCase().replace(/[^\w]/g, '');
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(p);
+    });
+    
+    // Find majority
+    let majority = { answer: 'No consensus', count: 0, confidence: 0 };
+    Object.entries(groups).forEach(([key, group]) => {
+      if (group.length > majority.count) {
+        majority = {
+          answer: group[0].prediction,
+          count: group.length,
+          confidence: group.reduce((sum, p) => sum + p.confidence, 0) / group.length
+        };
+      }
+    });
+    
+    // Calculate overall sentiment
+    const avgConfidence = predictions.reduce((sum, p) => sum + p.confidence, 0) / predictions.length;
+    const bullishCount = predictions.filter(p => p.bias === 'optimistic' || p.bias === 'bullish').length;
+    const bearishCount = predictions.filter(p => p.bias === 'pessimistic' || p.bias === 'bearish').length;
+    
+    let sentiment = 'neutral';
+    if (bullishCount > bearishCount * 1.5) sentiment = 'optimistic';
+    else if (bearishCount > bullishCount * 1.5) sentiment = 'pessimistic';
+    else if (bullishCount > bearishCount) sentiment = 'slightly optimistic';
+    else if (bearishCount > bullishCount) sentiment = 'slightly pessimistic';
+    
+    return {
+      majority: majority.answer,
+      agreement: Math.round((majority.count / predictions.length) * 100),
+      confidence: Math.round(avgConfidence * 100) / 100,
+      sentiment,
+      distribution: {
+        optimistic: bullishCount,
+        pessimistic: bearishCount,
+        neutral: predictions.length - bullishCount - bearishCount
+      }
+    };
   }
   
   getWorldState() {

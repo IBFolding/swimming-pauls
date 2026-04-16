@@ -84,6 +84,35 @@ app.post('/api/events', (req, res) => {
   res.json({ success: true, message: `Event ${type} triggered` });
 });
 
+// Ask a question to the Pauls
+app.post('/api/ask', (req, res) => {
+  const { question, numPauls = 100 } = req.body;
+  
+  if (!question) {
+    return res.status(400).json({ error: 'Question required' });
+  }
+  
+  const result = simulation.askQuestion(question, numPauls);
+  
+  // Broadcast to all clients that a question was asked
+  wsManager.broadcastEvent('question_asked', {
+    question,
+    consensus: result.consensus.majority,
+    responses: result.totalResponses
+  });
+  
+  res.json(result);
+});
+
+// Get recent predictions/history
+app.get('/api/predictions', (req, res) => {
+  // Return recent question history from simulation
+  res.json({
+    recent: simulation.predictionHistory || [],
+    totalQuestions: simulation.totalQuestionsAsked || 0
+  });
+});
+
 // Main page
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
