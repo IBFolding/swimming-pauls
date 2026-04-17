@@ -49,6 +49,22 @@ class PaulDNA:
     macro_specialist: float = 0.0
     nft_specialist: float = 0.0
     
+    @classmethod
+    def random(cls) -> 'PaulDNA':
+        """Generate random DNA."""
+        return cls(
+            risk_management=random.uniform(0.1, 0.9),
+            conviction=random.uniform(0.1, 0.9),
+            technical_vs_fundamental=random.uniform(0.1, 0.9),
+            emotional_stability=random.uniform(0.1, 0.9),
+            time_horizon=random.uniform(0.1, 0.9),
+            adaptability=random.uniform(0.1, 0.9),
+            learning_rate=random.uniform(0.1, 0.9),
+            defi_specialist=random.uniform(0, 0.5),
+            macro_specialist=random.uniform(0, 0.5),
+            nft_specialist=random.uniform(0, 0.5),
+        )
+    
     def __post_init__(self):
         """Ensure all traits are clamped to 0-1 range."""
         for field_name in self.__dataclass_fields__:

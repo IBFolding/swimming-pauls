@@ -338,7 +338,7 @@ class LiveTradingEngine:
         
         # Step 2: Get Pauls to trade
         if paul_names is None:
-            paul_names = self.evolution.curated_pauls[:50]  # Top 50 for now
+            paul_names = self.evolution.curated_pauls  # All 1000 Pauls
         
         print(f"\n🧠 Analyzing market for {len(paul_names)} Pauls...")
         
