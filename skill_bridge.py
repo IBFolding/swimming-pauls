@@ -40,6 +40,7 @@ class BatchPredictionEngine:
     
     def __init__(self):
         self.model = "kimi/kimi-k2-thinking"
+        self.last_source_mode = "unknown"
         
     def batch_predict(self, question: str, pauls: List[Dict[str, Any]]) -> List[PaulPrediction]:
         """
@@ -52,6 +53,9 @@ class BatchPredictionEngine:
         Returns:
             List of PaulPrediction objects
         """
+        # Reset source mode for this request
+        self.last_source_mode = "unknown"
+
         # Build the batch prompt with all Pauls
         batch_prompt = self._build_batch_prompt(question, pauls)
         
@@ -145,6 +149,7 @@ Generate predictions for ALL """ + str(len(pauls)) + """ Pauls now."""
             )
             
             if result.returncode == 0 and result.stdout.strip():
+                self.last_source_mode = "openclaw_cli"
                 return result.stdout.strip()
             
             # Fallback: try to use the model directly via HTTP API
@@ -166,6 +171,7 @@ Generate predictions for ALL """ + str(len(pauls)) + """ Pauls now."""
             
             if not api_key:
                 # Return mock data for testing
+                self.last_source_mode = "mock"
                 return self._generate_mock_response(prompt)
             
             # OpenRouter API endpoint for Kimi
@@ -197,10 +203,12 @@ Generate predictions for ALL """ + str(len(pauls)) + """ Pauls now."""
             
             with urllib.request.urlopen(req, timeout=120) as response:
                 result = json.loads(response.read().decode('utf-8'))
+                self.last_source_mode = "openrouter_kimi"
                 return result['choices'][0]['message']['content']
                 
         except Exception as e:
             print(f"Kimi API call failed: {e}")
+            self.last_source_mode = "mock"
             return self._generate_mock_response(prompt)
     
     def _generate_mock_response(self, prompt: str) -> str:
@@ -307,9 +315,11 @@ Generate predictions for ALL """ + str(len(pauls)) + """ Pauls now."""
         except json.JSONDecodeError as e:
             print(f"Failed to parse predictions JSON: {e}")
             # Fallback: generate predictions based on Pauls
+            self.last_source_mode = "rule_fallback"
             predictions = self._generate_fallback_predictions(pauls)
         except Exception as e:
             print(f"Error parsing predictions: {e}")
+            self.last_source_mode = "rule_fallback"
             predictions = self._generate_fallback_predictions(pauls)
         
         return predictions
@@ -387,6 +397,16 @@ class OpenClawSkillBridge:
             List of PaulPrediction objects with sentiment, confidence, and reasoning
         """
         return self.batch_engine.batch_predict(question, pauls)
+
+    def batch_predict_with_meta(self, question: str, pauls: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """
+        Generate predictions with metadata about the prediction source.
+        """
+        predictions = self.batch_engine.batch_predict(question, pauls)
+        return {
+            "predictions": predictions,
+            "source_mode": self.batch_engine.last_source_mode
+        }
         
     def _discover_skills(self) -> Dict[str, Any]:
         """Discover available OpenClaw skills"""
@@ -477,7 +497,7 @@ class OpenClawSkillBridge:
             if os.path.exists(os.path.expanduser(path)):
                 return True
                 
-        return True  # Assume available for demo purposes
+        return False
     
     def _build_tool_registry(self) -> Dict[str, SkillTool]:
         """Build registry of tools for Pauls"""
@@ -641,5 +661,3 @@ def get_skill_bridge() -> OpenClawSkillBridge:
             return engine.get_pauls_with_entries()
         except Exception as e:
             return [{"error": str(e)}]
-
-

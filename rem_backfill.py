@@ -248,7 +248,9 @@ class REMBackfillEngine:
                     paul_name=paul_name,
                     entry_type="prediction",
                     content=f"Predicted {vote_dir}: {reasoning[:100] if reasoning else 'No reasoning provided'}",
-                    timestamp=datetime.now() - timedelta(days=random.randint(1, 30)),
+                    # Keep generated thought entries inside the default 30-day
+                    # timeline window used by tests/UI filters.
+                    timestamp=datetime.now() - timedelta(days=random.randint(0, 29)),
                     location="market_floor",
                     mood=0.3 if vote_dir == 'BULLISH' else -0.3 if vote_dir == 'BEARISH' else 0.0,
                     energy=random.uniform(60, 90),
@@ -463,7 +465,9 @@ class REMBackfillEngine:
                     paul_name=paul_name,
                     entry_type="thought",
                     content=content,
-                    timestamp=datetime.now() - timedelta(days=random.randint(1, 30)),
+                    # Keep generated thought entries inside the default 30-day
+                    # timeline window used by tests/UI filters.
+                    timestamp=datetime.now() - timedelta(days=random.randint(0, 29)),
                     location=random.choice(['home', 'cafe', 'research_lab', None]),
                     mood=0.5 if sentiment == 'BULLISH' else -0.3 if sentiment == 'BEARISH' else 0.0,
                     energy=random.uniform(50, 90),

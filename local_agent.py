@@ -456,12 +456,15 @@ class LocalAgentServer:
 
             # Use batch prediction for all Pauls in a single API call
             batch_predictions = []
+            source_mode = "unknown"
             if skill_bridge:
                 try:
-                    batch_predictions = await asyncio.get_event_loop().run_in_executor(
+                    batch_result = await asyncio.get_event_loop().run_in_executor(
                         None,
-                        lambda: skill_bridge.batch_predict(question, paul_personas)
+                        lambda: skill_bridge.batch_predict_with_meta(question, paul_personas)
                     )
+                    batch_predictions = batch_result.get("predictions", [])
+                    source_mode = batch_result.get("source_mode", "unknown")
                     await websocket.send(json.dumps(create_message(
                         MessageType.INFO,
                         {"message": f"✅ Batch prediction complete. Got {len(batch_predictions)} predictions."}
@@ -491,14 +494,37 @@ class LocalAgentServer:
                 consensus = self._calculate_consensus_from_batch(batch_predictions)
                 sentiment = self._calculate_sentiment_from_batch(batch_predictions)
             else:
-                # Fallback to simulation if batch failed
-                result = await asyncio.get_event_loop().run_in_executor(
-                    None,
-                    lambda: quick_simulate(rounds=rounds, agents=paul_personas, question=question)
-                )
-                final = result.rounds[-1] if result.rounds else None
-                consensus = final.consensus if final else {"direction": "NEUTRAL", "confidence": 0.5}
-                sentiment = final.sentiment if final else 0
+                # Fallback to deterministic rule-based predictions if batch failed
+                source_mode = "rule_fallback"
+                try:
+                    if skill_bridge and hasattr(skill_bridge, "batch_engine"):
+                        batch_predictions = await asyncio.get_event_loop().run_in_executor(
+                            None,
+                            lambda: skill_bridge.batch_engine._generate_fallback_predictions(paul_personas)
+                        )
+                        consensus = self._calculate_consensus_from_batch(batch_predictions)
+                        sentiment = self._calculate_sentiment_from_batch(batch_predictions)
+                    else:
+                        # Last-resort simulation fallback when skill bridge is unavailable
+                        source_mode = "local_fallback"
+                        result = await asyncio.get_event_loop().run_in_executor(
+                            None,
+                            lambda: asyncio.run(quick_simulate(rounds=rounds, verbose=False))
+                        )
+                        final_consensus = result.final_consensus or {}
+                        direction = final_consensus.get("direction", "neutral").upper()
+                        agreement_ratio = final_consensus.get("consistency", 0.5)
+                        consensus = {
+                            "direction": direction,
+                            "confidence": round(float(agreement_ratio), 2),
+                            "strength": "weak",
+                            "agreement_ratio": round(float(agreement_ratio), 2),
+                        }
+                        sentiment = round(float(final_consensus.get("sentiment", 0.0)), 2)
+                except Exception as fallback_error:
+                    print(f"⚠️ Fallback simulation failed: {fallback_error}")
+                    consensus = {"direction": "NEUTRAL", "confidence": 0.5, "strength": "weak", "agreement_ratio": 0.5}
+                    sentiment = 0.0
 
             duration_ms = int((time.time() - start_time) * 1000)
 
@@ -512,6 +538,7 @@ class LocalAgentServer:
                 "message": f"✅ Simulation complete. {pauls} Pauls reached consensus via batch prediction.",
                 "system_limits": get_system_limits(),
                 "batch_prediction": True,
+                "source_mode": source_mode,
                 "duration_ms": duration_ms,
                 "agents": [
                     {
@@ -533,6 +560,11 @@ class LocalAgentServer:
                     for pred in (batch_predictions if batch_predictions else [])
                 ]
             }
+            if source_mode in {"mock", "rule_fallback", "local_fallback"}:
+                response_data["warning"] = (
+                    f"Fallback predictions were used (source_mode={source_mode}) "
+                    "instead of a live model/API response."
+                )
 
             # Save result to database
             if SIMULATION_AVAILABLE:
@@ -546,12 +578,22 @@ class LocalAgentServer:
                         "debate": f"http://localhost:3005/debate_network.html?id={result_id}"
                     }
                     db = PredictionHistoryDB()
+                    paul_votes = [
+                        {
+                            "name": pred.paul_name,
+                            "specialty": pred.specialty or "General",
+                            "direction": pred.sentiment.upper(),
+                            "confidence": pred.confidence,
+                            "reasoning": pred.reasoning,
+                        }
+                        for pred in (batch_predictions if batch_predictions else [])
+                    ]
+                    db_consensus = dict(consensus)
+                    db_consensus["sentiment"] = sentiment
                     db.record_prediction(
-                        prediction_id=result_id,
                         question=question,
-                        consensus_direction=response_data["consensus"]["direction"],
-                        consensus_confidence=response_data["consensus"]["confidence"],
-                        sentiment_score=response_data["sentiment"],
+                        consensus=db_consensus,
+                        paul_votes=paul_votes,
                         pauls_count=pauls,
                         rounds=rounds,
                         duration_ms=duration_ms
